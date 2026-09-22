@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LUX Residence — Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --rust:#ba4d2c;--rust-deep:#8a3316;--ink:#241109;--muted:#8a7566;--line:#ece2d7;
+  --bg:#f7f2ec;--card:#ffffff;--serif:'Playfair Display',Georgia,serif;--sans:'Inter',system-ui,sans-serif;
+  --ok:#2f8a54;--sold:#b23b3b;--rez:#b98328;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+:root{padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0)}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+.muted{color:var(--muted)}
+h1,h2,h3,h4{margin:0}
+
+/* ---------- LOGIN ---------- */
+#login{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:radial-gradient(130% 130% at 15% 0%,#3a1d0d,#25120a 60%,#1b0d06);}
+.login-card{width:min(400px,100%);background:rgba(255,251,247,.9);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.5);
+  border-radius:22px;padding:38px 32px;box-shadow:0 40px 80px -40px rgba(0,0,0,.6);text-align:center}
+.login-card .logo{font-family:var(--serif);font-weight:700;font-size:26px;color:var(--rust);letter-spacing:.02em}
+.login-card .sub{color:var(--muted);font-size:13px;margin:4px 0 26px;letter-spacing:.14em;text-transform:uppercase}
+.login-card input{width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:16px;text-align:center;letter-spacing:.3em}
+.login-card button{width:100%;margin-top:14px;padding:14px;border:none;border-radius:12px;background:var(--rust);color:#fff;font-weight:700;font-size:15px}
+.login-err{color:var(--sold);font-size:13px;min-height:18px;margin-top:10px}
+
+/* ---------- SHELL ---------- */
+#app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+#app[hidden]{display:none}
+.side{background:linear-gradient(180deg,#2a1509,#1c0d06);color:#f3e7dc;padding:24px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+.side .brand{font-family:var(--serif);font-weight:700;font-size:20px;color:#fff;padding:6px 12px 20px}
+.side .brand small{display:block;font-family:var(--sans);font-size:10px;letter-spacing:.2em;color:#e0a877;font-weight:600;margin-top:2px}
+.nav{display:flex;flex-direction:column;gap:4px;flex:1}
+.nav button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:none;color:#d9c6b6;
+  padding:12px 14px;border-radius:11px;font-size:14.5px;font-weight:500;transition:.15s}
+.nav button svg{width:19px;height:19px;flex:0 0 19px}
+.nav button:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-badge{display:inline-block;min-width:18px;height:18px;line-height:18px;text-align:center;background:#e0533a;color:#fff;border-radius:9px;font-size:11px;font-weight:700;margin-left:auto;padding:0 5px;}
+.nav button.on{background:var(--rust);color:#fff;box-shadow:0 12px 26px -12px rgba(186,77,44,.7)}
+.side .logout{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e9d8c8;padding:11px;border-radius:11px;font-weight:600;font-size:13px}
+
+.main{padding:30px clamp(16px,3vw,40px) 60px;max-width:1200px}
+.mobtop{display:none}
+
+.page-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.page-h h1{font-family:var(--serif);font-weight:700;font-size:clamp(24px,3.4vw,34px)}
+.page-h .sub{color:var(--muted);font-size:13px;margin-top:3px}
+.btn{border:none;border-radius:11px;padding:11px 18px;font-weight:600;font-size:14px;background:var(--rust);color:#fff;display:inline-flex;align-items:center;gap:8px}
+.btn.ghost{background:#fff;color:var(--rust);border:1px solid var(--line)}
+.btn.sm{padding:8px 12px;font-size:13px}
+.btn:hover{filter:brightness(1.05)}
+
+.sec{display:none}
+.sec.on{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* dashboard */
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;margin-bottom:26px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+.kpi b{font-family:var(--serif);font-size:34px;display:block;line-height:1}
+.kpi span{color:var(--muted);font-size:13px;display:block;margin-top:6px}
+.kpi.rust b{color:var(--rust)} .kpi.ok b{color:var(--ok)} .kpi.sold b{color:var(--sold)} .kpi.rez b{color:var(--rez)}
+.info-banner{background:#fff6ef;border:1px solid #f0dcc9;border-radius:14px;padding:16px 18px;font-size:13.5px;color:#6b4b34;line-height:1.6;margin-bottom:24px}
+.info-banner b{color:var(--rust)}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+.toolbar input.search{flex:1;min-width:180px;padding:11px 14px;border:1px solid var(--line);border-radius:11px;font-size:14px;background:#fff}
+.count{color:var(--muted);font-size:13px;font-weight:600}
+
+/* record cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.rec{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;transition:.15s}
+.rec:hover{box-shadow:0 18px 40px -26px rgba(74,42,24,.4);border-color:#e0d2c4}
+.rec-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.rec h4{font-family:var(--serif);font-size:19px}
+.rec-meta{color:var(--muted);font-size:13px;margin-top:3px}
+.rec-price{font-size:13.5px;color:var(--ink);margin-top:10px;font-weight:600}
+.rec-act{display:flex;gap:6px}
+.rec-act button{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:#fff;font-size:14px;display:flex;align-items:center;justify-content:center}
+.rec-act button:hover{border-color:var(--rust);color:var(--rust)}
+.pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;text-transform:uppercase;letter-spacing:.03em}
+.s-available{background:#e7f4ec;color:var(--ok)} .s-sold{background:#fbe9e9;color:var(--sold)} .s-reserved{background:#fbf1dd;color:var(--rez)}
+
+/* news card */
+.nrec p{color:#5f4e40;font-size:13.5px;line-height:1.6;margin:8px 0 0}
+.nrec .date{color:var(--rust);font-weight:700;font-size:12px}
+
+/* buildings */
+.brow{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:10px 14px;margin-bottom:10px}
+.brow span{color:var(--muted);font-weight:700;font-size:13px;flex:0 0 40px}
+.brow input{flex:1;border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:14px}
+
+/* settings */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:20px}
+.panel h3{font-family:var(--serif);font-size:20px;margin-bottom:6px}
+.panel .d{color:var(--muted);font-size:13px;margin-bottom:18px;line-height:1.6}
+.row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:none}
+.row .lbl b{font-size:14.5px}.row .lbl span{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#5f4e40}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-size:14.5px;background:#fff}
+.field textarea{resize:vertical;min-height:90px;line-height:1.6}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* switch */
+.switch{position:relative;width:52px;height:30px;flex:0 0 52px}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#d8cabb;border-radius:99px;transition:.2s}
+.slider:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.switch input:checked+.slider{background:var(--ok)}
+.switch input:checked+.slider:before{transform:translateX(22px)}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(30,15,8,.5);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center;z-index:100;padding:0}
+.modal.on{display:flex}
+.modal-c{background:var(--card);width:min(560px,100%);border-radius:22px 22px 0 0;padding:26px clamp(18px,4vw,30px) calc(26px + env(safe-area-inset-bottom,0));max-height:92vh;overflow:auto}
+.modal-c h3{font-family:var(--serif);font-size:23px;margin-bottom:20px}
+.modal-foot{display:flex;gap:10px;margin-top:8px}
+.modal-foot .btn{flex:1;justify-content:center}
+@media(min-width:640px){.modal{align-items:center;padding:24px}.modal-c{border-radius:22px}}
+
+.imgprev{margin-top:10px}.imgprev img{max-width:100%;max-height:170px;border-radius:12px;border:1px solid var(--line)}
+.imgprev .rm{margin-top:6px;font-size:12px;color:var(--sold);cursor:pointer;font-weight:600}
+.hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5}
+.ekrow{display:flex;gap:8px;margin-bottom:8px;align-items:center}.ekrow input{flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:14px}.ekrow input.a{flex:0 0 84px}.ekrow button{flex:0 0 34px;border:1px solid var(--line);background:#fff;border-radius:10px;color:var(--sold);cursor:pointer;font-size:16px}
+.ekrow button.dup{color:var(--ok)}
+.ekspsum{font-size:13px;font-weight:600;margin-top:10px;min-height:18px}
+.cpanel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px}.cpanel h4{font-family:var(--serif);font-size:17px;margin-bottom:14px}
+.sgrid{border-collapse:collapse;}
+.sgrid th{font-size:11px;color:var(--muted);padding:3px 5px;font-weight:600;}
+.sgrid td{padding:2px;}
+.scell{width:38px;height:33px;border:none;border-radius:7px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px -3px rgba(0,0,0,.4);}
+.scell:hover{filter:brightness(1.1);}
+.sales-grid-wrap{overflow-x:auto;margin:14px 0;}
+.rroom{display:flex;gap:10px;flex-wrap:wrap;} .rroom>div{text-align:center;} .rroom label{font-size:11px;color:var(--muted);display:block;margin-bottom:3px;} .rroom select{padding:6px 8px;border:1px solid var(--line);border-radius:8px;}
+.skpi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 18px;font-size:14px;margin-bottom:6px;flex-wrap:wrap;} .skpi b{font-family:var(--serif);font-size:20px;}
+.arow{padding:9px 13px;background:#fff;border:1px solid var(--line);border-radius:10px;margin-top:8px;font-size:14px;}
+.slegend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;margin:10px 0;} .slegend span{display:inline-flex;align-items:center;gap:6px;} .slegend i{width:14px;height:14px;border-radius:4px;display:inline-block;}
+.sales-grid-wrap{overflow-x:auto;padding-bottom:8px}
+.sfrow{display:flex;align-items:center;gap:4px;margin-bottom:4px;min-width:max-content}
+.sfnum{width:30px;text-align:right;font-size:12px;color:var(--muted);font-weight:700;flex:0 0 30px}
+.scell2{min-width:46px;height:38px;border-radius:7px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;line-height:1.05;padding:0 3px;user-select:none}
+.scell2 .a{font-size:8px;opacity:.9;font-weight:500}
+.scell2.gl{background:rgba(255,255,255,.5)!important;backdrop-filter:blur(6px) saturate(150%);-webkit-backdrop-filter:blur(6px) saturate(150%);color:#2f7d4f;border:1.5px solid rgba(186,77,44,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
+.scell2.dim{opacity:.14}
+.sfadd{width:26px;height:38px;border:1px dashed var(--line);border-radius:7px;background:#fff;color:var(--ok);font-weight:700;cursor:pointer}
+.sgbar{flex:1;min-width:180px;height:38px;border-radius:7px;background:#9a9a9a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;cursor:pointer}
+.upst{padding:5px 9px;border-radius:8px;color:#fff;font-size:11px;font-weight:700;border:none;cursor:pointer}
+/* toast */
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;
+  padding:13px 22px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:200;box-shadow:0 20px 40px -16px rgba(0,0,0,.5)}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- MOBILE ---------- */
+.backdrop{display:none}
+@media(max-width:900px){
+  #app{grid-template-columns:1fr}
+  .side{position:fixed;left:0;top:0;bottom:0;width:250px;z-index:60;transform:translateX(-105%);transition:.25s;height:100%}
+  .side.open{transform:none}
+  .backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:55}
+  .backdrop.on{display:block}
+  .mobtop{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:40;background:rgba(247,242,236,.9);backdrop-filter:blur(10px);
+    padding:calc(12px + env(safe-area-inset-top,0)) 16px 12px;border-bottom:1px solid var(--line)}
+  .mobtop .burger{width:42px;height:42px;border-radius:11px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center}
+  .mobtop .t{font-family:var(--serif);font-weight:700;font-size:18px}
+  .main{padding:20px 16px 60px}
+  .two{grid-template-columns:1fr}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-card">
+    <div class="logo">LUX Residence</div>
+    <div class="sub">Admin Panel</div>
+    <input id="email" type="email" placeholder="Email" autocomplete="username" style="width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:15px;margin-bottom:10px;box-sizing:border-box;text-align:left;letter-spacing:normal;">
+    <input id="pin" type="password" placeholder="Parol" autocomplete="current-password">
+    <div class="login-err" id="loginErr"></div>
+    <button id="loginBtn">Daxil ol</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" hidden>
+  <div class="backdrop" id="backdrop"></div>
+  <aside class="side" id="side">
+    <div class="brand">LUX Residence<small>ADMIN PANEL</small></div>
+    <nav class="nav" id="nav">
+      <button data-s="panel" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Panel</button>
+      <button data-s="leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v12H8l-4 4V4z"/><path d="M8 9h8M8 13h5"/></svg>Sorğular<span class="nav-badge" id="leadsBadge" style="display:none"></span></button>
+      <button data-s="apt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-5h6v5"/></svg>Mənzillər</button>
+      <button data-s="bina"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22v-4h6v4M8 6h2M14 6h2M8 10h2M14 10h2"/></svg>Binalar</button>
+      <button data-s="sales"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2M10 21v-3h4v3"/></svg>Satış Lövhəsi</button>
+      <button data-s="news"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h13v16H6a2 2 0 0 1-2-2V4z"/><path d="M17 8h3v10a2 2 0 0 1-2 2M8 8h5M8 12h5M8 16h5"/></svg>Xəbərlər</button>
+      <button data-s="part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.4"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5M15.5 20c0-2 1.5-3.5 3.5-3.5s2.5 1 2.5 1"/></svg>Partnyorlar</button>
+      <button data-s="content"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 10h16M4 15h10M4 20h7"/></svg>Kontent</button>
+      <button data-s="calc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M12 10h2M16 10h.01M8 14h2M12 14h2M16 14h.01M8 18h6"/></svg>Kalkulyator</button>
+      <button data-s="set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Qiymət & Tənzimləmə</button>
+    </nav>
+    <button class="logout" id="logout">Çıxış</button>
+  </aside>
+
+  <div>
+    <div class="mobtop">
+      <button class="burger" id="burger"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <div class="t" id="mobTitle">Panel</div>
+    </div>
+
+    <main class="main">
+      <!-- PANEL -->
+      <section class="sec on" id="s-panel">
+        <div class="page-h"><div><h1>Panel</h1><div class="sub">Ümumi baxış</div></div></div>
+        <div id="syncStatus"></div>
+        <div class="kpis" id="kpis"></div>
+      </section>
+
+      <!-- SORĞULAR -->
+      <section class="sec" id="s-leads">
+        <div class="page-h"><div><h1>Sorğular</h1><div class="sub">Müştəri müraciətləri (Mənə zəng edin + Əlaqə formu)</div></div><button class="btn ghost" onclick="renderLeads()">↻ Yenilə</button></div>
+        <div id="leadsList" class="grid"></div>
+      </section>
+
+      <!-- MƏNZİLLƏR -->
+      <section class="sec" id="s-apt">
+        <div class="page-h"><div><h1>Mənzillər</h1><div class="sub">Kataloq və xəritə üçün mənzil bazası</div></div><button class="btn" onclick="openApt()">+ Yeni mənzil</button></div>
+        <div class="toolbar"><input class="search" id="aptSearch" placeholder="Axtar: bina, otaq, sahə…"><span class="count" id="aptCount"></span></div>
+        <div class="grid" id="aptGrid"></div>
+      </section>
+
+      <!-- BİNALAR -->
+      <section class="sec" id="s-bina">
+        <div class="page-h"><div><h1>Binalar</h1><div class="sub">Xəritədəki bina adları (sıra sabitdir)</div></div><button class="btn" onclick="saveBina()">Yadda saxla</button></div>
+        <div id="binaList"></div>
+      </section>
+
+      <!-- XƏBƏRLƏR -->
+      <section class="sec" id="s-news">
+        <div class="page-h"><div><h1>Xəbərlər</h1><div class="sub">Ana səhifə və Xəbərlər bölməsi</div></div><button class="btn" onclick="openNews()">+ Yeni xəbər</button></div>
+        <div class="grid" id="newsGrid"></div>
+      </section>
+
+      <!-- PARTNYORLAR -->
+      <section class="sec" id="s-part">
+        <div class="page-h"><div><h1>Partnyorlar</h1><div class="sub">Ana səhifədə lent şəklində loqolar</div></div><button class="btn" onclick="openPart()">+ Partnyor</button></div>
+        <div class="grid" id="partGrid"></div>
+      </section>
+
+      <!-- KONTENT -->
+      <section class="sec" id="s-content">
+        <div class="page-h"><div><h1>Kontent</h1><div class="sub">Səhifə başlıqları, mətnlər və statistika</div></div><button class="btn" onclick="saveContent()">Kontenti yadda saxla</button></div>
+        <div id="contentForm"></div>
+        <button class="btn" style="margin-top:6px" onclick="saveContent()">Kontenti yadda saxla</button>
+      </section>
+
+      <!-- SATIŞ LÖVHƏSİ -->
+      <section class="sec" id="s-sales">
+        <div class="page-h"><div><h1>Satış Lövhəsi</h1><div class="sub">Xanaya klik → status, otaq, sahə redaktə</div></div></div>
+        <div class="cpanel"><div class="two"><div class="field"><label>Bina</label><select id="salesBina" onchange="selSalesBina(this.value)"></select></div><div class="field" style="align-self:end"><button class="btn ghost" onclick="addFloor()">+ Mərtəbə</button></div></div>
+          <div class="hint">🟢 Satışda · 🟩 Satılıb · 🟥 İnvestor · 🟡 Sakin · 🔵 Fond · ⬛ Satılmır. Xanaya <b>klik</b> → status, otaq və sahəni seçirsən. Sətir sonundakı <b>+</b> yeni mənzil əlavə edir.</div>
+        </div>
+        <div class="cpanel" style="padding:12px 16px"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="hint" style="margin:0">Filter:</span><select id="sFilter" onchange="renderGrid()" style="border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-family:inherit;font-weight:600"><option value="">Hamısı</option><option value="satisda">Satışda</option><option value="satilib">Satılıb</option><option value="investor">İnvestor</option><option value="sakin">Sakin</option><option value="fond">Fond</option><option value="satilmir">Satılmır</option></select><select id="sFilterRoom" onchange="renderGrid()" style="border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-family:inherit;font-weight:600"><option value="">Bütün otaqlar</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div></div>
+        <div id="salesSummary"></div>
+        <div id="salesGrid" class="sales-grid-wrap"></div>
+        <div class="cpanel"><h4>Boş mənzil axtarışı — bütün binalar</h4><div class="two"><div class="field"><label>Otaq sayı</label><select id="availRoom"></select></div><div class="field" style="align-self:end"><button class="btn ghost" onclick="searchAvail()">Axtar</button></div></div><div id="availOut"></div></div>
+      </section>
+
+      <!-- KALKULYATOR -->
+      <section class="sec" id="s-calc">
+        <div class="page-h"><div><h1>Kalkulyator</h1><div class="sub">Ödəniş kalkulyatorunun ayarları</div></div><button class="btn" onclick="saveCalc()">Yadda saxla</button></div>
+        <div class="cpanel"><h4>🔒 Giriş parolu</h4><div class="d">Kalkulyatoru açmaq üçün məxfi parol. Bu parolu yalnız icazəli şəxslərə verin.</div><div class="field"><label>Parol</label><input id="cGatePass"></div></div>
+        <div class="cpanel"><h4>İpoteka</h4>
+          <div class="row"><div class="lbl"><b>İpoteka aktiv</b><span>Kalkulyatorda İpoteka rejimi görünsün</span></div><label class="switch"><input type="checkbox" id="cMortEn"><span class="slider"></span></label></div>
+          <div class="field" style="margin-top:14px"><label>İllik faiz (%)</label><input id="cMortRate" type="number" step="0.1"></div>
+        </div>
+        <div class="cpanel"><h4>Sahə hədləri (m²)</h4><div class="two"><div class="field"><label>Minimum</label><input id="cAreaMin" type="number"></div><div class="field"><label>Maksimum</label><input id="cAreaMax" type="number"></div></div><div class="field"><label>Başlanğıc dəyər</label><input id="cAreaDef" type="number"></div></div>
+        <div class="cpanel"><h4>Qiymət hədləri (AZN/m²)</h4><div class="two"><div class="field"><label>Minimum</label><input id="cPriceMin" type="number"></div><div class="field"><label>Maksimum</label><input id="cPriceMax" type="number"></div></div><div class="field"><label>Başlanğıc dəyər</label><input id="cPriceDef" type="number"></div></div>
+        <div class="cpanel"><h4>İlkin ödəniş</h4><div class="field"><label>Standart ilkin ödəniş (%)</label><input id="cDownDef" type="number"></div></div>
+        <div class="cpanel"><h4>Müddət və əlavələr (AZN/m²)</h4><div id="termRows"></div><div class="hint">Hər müddət üçün m²-ə əlavə qiymət. Söndürülən müddət kalkulyatorda görünmür.</div></div>
+        <button class="btn" style="margin-top:6px" onclick="saveCalc()">Yadda saxla</button>
+      </section>
+
+      <!-- TƏNZİMLƏMƏ -->
+      <section class="sec" id="s-set">
+        <div class="page-h"><div><h1>Qiymət & Tənzimləmə</h1><div class="sub">Sayt görünüşü və məlumatların idarəsi</div></div></div>
+
+        <div class="panel">
+          <h3>Qiymətlərin görünüşü</h3>
+          <div class="d">Aktiv olduqda saytda mənzil qiymətləri göstərilir. Söndürüldükdə "Sorğu ilə" yazılır.</div>
+          <div class="row"><div class="lbl"><b>Saytda qiymətləri göstər</b><span>Kataloq, mənzil səhifəsi və müqayisə</span></div>
+            <label class="switch"><input type="checkbox" id="swPrice"><span class="slider"></span></label></div>
+        </div>
+
+        <div class="panel">
+          <h3>Əlaqə məlumatları</h3>
+          <div class="d">Bu məlumatlar admin bazasında saxlanılır. Saytda avtomatik yenilənməsi üçün əlavə bağlantı lazımdır — hazır olduqda qoşaram.</div>
+          <div class="two">
+            <div class="field"><label>Telefon 1</label><input id="cPhone1"></div>
+            <div class="field"><label>Telefon 2</label><input id="cPhone2"></div>
+          </div>
+          <div class="field"><label>E-poçt</label><input id="cEmail"></div>
+          <div class="field"><label>Ünvan</label><textarea id="cAddr"></textarea></div>
+          <button class="btn" onclick="saveContact()">Yadda saxla</button>
+        </div>
+
+        <div class="panel">
+          <h3>Sosial şəbəkələr (footer)</h3>
+          <div class="d">Boş qoyulan platforma footerda görünmür.</div>
+          <div class="two"><div class="field"><label>Instagram</label><input id="soc_instagram" placeholder="https://instagram.com/…"></div><div class="field"><label>Facebook</label><input id="soc_facebook"></div></div>
+          <div class="two"><div class="field"><label>YouTube</label><input id="soc_youtube"></div><div class="field"><label>WhatsApp</label><input id="soc_whatsapp" placeholder="https://wa.me/994…"></div></div>
+          <div class="two"><div class="field"><label>Telegram</label><input id="soc_telegram"></div><div class="field"><label>LinkedIn</label><input id="soc_linkedin"></div></div>
+          <button class="btn" onclick="saveSocial()">Yadda saxla</button>
+        </div>
+
+        <div class="panel">
+          <h3>Təhlükəsizlik</h3>
+          <div class="d">Admin panelə giriş PIN kodu.</div>
+          <div class="field"><label>Yeni PIN</label><input id="newPin" inputmode="numeric" placeholder="Yeni PIN kod"></div>
+          <button class="btn" onclick="changePin()">PIN dəyiş</button>
+        </div>
+
+        <div class="panel">
+          <h3>Məlumatların idarəsi</h3>
+          <div class="d">Bütün məlumatları faylla ehtiyat nüsxələyin/bərpa edin, və ya Supabase (canlı baza) ilə sinxronlayın.</div><button class="btn" style="margin-bottom:14px" onclick="pushAll()">☁ Bütün məlumatı Supabase-ə yüklə</button><br>
+          <div class="modal-foot" style="margin-top:0;flex-wrap:wrap">
+            <button class="btn ghost" onclick="exportData()">↓ Export (JSON)</button>
+            <button class="btn ghost" onclick="document.getElementById('imp').click()">↑ Import (JSON)</button>
+            <button class="btn ghost" style="color:var(--sold);border-color:#f0d2d2" onclick="resetData()">⟲ Defolta qaytar</button>
+          </div>
+          <input type="file" id="imp" accept="application/json" hidden>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- APT MODAL -->
+<div class="modal" id="aptModal">
+  <div class="modal-c">
+    <h3 id="aptMTitle">Yeni mənzil</h3>
+    <div class="two">
+      <div class="field"><label>Bina</label><select id="fBina"></select></div>
+      <div class="field"><label>Otaq sayı</label><input id="fRooms" type="number" min="1" max="6"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label>Ümumi sahə (m²)</label><input id="fArea" type="number" step="any" min="10" max="600"></div>
+      <div class="field"><label>Mərtəbə (məs. 5–10)</label><input id="fFloor"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label>Qiymət (AZN/m²)</label><input id="fPrice" type="number" min="0"></div>
+      <div class="field"><label>Status</label><select id="fStatus"><option value="available">Mövcud</option><option value="reserved">Rezerv</option><option value="sold">Satılıb</option></select></div>
+    </div>
+    <div class="field"><label>Plan şəkli (mənzil planı)</label><input type="file" id="fPlan" accept="image/*"><div id="fPlanPrev" class="imgprev"></div></div>
+    <div class="field"><label>Eksplikasiya — otaq sahələri (m²)</label>
+      <div id="ekspRows"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+        <button type="button" class="btn ghost sm" onclick="addEksp('')">+ Başqa otaq</button>
+        <button type="button" class="btn ghost sm" onclick="loadEkspTemplate()">↺ Standart siyahı</button>
+      </div>
+      <div id="ekspSum" class="ekspsum"></div>
+      <div class="hint">Otaq adları hazırdır — yalnız qarşısına <b>m²</b> yazın. Təkrarlanan otaq üçün <b>+</b>, silmək üçün <b>×</b>. Boş otaqlar dərc olunmur. Otaqların cəmi ümumi kvadrata uyğun olmalıdır (əks halda yadda saxlanmır).</div>
+    </div>
+    <div class="modal-foot"><button class="btn ghost" onclick="closeApt()">Ləğv et</button><button class="btn" onclick="saveApt()">Yadda saxla</button></div>
+  </div>
+</div>
+
+<!-- NEWS MODAL -->
+<div class="modal" id="newsModal">
+  <div class="modal-c">
+    <h3 id="newsMTitle">Yeni xəbər</h3>
+    <div class="field"><label>Tarix</label><input id="nDate" placeholder="18 Sen 2026"></div>
+    <div class="field"><label>Başlıq</label><input id="nTitle" maxlength="70"><div class="hint" id="ntc"></div></div>
+    <div class="field"><label>Qısa mətn (kartda görünür)</label><textarea id="nExcerpt"></textarea></div>
+    <div class="field"><label>Tam mətn (detal səhifəsi)</label><textarea id="nBody" style="min-height:130px"></textarea></div>
+    <div class="field"><label>SEO link (slug)</label><input id="nSlug" placeholder="avtomatik: başlıqdan"><div class="hint">URL-də görünür: #xeber-<b>bu-hisse</b>. Boş buraxsanız başlıqdan avtomatik yaranır.</div></div>
+    <div class="field"><label>Xəbər şəkli</label><input type="file" id="nImg" accept="image/*"><div id="nImgPrev" class="imgprev"></div></div>
+    <div class="modal-foot"><button class="btn ghost" onclick="closeNews()">Ləğv et</button><button class="btn" onclick="saveNews()">Yadda saxla</button></div>
+  </div>
+</div>
+
+<div class="modal" id="partModal"><div class="modal-c"><h3>Partnyor</h3>
+  <div class="field"><label>Ad</label><input id="partName"></div>
+  <div class="field"><label>Loqo (şəffaf PNG tövsiyə olunur)</label><input type="file" id="partLogo" accept="image/*"><div id="partLogoPrev" class="imgprev"></div></div>
+  <div class="modal-foot"><button class="btn ghost" onclick="closePart()">Ləğv et</button><button class="btn" onclick="savePart()">Yadda saxla</button></div>
+</div></div>
+<div id="unitPop" style="display:none;position:fixed;z-index:300;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 50px -18px rgba(0,0,0,.45);padding:14px;width:230px">
+  <div id="upStatuses" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+  <div class="two" style="gap:8px"><div class="field" style="margin:0"><label>Otaq</label><select id="upRoom"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div><div class="field" style="margin:0"><label>Sahə m²</label><input id="upArea" type="number" step="any"></div></div>
+  <div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm" style="flex:1" onclick="saveUnitPop()">Saxla</button><button class="btn ghost sm" onclick="delUnit()" style="color:var(--sold)">Sil</button><button class="btn ghost sm" onclick="closeUnitPop()">×</button></div>
+</div>
+<div id="toast"></div>
+
+<script>
+/* ---------- DEFAULTS (index.html ilə eyni) ---------- */
+const DEF_APT=[
+ {id:1,bina:'Bina 4',rooms:1,area:48,floor:'3–7',price:1350,status:'available'},
+ {id:2,bina:'Bina 4',rooms:2,area:64,floor:'5–10',price:1350,status:'available'},
+ {id:3,bina:'Bina 3',rooms:2,area:72,floor:'8–12',price:1400,status:'sold'},
+ {id:4,bina:'Bina 3',rooms:3,area:95,floor:'10–14',price:1400,status:'available'},
+ {id:5,bina:'Bina 1',rooms:3,area:104,floor:'6–11',price:1450,status:'available'},
+ {id:6,bina:'Bina 5',rooms:1,area:52,floor:'2–6',price:1300,status:'available'},
+ {id:7,bina:'Bina 6',rooms:2,area:68,floor:'7–13',price:1350,status:'reserved'},
+ {id:8,bina:'Bina 9',rooms:4,area:132,floor:'12–16',price:1500,status:'available'},
+ {id:9,bina:'Bina 10',rooms:3,area:88,floor:'4–9',price:1400,status:'sold'},
+ {id:10,bina:'Bina 11',rooms:2,area:60,floor:'3–8',price:1350,status:'available'},
+ {id:11,bina:'Bina 11',rooms:4,area:140,floor:'14–17',price:1550,status:'available'},
+ {id:12,bina:'Bina 9',rooms:3,area:99,floor:'9–13',price:1450,status:'available'}
+];
+const DEF_NEWS=[
+ {id:1,date:'18 Sen 2026',title:'Yeni blokda satış başladı',excerpt:'LUX Residence-in yeni yaşayış bloku satışa çıxdı — ilkin ödəniş 20%-dən, 0% daxili kreditlə.',body:'LUX Residence-in yeni yaşayış bloku rəsmi olaraq satışa çıxdı. Alıcılar üçün ilkin ödəniş 20%-dən başlayır və daxili kredit 0% faizlə təqdim olunur. Məhdud sayda mənzil mövcuddur — ətraflı məlumat üçün satış ofisi ilə əlaqə saxlayın.'},
+ {id:2,date:'12 Sen 2026',title:'Yaşıl həyət istifadəyə verildi',excerpt:'Bloklar arasında geniş park zonası, uşaq meydançası və gəzinti yolları sakinlərin istifadəsinə verildi.',body:'Layihənin mərkəzindəki geniş yaşıl həyət tam olaraq istifadəyə verildi. Sakinlər üçün park zonaları, uşaq oyun meydançaları, gəzinti yolları və istirahət guşələri hazırlandı.'},
+ {id:3,date:'5 Sen 2026',title:'Ödəniş şərtləri yeniləndi',excerpt:'Daxili kredit 36 aya qədər 0% faizlə — hər büdcəyə uyğun aylıq ödəniş imkanı.',body:'LUX Residence ödəniş şərtlərini yenilədi. İndi daxili kredit 36 aya qədər 0% faizlə təqdim olunur — hər büdcəyə uyğun rahat aylıq ödəniş imkanı yaradır.'}
+];
+const DEF_BINA=["Bina 9","Bina 10","Bina 6","Bina 4","Bina 3","Bina 5","Bina 1","Bina 11"];
+const DEF_CONTACT={phone1:'+994 50 809 00 88',phone2:'+994 50 700 00 88',email:'luxresidence.az@gmail.com',addr:'Ə.Ələkbərov, M.Müşfiq, S.Dağlı, İ.Qutqaşınlı küç. kəsişməsi (Space TV arxası, Elmlər m/s yaxınlığı)'};
+const STAT={available:'Mövcud',sold:'Satılıb',reserved:'Rezerv'};
+
+/* ---------- storage ---------- */
+function get(k,d){try{var s=localStorage.getItem(k);return s?JSON.parse(s):JSON.parse(JSON.stringify(d));}catch(e){return JSON.parse(JSON.stringify(d));}}
+var SUPA_URL="https://avqchschbbltnnasabdm.supabase.co",SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2cWNoc2NoYmJsdG5uYXNhYmRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5NDA2NTAsImV4cCI6MjEwNTUxNjY1MH0.PVxxfLrj8KZH6AUaQQPx5sEqpiGEMDIFy3Mq206OMKI";
+var sb=(window.supabase&&window.supabase.createClient)?window.supabase.createClient(SUPA_URL,SUPA_KEY):null;
+var OFFLINE=false;
+function set(k,v){localStorage.setItem(k,JSON.stringify(v));sbSet(k,v);}
+function sbSet(k,v){if(OFFLINE||!sb)return;try{sb.from("lux_kv").upsert({key:k,value:v,updated_at:new Date().toISOString()}).then(function(r){if(r.error)console.warn("Supabase:",r.error.message);});}catch(e){}}
+function pullAll(){if(!sb)return Promise.resolve();return sb.from("lux_kv").select("key,value").then(function(res){if(res.error)throw res.error;(res.data||[]).forEach(function(row){var stored=(row.key==="lux_showprices")?String(row.value):JSON.stringify(row.value);localStorage.setItem(row.key,stored);});APT=get("lux_apartments",DEF_APT);NEWS=get("lux_news",DEF_NEWS);BINA=get("lux_buildings",DEF_BINA);CONTACT=get("lux_contact",DEF_CONTACT);PART=get("lux_partners",[]);CFG=get("lux_cfg",DEF_CFG);SALES=get("lux_sales",{});if(!SALES||Object.keys(SALES).length<3||!_hasR(SALES)){SALES=JSON.parse(JSON.stringify(DEFAULT_SALES));try{localStorage.setItem("lux_sales",JSON.stringify(SALES));}catch(e){}}}).catch(function(e){console.warn("pullAll",e&&e.message);});}
+function pushAll(){if(OFFLINE||!sb){toast("Əvvəlcə email/parolla giriş edin");return;}["lux_apartments","lux_news","lux_buildings","lux_contact","lux_partners","lux_content","lux_cfg","lux_sales"].forEach(function(k){var v=get(k,null);if(v!=null)sbSet(k,v);});sbSet("lux_showprices",localStorage.getItem("lux_showprices")||"0");toast("Bütün məlumat Supabase-ə yükləndi ✓");}
+let APT=get('lux_apartments',DEF_APT);
+let NEWS=get('lux_news',DEF_NEWS);
+let BINA=get('lux_buildings',DEF_BINA);
+let CONTACT=get('lux_contact',DEF_CONTACT);
+let PART=get('lux_partners',[]);
+
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2200);}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+/* ---------- login ---------- */
+function pinOK(v){return v===(localStorage.getItem('lux_pin')||'ferid245');}
+document.getElementById('loginBtn').addEventListener('click',doLogin);
+document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function enterApp(){document.getElementById('login').style.display='none';document.getElementById('app').hidden=false;boot();}
+function doLogin(){var email=(document.getElementById('email').value||'').trim();var pass=(document.getElementById('pin').value||'').trim();var errEl=document.getElementById('loginErr');errEl.textContent='';
+ var lp=(localStorage.getItem('lux_pin')||'ferid245');
+ if(email&&sb){errEl.textContent='Yoxlanılır…';sb.auth.signInWithPassword({email:email,password:pass}).then(function(res){
+   if(res.error){ if(pass===lp){OFFLINE=true;enterApp();toast('Lokal rejim (Supabase girişi alınmadı)');} else {errEl.textContent='Email və ya parol yanlışdır';} return; }
+   OFFLINE=false;pullAll().then(function(){enterApp();}); }).catch(function(){ if(pass===lp){OFFLINE=true;enterApp();toast('Lokal rejim');} else {errEl.textContent='Bağlantı xətası'; } });
+   return; }
+ if(pass===lp){OFFLINE=true;enterApp();toast('Lokal rejim (Supabase-siz)');}else{errEl.textContent='Parol yanlışdır';document.getElementById('pin').value='';}}
+document.getElementById('logout').addEventListener('click',()=>location.reload());
+
+/* ---------- nav ---------- */
+const nav=document.getElementById('nav'),side=document.getElementById('side'),backdrop=document.getElementById('backdrop');
+nav.addEventListener('click',e=>{var b=e.target.closest('button[data-s]');if(!b)return;go(b.dataset.s);});
+function go(s){
+  [...nav.children].forEach(x=>x.classList.toggle('on',x.dataset.s===s));
+  document.querySelectorAll('.sec').forEach(x=>x.classList.toggle('on',x.id==='s-'+s));
+  var names={panel:'Panel',leads:'Sorğular',apt:'Mənzillər',bina:'Binalar',news:'Xəbərlər',sales:'Satış Lövhəsi',part:'Partnyorlar',content:'Kontent',calc:'Kalkulyator',set:'Qiymət & Tənzimləmə'};
+  document.getElementById('mobTitle').textContent=names[s]||'Panel';
+  if(s==='leads')renderLeads();if(s==='sales')renderSales();closeSide();window.scrollTo(0,0);
+}
+document.getElementById('burger').addEventListener('click',()=>{side.classList.add('open');backdrop.classList.add('on');});
+backdrop.addEventListener('click',closeSide);
+function closeSide(){side.classList.remove('open');backdrop.classList.remove('on');}
+
+/* ---------- boot / render ---------- */
+function boot(){var ss=document.getElementById('syncStatus');if(ss){ss.innerHTML=OFFLINE?'<div class="info-banner" style="background:#fbe9e9;border-color:#f0d2d2;color:#8a2b2b">⚠ <b>Lokal rejim</b> — Supabase-ə bağlı deyilsiniz. Dəyişikliklər yalnız bu brauzerdə qalır və saytda <b>görünməyəcək</b> (F5-də köhnəyə qayıdar). Sinxron üçün <b>email + parolla</b> çıxıb yenidən girin.</div>':'<div class="info-banner" style="background:#e7f4ec;border-color:#bfe3cc;color:#1f6a3f">☁ <b>Onlayn (Supabase)</b> — bütün dəyişiklikləriniz avtomatik saytda və hər cihazda görünür.</div>';}renderPanel();renderApt();renderBina();renderNews();renderPart();renderContent();renderCalc();fillSettings();renderLeads();renderSales();}
+
+function renderPanel(){
+  var av=APT.filter(a=>a.status==='available').length,so=APT.filter(a=>a.status==='sold').length,re=APT.filter(a=>a.status==='reserved').length;
+  document.getElementById('kpis').innerHTML=[
+    ['rust',APT.length,'Ümumi mənzil'],['ok',av,'Mövcud'],['sold',so,'Satılıb'],['rez',re,'Rezerv'],
+    ['',BINA.length,'Bina'],['',NEWS.length,'Xəbər']
+  ].map(k=>`<div class="kpi ${k[0]}"><b>${k[1]}</b><span>${k[2]}</span></div>`).join('');
+}
+
+/* apartments */
+const aptSearch=document.getElementById('aptSearch');
+aptSearch.addEventListener('input',renderApt);
+function renderApt(){
+  var q=(aptSearch.value||'').toLowerCase();
+  var list=APT.filter(a=>!q||(a.bina+' '+a.rooms+' otaq '+a.area+' '+STAT[a.status]).toLowerCase().indexOf(q)>=0);
+  document.getElementById('aptGrid').innerHTML=list.length?list.map(a=>`
+    <div class="rec">
+      <div class="rec-top"><span class="pill s-${a.status}">${STAT[a.status]}</span>
+        <div class="rec-act"><button title="Redaktə" onclick="openApt(${a.id})">✎</button><button title="Sil" onclick="delApt(${a.id})">🗑</button></div></div>
+      <h4>${a.rooms} otaqlı · ${a.area} m²</h4>
+      <div class="rec-meta">${esc(a.bina)} · ${esc(a.floor)} mərtəbə</div>
+      <div class="rec-price">${a.price} AZN/m² &nbsp;·&nbsp; ${(a.area*a.price).toLocaleString('az')} AZN</div>
+    </div>`).join(''):'<p class="muted">Uyğun mənzil yoxdur.</p>';
+  document.getElementById('aptCount').textContent=APT.length+' mənzil';
+}
+let editId=null;
+function fillBinaSelect(){document.getElementById('fBina').innerHTML=BINA.map(n=>`<option>${esc(n)}</option>`).join('');}
+function openApt(id){
+  fillBinaSelect();editId=id||null;
+  var a=id?APT.find(x=>x.id===id):{bina:BINA[0],rooms:2,area:70,floor:'',price:1400,status:'available'};
+  document.getElementById('aptMTitle').textContent=id?'Mənzili redaktə et':'Yeni mənzil';
+  fBina.value=a.bina;fRooms.value=a.rooms;fArea.value=a.area;fFloor.value=a.floor;fPrice.value=a.price;fStatus.value=a.status;
+  _planData=a.plan||null;renderPlanPrev();
+  if(a.eksp&&a.eksp.length){document.getElementById('ekspRows').innerHTML='';a.eksp.forEach(function(r){addEksp(r.name,r.area);});}else{loadEkspTemplate();}ekspSum();
+  document.getElementById('aptModal').classList.add('on');
+}
+function closeApt(){document.getElementById('aptModal').classList.remove('on');}
+function saveApt(){
+  var o={bina:fBina.value,rooms:+fRooms.value||1,area:+fArea.value||0,floor:fFloor.value.trim(),price:+fPrice.value||0,status:fStatus.value,plan:_planData||'',eksp:collectEksp()};
+  if(!o.area||!o.price){toast('Sahə və qiymət tələb olunur');return;}
+  if(!o.plan){toast('Mənzil planı şəkli mütləqdir');return;}
+  if(o.eksp&&o.eksp.length){var _s=Math.round(o.eksp.reduce(function(s,r){return s+(+r.area||0);},0)*100)/100;var _d=Math.round((o.area-_s)*100)/100;if(Math.abs(_d)>0.5){toast('Uyğunsuzluq: ümumi '+o.area+' m², otaqların cəmi '+_s+' m² — fərq '+_d+' m². Düzəldin.');return;}}
+  if(editId){var a=APT.find(x=>x.id===editId);Object.assign(a,o);}
+  else{o.id=(APT.reduce((m,x)=>Math.max(m,x.id),0)+1);APT.push(o);}
+  set('lux_apartments',APT);closeApt();renderApt();renderPanel();toast('Yadda saxlanıldı ✓');
+}
+function delApt(id){if(!confirm('Bu mənzili silmək istəyirsiniz?'))return;APT=APT.filter(x=>x.id!==id);set('lux_apartments',APT);renderApt();renderPanel();toast('Silindi');}
+
+/* buildings */
+function renderBina(){document.getElementById('binaList').innerHTML=BINA.map((n,i)=>`<div class="brow"><span>#${i+1}</span><input value="${esc(n)}" data-i="${i}"></div>`).join('');}
+function saveBina(){BINA=[...document.querySelectorAll('#binaList input')].map(x=>x.value.trim());set('lux_buildings',BINA);renderApt();renderPanel();toast('Binalar yadda saxlanıldı ✓');}
+
+/* news */
+let editNews=null;
+function renderNews(){
+  document.getElementById('newsGrid').innerHTML=NEWS.length?NEWS.map(n=>`
+    <div class="rec nrec">
+      <div class="rec-top"><span class="date">${esc(n.date)}</span>
+        <div class="rec-act"><button onclick="openNews(${n.id})">✎</button><button onclick="delNews(${n.id})">🗑</button></div></div>
+      <h4>${esc(n.title)}</h4><p>${esc(n.excerpt)}</p>
+    </div>`).join(''):'<p class="muted">Xəbər yoxdur.</p>';
+}
+function openNews(id){
+  editNews=id||null;var n=id?NEWS.find(x=>x.id===id):{date:'',title:'',excerpt:'',body:''};
+  document.getElementById('newsMTitle').textContent=id?'Xəbəri redaktə et':'Yeni xəbər';
+  nDate.value=n.date;nTitle.value=n.title;nExcerpt.value=n.excerpt;nBody.value=n.body;nSlug.value=n.slug||'';ntCount();
+  _newsImg=n.img||null;renderNewsImgPrev();
+  document.getElementById('newsModal').classList.add('on');
+}
+function closeNews(){document.getElementById('newsModal').classList.remove('on');}
+function saveNews(){
+  var o={date:nDate.value.trim(),title:nTitle.value.trim(),excerpt:nExcerpt.value.trim(),body:nBody.value.trim(),slug:(nSlug.value.trim()||slugify(nTitle.value.trim())),img:_newsImg||''};
+  if(!o.title){toast('Başlıq tələb olunur');return;}
+  if(!o.img){toast('Xəbər üçün şəkil mütləqdir');return;}
+  if(editNews){var n=NEWS.find(x=>x.id===editNews);Object.assign(n,o);}
+  else{o.id=(NEWS.reduce((m,x)=>Math.max(m,x.id),0)+1);NEWS.unshift(o);}
+  set('lux_news',NEWS);closeNews();renderNews();renderPanel();toast('Yadda saxlanıldı ✓');
+}
+function delNews(id){if(!confirm('Bu xəbəri silmək istəyirsiniz?'))return;NEWS=NEWS.filter(x=>x.id!==id);set('lux_news',NEWS);renderNews();renderPanel();toast('Silindi');}
+
+/* settings */
+function fillSettings(){
+  document.getElementById('swPrice').checked=(localStorage.getItem('lux_showprices')==='1');
+  cPhone1.value=CONTACT.phone1;cPhone2.value=CONTACT.phone2;cEmail.value=CONTACT.email;cAddr.value=CONTACT.addr;var _s=(get('lux_content',{}).social)||{};['instagram','facebook','youtube','whatsapp','telegram','linkedin'].forEach(function(k){var e=document.getElementById('soc_'+k);if(e)e.value=_s[k]||'';});
+}
+document.getElementById('swPrice').addEventListener('change',function(){var sp=this.checked?'1':'0';localStorage.setItem('lux_showprices',sp);sbSet('lux_showprices',sp);toast(this.checked?'Qiymətlər göstərilir':'Qiymətlər gizlədildi');});
+function saveSocial(){var C=get('lux_content',{});function sv(id){var e=document.getElementById(id);return e?e.value.trim():'';}C.social={instagram:sv('soc_instagram'),facebook:sv('soc_facebook'),youtube:sv('soc_youtube'),whatsapp:sv('soc_whatsapp'),telegram:sv('soc_telegram'),linkedin:sv('soc_linkedin')};set('lux_content',C);toast('Sosial şəbəkələr yadda saxlanıldı ✓');}
+function saveContact(){CONTACT={phone1:cPhone1.value.trim(),phone2:cPhone2.value.trim(),email:cEmail.value.trim(),addr:cAddr.value.trim()};set('lux_contact',CONTACT);toast('Əlaqə məlumatları yadda saxlanıldı ✓');}
+function changePin(){var p=document.getElementById('newPin').value.trim();if(p.length<3){toast('PIN ən az 3 rəqəm olmalıdır');return;}localStorage.setItem('lux_pin',p);document.getElementById('newPin').value='';toast('PIN dəyişdirildi ✓');}
+
+/* data mgmt */
+function exportData(){
+  var data={apartments:APT,news:NEWS,buildings:BINA,contact:CONTACT,partners:PART,content:get('lux_content',{}),calc:get('lux_cfg',{}),sales:get('lux_sales',{}),showprices:localStorage.getItem('lux_showprices')||'0'};
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lux-residence-data.json';a.click();
+}
+document.getElementById('imp').addEventListener('change',function(e){
+  var f=e.target.files[0];if(!f)return;var r=new FileReader();
+  r.onload=function(){try{var d=JSON.parse(r.result);
+    if(d.apartments){APT=d.apartments;set('lux_apartments',APT);}
+    if(d.news){NEWS=d.news;set('lux_news',NEWS);}
+    if(d.buildings){BINA=d.buildings;set('lux_buildings',BINA);}
+    if(d.contact){CONTACT=d.contact;set('lux_contact',CONTACT);}
+    if(d.partners){PART=d.partners;set('lux_partners',PART);}
+    if(d.content){set('lux_content',d.content);}
+    if(d.calc){CFG=d.calc;set('lux_cfg',CFG);}
+    if(d.sales){SALES=d.sales;set('lux_sales',SALES);}
+    if(d.showprices!=null)localStorage.setItem('lux_showprices',d.showprices);
+    boot();toast('Məlumatlar import edildi ✓');
+  }catch(err){toast('Fayl oxunmadı');}};
+  r.readAsText(f);e.target.value='';
+});
+function resetData(){
+  if(!confirm('Bütün dəyişikliklər silinib defolt məlumatlar qaytarılsın?'))return;
+  ['lux_apartments','lux_news','lux_buildings','lux_contact','lux_partners','lux_content','lux_cfg'].forEach(k=>localStorage.removeItem(k));
+  APT=get('lux_apartments',DEF_APT);NEWS=get('lux_news',DEF_NEWS);BINA=get('lux_buildings',DEF_BINA);CONTACT=get('lux_contact',DEF_CONTACT);PART=get('lux_partners',[]);CFG=get('lux_cfg',DEF_CFG);
+  boot();toast('Defolta qaytarıldı');
+}
+
+/* focus pin on load */
+
+/* ---- image helper ---- */
+function imgTo(file,maxW,mime,cb){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var s=Math.min(1,maxW/im.width);var c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);var x=c.getContext('2d');x.drawImage(im,0,0,c.width,c.height);try{cb(c.toDataURL(mime,0.85));}catch(e){toast('Şəkil çox böyükdür');}};im.src=r.result;};r.readAsDataURL(file);}
+
+/* ---- apartment plan + eksplikasiya ---- */
+var _planData=null;
+function renderPlanPrev(){document.getElementById('fPlanPrev').innerHTML=_planData?('<img src="'+_planData+'"><div class="rm" onclick="_planData=null;renderPlanPrev()">Şəkli sil</div>'):'';}
+document.getElementById('fPlan').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;imgTo(f,1000,'image/jpeg',function(d){_planData=d;renderPlanPrev();});e.target.value='';});
+var EKSP_TEMPLATE=['Yataq otağı','Zal','Mətbəx','S/Q','Eyvan','Qarderob','Holl','Dəhliz'];
+function addEksp(name,area,afterEl){var d=document.createElement('div');d.className='ekrow';
+ var ni=document.createElement('input');ni.className='n';ni.placeholder='Otaq';ni.value=name||'';
+ var ai=document.createElement('input');ai.className='a';ai.type='number';ai.step='any';ai.min='0';ai.placeholder='m²';ai.value=(area!=null&&area!=='')?area:'';ai.addEventListener('input',ekspSum);
+ var plus=document.createElement('button');plus.type='button';plus.className='dup';plus.title='Bu otaqdan daha bir əlavə et';plus.textContent='+';plus.onclick=function(){addEksp(ni.value,'',d);};
+ var rm=document.createElement('button');rm.type='button';rm.title='Sil';rm.textContent='×';rm.onclick=function(){d.remove();ekspSum();};
+ d.appendChild(ni);d.appendChild(ai);d.appendChild(plus);d.appendChild(rm);
+ var host=document.getElementById('ekspRows');
+ if(afterEl&&afterEl.nextSibling)host.insertBefore(d,afterEl.nextSibling);else if(afterEl)host.appendChild(d);else host.appendChild(d);
+ ekspSum();}
+function loadEkspTemplate(){document.getElementById('ekspRows').innerHTML='';EKSP_TEMPLATE.forEach(function(n){addEksp(n,'');});}
+function collectEksp(){return [].map.call(document.querySelectorAll('#ekspRows .ekrow'),function(r){return {name:r.querySelector('.n').value.trim(),area:+r.querySelector('.a').value||0};}).filter(function(x){return x.name&&x.area>0;});}
+function ekspSum(){var el=document.getElementById('ekspSum');if(!el)return;var rows=collectEksp();var sum=Math.round(rows.reduce(function(s,r){return s+(+r.area||0);},0)*100)/100;var total=+document.getElementById('fArea').value||0;if(!rows.length){el.textContent='';return;}var diff=Math.round((total-sum)*100)/100;if(Math.abs(diff)<=0.5){el.textContent='✓ Otaqların cəmi: '+sum+' m² (ümumi: '+total+' m²)';el.style.color='#2f8a54';}else{el.textContent='⚠ Cəm: '+sum+' m², ümumi: '+total+' m² — fərq: '+diff+' m²';el.style.color='#b23b3b';}}
+
+/* ---- news image + slug ---- */
+var _newsImg=null;
+function renderNewsImgPrev(){document.getElementById('nImgPrev').innerHTML=_newsImg?('<img src="'+_newsImg+'"><div class="rm" onclick="_newsImg=null;renderNewsImgPrev()">Şəkli sil</div>'):'';}
+document.getElementById('nImg').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;imgTo(f,1200,'image/jpeg',function(d){_newsImg=d;renderNewsImgPrev();});e.target.value='';});
+function slugify(s){return String(s).toLowerCase().replace(/ə/g,'e').replace(/ı/g,'i').replace(/ç/g,'c').replace(/ş/g,'s').replace(/ğ/g,'g').replace(/ö/g,'o').replace(/ü/g,'u').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||('x'+Date.now());}
+
+/* ---- partners ---- */
+var _partLogo=null,editPart=null;
+function renderPart(){document.getElementById('partGrid').innerHTML=PART.length?PART.map(function(p,i){return '<div class="rec"><div class="rec-top"><span class="muted" style="font-size:12px">#'+(i+1)+'</span><div class="rec-act"><button onclick="openPart('+i+')">✎</button><button onclick="delPart('+i+')">🗑</button></div></div>'+(p.logo?'<img src="'+p.logo+'" style="max-height:46px;max-width:100%;object-fit:contain;margin:8px 0">':'')+'<h4 style="font-size:16px">'+esc(p.name||'—')+'</h4></div>';}).join(''):'<p class="muted">Partnyor yoxdur. Loqo əlavə edin.</p>';}
+function openPart(i){editPart=(i==null?null:i);_partLogo=(i!=null?PART[i].logo:null);document.getElementById('partName').value=(i!=null?(PART[i].name||''):'');renderPartPrev();document.getElementById('partModal').classList.add('on');}
+function closePart(){document.getElementById('partModal').classList.remove('on');}
+function renderPartPrev(){document.getElementById('partLogoPrev').innerHTML=_partLogo?('<img src="'+_partLogo+'"><div class="rm" onclick="_partLogo=null;renderPartPrev()">Loqonu sil</div>'):'';}
+document.getElementById('partLogo').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;imgTo(f,320,'image/png',function(d){_partLogo=d;renderPartPrev();});e.target.value='';});
+function savePart(){var o={name:document.getElementById('partName').value.trim(),logo:_partLogo||''};if(!o.name&&!o.logo){toast('Ad və ya loqo lazımdır');return;}if(editPart!=null)PART[editPart]=o;else PART.push(o);set('lux_partners',PART);closePart();renderPart();toast('Yadda saxlanıldı ✓');}
+function delPart(i){if(!confirm('Bu partnyoru silmək?'))return;PART.splice(i,1);set('lux_partners',PART);renderPart();toast('Silindi');}
+
+/* ---- content editor ---- */
+var DEF_C={homeEyebrow:'Şəhərin yeni ritmi',homeTitle:'Təbiətin nəfəsini<br>evinizdə hiss edin',homeStats:[{v:'10+',l:'yaşayış binası'},{v:'0%',l:'daxili kredit'},{v:'7/24',l:'mühafizə'},{v:'Elmlər',l:'m/s yaxınlığında'}],aboutEyebrow:'Haqqımızda',aboutTitle:'Şəhərin yeni ritmini<br>yaşayın',aboutText:'Müasir memarlıq, geniş yaşıllıq və rahatlıq — bir layihədə. Yaşamaq üçün düşünülmüş məkan.',aboutVideo:'',infraEyebrow:'İnfrastruktur',infraTitle:'Yaşamaq üçün lazım olan<br>hər şey yaxınlıqda',infraText:'Məktəb, xəstəxana, metro və ticarət mərkəzləri — hamısı yürüş məsafəsində.',newsEyebrow:'Xəbərlər',newsTitle:'Son yeniliklər',newsText:'Layihə ilə bağlı ən son xəbərlər və elanlar.',discTitle:'Layihə haqqında',discText:'Müasir memarlıq, geniş yaşıllıq və şəhər mərkəzinə yaxınlıq — LUX Residence şəhərin yeni ritmini təqdim edir. Düşünülmüş infrastruktur, təhlükəsiz mühit və hər detalı ilə rahat yaşam bir ünvanda.',infraStats:[{v:'5 dəq',l:'Metro stansiyası'},{v:'3 dəq',l:'Məktəb & bağça'},{v:'7 dəq',l:'Xəstəxana'},{v:'4 dəq',l:'Ticarət mərkəzi'}],features:[{t:'Yaşıl sahələr',d:'Bloklar arasında geniş park zonaları və peyzaj.'},{t:'7/24 mühafizə',d:'Nəzarət kameraları və qapalı ərazi təhlükəsizliyi.'},{t:'Parking',d:'Yerüstü və yeraltı avtomobil dayanacaqları.'},{t:'Uşaq meydançaları',d:'Uşaqlar üçün təhlükəsiz oyun zonaları.'},{t:'Ticarət sahələri',d:'Market, kafe və xidmət obyektləri binaların altında.'},{t:'Nəqliyyat',d:'İctimai nəqliyyat və magistral yollara rahat çıxış.'}],teasers:[{t:'Haqqımızda',d:'Müasir memarlıq, yaşıllıq və şəhər mərkəzinə yaxınlıq bir layihədə.'},{t:'İnfrastruktur',d:'Yaşıl sahələr, 7/24 mühafizə, parking, ticarət və uşaq meydançaları.'},{t:'Əlaqə',d:'Satış ofisi, ünvan və telefonlar — bizimlə əlaqə saxlayın.'}]};
+function _q(v){return String(v==null?'':v).replace(/"/g,'&quot;');}
+function cText(id,lbl,val){return '<div class="field"><label>'+lbl+'</label><input id="ct_'+id+'" value="'+_q(val)+'"></div>';}
+function cArea(id,lbl,val){return '<div class="field"><label>'+lbl+'</label><textarea id="ct_'+id+'">'+esc(val||'')+'</textarea></div>';}
+function cStats(key,lbl,arr){return '<div class="cpanel"><h4>'+lbl+'</h4>'+arr.map(function(s,i){return '<div class="two"><div class="field"><label>Dəyər</label><input id="ct_'+key+'_'+i+'_v" value="'+_q(s.v)+'"></div><div class="field"><label>Alt yazı</label><input id="ct_'+key+'_'+i+'_l" value="'+_q(s.l)+'"></div></div>';}).join('')+'</div>';}
+function cTD(key,lbl,arr){return '<div class="cpanel"><h4>'+lbl+'</h4>'+arr.map(function(s,i){return '<div class="two"><div class="field"><label>Başlıq</label><input id="ct_'+key+'_'+i+'_t" value="'+_q(s.t)+'"></div><div class="field"><label>Mətn</label><input id="ct_'+key+'_'+i+'_d" value="'+_q(s.d)+'"></div></div>';}).join('')+'</div>';}
+var _heroImgs={about:null,infra:null,news:null};
+function heroImg(key,input){var f=input.files[0];if(!f)return;imgTo(f,1400,'image/jpeg',function(d){_heroImgs[key]=d;var p=document.getElementById('hprev_'+key);if(p)p.innerHTML='<img src="'+d+'">';});input.value='';}
+function heroField(key,img){return '<div class="field"><label>Hero şəkli</label><input type="file" accept="image/*" onchange="heroImg(\''+key+'\',this)"><div class="imgprev" id="hprev_'+key+'">'+(img?'<img src="'+img+'">':'')+'</div></div>';}
+function renderContent(){var C=Object.assign({},JSON.parse(JSON.stringify(DEF_C)),get('lux_content',{}));
+ _heroImgs={about:C.aboutHeroImg||null,infra:C.infraHeroImg||null,news:C.newsHeroImg||null,disc:C.discImg||null};
+ var html='';
+ html+='<div class="cpanel"><h4>Ana səhifə — Hero</h4>'+cText('homeEyebrow','Üst yazı',C.homeEyebrow)+cText('homeTitle','Başlıq (sətir üçün &lt;br&gt;)',C.homeTitle)+'</div>';
+ html+=cStats('homeStats','Ana səhifə — Statistika',C.homeStats);
+ html+='<div class="cpanel"><h4>Haqqımızda — Hero</h4>'+heroField('about',C.aboutHeroImg)+cText('aboutEyebrow','Kiçik yazı',C.aboutEyebrow)+cText('aboutTitle','Başlıq',C.aboutTitle)+cArea('aboutText','Sloqan',C.aboutText)+'</div>';
+ html+='<div class="cpanel"><h4>Haqqımızda — Video</h4>'+cText('aboutVideo','YouTube linki və ya video (.mp4) URL',C.aboutVideo)+'<div class="hint">Səhifəyə girən kimi avtomatik oynayır (səssiz), istifadəçi pauza verə bilər. YouTube tövsiyə olunur — video faylını YouTube-a yükləyib linkini bura yapışdırın.</div></div>';
+ html+='<div class="cpanel"><h4>İnfrastruktur — Hero</h4>'+heroField('infra',C.infraHeroImg)+cText('infraEyebrow','Kiçik yazı',C.infraEyebrow)+cText('infraTitle','Başlıq (sətir üçün &lt;br&gt;)',C.infraTitle)+cArea('infraText','Sloqan',C.infraText)+'</div>';
+ html+=cStats('infraStats','İnfrastruktur — Statistika',C.infraStats);
+ html+=cTD('features','İnfrastruktur — Xüsusiyyət kartları',C.features);
+ html+='<div class="cpanel"><h4>Xəbərlər — Hero</h4>'+heroField('news',C.newsHeroImg)+cText('newsEyebrow','Kiçik yazı',C.newsEyebrow)+cText('newsTitle','Başlıq',C.newsTitle)+cArea('newsText','Sloqan',C.newsText)+'</div>';
+ html+='<div class="cpanel"><h4>Layihə haqqında (Kəşf edin — şəkilli bölmə)</h4>'+heroField('disc',C.discImg)+cText('discTitle','Başlıq',C.discTitle)+cArea('discText','Mətn',C.discText)+'</div>';
+ document.getElementById('contentForm').innerHTML=html;
+}
+function saveContent(){var C=Object.assign({},JSON.parse(JSON.stringify(DEF_C)),get('lux_content',{}));
+ function v(id){var e=document.getElementById('ct_'+id);return e?e.value:'';}
+ C.homeEyebrow=v('homeEyebrow');C.homeTitle=v('homeTitle');
+ C.aboutEyebrow=v('aboutEyebrow');C.aboutTitle=v('aboutTitle');C.aboutText=v('aboutText');
+ C.aboutVideo=v('aboutVideo');
+ C.infraEyebrow=v('infraEyebrow');C.infraTitle=v('infraTitle');C.infraText=v('infraText');
+ C.newsEyebrow=v('newsEyebrow');C.newsTitle=v('newsTitle');C.newsText=v('newsText');
+ C.discTitle=v('discTitle');C.discText=v('discText');
+ if(_heroImgs.about)C.aboutHeroImg=_heroImgs.about;if(_heroImgs.infra)C.infraHeroImg=_heroImgs.infra;if(_heroImgs.news)C.newsHeroImg=_heroImgs.news;if(_heroImgs.disc)C.discImg=_heroImgs.disc;
+ ['homeStats','infraStats'].forEach(function(k){C[k]=C[k].map(function(s,i){return {v:v(k+'_'+i+'_v'),l:v(k+'_'+i+'_l')};});});
+ ['features'].forEach(function(k){C[k]=C[k].map(function(s,i){return {t:v(k+'_'+i+'_t'),d:v(k+'_'+i+'_d')};});});
+ set('lux_content',C);toast('Kontent yadda saxlanıldı ✓');
+}
+
+
+/* ---- calculator config ---- */
+var DEF_CFG={pin:'1234',gatePass:'1234',mortgageEnabled:true,mortgageRate:8,area:{min:40,max:200,def:60},price:{min:1300,max:5000,def:1350},downDef:30,terms:[{months:6,surcharge:0,enabled:true},{months:12,surcharge:200,enabled:true},{months:24,surcharge:400,enabled:true},{months:36,surcharge:600,enabled:true}]};
+var CFG=get('lux_cfg',DEF_CFG);
+var DEFAULT_SALES={"Bina 3":{"floors":16,"rows":{"16":[{"n":1,"room":"2","area":"111.62","s":"satilib"},{"n":2,"room":"1","area":"70.67","s":"satilib"},{"n":3,"room":"2","area":"134.08","s":"investor"},{"n":4,"room":"1","area":"73.80","s":"satilib"},{"n":5,"room":"3","area":"149.32","s":"investor"},{"n":6,"room":"3","area":"176.3","s":"investor"}],"15":[{"n":1,"room":"2","area":"111.62","s":"investor"},{"n":2,"room":"1","area":"70.67","s":"investor"},{"n":3,"room":"2","area":"134.08","s":"satilib"},{"n":4,"room":"1","area":"73.80","s":"satilib"},{"n":5,"room":"3","area":"149.32","s":"satilib"},{"n":6,"room":"3","area":"176.3","s":"investor"}],"14":[{"n":1,"room":"2","area":"111.62","s":"investor"},{"n":2,"room":"1","area":"70.67","s":"investor"},{"n":3,"room":"2","area":"134.08","s":"satilib"},{"n":4,"room":"1","area":"73.80","s":"satilib"},{"n":5,"room":"3","area":"149.32","s":"satilib"},{"n":6,"room":"3","area":"176.3","s":"satisda"}],"13":[{"n":1,"room":"2","area":"111.62","s":"investor"},{"n":2,"room":"1","area":"70.67","s":"satilib"},{"n":3,"room":"2","area":"134.08","s":"satilib"},{"n":4,"room":"1","area":"73.80","s":"satilib"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"3","area":"176.3","s":"satilib"}],"12":[{"n":1,"room":"2","area":"111.62","s":"satilib"},{"n":2,"room":"1","area":"70.67","s":"satilib"},{"n":3,"room":"2","area":"134.08","s":"satilib"},{"n":4,"room":"1","area":"73.80","s":"satilib"},{"n":5,"room":"3","area":"149.32","s":"satilib"},{"n":6,"room":"3","area":"176.3","s":"satilib"}],"11":[{"n":1,"room":"2","area":"111.62","s":"satilib"},{"n":2,"room":"1","area":"70.67","s":"satilib"},{"n":3,"room":"2","area":"134.08","s":"satilib"},{"n":4,"room":"1","area":"73.80","s":"satilib"},{"n":5,"room":"3","area":"149.32","s":"satilib"},{"n":6,"room":"3","area":"176.3","s":"satilib"}],"10":[{"n":1,"room":"2","area":"111.62","s":"satilib"},{"n":2,"room":"1","area":"70.67","s":"satilib"},{"n":3,"room":"2","area":"134.08","s":"satilib"},{"n":4,"room":"1","area":"73.80","s":"satilib"},{"n":5,"room":"3","area":"149.32","s":"satilib"},{"n":6,"room":"3","area":"176.3","s":"satilib"}],"9":[{"n":1,"room":"2","area":"111.62","s":"satilib"},{"n":2,"room":"1","area":"70.67","s":"satilib"},{"n":3,"room":"2","area":"134.08","s":"satilib"},{"n":4,"room":"1","area":"73.80","s":"satilib"},{"n":5,"room":"3","area":"149.32","s":"satilib"},{"n":6,"room":"3","area":"176.3","s":"satilib"}],"8":[{"n":1,"room":"2","area":"111.62","s":"satilib"},{"n":2,"room":"1","area":"70.67","s":"satilib"},{"n":3,"room":"2","area":"134.08","s":"satilib"},{"n":4,"room":"1","area":"73.80","s":"satilib"},{"n":5,"room":"3","area":"149.32","s":"satilib"},{"n":6,"room":"3","area":"176.3","s":"satilib"}],"7":[{"n":1,"room":"2","area":"111.62","s":"satilib"},{"n":2,"room":"1","area":"","s":"sakin"},{"n":3,"room":"2","area":"134.08","s":"satilib"},{"n":4,"room":"1","area":"73.80","s":"satilib"},{"n":5,"room":"3","area":"149.32","s":"satilib"},{"n":6,"room":"3","area":"176.3","s":"investor"}],"6":[{"n":1,"room":"2","area":"111.62","s":"satilib"},{"n":2,"room":"1","area":"70.67","s":"satilib"},{"n":3,"room":"2","area":"134.08","s":"satilib"},{"n":4,"room":"1","area":"73.80","s":"satilib"},{"n":5,"room":"3","area":"149.32","s":"satilib"},{"n":6,"room":"3","area":"176.3","s":"fond"}],"5":[{"n":1,"room":"2","area":"111.62","s":"satilib"},{"n":2,"room":"1","area":"70.67","s":"satilib"},{"n":3,"room":"2","area":"134.08","s":"satilib"},{"n":4,"room":"1","area":"73.80","s":"satilib"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"3","area":"176.3","s":"satilib"}],"4":[{"n":1,"room":"2","area":"111.62","s":"satilib"},{"n":2,"room":"1","area":"70.67","s":"satilib"},{"n":3,"room":"2","area":"134.08","s":"satilib"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"149.32","s":"fond"},{"n":6,"room":"3","area":"","s":"sakin"}],"3":[{"n":1,"room":"2","area":"111.62","s":"satilib"},{"n":2,"room":"1","area":"70.67","s":"satilib"},{"n":3,"room":"2","area":"134.08","s":"satisda"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"149.32","s":"satisda"},{"n":6,"room":"3","area":"176.3","s":"satisda"}],"1":[{"n":1,"room":"","area":"","s":"qeyri"}],"2":[{"n":1,"room":"","area":"","s":"qeyri"}],"-1":[{"n":1,"room":"","area":"","s":"zirzemi"}]}},"Bina 4":{"floors":16,"rows":{"16":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"70.37","s":"satilib"},{"n":3,"room":"2","area":"134.33","s":"investor"},{"n":4,"room":"1","area":"73.42","s":"investor"},{"n":5,"room":"3","area":"150.66","s":"satisda"},{"n":6,"room":"3","area":"174.53","s":"investor"}],"15":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"70.37","s":"satilib"},{"n":3,"room":"2","area":"134.33","s":"satilib"},{"n":4,"room":"1","area":"73.42","s":"investor"},{"n":5,"room":"3","area":"150.66","s":"satilib"},{"n":6,"room":"3","area":"174.53","s":"investor"}],"14":[{"n":1,"room":"2","area":"111.64","s":"investor"},{"n":2,"room":"1","area":"70.37","s":"satilib"},{"n":3,"room":"2","area":"134.33","s":"satilib"},{"n":4,"room":"1","area":"73.42","s":"satilib"},{"n":5,"room":"3","area":"150.66","s":"satilib"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"13":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"70.37","s":"satilib"},{"n":3,"room":"2","area":"134.33","s":"satilib"},{"n":4,"room":"1","area":"73.42","s":"satilib"},{"n":5,"room":"3","area":"150.66","s":"satilib"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"12":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"70.37","s":"satilib"},{"n":3,"room":"2","area":"134.33","s":"satilib"},{"n":4,"room":"1","area":"73.42","s":"satilib"},{"n":5,"room":"3","area":"150.66","s":"satilib"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"11":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"70.37","s":"satilib"},{"n":3,"room":"2","area":"134.33","s":"satilib"},{"n":4,"room":"1","area":"73.42","s":"satilib"},{"n":5,"room":"3","area":"150.66","s":"satilib"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"10":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"","s":"sakin"},{"n":3,"room":"2","area":"134.33","s":"satilib"},{"n":4,"room":"1","area":"73.42","s":"satilib"},{"n":5,"room":"3","area":"150.66","s":"satilib"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"9":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"70.37","s":"satilib"},{"n":3,"room":"2","area":"134.33","s":"satilib"},{"n":4,"room":"1","area":"73.42","s":"satilib"},{"n":5,"room":"3","area":"150.66","s":"satilib"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"8":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"70.37","s":"satilib"},{"n":3,"room":"2","area":"134.33","s":"satilib"},{"n":4,"room":"1","area":"73.42","s":"satilib"},{"n":5,"room":"3","area":"150.66","s":"satilib"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"7":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"70.37","s":"satilib"},{"n":3,"room":"2","area":"134.33","s":"satisda"},{"n":4,"room":"1","area":"73.42","s":"satilib"},{"n":5,"room":"3","area":"150.66","s":"satilib"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"6":[{"n":1,"room":"2","area":"","s":"sakin"},{"n":2,"room":"1","area":"70.37","s":"satilib"},{"n":3,"room":"2","area":"134.33","s":"satilib"},{"n":4,"room":"1","area":"73.42","s":"satilib"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"5":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"","s":"sakin"},{"n":3,"room":"2","area":"","s":"sakin"},{"n":4,"room":"1","area":"73.42","s":"satilib"},{"n":5,"room":"3","area":"150.66","s":"satilib"},{"n":6,"room":"3","area":"","s":"sakin"}],"4":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"","s":"sakin"},{"n":3,"room":"2","area":"","s":"sakin"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"3","area":"","s":"sakin"}],"3":[{"n":1,"room":"2","area":"111.64","s":"fond"},{"n":2,"room":"1","area":"70.37","s":"satisda"},{"n":3,"room":"2","area":"134.33","s":"fond"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"150.66","s":"satisda"},{"n":6,"room":"3","area":"174.53","s":"satisda"}],"1":[{"n":1,"room":"","area":"","s":"qeyri"}],"2":[{"n":1,"room":"","area":"","s":"qeyri"}],"-1":[{"n":1,"room":"","area":"","s":"zirzemi"}]}},"Bina 5":{"floors":16,"rows":{"16":[{"n":1,"room":"2","area":"111.64","s":"satisda"},{"n":2,"room":"1","area":"70.37","s":"satisda"},{"n":3,"room":"2","area":"134.33","s":"satisda"},{"n":4,"room":"1","area":"73.42","s":"satisda"},{"n":5,"room":"3","area":"150.66","s":"satisda"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"15":[{"n":1,"room":"2","area":"111.64","s":"satisda"},{"n":2,"room":"1","area":"70.37","s":"satisda"},{"n":3,"room":"2","area":"134.33","s":"satisda"},{"n":4,"room":"1","area":"73.42","s":"satisda"},{"n":5,"room":"3","area":"150.66","s":"satisda"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"14":[{"n":1,"room":"2","area":"111.64","s":"satisda"},{"n":2,"room":"1","area":"70.37","s":"satisda"},{"n":3,"room":"2","area":"134.33","s":"satisda"},{"n":4,"room":"1","area":"73.42","s":"satisda"},{"n":5,"room":"3","area":"150.66","s":"satisda"},{"n":6,"room":"3","area":"174.53","s":"satisda"}],"13":[{"n":1,"room":"2","area":"111.64","s":"satisda"},{"n":2,"room":"1","area":"70.37","s":"satisda"},{"n":3,"room":"2","area":"134.33","s":"satisda"},{"n":4,"room":"1","area":"73.42","s":"satisda"},{"n":5,"room":"3","area":"150.66","s":"satisda"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"12":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"70.37","s":"satisda"},{"n":3,"room":"2","area":"134.33","s":"satisda"},{"n":4,"room":"1","area":"73.42","s":"satisda"},{"n":5,"room":"3","area":"150.66","s":"satisda"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"11":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"70.37","s":"satisda"},{"n":3,"room":"2","area":"134.33","s":"satisda"},{"n":4,"room":"1","area":"73.42","s":"satisda"},{"n":5,"room":"3","area":"150.66","s":"satisda"},{"n":6,"room":"3","area":"174.53","s":"satisda"}],"10":[{"n":1,"room":"2","area":"111.64","s":"satisda"},{"n":2,"room":"1","area":"70.37","s":"satilib"},{"n":3,"room":"2","area":"134.33","s":"satisda"},{"n":4,"room":"1","area":"73.42","s":"satisda"},{"n":5,"room":"3","area":"150.66","s":"satilib"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"9":[{"n":1,"room":"2","area":"111.64","s":"satisda"},{"n":2,"room":"1","area":"70.37","s":"satisda"},{"n":3,"room":"2","area":"134.33","s":"satisda"},{"n":4,"room":"1","area":"73.42","s":"satisda"},{"n":5,"room":"3","area":"150.66","s":"satisda"},{"n":6,"room":"3","area":"174.53","s":"satilib"}],"8":[{"n":1,"room":"2","area":"111.64","s":"satisda"},{"n":2,"room":"1","area":"70.37","s":"satilib"},{"n":3,"room":"2","area":"134.33","s":"satisda"},{"n":4,"room":"1","area":"73.42","s":"satisda"},{"n":5,"room":"3","area":"150.66","s":"satisda"},{"n":6,"room":"3","area":"174.53","s":"satisda"}],"7":[{"n":1,"room":"2","area":"111.64","s":"satilib"},{"n":2,"room":"1","area":"70.37","s":"satilib"},{"n":3,"room":"2","area":"134.33","s":"satisda"},{"n":4,"room":"1","area":"73.42","s":"satilib"},{"n":5,"room":"3","area":"150.66","s":"satisda"},{"n":6,"room":"3","area":"174.53","s":"satisda"}],"6":[{"n":1,"room":"2","area":"","s":"sakin"},{"n":2,"room":"1","area":"","s":"sakin"},{"n":3,"room":"2","area":"","s":"sakin"},{"n":4,"room":"1","area":"73.42","s":"satilib"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"3","area":"","s":"sakin"}],"5":[{"n":1,"room":"2","area":"","s":"sakin"},{"n":2,"room":"1","area":"","s":"sakin"},{"n":3,"room":"2","area":"","s":"sakin"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"3","area":"","s":"sakin"}],"4":[{"n":1,"room":"2","area":"","s":"sakin"},{"n":2,"room":"1","area":"","s":"sakin"},{"n":3,"room":"2","area":"","s":"sakin"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"3","area":"","s":"sakin"}],"3":[{"n":1,"room":"2","area":"111.64","s":"satisda"},{"n":2,"room":"1","area":"70.37","s":"satisda"},{"n":3,"room":"2","area":"134.33","s":"satisda"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"150.66","s":"satisda"},{"n":6,"room":"3","area":"174.53","s":"satisda"}],"1":[{"n":1,"room":"","area":"","s":"qeyri"}],"2":[{"n":1,"room":"","area":"","s":"qeyri"}],"-1":[{"n":1,"room":"","area":"","s":"zirzemi"}]}},"Bina 6":{"floors":16,"rows":{"16":[{"n":1,"room":"2","area":"111.62","s":"satisda"},{"n":2,"room":"1","area":"70.67","s":"satisda"},{"n":3,"room":"2","area":"134.08","s":"satisda"},{"n":4,"room":"1","area":"73.80","s":"satisda"},{"n":5,"room":"3","area":"149.32","s":"satisda"},{"n":6,"room":"3","area":"176.3","s":"satisda"}],"15":[{"n":1,"room":"2","area":"111.62","s":"satisda"},{"n":2,"room":"1","area":"70.67","s":"satisda"},{"n":3,"room":"2","area":"134.08","s":"satisda"},{"n":4,"room":"1","area":"73.80","s":"satisda"},{"n":5,"room":"3","area":"149.32","s":"satisda"},{"n":6,"room":"3","area":"176.3","s":"investor"}],"14":[{"n":1,"room":"2","area":"111.62","s":"satisda"},{"n":2,"room":"1","area":"70.67","s":"satisda"},{"n":3,"room":"2","area":"134.08","s":"satisda"},{"n":4,"room":"1","area":"73.80","s":"satisda"},{"n":5,"room":"3","area":"149.32","s":"satisda"},{"n":6,"room":"3","area":"176.3","s":"satisda"}],"13":[{"n":1,"room":"2","area":"111.62","s":"satisda"},{"n":2,"room":"1","area":"70.67","s":"satisda"},{"n":3,"room":"2","area":"134.08","s":"satisda"},{"n":4,"room":"1","area":"73.80","s":"satisda"},{"n":5,"room":"3","area":"149.32","s":"satisda"},{"n":6,"room":"3","area":"176.3","s":"satisda"}],"12":[{"n":1,"room":"2","area":"111.62","s":"satisda"},{"n":2,"room":"1","area":"70.67","s":"satisda"},{"n":3,"room":"2","area":"134.08","s":"satisda"},{"n":4,"room":"1","area":"73.80","s":"satisda"},{"n":5,"room":"3","area":"149.32","s":"satisda"},{"n":6,"room":"3","area":"176.3","s":"satisda"}],"11":[{"n":1,"room":"2","area":"111.62","s":"satisda"},{"n":2,"room":"1","area":"70.67","s":"satisda"},{"n":3,"room":"2","area":"134.08","s":"satisda"},{"n":4,"room":"1","area":"73.80","s":"satisda"},{"n":5,"room":"3","area":"149.32","s":"satisda"},{"n":6,"room":"3","area":"176.3","s":"satisda"}],"10":[{"n":1,"room":"2","area":"111.62","s":"satisda"},{"n":2,"room":"1","area":"70.67","s":"satisda"},{"n":3,"room":"2","area":"134.08","s":"satisda"},{"n":4,"room":"1","area":"73.80","s":"satisda"},{"n":5,"room":"3","area":"149.32","s":"satisda"},{"n":6,"room":"3","area":"176.3","s":"satisda"}],"9":[{"n":1,"room":"2","area":"111.62","s":"satisda"},{"n":2,"room":"1","area":"70.67","s":"satisda"},{"n":3,"room":"2","area":"134.08","s":"satisda"},{"n":4,"room":"1","area":"73.80","s":"satisda"},{"n":5,"room":"3","area":"149.32","s":"satisda"},{"n":6,"room":"3","area":"176.3","s":"satisda"}],"8":[{"n":1,"room":"2","area":"111.62","s":"satisda"},{"n":2,"room":"1","area":"70.67","s":"satisda"},{"n":3,"room":"2","area":"134.08","s":"satisda"},{"n":4,"room":"1","area":"73.80","s":"satisda"},{"n":5,"room":"3","area":"149.32","s":"satisda"},{"n":6,"room":"3","area":"176.3","s":"satisda"}],"7":[{"n":1,"room":"2","area":"111.62","s":"satisda"},{"n":2,"room":"1","area":"70.67","s":"satisda"},{"n":3,"room":"2","area":"134.08","s":"satisda"},{"n":4,"room":"1","area":"73.80","s":"satisda"},{"n":5,"room":"3","area":"149.32","s":"satisda"},{"n":6,"room":"3","area":"176.3","s":"satisda"}],"6":[{"n":1,"room":"2","area":"","s":"sakin"},{"n":2,"room":"1","area":"","s":"sakin"},{"n":3,"room":"2","area":"","s":"sakin"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"3","area":"","s":"sakin"}],"5":[{"n":1,"room":"2","area":"","s":"sakin"},{"n":2,"room":"1","area":"","s":"sakin"},{"n":3,"room":"2","area":"","s":"sakin"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"3","area":"","s":"sakin"}],"4":[{"n":1,"room":"2","area":"","s":"sakin"},{"n":2,"room":"1","area":"","s":"sakin"},{"n":3,"room":"2","area":"","s":"sakin"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"3","area":"","s":"sakin"}],"3":[{"n":1,"room":"2","area":"111.62","s":"satisda"},{"n":2,"room":"1","area":"70.67","s":"satisda"},{"n":3,"room":"2","area":"134.08","s":"satisda"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"149.32","s":"satisda"},{"n":6,"room":"3","area":"176.3","s":"satisda"}],"1":[{"n":1,"room":"","area":"","s":"qeyri"}],"2":[{"n":1,"room":"","area":"","s":"qeyri"}],"-1":[{"n":1,"room":"","area":"","s":"zirzemi"}]}},"Bina 9":{"floors":14,"rows":{"14":[{"n":1,"room":"2","area":"124.7","s":"satilib"},{"n":2,"room":"3","area":"138.06","s":"satilib"},{"n":3,"room":"1","area":"72.61","s":"satilib"},{"n":4,"room":"1","area":"72.52","s":"satilib"},{"n":5,"room":"3","area":"138.14","s":"investor"},{"n":6,"room":"2","area":"123.55","s":"investor"}],"13":[{"n":1,"room":"2","area":"124.7","s":"satilib"},{"n":2,"room":"3","area":"138.06","s":"satilib"},{"n":3,"room":"1","area":"72.61","s":"satilmir"},{"n":4,"room":"1","area":"72.52","s":"satilmir"},{"n":5,"room":"3","area":"138.14","s":"satilib"},{"n":6,"room":"2","area":"123.55","s":"investor"}],"12":[{"n":1,"room":"2","area":"124.7","s":"satilib"},{"n":2,"room":"3","area":"138.06","s":"satilib"},{"n":3,"room":"1","area":"72.61","s":"satilib"},{"n":4,"room":"1","area":"72.52","s":"satilib"},{"n":5,"room":"3","area":"138.14","s":"satilib"},{"n":6,"room":"2","area":"123.55","s":"satilib"}],"11":[{"n":1,"room":"2","area":"124.7","s":"satilib"},{"n":2,"room":"3","area":"138.06","s":"satilib"},{"n":3,"room":"1","area":"72.61","s":"satilib"},{"n":4,"room":"1","area":"72.52","s":"satilib"},{"n":5,"room":"3","area":"138.14","s":"satilib"},{"n":6,"room":"2","area":"123.55","s":"satilib"}],"10":[{"n":1,"room":"2","area":"124.7","s":"satilib"},{"n":2,"room":"3","area":"138.06","s":"satilib"},{"n":3,"room":"1","area":"72.61","s":"satilib"},{"n":4,"room":"1","area":"72.52","s":"satilib"},{"n":5,"room":"3","area":"138.14","s":"satilib"},{"n":6,"room":"2","area":"","s":"sakin"}],"9":[{"n":1,"room":"2","area":"124.7","s":"satilib"},{"n":2,"room":"3","area":"138.06","s":"satilib"},{"n":3,"room":"1","area":"72.61","s":"satilib"},{"n":4,"room":"1","area":"72.52","s":"satilib"},{"n":5,"room":"3","area":"138.14","s":"satilib"},{"n":6,"room":"2","area":"123.55","s":"satilib"}],"8":[{"n":1,"room":"2","area":"","s":"sakin"},{"n":2,"room":"3","area":"138.06","s":"satilib"},{"n":3,"room":"1","area":"72.61","s":"satilib"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"138.14","s":"satilib"},{"n":6,"room":"2","area":"","s":"sakin"}],"7":[{"n":1,"room":"2","area":"124.7","s":"satilib"},{"n":2,"room":"3","area":"138.06","s":"satilib"},{"n":3,"room":"1","area":"72.61","s":"satilib"},{"n":4,"room":"1","area":"72.52","s":"satilib"},{"n":5,"room":"3","area":"138.14","s":"satilib"},{"n":6,"room":"2","area":"123.55","s":"satilib"}],"6":[{"n":1,"room":"2","area":"","s":"sakin"},{"n":2,"room":"3","area":"138.06","s":"satilib"},{"n":3,"room":"1","area":"","s":"sakin"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"138.14","s":"satilib"},{"n":6,"room":"2","area":"","s":"sakin"}],"5":[{"n":1,"room":"","area":"","s":"sakin"},{"n":2,"room":"","area":"","s":"sakin"},{"n":3,"room":"","area":"","s":"sakin"},{"n":4,"room":"","area":"","s":"sakin"},{"n":5,"room":"","area":"","s":"sakin"},{"n":6,"room":"","area":"","s":"sakin"},{"n":7,"room":"","area":"","s":"sakin"},{"n":8,"room":"","area":"","s":"sakin"}],"4":[{"n":1,"room":"","area":"","s":"sakin"},{"n":2,"room":"","area":"","s":"sakin"},{"n":3,"room":"","area":"","s":"sakin"},{"n":4,"room":"","area":"","s":"sakin"},{"n":5,"room":"","area":"","s":"sakin"},{"n":6,"room":"","area":"","s":"sakin"},{"n":7,"room":"","area":"","s":"sakin"},{"n":8,"room":"","area":"","s":"sakin"}],"3":[{"n":1,"room":"","area":"","s":"sakin"},{"n":2,"room":"","area":"","s":"sakin"},{"n":3,"room":"","area":"","s":"sakin"},{"n":4,"room":"","area":"","s":"sakin"},{"n":5,"room":"","area":"","s":"sakin"},{"n":6,"room":"","area":"","s":"sakin"},{"n":7,"room":"","area":"","s":"sakin"},{"n":8,"room":"","area":"","s":"sakin"},{"n":9,"room":"","area":"","s":"sakin"},{"n":10,"room":"","area":"","s":"sakin"},{"n":11,"room":"","area":"","s":"sakin"},{"n":12,"room":"","area":"","s":"sakin"}],"2":[{"n":1,"room":"","area":"","s":"sakin"},{"n":2,"room":"","area":"","s":"sakin"},{"n":3,"room":"","area":"","s":"sakin"},{"n":4,"room":"","area":"","s":"sakin"},{"n":5,"room":"","area":"","s":"sakin"},{"n":6,"room":"","area":"","s":"sakin"},{"n":7,"room":"","area":"","s":"sakin"},{"n":8,"room":"","area":"","s":"sakin"},{"n":9,"room":"","area":"","s":"sakin"},{"n":10,"room":"","area":"","s":"sakin"},{"n":11,"room":"","area":"","s":"sakin"},{"n":12,"room":"","area":"","s":"sakin"}],"1":[{"n":1,"room":"","area":"","s":"qeyri"}],"-1":[{"n":1,"room":"","area":"","s":"zirzemi"}]}},"Bina 10":{"floors":14,"rows":{"14":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"investor"},{"n":3,"room":"1","area":"72.61","s":"investor"},{"n":4,"room":"1","area":"72.52","s":"investor"},{"n":5,"room":"3","area":"138.14","s":"investor"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"13":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"investor"},{"n":3,"room":"1","area":"72.61","s":"investor"},{"n":4,"room":"1","area":"72.52","s":"investor"},{"n":5,"room":"3","area":"138.14","s":"investor"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"12":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"investor"},{"n":3,"room":"1","area":"72.61","s":"investor"},{"n":4,"room":"1","area":"72.52","s":"investor"},{"n":5,"room":"3","area":"138.14","s":"investor"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"11":[{"n":1,"room":"2","area":"124.7","s":"satilib"},{"n":2,"room":"3","area":"138.06","s":"satilib"},{"n":3,"room":"1","area":"72.61","s":"satilib"},{"n":4,"room":"1","area":"72.52","s":"investor"},{"n":5,"room":"3","area":"138.14","s":"investor"},{"n":6,"room":"2","area":"123.55","s":"satilib"}],"10":[{"n":1,"room":"2","area":"124.7","s":"satilib"},{"n":2,"room":"3","area":"138.06","s":"satilib"},{"n":3,"room":"1","area":"72.61","s":"satilib"},{"n":4,"room":"1","area":"72.52","s":"satilib"},{"n":5,"room":"3","area":"138.14","s":"satilib"},{"n":6,"room":"2","area":"123.55","s":"satilib"}],"9":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"investor"},{"n":3,"room":"1","area":"72.61","s":"satilib"},{"n":4,"room":"1","area":"72.52","s":"investor"},{"n":5,"room":"3","area":"138.14","s":"investor"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"8":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"investor"},{"n":3,"room":"1","area":"72.61","s":"satilib"},{"n":4,"room":"1","area":"72.52","s":"investor"},{"n":5,"room":"3","area":"138.14","s":"investor"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"7":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"satilib"},{"n":3,"room":"1","area":"72.61","s":"satilib"},{"n":4,"room":"1","area":"72.52","s":"satilib"},{"n":5,"room":"3","area":"138.14","s":"satilib"},{"n":6,"room":"2","area":"123.55","s":"satilib"}],"6":[{"n":1,"room":"","area":"","s":"satisda"},{"n":2,"room":"","area":"","s":"satisda"},{"n":3,"room":"","area":"","s":"satisda"},{"n":4,"room":"","area":"","s":"satilib"},{"n":5,"room":"","area":"","s":"satisda"},{"n":6,"room":"","area":"","s":"sakin"},{"n":7,"room":"","area":"","s":"satisda"},{"n":8,"room":"","area":"","s":"satisda"}],"5":[{"n":1,"room":"","area":"","s":"sakin"},{"n":2,"room":"","area":"","s":"satilib"},{"n":3,"room":"","area":"","s":"satilib"},{"n":4,"room":"","area":"","s":"sakin"},{"n":5,"room":"","area":"","s":"sakin"},{"n":6,"room":"","area":"","s":"sakin"},{"n":7,"room":"","area":"","s":"sakin"},{"n":8,"room":"","area":"","s":"sakin"}],"4":[{"n":1,"room":"","area":"","s":"sakin"},{"n":2,"room":"","area":"","s":"sakin"},{"n":3,"room":"","area":"","s":"sakin"},{"n":4,"room":"","area":"","s":"sakin"},{"n":5,"room":"","area":"","s":"sakin"},{"n":6,"room":"","area":"","s":"sakin"},{"n":7,"room":"","area":"","s":"sakin"},{"n":8,"room":"","area":"","s":"sakin"}],"3":[{"n":1,"room":"","area":"","s":"sakin"},{"n":2,"room":"","area":"","s":"sakin"},{"n":3,"room":"","area":"","s":"sakin"},{"n":4,"room":"","area":"","s":"sakin"},{"n":5,"room":"","area":"","s":"sakin"},{"n":6,"room":"","area":"","s":"sakin"},{"n":7,"room":"","area":"","s":"sakin"},{"n":8,"room":"","area":"","s":"sakin"},{"n":9,"room":"","area":"","s":"sakin"},{"n":10,"room":"","area":"","s":"sakin"},{"n":11,"room":"","area":"","s":"sakin"},{"n":12,"room":"","area":"","s":"sakin"}],"2":[{"n":1,"room":"","area":"","s":"sakin"},{"n":2,"room":"","area":"","s":"sakin"},{"n":3,"room":"","area":"","s":"sakin"},{"n":4,"room":"","area":"","s":"sakin"},{"n":5,"room":"","area":"","s":"sakin"},{"n":6,"room":"","area":"","s":"sakin"},{"n":7,"room":"","area":"","s":"sakin"},{"n":8,"room":"","area":"","s":"sakin"},{"n":9,"room":"","area":"","s":"sakin"},{"n":10,"room":"","area":"","s":"sakin"},{"n":11,"room":"","area":"","s":"sakin"},{"n":12,"room":"","area":"","s":"sakin"}],"1":[{"n":1,"room":"","area":"","s":"qeyri"}],"-1":[{"n":1,"room":"","area":"","s":"zirzemi"}]}},"Bina 11":{"floors":14,"rows":{"6":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"satisda"},{"n":3,"room":"1","area":"72.61","s":"satisda"},{"n":4,"room":"1","area":"72.52","s":"satisda"},{"n":5,"room":"3","area":"138.14","s":"satisda"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"7":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"satisda"},{"n":3,"room":"1","area":"72.61","s":"satisda"},{"n":4,"room":"1","area":"72.52","s":"satisda"},{"n":5,"room":"3","area":"138.14","s":"satisda"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"8":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"satisda"},{"n":3,"room":"1","area":"72.61","s":"satisda"},{"n":4,"room":"1","area":"72.52","s":"satisda"},{"n":5,"room":"3","area":"138.14","s":"satisda"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"9":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"satisda"},{"n":3,"room":"1","area":"72.61","s":"satisda"},{"n":4,"room":"1","area":"72.52","s":"satisda"},{"n":5,"room":"3","area":"138.14","s":"satisda"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"10":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"satisda"},{"n":3,"room":"1","area":"72.61","s":"satisda"},{"n":4,"room":"1","area":"72.52","s":"satisda"},{"n":5,"room":"3","area":"138.14","s":"satisda"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"11":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"satisda"},{"n":3,"room":"1","area":"72.61","s":"satisda"},{"n":4,"room":"1","area":"72.52","s":"satisda"},{"n":5,"room":"3","area":"138.14","s":"satisda"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"12":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"satisda"},{"n":3,"room":"1","area":"72.61","s":"satisda"},{"n":4,"room":"1","area":"72.52","s":"satisda"},{"n":5,"room":"3","area":"138.14","s":"satisda"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"13":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"satisda"},{"n":3,"room":"1","area":"72.61","s":"satisda"},{"n":4,"room":"1","area":"72.52","s":"satisda"},{"n":5,"room":"3","area":"138.14","s":"satisda"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"14":[{"n":1,"room":"2","area":"124.7","s":"satisda"},{"n":2,"room":"3","area":"138.06","s":"satisda"},{"n":3,"room":"1","area":"72.61","s":"satisda"},{"n":4,"room":"1","area":"72.52","s":"satisda"},{"n":5,"room":"3","area":"138.14","s":"satisda"},{"n":6,"room":"2","area":"123.55","s":"satisda"}],"5":[{"n":1,"room":"2","area":"","s":"sakin"},{"n":2,"room":"3","area":"","s":"sakin"},{"n":3,"room":"1","area":"","s":"sakin"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"2","area":"","s":"sakin"}],"4":[{"n":1,"room":"2","area":"","s":"sakin"},{"n":2,"room":"3","area":"","s":"sakin"},{"n":3,"room":"1","area":"","s":"sakin"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"2","area":"","s":"sakin"}],"3":[{"n":1,"room":"2","area":"","s":"sakin"},{"n":2,"room":"3","area":"","s":"sakin"},{"n":3,"room":"1","area":"","s":"sakin"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"2","area":"","s":"sakin"}],"2":[{"n":1,"room":"2","area":"","s":"sakin"},{"n":2,"room":"3","area":"","s":"sakin"},{"n":3,"room":"1","area":"","s":"sakin"},{"n":4,"room":"1","area":"","s":"sakin"},{"n":5,"room":"3","area":"","s":"sakin"},{"n":6,"room":"2","area":"","s":"sakin"}],"1":[{"n":1,"room":"","area":"","s":"qeyri"}],"-1":[{"n":1,"room":"","area":"","s":"zirzemi"}]}},"Bina 1":{"floors":20,"rows":{"20":[{"n":1,"room":"2","area":"120.65","s":"satilib"},{"n":2,"room":"4","area":"185.85","s":"satilib"},{"n":3,"room":"4","area":"243.01","s":"satilib"},{"n":4,"room":"3","area":"152.38","s":"satilib"}],"19":[{"n":1,"room":"2","area":"120.65","s":"investor"},{"n":2,"room":"4","area":"185.85","s":"investor"},{"n":3,"room":"4","area":"243.01","s":"investor"},{"n":4,"room":"3","area":"152.38","s":"investor"}],"18":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"17":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"16":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"investor"},{"n":3,"room":"4","area":"243.01","s":"investor"},{"n":4,"room":"3","area":"152.38","s":"investor"}],"15":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"investor"},{"n":3,"room":"4","area":"243.01","s":"investor"},{"n":4,"room":"3","area":"152.38","s":"investor"}],"14":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satilib"},{"n":4,"room":"3","area":"152.38","s":"satilib"}],"13":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"investor"},{"n":3,"room":"4","area":"243.01","s":"investor"},{"n":4,"room":"3","area":"152.38","s":"investor"}],"12":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satilib"},{"n":3,"room":"4","area":"243.01","s":"satilib"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"5":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"6":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"7":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"8":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"9":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"10":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"11":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"1":[{"n":1,"room":"","area":"","s":"qeyri"}],"2":[{"n":1,"room":"","area":"","s":"qeyri"}],"3":[{"n":1,"room":"","area":"","s":"qeyri"}],"4":[{"n":1,"room":"","area":"","s":"qeyri"}],"-1":[{"n":1,"room":"","area":"","s":"zirzemi"}]}},"Bina 2":{"floors":20,"rows":{"5":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"6":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"7":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"8":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"9":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"","s":"sakin"}],"10":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"11":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"12":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"13":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"14":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"15":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"16":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"17":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"18":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"19":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"20":[{"n":1,"room":"2","area":"120.65","s":"satisda"},{"n":2,"room":"4","area":"185.85","s":"satisda"},{"n":3,"room":"4","area":"243.01","s":"satisda"},{"n":4,"room":"3","area":"152.38","s":"satisda"}],"1":[{"n":1,"room":"","area":"","s":"qeyri"}],"2":[{"n":1,"room":"","area":"","s":"qeyri"}],"3":[{"n":1,"room":"","area":"","s":"qeyri"}],"4":[{"n":1,"room":"","area":"","s":"qeyri"}],"-1":[{"n":1,"room":"","area":"","s":"zirzemi"}]}}};var SALES=get('lux_sales',{});function _hasR(o){try{var k=Object.keys(o)[0];return o[k]&&o[k].rows;}catch(e){return false;}}if(!SALES||Object.keys(SALES).length<3||!_hasR(SALES)){SALES=JSON.parse(JSON.stringify(DEFAULT_SALES));}var curBina='';
+var ST_ORDER=['bos','satilib','rezerv','investor'];var ST_LBL={bos:'Boş',satilib:'Satılıb',rezerv:'Rezerv',investor:'İnvestor'};var ST_COL={bos:'#2f8a54',satilib:'#b23b3b',rezerv:'#b98328',investor:'#3b6db2'};
+if(!CFG.terms)CFG=JSON.parse(JSON.stringify(DEF_CFG));
+function renderCalc(){
+ document.getElementById('cGatePass').value=CFG.gatePass||'1234';cMortEn.checked=!!CFG.mortgageEnabled;cMortRate.value=CFG.mortgageRate;
+ cAreaMin.value=CFG.area.min;cAreaMax.value=CFG.area.max;cAreaDef.value=CFG.area.def;
+ cPriceMin.value=CFG.price.min;cPriceMax.value=CFG.price.max;cPriceDef.value=CFG.price.def;
+ cDownDef.value=CFG.downDef;
+ document.getElementById('termRows').innerHTML=CFG.terms.map(function(t,i){return '<div class="ekrow"><input class="a" style="flex:0 0 74px" value="'+t.months+' ay" disabled><input type="number" id="tsur_'+i+'" value="'+t.surcharge+'" placeholder="əlavə AZN/m²"><label class="switch" style="flex:0 0 52px"><input type="checkbox" id="ten_'+i+'" '+(t.enabled?'checked':'')+'><span class="slider"></span></label></div>';}).join('');
+}
+function saveCalc(){
+ CFG.gatePass=document.getElementById('cGatePass').value.trim()||'1234';CFG.mortgageEnabled=cMortEn.checked;CFG.mortgageRate=+cMortRate.value||0;
+ CFG.area={min:+cAreaMin.value||0,max:+cAreaMax.value||0,def:+cAreaDef.value||0};
+ CFG.price={min:+cPriceMin.value||0,max:+cPriceMax.value||0,def:+cPriceDef.value||0};
+ CFG.downDef=+cDownDef.value||0;
+ CFG.terms=CFG.terms.map(function(t,i){return {months:t.months,surcharge:+document.getElementById('tsur_'+i).value||0,enabled:document.getElementById('ten_'+i).checked};});
+ set('lux_cfg',CFG);toast('Kalkulyator ayarları yadda saxlanıldı ✓');
+}
+var _fa=document.getElementById('fArea');if(_fa)_fa.addEventListener('input',ekspSum);
+function ntCount(){var e=document.getElementById('ntc'),t=document.getElementById('nTitle');if(e&&t)e.textContent=t.value.length+'/70 simvol (SEO üçün optimal ≤ 60)';}var _nt=document.getElementById('nTitle');if(_nt)_nt.addEventListener('input',ntCount);
+
+/* ---- leads ---- */
+function renderLeads(){var el=document.getElementById('leadsList');if(!el)return;if(OFFLINE||!sb){el.innerHTML='<div class="info-banner" style="grid-column:1/-1;background:#fbe9e9;border-color:#f0d2d2;color:#8a2b2b">Sorğuları görmək üçün <b>email + parolla onlayn</b> daxil olun.</div>';return;}el.innerHTML='<p class="muted" style="grid-column:1/-1">Yüklənir…</p>';sb.from('lux_leads').select('*').order('created_at',{ascending:false}).then(function(r){if(r.error){el.innerHTML='<p class="muted" style="grid-column:1/-1">Xəta: '+r.error.message+'</p>';return;}var rows=r.data||[];var nw=rows.filter(function(x){return x.status==='yeni';}).length;var bd=document.getElementById('leadsBadge');if(bd){bd.textContent=nw||'';bd.style.display=nw?'inline-block':'none';}if(!rows.length){el.innerHTML='<p class="muted" style="grid-column:1/-1">Hələ sorğu yoxdur.</p>';return;}el.innerHTML=rows.map(function(l){var d=new Date(l.created_at);var dt=d.toLocaleDateString('az-AZ')+' '+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'});var ans=l.status==='cavablandı';return '<div class="rec" style="'+(ans?'opacity:.6;':'')+'"><div class="rec-top"><span class="pill '+(ans?'s-sold':'s-available')+'">'+esc(l.status||'yeni')+'</span><div class="rec-act"><button title="Cavablandı" onclick="markLead(\''+l.id+'\')">✓</button><button title="Sil" onclick="delLead(\''+l.id+'\')">🗑</button></div></div><h4 style="font-size:16px">'+esc(l.name||'—')+'</h4><div class="rec-meta"><a href="tel:'+esc(l.phone||'')+'" style="color:var(--rust);font-weight:600">'+esc(l.phone||'')+'</a></div><div class="rec-meta">'+dt+'</div>'+(l.apartment?'<div class="rec-meta">🏠 '+esc(l.apartment)+'</div>':'')+(l.email?'<div class="rec-meta">'+esc(l.email)+'</div>':'')+(l.subject?'<div class="rec-meta"><b>'+esc(l.subject)+'</b></div>':'')+(l.message?'<p style="font-size:13.5px;color:#5f4e40;margin:8px 0 0;line-height:1.5">'+esc(l.message)+'</p>':'')+'</div>';}).join('');}).catch(function(e){el.innerHTML='<p class="muted" style="grid-column:1/-1">Bağlantı xətası</p>';});}
+function markLead(id){if(!sb)return;sb.from('lux_leads').update({status:'cavablandı'}).eq('id',id).then(function(){renderLeads();});}
+function delLead(id){if(!sb)return;if(!confirm('Bu sorğu silinsin?'))return;sb.from('lux_leads').delete().eq('id',id).then(function(){renderLeads();});}
+
+/* ---- sales board (rich model) ---- */
+var SST={satisda:['Satışda','glass'],satilib:['Satılıb','#2f8a54'],investor:['İnvestor','#c0392b'],sakin:['Sakin','#e0a800'],fond:['Fond','#2e6fb0'],satilmir:['Satılmır','#3a3a3a'],qeyri:['Qeyri-yaşayış','#8a8a8a'],zirzemi:['Zirzəmi','#8a8a8a']};
+var CYC=['satisda','satilib','investor','sakin','fond','satilmir'];
+function salesSave(){set('lux_sales',SALES);}
+function loadSampleSales(){if(!confirm('Nümunə (bütün 9 bina) data yüklənsin? Cari dəyişikliklər əvəz olunacaq.'))return;SALES=JSON.parse(JSON.stringify(DEFAULT_SALES));salesSave();curBina='';renderSales();toast('Nümunə data yükləndi ✓');}
+function renderSales(){var sel=document.getElementById('salesBina');var keys=BINA.slice();Object.keys(SALES).forEach(function(k){if(keys.indexOf(k)<0)keys.push(k);});if(!curBina){for(var i=0;i<keys.length;i++){if(SALES[keys[i]]&&SALES[keys[i]].rows){curBina=keys[i];break;}}}if(sel){sel.innerHTML='<option value="">— Bina seçin —</option>'+keys.map(function(n){return '<option'+(n===curBina?' selected':'')+'>'+esc(n)+'</option>';}).join('');}var ar=document.getElementById('availRoom');if(ar&&!ar._f){ar.innerHTML='<option value="">Bütün otaqlar</option>'+[1,2,3,4].map(function(r){return '<option>'+r+'</option>';}).join('');ar._f=true;}if(curBina)selSalesBina(curBina);else renderGrid();}
+function selSalesBina(name){curBina=name;renderGrid();}
+function renderGrid(){var b=SALES[curBina],g=document.getElementById('salesGrid');if(!b||!b.rows){g.innerHTML=curBina?'<p class="muted">Bu bina üçün data yoxdur. Import edin və ya mərtəbə əlavə edin.</p>':'';renderSummary();return;}
+ var fls=Object.keys(b.rows).map(Number).sort(function(a,b){return b-a;});var h='';
+ fls.forEach(function(f){var units=b.rows[f]||[];var allQ=units.length&&units.every(function(u){return u.s==='qeyri';});var allZ=units.length&&units.every(function(u){return u.s==='zirzemi';});
+  h+='<div class="sfrow"><div class="sfnum">'+(f<0?'Z':f)+'</div>';
+  if(allZ){h+='<div class="sgbar" onclick="convFloor('+f+')">Zirzəmi</div></div>';return;}
+  if(allQ){h+='<div class="sgbar" onclick="convFloor('+f+')">Qeyri-yaşayış</div></div>';return;}
+  var _fS=(document.getElementById('sFilter')||{}).value||'';var _fR=(document.getElementById('sFilterRoom')||{}).value||'';units.forEach(function(u,ix){var gl=u.s==='satisda';var mt=(!_fS||u.s===_fS)&&(!_fR||String(u.room)===String(_fR));h+='<div class="scell2'+(gl?' gl':'')+(mt?'':' dim')+'" style="'+(gl?'':'background:'+(SST[u.s]?SST[u.s][1]:'#888')+(u.s==='sakin'?';color:#3a2410':''))+'" onclick="cellClick(event,'+f+','+ix+')" title="'+(SST[u.s]?SST[u.s][0]:u.s)+'">'+(u.room||'')+(u.area&&u.s!=='sakin'?'<span class="a">'+u.area+'</span>':'')+'</div>';});
+  h+='<button class="sfadd" onclick="addUnit('+f+')">+</button></div>';
+ });
+ g.innerHTML=h;renderSummary();
+}
+function cellClick(e,f,ix){openUnitPop(e,f,ix);}
+function cycleStatus(f,ix){var u=SALES[curBina].rows[f][ix];var i=CYC.indexOf(u.s);u.s=CYC[(i+1)%CYC.length];if(u.s==='sakin')u.area='';salesSave();renderGrid();}
+var _pop={f:null,ix:null};
+function openUnitPop(e,f,ix){_pop={f:f,ix:ix};var u=SALES[curBina].rows[f][ix];
+ document.getElementById('upStatuses').innerHTML=CYC.concat(['qeyri']).map(function(k){return '<button class="upst" style="background:'+(k==='satisda'?'#8fbf9f':SST[k][1])+'" onclick="setUnitStatus(\''+k+'\')">'+SST[k][0]+'</button>';}).join('');
+ document.getElementById('upRoom').value=u.room||'';document.getElementById('upArea').value=u.area||'';
+ var pop=document.getElementById('unitPop');pop.style.display='block';pop.style.left=Math.min((e.clientX||100),window.innerWidth-250)+'px';pop.style.top=Math.min((e.clientY||100),window.innerHeight-270)+'px';
+}
+function setUnitStatus(s){SALES[curBina].rows[_pop.f][_pop.ix].s=s;if(s==='sakin')SALES[curBina].rows[_pop.f][_pop.ix].area='';salesSave();renderGrid();}
+function saveUnitPop(){var u=SALES[curBina].rows[_pop.f][_pop.ix];u.room=document.getElementById('upRoom').value;u.area=document.getElementById('upArea').value;salesSave();renderGrid();closeUnitPop();}
+function delUnit(){SALES[curBina].rows[_pop.f].splice(_pop.ix,1);salesSave();renderGrid();closeUnitPop();}
+function closeUnitPop(){document.getElementById('unitPop').style.display='none';}
+function addUnit(f){var arr=SALES[curBina].rows[f];if(arr.length===1&&(arr[0].s==='qeyri'||arr[0].s==='zirzemi'))arr.length=0;arr.push({n:arr.length+1,room:'',area:'',s:'satisda'});salesSave();renderGrid();}
+function convFloor(f){if(!confirm('Bu mərtəbəni yaşayış mərtəbəsinə çevir?'))return;SALES[curBina].rows[f]=[{n:1,room:'',area:'',s:'satisda'}];salesSave();renderGrid();}
+function addFloor(){if(!curBina){toast('Bina seçin');return;}var b=SALES[curBina]||{floors:0,rows:{}};if(!b.rows)b.rows={};var mx=Object.keys(b.rows).map(Number).reduce(function(a,c){return Math.max(a,c);},0);var nf=mx+1;b.rows[String(nf)]=[{n:1,room:'',area:'',s:'satisda'}];b.floors=Math.max(b.floors||0,nf);SALES[curBina]=b;salesSave();renderGrid();}
+function renderSummary(){var b=SALES[curBina],el=document.getElementById('salesSummary');if(!b||!b.rows){el.innerHTML='';return;}var c={},byRoom={},total=0;Object.keys(b.rows).forEach(function(f){b.rows[f].forEach(function(u){total++;c[u.s]=(c[u.s]||0)+1;if(u.s==='satisda'&&u.room)byRoom[u.room]=(byRoom[u.room]||0)+1;});});var order=['satisda','satilib','investor','sakin','fond','satilmir'];el.innerHTML='<div class="skpi"><b>'+total+'</b> mənzil'+order.map(function(k){return c[k]?' · <span style="color:'+(k==='satisda'?'#2f8a54':SST[k][1])+'">'+c[k]+' '+SST[k][0].toLowerCase()+'</span>':'';}).join('')+'</div><div class="hint">Boş otaqlar: '+(Object.keys(byRoom).length?Object.keys(byRoom).sort().map(function(r){return r+' otaq — '+byRoom[r];}).join(' · '):'—')+'</div>';}
+function searchAvail(){var r=document.getElementById('availRoom').value,out=document.getElementById('availOut'),res=[];Object.keys(SALES).forEach(function(bn){var b=SALES[bn];if(!b.rows)return;Object.keys(b.rows).forEach(function(f){b.rows[f].forEach(function(u,ix){if(u.s==='satisda'&&(!r||String(u.room)===String(r)))res.push({bina:bn,floor:+f,unit:ix+1,r:u.room});});});});res.sort(function(a,b){return String(a.bina).localeCompare(String(b.bina))||a.floor-b.floor;});out.innerHTML=res.length?('<div class="hint" style="margin-top:10px">'+res.length+' boş:</div>'+res.map(function(x){return '<div class="arow">'+esc(x.bina)+' · '+x.floor+'-ci mərtəbə · M'+x.unit+(x.r?' · '+x.r+' otaqlı':'')+'</div>';}).join('')):'<div class="hint" style="margin-top:10px">Boş mənzil yoxdur.</div>';}
+document.getElementById('pin').focus();
+</script>
+</body>
+</html>
