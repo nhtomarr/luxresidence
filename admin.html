@@ -740,123 +740,156 @@ var SST={satisda:['Satışda','glass'],satilib:['Satılıb','#2f8a54'],investor:
 var CYC=['satisda','satilib','investor','sakin','fond','satilmir'];
 var COMM=get('lux_commercial',{}),GAR=get('lux_garage',{});var SMODE='res';var _ovReturn=false;
 function SD(){return SMODE==='com'?COMM:SMODE==='gar'?GAR:SALES;}
-/* ===== SATIŞ LÖVHƏSİ SƏNƏD EXPORT ===== */
-var EXPORT_ST={satisda:['Satışda','2f8a54','e8f5ec'],satilib:['Satılıb','2f8a54','dff0e6'],investor:['İnvestor','c0392b','f7dedb'],sakin:['Sakin','b8860b','faf1d8'],fond:['Fond','2e6fb0','dde8f5'],satilmir:['Satılmır','3a3a3a','e2e2e2'],qeyri:['Qeyri-yaşayış','8a8a8a','ededed'],zirzemi:['Zirzəmi','8a8a8a','ededed']};
+/* ===== SATIŞ LÖVHƏSİ — KORPORATİV SƏNƏD EXPORT ===== */
+/* Status: [ad, mətn rəngi, tam sətir fon rəngi] */
+var EXP_ST={
+ satisda:['SATIŞDA','1a1a1a','ffffff'],
+ satilib:['SATILIB','ffffff','2f7a44'],
+ investor:['İNVESTOR','ffffff','b23b3b'],
+ sakin:['SAKİN','3a2a10','e8c766'],
+ fond:['FOND','ffffff','2e6fb0'],
+ satilmir:['SATILMIR','ffffff','3a3a3a'],
+ qeyri:['QEYRİ-YAŞAYIŞ','ffffff','8a8a8a'],
+ zirzemi:['ZİRZƏMİ','ffffff','8a8a8a']
+};
 var BINA_ORDER=['Bina 1','Bina 2','Bina 3','Bina 4','Bina 5','Bina 6','Bina 9','Bina 10','Bina 11'];
-function _sortBinas(keys){return keys.slice().sort(function(a,b){var i=BINA_ORDER.indexOf(a),j=BINA_ORDER.indexOf(b);return (i<0?99:i)-(j<0?99:j);});}
-function _floorLabel(b,f){return (b.labels&&b.labels[f])?b.labels[f]:(String(f)==='-1'?'Zirzəmi':f);}
-function _todayStr(){var d=new Date();function z(n){return(n<10?'0':'')+n;}return z(d.getDate())+'.'+z(d.getMonth()+1)+'.'+d.getFullYear();}
-function _binaStats(b){var c={},total=0,m2=0;Object.keys(b.rows||{}).forEach(function(f){(b.rows[f]||[]).forEach(function(u){if(u.s==='qeyri'||u.s==='zirzemi')return;total++;c[u.s]=(c[u.s]||0)+1;var a=parseFloat(u.area)||0;m2+=a;});});return{c:c,total:total,m2:m2};}
+var LOGO_W_B64="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";
+function _sortB(keys){return keys.slice().sort(function(a,b){var i=BINA_ORDER.indexOf(a),j=BINA_ORDER.indexOf(b);return (i<0?99:i)-(j<0?99:j);});}
+function _flLabel(b,f){return (b.labels&&b.labels[f])?b.labels[f]:(String(f)==='-1'?'Zirzəmi':f);}
+function _today(){var d=new Date();function z(n){return(n<10?'0':'')+n;}return z(d.getDate())+'.'+z(d.getMonth()+1)+'.'+d.getFullYear();}
+function _stats(b){var c={},total=0,m2=0;Object.keys(b.rows||{}).forEach(function(f){(b.rows[f]||[]).forEach(function(u){if(u.s==='qeyri'||u.s==='zirzemi')return;total++;c[u.s]=(c[u.s]||0)+1;m2+=parseFloat(u.area)||0;});});return{c:c,total:total,m2:m2};}
+function _b64toU8(b64){var bin=atob(b64);var len=bin.length;var u8=new Uint8Array(len);for(var i=0;i<len;i++)u8[i]=bin.charCodeAt(i);return u8;}
 
-/* ---------- WORD (.docx) ---------- */
+/* ---------------- WORD (.docx) ---------------- */
 function exportSalesDoc(){
  if(!window.docx){toast('Sənəd kitabxanası yüklənmədi, internetə bağlanın');return;}
  var D=docx;var SALESD=(typeof SALES!=='undefined')?SALES:get('lux_sales',{});
- var keys=_sortBinas(Object.keys(SALESD).filter(function(k){return SALESD[k]&&SALESD[k].rows;}));
+ var keys=_sortB(Object.keys(SALESD).filter(function(k){return SALESD[k]&&SALESD[k].rows;}));
  if(!keys.length){toast('Data yoxdur');return;}
- toast('Word sənədi hazırlanır…');
+ toast('Rəsmi sənəd hazırlanır…');
+ var NAVY='24303a',GOLD='b8894b',INK='1a1a1a',LINE='c9b48f';
  var children=[];
- /* Başlıq */
- children.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{after:60},children:[new D.TextRun({text:'LUX RESIDENCE',bold:true,size:40,color:'8a4b2a',font:'Georgia'})]}));
- children.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{after:40},children:[new D.TextRun({text:'Satış Lövhəsi — Mənzil Şkalası',size:26,color:'5f4e40'})]}));
- children.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{after:300},children:[new D.TextRun({text:_todayStr(),size:22,italics:true,color:'8a8a8a'})]}));
+ /* ---- FİRMA BLANKI BAŞLIĞI ---- */
+ var headerCells=[
+   new D.TableCell({width:{size:1500,type:D.WidthType.DXA},verticalAlign:D.VerticalAlign.CENTER,margins:{top:120,bottom:120,left:160,right:80},shading:{type:D.ShadingType.CLEAR,fill:NAVY},children:[
+     new D.Paragraph({alignment:D.AlignmentType.CENTER,children:[new D.ImageRun({type:'png',data:_b64toU8(LOGO_W_B64),transformation:{width:64,height:86}})]})
+   ]}),
+   new D.TableCell({width:{size:6900,type:D.WidthType.DXA},verticalAlign:D.VerticalAlign.CENTER,margins:{top:120,bottom:120,left:200,right:120},shading:{type:D.ShadingType.CLEAR,fill:NAVY},children:[
+     new D.Paragraph({spacing:{after:20},children:[new D.TextRun({text:'LUX RESIDENCE',bold:true,size:36,color:'ffffff',font:'Georgia'})]}),
+     new D.Paragraph({spacing:{after:40},children:[new D.TextRun({text:'Yaşayış Kompleksi',size:19,color:GOLD,font:'Georgia',italics:true})]}),
+     new D.Paragraph({children:[new D.TextRun({text:'Satış Lövhəsi — Mənzil Şkalası',size:18,color:'e6dcc9'})]})
+   ]}),
+   new D.TableCell({width:{size:2400,type:D.WidthType.DXA},verticalAlign:D.VerticalAlign.CENTER,margins:{top:120,bottom:120,left:120,right:160},shading:{type:D.ShadingType.CLEAR,fill:NAVY},children:[
+     new D.Paragraph({alignment:D.AlignmentType.RIGHT,spacing:{after:20},children:[new D.TextRun({text:'SƏNƏD TARİXİ',size:14,color:GOLD,bold:true})]}),
+     new D.Paragraph({alignment:D.AlignmentType.RIGHT,children:[new D.TextRun({text:_today(),size:22,color:'ffffff',bold:true})]})
+   ]})
+ ];
+ children.push(new D.Table({width:{size:10800,type:D.WidthType.DXA},columnWidths:[1500,6900,2400],borders:{top:{style:D.BorderStyle.NONE},bottom:{style:D.BorderStyle.NONE},left:{style:D.BorderStyle.NONE},right:{style:D.BorderStyle.NONE},insideHorizontal:{style:D.BorderStyle.NONE},insideVertical:{style:D.BorderStyle.NONE}},rows:[new D.TableRow({children:headerCells})]}));
+ /* qızıl ayırıcı */
+ children.push(new D.Paragraph({spacing:{before:0,after:200},border:{bottom:{color:GOLD,size:18,style:D.BorderStyle.SINGLE}},children:[new D.TextRun({text:'',size:2})]}));
 
  var order=['satisda','satilib','investor','sakin','fond','satilmir'];
  var G={total:0,m2:0,c:{}};
+ var COLW=[1500,1100,1300,2100,4800];var TW=COLW.reduce(function(a,b){return a+b;},0);
+ function cell(w,txt,opt){opt=opt||{};return new D.TableCell({width:{size:w,type:D.WidthType.DXA},verticalAlign:D.VerticalAlign.CENTER,margins:{top:40,bottom:40,left:120,right:120},shading:opt.fill?{type:D.ShadingType.CLEAR,fill:opt.fill}:undefined,children:[new D.Paragraph({alignment:opt.align||D.AlignmentType.LEFT,children:[new D.TextRun({text:txt,bold:opt.bold,color:opt.color||INK,size:opt.size||19})]})]});}
+
  keys.forEach(function(bn,bi){
-  var b=SALESD[bn];var st=_binaStats(b);
+  var b=SALESD[bn];var st=_stats(b);
   G.total+=st.total;G.m2+=st.m2;order.forEach(function(k){G.c[k]=(G.c[k]||0)+(st.c[k]||0);});
-  /* Bina başlığı */
-  children.push(new D.Paragraph({spacing:{before:bi?200:0,after:100},border:{bottom:{color:'8a4b2a',size:12,style:D.BorderStyle.SINGLE}},children:[new D.TextRun({text:bn,bold:true,size:30,color:'8a4b2a',font:'Georgia'})]}));
-  /* Cədvəl: mərtəbə, №, otaq, sahə, status */
-  var rows=[];
-  var hdr=['Mərtəbə','№','Otaq','Sahə (m²)','Status'];
-  rows.push(new D.TableRow({tableHeader:true,children:hdr.map(function(t,ix){return new D.TableCell({width:{size:[1400,900,1100,1600,2400][ix],type:D.WidthType.DXA},shading:{type:D.ShadingType.CLEAR,fill:'3a2410'},children:[new D.Paragraph({children:[new D.TextRun({text:t,bold:true,color:'ffffff',size:18})]})]});})}));
+  if(bi)children.push(new D.Paragraph({spacing:{before:80},children:[new D.PageBreak()]}));
+  /* Bina zolağı */
+  children.push(new D.Table({width:{size:TW,type:D.WidthType.DXA},columnWidths:[TW],borders:{top:{style:D.BorderStyle.NONE},bottom:{style:D.BorderStyle.NONE},left:{style:D.BorderStyle.NONE},right:{style:D.BorderStyle.NONE},insideHorizontal:{style:D.BorderStyle.NONE},insideVertical:{style:D.BorderStyle.NONE}},rows:[new D.TableRow({children:[new D.TableCell({width:{size:TW,type:D.WidthType.DXA},margins:{top:80,bottom:80,left:160,right:160},shading:{type:D.ShadingType.CLEAR,fill:NAVY},children:[new D.Paragraph({children:[new D.TextRun({text:bn.toUpperCase(),bold:true,size:26,color:'ffffff',font:'Georgia'}),new D.TextRun({text:'    ('+st.total+' mənzil)',size:18,color:GOLD})]})]})]})]}));
+  /* Cədvəl başlığı */
+  var rows=[new D.TableRow({tableHeader:true,children:[
+    cell(COLW[0],'MƏRTƏBƏ',{bold:true,color:'ffffff',fill:'3a4a58',size:16}),
+    cell(COLW[1],'№',{bold:true,color:'ffffff',fill:'3a4a58',size:16,align:D.AlignmentType.CENTER}),
+    cell(COLW[2],'OTAQ',{bold:true,color:'ffffff',fill:'3a4a58',size:16,align:D.AlignmentType.CENTER}),
+    cell(COLW[3],'SAHƏ (m²)',{bold:true,color:'ffffff',fill:'3a4a58',size:16,align:D.AlignmentType.CENTER}),
+    cell(COLW[4],'STATUS',{bold:true,color:'ffffff',fill:'3a4a58',size:16})
+  ]})];
   var fls=Object.keys(b.rows).map(Number).sort(function(a,b){return b-a;});
-  fls.forEach(function(f){var units=b.rows[f]||[];if(!units.length)return;
-   var lbl=_floorLabel(b,f);
-   units.forEach(function(u,ui){
-    var si=EXPORT_ST[u.s]||['?','888','eee'];
+  fls.forEach(function(f){var units=b.rows[f]||[];if(!units.length)return;var lbl=_flLabel(b,f);
+   units.forEach(function(u,ui){var si=EXP_ST[u.s]||['—',INK,'ffffff'];var fill=si[2];var fg=si[1];
     rows.push(new D.TableRow({children:[
-     new D.TableCell({width:{size:1400,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:ui===0?String(lbl):'',size:18,bold:true})]})]}),
-     new D.TableCell({width:{size:900,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:String(u.n||''),size:18})]})]}),
-     new D.TableCell({width:{size:1100,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:u.room?String(u.room):'—',size:18})]})]}),
-     new D.TableCell({width:{size:1600,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:u.area?String(u.area):'—',size:18})]})]}),
-     new D.TableCell({width:{size:2400,type:D.WidthType.DXA},shading:{type:D.ShadingType.CLEAR,fill:si[2]},children:[new D.Paragraph({children:[new D.TextRun({text:si[0],size:18,bold:true,color:si[1]})]})]})
+     cell(COLW[0],ui===0?String(lbl):'',{bold:true,color:fg,fill:fill}),
+     cell(COLW[1],String(u.n||''),{color:fg,fill:fill,align:D.AlignmentType.CENTER}),
+     cell(COLW[2],u.room?String(u.room):'—',{color:fg,fill:fill,align:D.AlignmentType.CENTER}),
+     cell(COLW[3],u.area?String(u.area):'—',{color:fg,fill:fill,align:D.AlignmentType.CENTER}),
+     cell(COLW[4],si[0],{bold:true,color:fg,fill:fill})
     ]}));
    });
   });
-  children.push(new D.Table({width:{size:7400,type:D.WidthType.DXA},columnWidths:[1400,900,1100,1600,2400],rows:rows}));
+  children.push(new D.Table({width:{size:TW,type:D.WidthType.DXA},columnWidths:COLW,borders:{top:{color:LINE,size:6,style:D.BorderStyle.SINGLE},bottom:{color:LINE,size:6,style:D.BorderStyle.SINGLE},left:{color:LINE,size:6,style:D.BorderStyle.SINGLE},right:{color:LINE,size:6,style:D.BorderStyle.SINGLE},insideHorizontal:{color:'ffffff',size:4,style:D.BorderStyle.SINGLE},insideVertical:{color:'ffffff',size:4,style:D.BorderStyle.SINGLE}},rows:rows}));
   /* Bina xülasəsi */
-  var parts=order.filter(function(k){return st.c[k];}).map(function(k){return EXPORT_ST[k][0]+': '+st.c[k];});
-  children.push(new D.Paragraph({spacing:{before:120,after:60},children:[
-   new D.TextRun({text:'Xülasə — ',bold:true,size:20,color:'3a2410'}),
-   new D.TextRun({text:'Cəmi '+st.total+' mənzil'+(st.m2?' · '+st.m2.toFixed(2)+' m²':''),size:20})
-  ]}));
-  children.push(new D.Paragraph({spacing:{after:80},children:[new D.TextRun({text:parts.join('  ·  '),size:19,color:'5f4e40'})]}));
+  var parts=order.filter(function(k){return st.c[k];}).map(function(k){return EXP_ST[k][0]+': '+st.c[k];});
+  children.push(new D.Paragraph({spacing:{before:120,after:40},children:[new D.TextRun({text:'XÜLASƏ:  ',bold:true,size:18,color:NAVY}),new D.TextRun({text:'Cəmi '+st.total+' mənzil'+(st.m2?'  ·  '+st.m2.toFixed(2)+' m²':''),size:18,color:INK})]}));
+  children.push(new D.Paragraph({spacing:{after:60},children:[new D.TextRun({text:parts.join('     '),size:17,color:'5f4e40'})]}));
  });
 
- /* Ümumi yekun */
+ /* ---- ÜMUMİ YEKUN ---- */
  children.push(new D.Paragraph({children:[new D.PageBreak()]}));
- children.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{after:160},children:[new D.TextRun({text:'ÜMUMİ YEKUN',bold:true,size:32,color:'8a4b2a',font:'Georgia'})]}));
- var yrows=[new D.TableRow({tableHeader:true,children:['Göstərici','Say'].map(function(t){return new D.TableCell({width:{size:t==='Say'?2000:4600,type:D.WidthType.DXA},shading:{type:D.ShadingType.CLEAR,fill:'3a2410'},children:[new D.Paragraph({children:[new D.TextRun({text:t,bold:true,color:'ffffff',size:20})]})]});})})];
- yrows.push(new D.TableRow({children:[new D.TableCell({width:{size:4600,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:'Ümumi mənzil',bold:true,size:20})]})]}),new D.TableCell({width:{size:2000,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:String(G.total),bold:true,size:20})]})]})]}));
- order.forEach(function(k){if(!G.c[k])return;var si=EXPORT_ST[k];yrows.push(new D.TableRow({children:[new D.TableCell({width:{size:4600,type:D.WidthType.DXA},shading:{type:D.ShadingType.CLEAR,fill:si[2]},children:[new D.Paragraph({children:[new D.TextRun({text:si[0],size:20,color:si[1],bold:true})]})]}),new D.TableCell({width:{size:2000,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:String(G.c[k]),size:20})]})]})]}));});
- yrows.push(new D.TableRow({children:[new D.TableCell({width:{size:4600,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:'Ümumi sahə',bold:true,size:20})]})]}),new D.TableCell({width:{size:2000,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:G.m2.toFixed(2)+' m²',size:20})]})]})]}));
- children.push(new D.Table({width:{size:6600,type:D.WidthType.DXA},columnWidths:[4600,2000],rows:yrows}));
- children.push(new D.Paragraph({spacing:{before:240},alignment:D.AlignmentType.CENTER,children:[new D.TextRun({text:'LUX Residence · luxresidence.az · '+_todayStr(),size:16,italics:true,color:'8a8a8a'})]}));
+ children.push(new D.Table({width:{size:TW,type:D.WidthType.DXA},columnWidths:[TW],borders:{top:{style:D.BorderStyle.NONE},bottom:{style:D.BorderStyle.NONE},left:{style:D.BorderStyle.NONE},right:{style:D.BorderStyle.NONE},insideHorizontal:{style:D.BorderStyle.NONE},insideVertical:{style:D.BorderStyle.NONE}},rows:[new D.TableRow({children:[new D.TableCell({width:{size:TW,type:D.WidthType.DXA},margins:{top:120,bottom:120,left:160,right:160},shading:{type:D.ShadingType.CLEAR,fill:NAVY},children:[new D.Paragraph({alignment:D.AlignmentType.CENTER,children:[new D.TextRun({text:'ÜMUMİ YEKUN',bold:true,size:30,color:'ffffff',font:'Georgia'})]})]})]})]}));
+ children.push(new D.Paragraph({spacing:{after:120}}));
+ var yw=[6800,4000];
+ var yrows=[new D.TableRow({tableHeader:true,children:[cell(yw[0],'GÖSTƏRİCİ',{bold:true,color:'ffffff',fill:'3a4a58',size:18}),cell(yw[1],'SAY',{bold:true,color:'ffffff',fill:'3a4a58',size:18,align:D.AlignmentType.CENTER})]})];
+ yrows.push(new D.TableRow({children:[cell(yw[0],'Ümumi mənzil sayı',{bold:true,size:19}),cell(yw[1],String(G.total),{bold:true,size:19,align:D.AlignmentType.CENTER})]}));
+ order.forEach(function(k){if(!G.c[k])return;var si=EXP_ST[k];yrows.push(new D.TableRow({children:[cell(yw[0],si[0],{bold:true,color:si[1],fill:si[2]}),cell(yw[1],String(G.c[k]),{color:si[1],fill:si[2],bold:true,align:D.AlignmentType.CENTER})]}));});
+ yrows.push(new D.TableRow({children:[cell(yw[0],'Ümumi sahə',{bold:true,size:19}),cell(yw[1],G.m2.toFixed(2)+' m²',{bold:true,size:19,align:D.AlignmentType.CENTER})]}));
+ children.push(new D.Table({width:{size:yw[0]+yw[1],type:D.WidthType.DXA},columnWidths:yw,borders:{top:{color:LINE,size:6,style:D.BorderStyle.SINGLE},bottom:{color:LINE,size:6,style:D.BorderStyle.SINGLE},left:{color:LINE,size:6,style:D.BorderStyle.SINGLE},right:{color:LINE,size:6,style:D.BorderStyle.SINGLE},insideHorizontal:{color:'ffffff',size:4,style:D.BorderStyle.SINGLE},insideVertical:{color:'ffffff',size:4,style:D.BorderStyle.SINGLE}},rows:yrows}));
+ children.push(new D.Paragraph({spacing:{before:400},alignment:D.AlignmentType.CENTER,border:{top:{color:GOLD,size:12,style:D.BorderStyle.SINGLE}},children:[new D.TextRun({text:'LUX RESIDENCE  ·  luxresidence.az  ·  +994 50 809 00 88',size:16,color:NAVY,bold:true})]}));
+ children.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{before:20},children:[new D.TextRun({text:'Bu sənəd '+_today()+' tarixinə olan məlumatları əks etdirir.',size:14,italics:true,color:'8a8a8a'})]}));
 
- var doc=new D.Document({sections:[{properties:{page:{margin:{top:720,bottom:720,left:720,right:720}}},children:children}]});
- D.Packer.toBlob(doc).then(function(blob){
-  saveAs(blob,'LUX_Residence_Satis_Lovhesi_'+_todayStr().replace(/\./g,'_')+'.docx');
-  toast('Word sənədi yükləndi ✓');
- }).catch(function(e){toast('Xəta: '+e.message);});
+ var doc=new D.Document({sections:[{properties:{page:{margin:{top:640,bottom:640,left:640,right:640}}},children:children}]});
+ D.Packer.toBlob(doc).then(function(blob){saveAs(blob,'LUX_Residence_Satis_Lovhesi_'+_today().replace(/\./g,'_')+'.docx');toast('Rəsmi sənəd yükləndi ✓');}).catch(function(e){toast('Xəta: '+e.message);});
 }
 
-/* ---------- PDF / ÇAP ---------- */
+/* ---------------- PDF / ÇAP ---------------- */
 function exportSalesPDF(){
  var SALESD=(typeof SALES!=='undefined')?SALES:get('lux_sales',{});
- var keys=_sortBinas(Object.keys(SALESD).filter(function(k){return SALESD[k]&&SALESD[k].rows;}));
+ var keys=_sortB(Object.keys(SALESD).filter(function(k){return SALESD[k]&&SALESD[k].rows;}));
  if(!keys.length){toast('Data yoxdur');return;}
- var order=['satisda','satilib','investor','sakin','fond','satilmir'];
- var G={total:0,m2:0,c:{}};
+ var order=['satisda','satilib','investor','sakin','fond','satilmir'];var G={total:0,m2:0,c:{}};
  var h='<html><head><meta charset="utf-8"><title>LUX Residence — Satış Lövhəsi</title><style>'+
-  '@page{margin:14mm}body{font-family:Georgia,serif;color:#2a1b12;font-size:11px}'+
-  'h1{text-align:center;color:#8a4b2a;font-size:26px;margin:0 0 4px}'+
-  '.sub{text-align:center;color:#5f4e40;font-size:13px;margin:0 0 2px}'+
-  '.date{text-align:center;color:#8a8a8a;font-style:italic;margin:0 0 22px}'+
-  'h2{color:#8a4b2a;font-size:17px;border-bottom:2px solid #8a4b2a;padding-bottom:3px;margin:22px 0 8px}'+
-  'table{border-collapse:collapse;width:100%;margin-bottom:6px;font-family:Arial,sans-serif}'+
-  'th{background:#3a2410;color:#fff;font-size:10px;padding:5px 6px;text-align:left}'+
-  'td{border:1px solid #ddd;padding:4px 6px;font-size:10.5px}'+
-  '.sum{font-size:11px;margin:4px 0 2px}.sum b{color:#3a2410}'+
-  '.parts{font-size:10.5px;color:#5f4e40;margin-bottom:6px}'+
-  '.badge{font-weight:700;padding:1px 5px;border-radius:4px}'+
-  '.yekun{page-break-before:always}.yekun h1{margin-top:10px}'+
-  '.foot{text-align:center;color:#8a8a8a;font-style:italic;font-size:10px;margin-top:20px}'+
+  '@page{margin:12mm}*{box-sizing:border-box}body{font-family:Georgia,serif;color:#1a1a1a;margin:0}'+
+  '.hdr{display:flex;align-items:center;background:#24303a;color:#fff;padding:16px 20px;border-bottom:4px solid #b8894b}'+
+  '.hdr img{width:56px;height:auto;margin-right:18px}'+
+  '.hdr .t1{font-size:24px;font-weight:bold;letter-spacing:.04em}'+
+  '.hdr .t2{font-size:13px;color:#b8894b;font-style:italic;margin:2px 0}'+
+  '.hdr .t3{font-size:12px;color:#e6dcc9}'+
+  '.hdr .date{margin-left:auto;text-align:right}.hdr .date b{font-size:11px;color:#b8894b;display:block}.hdr .date span{font-size:16px;font-weight:bold}'+
+  '.bband{background:#24303a;color:#fff;padding:8px 16px;font-size:17px;font-weight:bold;font-family:Georgia;margin-top:18px;letter-spacing:.03em}'+
+  '.bband small{color:#b8894b;font-weight:normal;font-size:13px}'+
+  'table{border-collapse:collapse;width:100%;font-family:Arial,sans-serif;margin-bottom:2px}'+
+  'thead th{background:#3a4a58;color:#fff;font-size:10px;letter-spacing:.05em;padding:6px 10px;text-align:left;border:1px solid #fff}'+
+  'td{padding:5px 10px;font-size:10.5px;border:1px solid #fff}'+
+  '.sum{font-size:12px;margin:8px 0 2px;font-family:Georgia}.sum b{color:#24303a}'+
+  '.parts{font-size:11px;color:#5f4e40;margin-bottom:4px;font-family:Arial}'+
+  '.yekun{page-break-before:always}'+
+  '.yband{background:#24303a;color:#fff;text-align:center;padding:14px;font-size:22px;font-weight:bold;font-family:Georgia;margin-bottom:14px}'+
+  '.foot{text-align:center;margin-top:26px;padding-top:12px;border-top:3px solid #b8894b;color:#24303a;font-weight:bold;font-size:13px;font-family:Georgia}'+
+  '.foot small{display:block;color:#8a8a8a;font-weight:normal;font-style:italic;margin-top:4px;font-size:11px}'+
+  'tr{page-break-inside:avoid}'+
   '</style></head><body>';
- h+='<h1>LUX RESIDENCE</h1><div class="sub">Satış Lövhəsi — Mənzil Şkalası</div><div class="date">'+_todayStr()+'</div>';
- function badge(s){var si=EXPORT_ST[s]||['?','#888','#eee'];return '<span class="badge" style="background:#'+si[2]+';color:#'+si[1]+'">'+si[0]+'</span>';}
- keys.forEach(function(bn){var b=SALESD[bn];var st=_binaStats(b);
+ h+='<div class="hdr"><img src="data:image/png;base64,'+LOGO_W_B64+'"><div><div class="t1">LUX RESIDENCE</div><div class="t2">Yaşayış Kompleksi</div><div class="t3">Satış Lövhəsi — Mənzil Şkalası</div></div><div class="date"><b>SƏNƏD TARİXİ</b><span>'+_today()+'</span></div></div>';
+ function row(u,lbl,first){var si=EXP_ST[u.s]||['—','1a1a1a','ffffff'];var style='background:#'+si[2]+';color:#'+si[1];
+   return '<tr style="'+style+'"><td style="font-weight:bold">'+(first?String(lbl):'')+'</td><td style="text-align:center">'+(u.n||'')+'</td><td style="text-align:center">'+(u.room||'—')+'</td><td style="text-align:center">'+(u.area||'—')+'</td><td style="font-weight:bold">'+si[0]+'</td></tr>';}
+ keys.forEach(function(bn){var b=SALESD[bn];var st=_stats(b);
   G.total+=st.total;G.m2+=st.m2;order.forEach(function(k){G.c[k]=(G.c[k]||0)+(st.c[k]||0);});
-  h+='<h2>'+bn+'</h2><table><thead><tr><th>Mərtəbə</th><th>№</th><th>Otaq</th><th>Sahə (m²)</th><th>Status</th></tr></thead><tbody>';
+  h+='<div class="bband">'+bn.toUpperCase()+' <small>('+st.total+' mənzil)</small></div>';
+  h+='<table><thead><tr><th>MƏRTƏBƏ</th><th style="text-align:center">№</th><th style="text-align:center">OTAQ</th><th style="text-align:center">SAHƏ (m²)</th><th>STATUS</th></tr></thead><tbody>';
   var fls=Object.keys(b.rows).map(Number).sort(function(a,b){return b-a;});
-  fls.forEach(function(f){var units=b.rows[f]||[];if(!units.length)return;var lbl=_floorLabel(b,f);
-   units.forEach(function(u,ui){h+='<tr><td><b>'+(ui===0?String(lbl):'')+'</b></td><td>'+(u.n||'')+'</td><td>'+(u.room||'—')+'</td><td>'+(u.area||'—')+'</td><td>'+badge(u.s)+'</td></tr>';});
-  });
+  fls.forEach(function(f){var units=b.rows[f]||[];if(!units.length)return;var lbl=_flLabel(b,f);units.forEach(function(u,ui){h+=row(u,lbl,ui===0);});});
   h+='</tbody></table>';
-  var parts=order.filter(function(k){return st.c[k];}).map(function(k){return EXPORT_ST[k][0]+': '+st.c[k];});
-  h+='<div class="sum"><b>Xülasə —</b> Cəmi '+st.total+' mənzil'+(st.m2?' · '+st.m2.toFixed(2)+' m²':'')+'</div><div class="parts">'+parts.join('  ·  ')+'</div>';
+  var parts=order.filter(function(k){return st.c[k];}).map(function(k){return EXP_ST[k][0]+': '+st.c[k];});
+  h+='<div class="sum"><b>XÜLASƏ:</b> Cəmi '+st.total+' mənzil'+(st.m2?'  ·  '+st.m2.toFixed(2)+' m²':'')+'</div><div class="parts">'+parts.join('     ')+'</div>';
  });
- h+='<div class="yekun"><h1>ÜMUMİ YEKUN</h1><table><thead><tr><th>Göstərici</th><th>Say</th></tr></thead><tbody>';
- h+='<tr><td><b>Ümumi mənzil</b></td><td><b>'+G.total+'</b></td></tr>';
- order.forEach(function(k){if(!G.c[k])return;h+='<tr><td>'+badge(k)+'</td><td>'+G.c[k]+'</td></tr>';});
- h+='<tr><td><b>Ümumi sahə</b></td><td>'+G.m2.toFixed(2)+' m²</td></tr>';
- h+='</tbody></table><div class="foot">LUX Residence · luxresidence.az · '+_todayStr()+'</div></div>';
- h+='</body></html>';
+ h+='<div class="yekun"><div class="yband">ÜMUMİ YEKUN</div><table><thead><tr><th>GÖSTƏRİCİ</th><th style="text-align:center">SAY</th></tr></thead><tbody>';
+ h+='<tr><td style="font-weight:bold">Ümumi mənzil sayı</td><td style="text-align:center;font-weight:bold">'+G.total+'</td></tr>';
+ order.forEach(function(k){if(!G.c[k])return;var si=EXP_ST[k];h+='<tr style="background:#'+si[2]+';color:#'+si[1]+'"><td style="font-weight:bold">'+si[0]+'</td><td style="text-align:center;font-weight:bold">'+G.c[k]+'</td></tr>';});
+ h+='<tr><td style="font-weight:bold">Ümumi sahə</td><td style="text-align:center;font-weight:bold">'+G.m2.toFixed(2)+' m²</td></tr>';
+ h+='</tbody></table><div class="foot">LUX RESIDENCE  ·  luxresidence.az  ·  +994 50 809 00 88<small>Bu sənəd '+_today()+' tarixinə olan məlumatları əks etdirir.</small></div></div></body></html>';
  var w=window.open('','_blank');if(!w){toast('Pop-up bloklandı, icazə verin');return;}
- w.document.write(h);w.document.close();
- setTimeout(function(){w.focus();w.print();},400);
+ w.document.write(h);w.document.close();setTimeout(function(){w.focus();w.print();},500);
  toast('Çap pəncərəsi açıldı — PDF kimi saxlaya bilərsiniz');
 }
 
