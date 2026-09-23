@@ -225,6 +225,7 @@ h1,h2,h3,h4{margin:0}
       <button data-s="part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.4"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5M15.5 20c0-2 1.5-3.5 3.5-3.5s2.5 1 2.5 1"/></svg>Partnyorlar</button>
       <button data-s="content"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 10h16M4 15h10M4 20h7"/></svg>Kontent</button>
       <button data-s="calc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M12 10h2M16 10h.01M8 14h2M12 14h2M16 14h.01M8 18h6"/></svg>Kalkulyator</button>
+      <button data-s="mugavile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>Müqavilə</button>
       <button data-s="set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Qiymət & Tənzimləmə</button>
     </nav>
     <button class="logout" id="logout">Çıxış</button>
@@ -307,6 +308,73 @@ h1,h2,h3,h4{margin:0}
         <div class="cpanel"><h4>İlkin ödəniş</h4><div class="field"><label>Standart ilkin ödəniş (%)</label><input id="cDownDef" type="number"></div></div>
         <div class="cpanel"><h4>Müddət və əlavələr (AZN/m²)</h4><div id="termRows"></div><div class="hint">Hər müddət üçün m²-ə əlavə qiymət. Söndürülən müddət kalkulyatorda görünmür.</div></div>
         <button class="btn" style="margin-top:6px" onclick="saveCalc()">Yadda saxla</button>
+      </section>
+
+      <!-- MÜQAVİLƏ -->
+      <section class="sec" id="s-mugavile">
+        <div class="page-h"><div><h1>Müqavilə</h1><div class="sub">Alqı-satqı müqaviləsi yaradın — boşluqları doldurun, sənəd avtomatik yüklənsin.</div></div></div>
+        <div class="panel" style="background:#fff8ee;border:1px solid #e8d5b0">
+          <div class="d" style="color:#8a6a3a">⚠️ Diqqət: Bu <b>nümunə</b> şablondur. Müqavilənin hüquqi mətni hüquqşünas tərəfindən yoxlanılmalıdır. Real müqavilə mətni hazır olanda əvəz ediləcək.</div>
+        </div>
+
+        <div class="panel">
+          <h3>Alıcı məlumatları</h3>
+          <div class="two">
+            <div class="field"><label>Ad</label><input id="mgAd" placeholder="Məsələn: Elvin"></div>
+            <div class="field"><label>Soyad</label><input id="mgSoyad" placeholder="Məmmədov"></div>
+          </div>
+          <div class="two">
+            <div class="field"><label>Ata adı</label><input id="mgAta" placeholder="Rəşid oğlu"></div>
+            <div class="field"><label>FİN kod</label><input id="mgFin" placeholder="7 simvol, məs. AA12345"></div>
+          </div>
+          <div class="two">
+            <div class="field"><label>Şəxsiyyət vəsiqəsi (seriya №)</label><input id="mgSV" placeholder="AZE 12345678"></div>
+            <div class="field"><label>Telefon</label><input id="mgTel" placeholder="+994 __ ___ __ __"></div>
+          </div>
+          <div class="field"><label>Ünvan</label><input id="mgUnvan" placeholder="Qeydiyyat ünvanı"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Mənzil</h3>
+          <div class="two">
+            <div class="field"><label>Bina</label><select id="mgBina" onchange="mgFillFloors()"></select></div>
+            <div class="field"><label>Mərtəbə</label><select id="mgFloor" onchange="mgFillUnits()"></select></div>
+          </div>
+          <div class="two">
+            <div class="field"><label>Mənzil №</label><select id="mgUnit" onchange="mgUnitPicked()"></select></div>
+            <div class="field"><label>Otaq sayı</label><input id="mgOtaq" readonly></div>
+          </div>
+          <div class="field"><label>Sahə (m²)</label><input id="mgSahe" readonly></div>
+        </div>
+
+        <div class="panel">
+          <h3>Satış şərtləri</h3>
+          <div class="two">
+            <div class="field"><label>1 m² qiyməti (AZN)</label><input id="mgM2" type="number" oninput="mgCalc()" placeholder="3600"></div>
+            <div class="field"><label>Ümumi qiymət (AZN)</label><input id="mgTotal" oninput="mgTotalManual()" placeholder="avtomatik"></div>
+          </div>
+          <div class="two">
+            <div class="field"><label>İlkin ödəniş (AZN)</label><input id="mgIlkin" type="number" oninput="mgCalc()" placeholder="0"></div>
+            <div class="field"><label>Qalıq məbləğ (AZN)</label><input id="mgQaliq" readonly></div>
+          </div>
+          <div class="two">
+            <div class="field"><label>Ödəniş müddəti (ay)</label><input id="mgAy" type="number" oninput="mgCalc()" placeholder="12"></div>
+            <div class="field"><label>Aylıq ödəniş (AZN)</label><input id="mgAylik" readonly></div>
+          </div>
+          <div class="two">
+            <div class="field"><label>Müqavilə №</label><input id="mgNo" placeholder="məs. LR-2026-001"></div>
+            <div class="field"><label>Müqavilə tarixi</label><input id="mgDate" type="date"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Sənədi yarat</h3>
+          <div class="d">Bütün vacib xanaları doldurun və müqaviləni yükləyin.</div>
+          <div class="two" style="margin-top:8px">
+            <div class="field" style="align-self:end"><button class="btn" onclick="genMugavileDoc()">📄 Word (.docx) yüklə</button></div>
+            <div class="field" style="align-self:end"><button class="btn ghost" onclick="genMugavilePDF()">🖨️ PDF / Çap</button></div>
+          </div>
+        </div>
       </section>
 
       <!-- TƏNZİMLƏMƏ -->
@@ -489,9 +557,9 @@ nav.addEventListener('click',e=>{var b=e.target.closest('button[data-s]');if(!b)
 function go(s){
   [...nav.children].forEach(x=>x.classList.toggle('on',x.dataset.s===s));
   document.querySelectorAll('.sec').forEach(x=>x.classList.toggle('on',x.id==='s-'+s));
-  var names={panel:'Panel',leads:'Sorğular',apt:'Mənzillər',bina:'Binalar',news:'Xəbərlər',sales:'Satış Lövhəsi',part:'Partnyorlar',content:'Kontent',calc:'Kalkulyator',set:'Qiymət & Tənzimləmə'};
+  var names={panel:'Panel',leads:'Sorğular',apt:'Mənzillər',bina:'Binalar',news:'Xəbərlər',sales:'Satış Lövhəsi',part:'Partnyorlar',content:'Kontent',calc:'Kalkulyator',mugavile:'Müqavilə',set:'Qiymət & Tənzimləmə'};
   document.getElementById('mobTitle').textContent=names[s]||'Panel';
-  if(s==='leads')renderLeads();if(s==='sales')renderSales();closeSide();window.scrollTo(0,0);
+  if(s==='leads')renderLeads();if(s==='sales')renderSales();if(s==='mugavile')initMugavile();closeSide();window.scrollTo(0,0);
 }
 document.getElementById('burger').addEventListener('click',()=>{side.classList.add('open');backdrop.classList.add('on');});
 backdrop.addEventListener('click',closeSide);
@@ -892,6 +960,112 @@ function exportSalesPDF(){
  var w=window.open('','_blank');if(!w){toast('Pop-up bloklandı, icazə verin');return;}
  w.document.write(h);w.document.close();setTimeout(function(){w.focus();w.print();},500);
  toast('Çap pəncərəsi açıldı — PDF kimi saxlaya bilərsiniz');
+}
+
+/* ========= MÜQAVİLƏ ========= */
+var SELLER={ad:'"NEO ADS MEDİA" MMC',voen:'2008569251',unvan:'Bakı şəhəri, Nərimanov rayonu, Əhməd Rəcəbli küç. 9',bank:'Kapital Bank ASC, Nərimanov filialı',hesab:'AZ58AIIB400500H9443715557109',swift:'AIIBAZ2XXXX',muxbir:'AZ37NABZ01350100000000001944',bankvoen:'9900003611',filial:'200093',tel:'+994 12 566 09 38'};
+function _mgSales(){return (typeof SALES!=='undefined')?SALES:get('lux_sales',{});}
+function initMugavile(){
+ var sel=document.getElementById('mgBina');if(!sel)return;
+ var D=_mgSales();var keys=_sortB(Object.keys(D).filter(function(k){return D[k]&&D[k].rows;}));
+ sel.innerHTML='<option value="">— Bina seçin —</option>'+keys.map(function(k){return '<option>'+esc(k)+'</option>';}).join('');
+ var d=document.getElementById('mgDate');if(d&&!d.value){var t=new Date();d.value=t.getFullYear()+'-'+('0'+(t.getMonth()+1)).slice(-2)+'-'+('0'+t.getDate()).slice(-2);}
+ if(!document.getElementById('mgM2').value)document.getElementById('mgM2').value='3600';
+}
+function mgFillFloors(){var D=_mgSales();var b=D[document.getElementById('mgBina').value];var fs=document.getElementById('mgFloor');
+ if(!b){fs.innerHTML='';document.getElementById('mgUnit').innerHTML='';return;}
+ var fls=Object.keys(b.rows).map(Number).sort(function(a,b){return b-a;});
+ fs.innerHTML='<option value="">— Mərtəbə —</option>'+fls.map(function(f){return (b.rows[f]&&b.rows[f].length)?'<option value="'+f+'">'+_flLabel(b,f)+'</option>':'';}).join('');
+ document.getElementById('mgUnit').innerHTML='';}
+function mgFillUnits(){var D=_mgSales();var b=D[document.getElementById('mgBina').value];var f=document.getElementById('mgFloor').value;var us=document.getElementById('mgUnit');
+ if(!b||f===''){us.innerHTML='';return;}
+ var units=b.rows[f]||[];
+ us.innerHTML='<option value="">— Mənzil —</option>'+units.map(function(u,ix){return '<option value="'+ix+'">№'+esc(String(u.n||''))+' ('+(SST[u.s]?SST[u.s][0]:u.s)+(u.area?', '+u.area+' m²':'')+')</option>';}).join('');}
+function mgUnitPicked(){var D=_mgSales();var b=D[document.getElementById('mgBina').value];var f=document.getElementById('mgFloor').value;var ix=document.getElementById('mgUnit').value;
+ if(!b||f===''||ix==='')return;var u=b.rows[f][ix];
+ document.getElementById('mgOtaq').value=u.room||'';document.getElementById('mgSahe').value=u.area||'';mgCalc();}
+function mgCalc(){var sahe=parseFloat(document.getElementById('mgSahe').value)||0;var m2=parseFloat(document.getElementById('mgM2').value)||0;
+ var total=Math.round(sahe*m2*100)/100;if(total)document.getElementById('mgTotal').value=total;
+ var t=parseFloat(document.getElementById('mgTotal').value)||0;var ilkin=parseFloat(document.getElementById('mgIlkin').value)||0;
+ var qaliq=Math.max(t-ilkin,0);document.getElementById('mgQaliq').value=qaliq.toFixed(2);
+ var ay=parseInt(document.getElementById('mgAy').value)||0;document.getElementById('mgAylik').value=ay?(qaliq/ay).toFixed(2):'';}
+function mgTotalManual(){mgCalc();}
+function _mgData(){
+ var g=function(id){return (document.getElementById(id).value||'').trim();};
+ var full=(g('mgAd')+' '+g('mgSoyad')+' '+g('mgAta')).trim();
+ return {full:full,ad:g('mgAd'),soyad:g('mgSoyad'),ata:g('mgAta'),fin:g('mgFin'),sv:g('mgSV'),tel:g('mgTel'),unvan:g('mgUnvan'),
+  bina:g('mgBina'),floor:document.getElementById('mgFloor').selectedOptions[0]?document.getElementById('mgFloor').selectedOptions[0].textContent:'',
+  unitno:document.getElementById('mgUnit').selectedOptions[0]?document.getElementById('mgUnit').selectedOptions[0].textContent.replace(/\s*\(.*/,''):'',
+  otaq:g('mgOtaq'),sahe:g('mgSahe'),m2:g('mgM2'),total:g('mgTotal'),ilkin:g('mgIlkin')||'0',qaliq:g('mgQaliq'),ay:g('mgAy'),aylik:g('mgAylik'),
+  no:g('mgNo')||'________',date:g('mgDate')?g('mgDate').split('-').reverse().join('.'):_today()};
+}
+function _mgValid(d){var miss=[];if(!d.ad)miss.push('Ad');if(!d.soyad)miss.push('Soyad');if(!d.fin)miss.push('FİN');if(!d.bina)miss.push('Bina');if(!d.unitno)miss.push('Mənzil');if(!d.total)miss.push('Qiymət');
+ if(miss.length){toast('Doldurun: '+miss.join(', '));return false;}return true;}
+
+/* Müqavilə mətni (NÜMUNƏ) */
+function _mgClauses(d){
+ return [
+  ['1. MÜQAVİLƏNİN PREDMETİ',
+   'Satıcı '+SELLER.ad+' (bundan sonra "Satıcı") aşağıda göstərilən mənzili Alıcıya satmağı, Alıcı '+d.full+' (bundan sonra "Alıcı") isə həmin mənzili qəbul edib dəyərini ödəməyi öhdəsinə götürür.\n'+
+   'Mənzil: '+d.bina+', '+d.floor+', mənzil №'+d.unitno+', '+d.otaq+' otaqlı, ümumi sahəsi '+d.sahe+' m².'],
+  ['2. MÜQAVİLƏNİN QİYMƏTİ VƏ ÖDƏNİŞ ŞƏRTLƏRİ',
+   'Mənzilin 1 m² qiyməti: '+d.m2+' AZN.\n'+
+   'Ümumi dəyər: '+d.total+' AZN.\n'+
+   'İlkin ödəniş: '+d.ilkin+' AZN.\n'+
+   'Qalıq məbləğ: '+d.qaliq+' AZN, '+(d.ay||'__')+' ay ərzində, aylıq '+(d.aylik||'__')+' AZN ödənilməklə.\n'+
+   'Ödənişlər Satıcının bank hesabına köçürülür.'],
+  ['3. TƏRƏFLƏRİN ÖHDƏLİKLƏRİ',
+   'Satıcı mənzili müqavilə şərtlərinə uyğun təhvil verməyi öhdəsinə götürür. Alıcı ödənişləri vaxtında yerinə yetirməyi öhdəsinə götürür. (Nümunə mətn — hüquqşünas tərəfindən dəqiqləşdiriləcək.)'],
+  ['4. YEKUN MÜDDƏALAR',
+   'Müqavilə imzalandığı andan qüvvəyə minir. Mübahisələr danışıqlar yolu ilə, həll olunmadıqda Azərbaycan Respublikasının qanunvericiliyinə uyğun məhkəmə qaydasında həll edilir. Müqavilə iki nüsxədə tərtib edilib, hər tərəfdə bir nüsxə saxlanılır.']
+ ];
+}
+
+/* ---- WORD ---- */
+function genMugavileDoc(_dOverride){
+ if(!window.docx){toast('Kitabxana yüklənmədi, internetə bağlanın');return;}
+ var d=_dOverride||_mgData();if(!_dOverride&&!_mgValid(d))return;var D=docx;var NAVY='24303a',GOLD='b8894b',INK='1a1a1a';
+ var ch=[];
+ ch.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{after:40},children:[new D.ImageRun({type:'png',data:_b64toU8(LOGO_W_B64),transformation:{width:52,height:70}})]}));
+ ch.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{after:10},children:[new D.TextRun({text:'ALQI-SATQI MÜQAVİLƏSİ',bold:true,size:32,font:'Georgia',color:NAVY})]}));
+ ch.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{after:20},children:[new D.TextRun({text:'№ '+d.no,size:22,color:INK})]}));
+ ch.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{after:240},border:{bottom:{color:GOLD,size:12,style:D.BorderStyle.SINGLE}},children:[new D.TextRun({text:'Bakı şəhəri                                                            '+d.date,size:18,color:INK})]}));
+ _mgClauses(d).forEach(function(c){
+  ch.push(new D.Paragraph({spacing:{before:160,after:60},children:[new D.TextRun({text:c[0],bold:true,size:20,color:NAVY})]}));
+  c[1].split('\n').forEach(function(line){ch.push(new D.Paragraph({spacing:{after:40},children:[new D.TextRun({text:line,size:19,color:INK})]}));});
+ });
+ /* Rekvizitlər */
+ ch.push(new D.Paragraph({spacing:{before:220,after:80},children:[new D.TextRun({text:'TƏRƏFLƏRİN REKVİZİTLƏRİ',bold:true,size:20,color:NAVY})]}));
+ function party(title,lines){var runs=[new D.TextRun({text:title,bold:true,size:18,color:INK}),new D.TextRun({text:'\n',size:18})];lines.forEach(function(l){runs.push(new D.TextRun({text:l+'\n',size:17,color:INK}));});return runs;}
+ var sellerLines=['Ad: '+SELLER.ad,'VÖEN: '+SELLER.voen,'Ünvan: '+SELLER.unvan,'Bank: '+SELLER.bank,'Hesab: '+SELLER.hesab,'SWIFT: '+SELLER.swift,'Tel: '+SELLER.tel];
+ var buyerLines=['A.S.A: '+d.full,'FİN: '+d.fin,'Ş/V: '+(d.sv||'—'),'Ünvan: '+(d.unvan||'—'),'Tel: '+(d.tel||'—')];
+ var rt=new D.Table({width:{size:10600,type:D.WidthType.DXA},columnWidths:[5300,5300],borders:{top:{color:'c9b48f',size:6,style:D.BorderStyle.SINGLE},bottom:{color:'c9b48f',size:6,style:D.BorderStyle.SINGLE},left:{color:'c9b48f',size:6,style:D.BorderStyle.SINGLE},right:{color:'c9b48f',size:6,style:D.BorderStyle.SINGLE},insideVertical:{color:'c9b48f',size:6,style:D.BorderStyle.SINGLE}},rows:[new D.TableRow({children:[
+  new D.TableCell({width:{size:5300,type:D.WidthType.DXA},margins:{top:120,bottom:120,left:160,right:160},children:[new D.Paragraph({children:party('SATICI',sellerLines)})]}),
+  new D.TableCell({width:{size:5300,type:D.WidthType.DXA},margins:{top:120,bottom:120,left:160,right:160},children:[new D.Paragraph({children:party('ALICI',buyerLines)})]})
+ ]})]});
+ ch.push(rt);
+ ch.push(new D.Paragraph({spacing:{before:260},children:[new D.TextRun({text:'Satıcı: ________________________                    Alıcı: ________________________',size:19,color:INK})]}));
+ ch.push(new D.Paragraph({spacing:{before:20},alignment:D.AlignmentType.CENTER,children:[new D.TextRun({text:'(imza)                                                                            (imza)',size:15,italics:true,color:'8a8a8a'})]}));
+ var doc=new D.Document({sections:[{properties:{page:{margin:{top:900,bottom:720,left:900,right:900}}},children:ch}]});
+ D.Packer.toBlob(doc).then(function(blob){saveAs(blob,'Muqavile_'+(d.soyad||'alici')+'_'+d.no.replace(/[^\w-]/g,'')+'.docx');toast('Müqavilə yükləndi ✓');}).catch(function(e){toast('Xəta: '+e.message);});
+}
+
+/* ---- PDF ---- */
+function genMugavilePDF(){
+ var d=_mgData();if(!_mgValid(d))return;
+ var h='<html><head><meta charset="utf-8"><title>Müqavilə '+d.no+'</title><style>@page{margin:16mm}body{font-family:Georgia,serif;color:#1a1a1a;font-size:13px;line-height:1.65}'+
+  '.top{text-align:center;border-bottom:3px solid #b8894b;padding-bottom:14px;margin-bottom:18px}.top img{width:46px}.top h1{font-size:22px;color:#24303a;margin:8px 0 2px}.top .no{font-size:15px}.top .row{display:flex;justify-content:space-between;font-size:13px;margin-top:10px}'+
+  'h2{font-size:14px;color:#24303a;margin:16px 0 6px}p{margin:3px 0;white-space:pre-line}'+
+  'table{border-collapse:collapse;width:100%;margin-top:8px}td{border:1px solid #c9b48f;padding:10px 12px;vertical-align:top;width:50%;font-size:12px}td b{font-size:13px}'+
+  '.sign{margin-top:34px;font-size:13px}.sign .l{display:inline-block;width:48%}.imza{text-align:center;color:#8a8a8a;font-style:italic;font-size:11px;margin-top:2px}'+
+  '</style></head><body>';
+ h+='<div class="top"><img src="data:image/png;base64,'+LOGO_W_B64+'" style="filter:none"><h1>ALQI-SATQI MÜQAVİLƏSİ</h1><div class="no">№ '+d.no+'</div><div class="row"><span>Bakı şəhəri</span><span>'+d.date+'</span></div></div>';
+ _mgClauses(d).forEach(function(c){h+='<h2>'+c[0]+'</h2><p>'+c[1].replace(/</g,'&lt;')+'</p>';});
+ h+='<h2>TƏRƏFLƏRİN REKVİZİTLƏRİ</h2><table><tr><td><b>SATICI</b><br>Ad: '+SELLER.ad+'<br>VÖEN: '+SELLER.voen+'<br>Ünvan: '+SELLER.unvan+'<br>Bank: '+SELLER.bank+'<br>Hesab: '+SELLER.hesab+'<br>SWIFT: '+SELLER.swift+'<br>Tel: '+SELLER.tel+'</td>'+
+   '<td><b>ALICI</b><br>A.S.A: '+d.full+'<br>FİN: '+d.fin+'<br>Ş/V: '+(d.sv||'—')+'<br>Ünvan: '+(d.unvan||'—')+'<br>Tel: '+(d.tel||'—')+'</td></tr></table>';
+ h+='<div class="sign"><span class="l">Satıcı: ________________<div class="imza">(imza)</div></span><span class="l" style="text-align:right">Alıcı: ________________<div class="imza">(imza)</div></span></div>';
+ h+='</body></html>';
+ var w=window.open('','_blank');if(!w){toast('Pop-up bloklandı');return;}w.document.write(h);w.document.close();setTimeout(function(){w.focus();w.print();},400);toast('Çap pəncərəsi açıldı');
 }
 
 function salesSave(){if(SMODE==='com')set('lux_commercial',COMM);else if(SMODE==='gar')set('lux_garage',GAR);else set('lux_sales',SALES);}
