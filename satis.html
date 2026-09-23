@@ -74,8 +74,8 @@ function renderTabs(){var keys=Object.keys(SALES);var tb=document.getElementById
  tb.innerHTML=keys.map(function(k){return '<button class="btab'+(k===curB?' on':'')+'" onclick="selB(\''+k+'\')">'+k+'</button>';}).join('');renderBoard();}
 function selB(k){curB=k;renderTabs();}
 function renderBoard(){var b=SALES[curB];if(!b){return;}var c={},byRoom={},total=0;
- Object.keys(b.rows).forEach(function(f){b.rows[f].forEach(function(u){total++;c[u.s]=(c[u.s]||0)+1;if(u.s==='satisda'&&u.room)byRoom[u.room]=(byRoom[u.room]||0)+1;});});
- var sm='<b>'+total+'</b> mənzil';['satisda','satilib','investor','sakin','fond','satilmir','qeyri'].forEach(function(k){if(c[k])sm+=' · <span style="color:'+ST[k][1]+';font-weight:700">'+c[k]+' '+ST[k][0].toLowerCase()+'</span>';});
+ Object.keys(b.rows).forEach(function(f){b.rows[f].forEach(function(u){c[u.s]=(c[u.s]||0)+1;if(u.s==='qeyri'||u.s==='zirzemi')return;total++;if(u.s==='satisda'&&u.room)byRoom[u.room]=(byRoom[u.room]||0)+1;});});
+ var sm='<b>'+total+'</b> mənzil';['satisda','satilib','investor','sakin','fond','satilmir'].forEach(function(k){if(c[k])sm+=' · <span style="color:'+ST[k][1]+';font-weight:700">'+c[k]+' '+ST[k][0].toLowerCase()+'</span>';});
  sm+='<div class="rooms">Boş (satışda): '+(Object.keys(byRoom).length?Object.keys(byRoom).sort().map(function(r){return r+' otaqlı — '+byRoom[r];}).join('  ·  '):'—')+'</div>';
  document.getElementById('summary').innerHTML=sm;
  var fls=Object.keys(b.rows).map(Number).sort(function(a,b){return b-a;});var h='';
