@@ -21,6 +21,13 @@ button{font-family:inherit;cursor:pointer}.muted{color:var(--muted)}
 .btab.on{background:var(--rust);color:#fff;border-color:var(--rust)}
 .summary{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 18px;margin-bottom:12px;font-size:14px}
 .summary b{font-family:var(--serif);font-size:20px}.summary .rooms{font-size:13px;color:var(--muted);margin-top:6px}
+.summary{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.summary .all{text-align:right;border-left:1px solid var(--line);padding-left:18px;margin-left:auto}
+.summary .all .lbl{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-bottom:4px}
+.summary .all .nums{display:flex;gap:18px;justify-content:flex-end}
+.summary .all .n b{display:block;line-height:1.1}
+.summary .all .n span{font-size:12px;color:var(--muted)}
+@media(max-width:640px){.summary .all{text-align:left;border-left:none;border-top:1px solid var(--line);padding:10px 0 0;margin-left:0;width:100%}.summary .all .nums{justify-content:flex-start}}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;margin-bottom:14px;color:#5f4e40}.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:14px;height:14px;border-radius:4px;display:inline-block}
 .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
 .filters .fg{display:flex;gap:6px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 10px}
@@ -75,9 +82,9 @@ function renderTabs(){var keys=Object.keys(SALES);var tb=document.getElementById
 function selB(k){curB=k;renderTabs();}
 function renderBoard(){var b=SALES[curB];if(!b){return;}var c={},byRoom={},total=0;
  Object.keys(b.rows).forEach(function(f){b.rows[f].forEach(function(u){c[u.s]=(c[u.s]||0)+1;if(u.s==='qeyri'||u.s==='zirzemi')return;total++;if(u.s==='satisda'&&u.room)byRoom[u.room]=(byRoom[u.room]||0)+1;});});
- var sm='<b>'+total+'</b> mənzil';['satisda','satilib','investor','sakin','fond','satilmir'].forEach(function(k){if(c[k])sm+=' · <span style="color:'+ST[k][1]+';font-weight:700">'+c[k]+' '+ST[k][0].toLowerCase()+'</span>';});
+ var sm='<div class="cur"><b>'+total+'</b> mənzil';['satisda','satilib','investor','sakin','fond','satilmir'].forEach(function(k){if(c[k])sm+=' · <span style="color:'+ST[k][1]+';font-weight:700">'+c[k]+' '+ST[k][0].toLowerCase()+'</span>';});
  sm+='<div class="rooms">Boş (satışda): '+(Object.keys(byRoom).length?Object.keys(byRoom).sort().map(function(r){return r+' otaqlı — '+byRoom[r];}).join('  ·  '):'—')+'</div>';
- document.getElementById('summary').innerHTML=sm;
+ sm+='</div>';var aT=0,aS=0;Object.keys(SALES).forEach(function(bn){var rw=(SALES[bn]&&SALES[bn].rows)||{};Object.keys(rw).forEach(function(f){(rw[f]||[]).forEach(function(u){if(u.s==='qeyri'||u.s==='zirzemi')return;aT++;if(u.s==='satilib')aS++;});});});sm+='<div class="all"><div class="lbl">Bütün binalar</div><div class="nums"><div class="n"><b>'+aT+'</b><span>ümumi mənzil</span></div><div class="n"><b style="color:'+ST.satilib[1]+'">'+aS+'</b><span>satılıb'+(aT?' ('+Math.round(aS*100/aT)+'%)':'')+'</span></div></div></div>';document.getElementById('summary').innerHTML=sm;
  var fls=Object.keys(b.rows).map(Number).sort(function(a,b){return b-a;});var h='';
  fls.forEach(function(f){var units=b.rows[f]||[];var allQ=units.length&&units.every(function(u){return u.s==='qeyri';});var allZ=units.length&&units.every(function(u){return u.s==='zirzemi';});h+='<div class="frow"><div class="fnum">'+(f<0?'Z':f)+'</div><div class="funits">';if(allZ){h+='<div class="gbar">Zirzəmi</div></div></div>';return;}if(allQ){h+='<div class="gbar">Qeyri-yaşayış sahəsi</div></div></div>';return;}units.forEach(function(u){var showA=u.area&&u.s!=='sakin';var match=(!fRoom||String(u.room)===String(fRoom))&&(!fStat||u.s===fStat);var glass=u.s==='satisda';h+='<div class="ucell'+(glass?' glass':'')+(match?'':' dim')+'" style="'+(glass?'':'background:'+(ST[u.s]?ST[u.s][1]:'#888')+(u.s==="sakin"?";color:#3a2410":""))+'" title="'+f+'-ci mərtəbə'+(u.room?' · '+u.room+' otaqlı':'')+(u.area&&u.s!=='sakin'?' · '+u.area+' m²':'')+' · '+(ST[u.s]?ST[u.s][0]:u.s)+'">'+(u.room?u.room:'')+(showA?'<span class="ar">'+u.area+'</span>':'')+'</div>';});h+='</div></div>';});
  document.getElementById('board').innerHTML=h;}
