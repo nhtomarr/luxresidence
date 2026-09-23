@@ -67,6 +67,13 @@ h1,h2,h3,h4{margin:0}
 .kpi b{font-family:var(--serif);font-size:34px;display:block;line-height:1}
 .kpi span{color:var(--muted);font-size:13px;display:block;margin-top:6px}
 .kpi.rust b{color:var(--rust)} .kpi.ok b{color:var(--ok)} .kpi.sold b{color:var(--sold)} .kpi.rez b{color:var(--rez)}
+.kh{font-family:var(--serif);font-size:20px;margin:6px 0 12px;color:var(--ink)}.kh small{font-family:inherit;font-size:13px;color:var(--muted);font-weight:400;margin-left:6px}
+.kpi.inv b{color:#c0392b}.kpi.grn b{color:#2f8a54}.kpi b small{font-size:16px;font-family:inherit;color:var(--muted)}
+.ktbl{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:6px 14px;margin:-10px 0 28px;overflow-x:auto}
+.ktbl table{width:100%;border-collapse:collapse;font-size:14px}.ktbl th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:10px 8px;border-bottom:1px solid var(--line)}
+.ktbl td{padding:9px 8px;border-bottom:1px solid var(--line)}.ktbl tr:last-child td{border-bottom:none}.ktbl td.g{color:var(--ok);font-weight:700}
+.kbar{display:inline-block;width:80px;height:7px;border-radius:9px;background:#efe6dd;vertical-align:middle;margin-right:8px;overflow:hidden}.kbar i{display:block;height:100%;background:#2f8a54;border-radius:9px}
+
 .info-banner{background:#fff6ef;border:1px solid #f0dcc9;border-radius:14px;padding:16px 18px;font-size:13.5px;color:#6b4b34;line-height:1.6;margin-bottom:24px}
 .info-banner b{color:var(--rust)}
 
@@ -230,7 +237,7 @@ h1,h2,h3,h4{margin:0}
       <section class="sec on" id="s-panel">
         <div class="page-h"><div><h1>Panel</h1><div class="sub">Ümumi baxış</div></div></div>
         <div id="syncStatus"></div>
-        <div class="kpis" id="kpis"></div>
+        <div id="kpis"></div>
       </section>
 
       <!-- SORĞULAR -->
@@ -483,11 +490,21 @@ function closeSide(){side.classList.remove('open');backdrop.classList.remove('on
 function boot(){var ss=document.getElementById('syncStatus');if(ss){ss.innerHTML=OFFLINE?'<div class="info-banner" style="background:#fbe9e9;border-color:#f0d2d2;color:#8a2b2b">⚠ <b>Lokal rejim</b> — Supabase-ə bağlı deyilsiniz. Dəyişikliklər yalnız bu brauzerdə qalır və saytda <b>görünməyəcək</b> (F5-də köhnəyə qayıdar). Sinxron üçün <b>email + parolla</b> çıxıb yenidən girin.</div>':'<div class="info-banner" style="background:#e7f4ec;border-color:#bfe3cc;color:#1f6a3f">☁ <b>Onlayn (Supabase)</b> — bütün dəyişiklikləriniz avtomatik saytda və hər cihazda görünür.</div>';}renderPanel();renderApt();renderBina();renderNews();renderPart();renderContent();renderCalc();fillSettings();renderLeads();renderSales();}
 
 function renderPanel(){
-  var av=APT.filter(a=>a.status==='available').length,so=APT.filter(a=>a.status==='sold').length,re=APT.filter(a=>a.status==='reserved').length;
-  document.getElementById('kpis').innerHTML=[
-    ['rust',APT.length,'Ümumi mənzil'],['ok',av,'Mövcud'],['sold',so,'Satılıb'],['rez',re,'Rezerv'],
-    ['',BINA.length,'Bina'],['',NEWS.length,'Xəbər']
-  ].map(k=>`<div class="kpi ${k[0]}"><b>${k[1]}</b><span>${k[2]}</span></div>`).join('');
+  function cnt(D,skip){var c={},t=0,m2=0,m2s=0,bb={};Object.keys(D||{}).forEach(function(bn){var rw=(D[bn]&&D[bn].rows)||{};var o={t:0,satisda:0,satilib:0,investor:0,sakin:0,other:0};Object.keys(rw).forEach(function(f){(rw[f]||[]).forEach(function(u){if(skip&&(u.s==='qeyri'||u.s==='zirzemi'))return;t++;o.t++;c[u.s]=(c[u.s]||0)+1;if(o[u.s]!=null)o[u.s]++;else o.other++;var a=parseFloat(u.area)||0;m2+=a;if(u.s==='satilib')m2s+=a;});});if(o.t)bb[bn]=o;});return {c:c,t:t,m2:m2,m2s:m2s,bb:bb};}
+  function pc(a,b){return b?' ('+Math.round(a*100/b)+'%)':'';}
+  function kp(cls,v,l){return '<div class="kpi '+cls+'"><b>'+v+'</b><span>'+l+'</span></div>';}
+  function f0(x){return Math.round(x).toLocaleString('az-AZ');}
+  var R=cnt(SALES,true),C=cnt(COMM,false),G=cnt(GAR,false);
+  var h='<h3 class="kh">Mənzillər <small>satış lövhəsi · '+Object.keys(R.bb).length+' bina</small></h3><div class="kpis">'
+   +kp('rust',R.t,'Ümumi mənzil')+kp('',R.c.satisda||0,'Satışda'+pc(R.c.satisda||0,R.t))+kp('grn',R.c.satilib||0,'Satılıb'+pc(R.c.satilib||0,R.t))
+   +kp('inv',R.c.investor||0,'İnvestor')+kp('rez',R.c.sakin||0,'Sakin')+kp('',(R.c.fond||0)+(R.c.satilmir||0),'Fond / Satılmır')+'</div>';
+  var ord=['Bina 1','Bina 2','Bina 3','Bina 4','Bina 5','Bina 6','Bina 9','Bina 10','Bina 11'];var bk=Object.keys(R.bb).sort(function(a,b){var i=ord.indexOf(a),j=ord.indexOf(b);return (i<0?99:i)-(j<0?99:j);});
+  h+='<div class="ktbl"><table><thead><tr><th>Bina</th><th>Cəmi</th><th>Satışda</th><th>Satılıb</th><th>İnvestor</th><th>Sakin</th><th>Digər</th><th style="min-width:120px">Satış</th></tr></thead><tbody>'
+   +bk.map(function(k){var o=R.bb[k];var p=o.t?Math.round(o.satilib*100/o.t):0;return '<tr><td><b>'+esc(k)+'</b></td><td>'+o.t+'</td><td>'+o.satisda+'</td><td class="g">'+o.satilib+'</td><td>'+o.investor+'</td><td>'+o.sakin+'</td><td>'+o.other+'</td><td><div class="kbar"><i style="width:'+p+'%"></i></div><small>'+p+'%</small></td></tr>';}).join('')+'</tbody></table></div>';
+  if(C.t)h+='<h3 class="kh">Qeyri-yaşayış <small>'+Object.keys(C.bb).length+' bina</small></h3><div class="kpis">'+kp('rust',C.t,'Obyekt')+kp('',C.c.satisda||0,'Satışda')+kp('grn',C.c.satilib||0,'Satılıb'+pc(C.c.satilib||0,C.t))+kp('',f0(C.m2)+'<small> m²</small>','Ümumi sahə')+kp('grn',f0(C.m2s)+'<small> m²</small>','Satılmış sahə')+'</div>';
+  if(G.t)h+='<h3 class="kh">Qaraj</h3><div class="kpis">'+kp('rust',G.t,'Qaraj yeri')+kp('',G.c.satisda||0,'Satışda')+kp('grn',G.c.satilib||0,'Satılıb'+pc(G.c.satilib||0,G.t))+kp('',G.c.satilmir||0,'Satılmır')+'</div>';
+  h+='<h3 class="kh">Sayt</h3><div class="kpis">'+kp('',APT.length,'Kataloqdakı mənzil')+kp('',NEWS.length,'Xəbər')+kp('',(PART||[]).length,'Partnyor')+'</div>';
+  document.getElementById('kpis').innerHTML=h;
 }
 
 /* apartments */
