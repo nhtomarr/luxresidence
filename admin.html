@@ -158,6 +158,7 @@ h1,h2,h3,h4{margin:0}
 .sfnum{cursor:pointer;border-radius:6px}.sfnum:hover{color:var(--rust);background:#fff}
 .wide .sfnum{width:66px;flex-basis:66px;font-size:11px}
 .gwrap .sfrow{flex-wrap:wrap;min-width:0;align-items:flex-start}.gwrap .sfrow .sfnum{align-self:center}
+.ovback{display:flex;align-items:center;gap:12px;margin-bottom:16px}.ovback b{font-family:var(--serif);font-size:18px}
 .ovblk{margin-bottom:22px}.ovh{display:flex;align-items:center;gap:10px;margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);flex-wrap:wrap}.ovh b{font-family:var(--serif);font-size:17px}.ovh span{font-size:13px;color:var(--muted)}.ovh .btn{margin-left:auto}
 .scell2{min-width:46px;height:38px;border-radius:7px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;line-height:1.05;padding:0 3px;user-select:none}
 .scell2 .a{font-size:8px;opacity:.9;font-weight:500}
@@ -318,6 +319,13 @@ h1,h2,h3,h4{margin:0}
         </div>
 
         <div class="panel">
+          <h3>Saytı gizlət (baxım rejimi)</h3>
+          <div class="d">Aktiv olduqda ziyarətçilər sayt əvəzinə "Sayt baxımdadır" səhifəsini görür. Admin panel işləməyə davam edir.</div>
+          <div class="row"><div class="lbl"><b>Saytı gizlət</b><span>Baxım/yeniləmə zamanı</span></div>
+            <label class="switch"><input type="checkbox" id="swMaint"><span class="slider"></span></label></div>
+        </div>
+
+        <div class="panel">
           <h3>Əlaqə məlumatları</h3>
           <div class="d">Bu məlumatlar admin bazasında saxlanılır. Saytda avtomatik yenilənməsi üçün əlavə bağlantı lazımdır — hazır olduqda qoşaram.</div>
           <div class="two">
@@ -449,7 +457,7 @@ var OFFLINE=false;
 function set(k,v){localStorage.setItem(k,JSON.stringify(v));sbSet(k,v);}
 function sbSet(k,v){if(OFFLINE||!sb)return;try{sb.from("lux_kv").upsert({key:k,value:v,updated_at:new Date().toISOString()}).then(function(r){if(r.error)console.warn("Supabase:",r.error.message);});}catch(e){}}
 function pullAll(){if(!sb)return Promise.resolve();return sb.from("lux_kv").select("key,value").then(function(res){if(res.error)throw res.error;(res.data||[]).forEach(function(row){var stored=(row.key==="lux_showprices")?String(row.value):JSON.stringify(row.value);localStorage.setItem(row.key,stored);});APT=get("lux_apartments",DEF_APT);NEWS=get("lux_news",DEF_NEWS);BINA=get("lux_buildings",DEF_BINA);CONTACT=get("lux_contact",DEF_CONTACT);PART=get("lux_partners",[]);CFG=get("lux_cfg",DEF_CFG);COMM=get("lux_commercial",{});GAR=get("lux_garage",{});SALES=get("lux_sales",{});if(!SALES||Object.keys(SALES).length<3||!_hasR(SALES)){SALES=JSON.parse(JSON.stringify(DEFAULT_SALES));try{localStorage.setItem("lux_sales",JSON.stringify(SALES));}catch(e){}}}).catch(function(e){console.warn("pullAll",e&&e.message);});}
-function pushAll(){if(OFFLINE||!sb){toast("Əvvəlcə email/parolla giriş edin");return;}["lux_apartments","lux_news","lux_buildings","lux_contact","lux_partners","lux_content","lux_cfg","lux_sales","lux_commercial","lux_garage"].forEach(function(k){var v=get(k,null);if(v!=null)sbSet(k,v);});sbSet("lux_showprices",localStorage.getItem("lux_showprices")||"0");toast("Bütün məlumat Supabase-ə yükləndi ✓");}
+function pushAll(){if(OFFLINE||!sb){toast("Əvvəlcə email/parolla giriş edin");return;}["lux_apartments","lux_news","lux_buildings","lux_contact","lux_partners","lux_content","lux_cfg","lux_sales","lux_commercial","lux_garage"].forEach(function(k){var v=get(k,null);if(v!=null)sbSet(k,v);});sbSet("lux_showprices",localStorage.getItem("lux_showprices")||"0");sbSet("lux_maintenance",localStorage.getItem("lux_maintenance")||"0");toast("Bütün məlumat Supabase-ə yükləndi ✓");}
 let APT=get('lux_apartments',DEF_APT);
 let NEWS=get('lux_news',DEF_NEWS);
 let BINA=get('lux_buildings',DEF_BINA);
@@ -581,7 +589,7 @@ function delNews(id){if(!confirm('Bu xəbəri silmək istəyirsiniz?'))return;NE
 
 /* settings */
 function fillSettings(){
-  document.getElementById('swPrice').checked=(localStorage.getItem('lux_showprices')==='1');
+  document.getElementById('swPrice').checked=(localStorage.getItem('lux_showprices')==='1');var _sm=document.getElementById('swMaint');if(_sm){_sm.checked=(localStorage.getItem('lux_maintenance')==='1');_sm.addEventListener('change',function(){var v=this.checked?'1':'0';localStorage.setItem('lux_maintenance',v);sbSet('lux_maintenance',v);toast(this.checked?'Sayt gizlədildi (baxım rejimi)':'Sayt yenidən aktivdir');});}
   cPhone1.value=CONTACT.phone1;cPhone2.value=CONTACT.phone2;cEmail.value=CONTACT.email;cAddr.value=CONTACT.addr;var _s=(get('lux_content',{}).social)||{};['instagram','facebook','youtube','whatsapp','telegram','linkedin'].forEach(function(k){var e=document.getElementById('soc_'+k);if(e)e.value=_s[k]||'';});
 }
 document.getElementById('swPrice').addEventListener('change',function(){var sp=this.checked?'1':'0';localStorage.setItem('lux_showprices',sp);sbSet('lux_showprices',sp);toast(this.checked?'Qiymətlər göstərilir':'Qiymətlər gizlədildi');});
@@ -735,6 +743,8 @@ function loadSampleSales(){if(!confirm('Nümunə (bütün 9 bina) data yükləns
 function renderSales(){var sel=document.getElementById('salesBina');var keys=BINA.slice();Object.keys(SALES).forEach(function(k){if(keys.indexOf(k)<0)keys.push(k);});if(!curBina){for(var i=0;i<keys.length;i++){if(SALES[keys[i]]&&SALES[keys[i]].rows){curBina=keys[i];break;}}}if(sel){var ck=Object.keys(COMM||{});sel.innerHTML='<option value="">— Bina seçin —</option><optgroup label="Yaşayış">'+keys.map(function(n){return '<option value="'+esc(n)+'"'+(SMODE==='res'&&n===curBina?' selected':'')+'>'+esc(n)+'</option>';}).join('')+'</optgroup>'+(ck.length?'<optgroup label="Qeyri-yaşayış"><option value="com::__all"'+(SMODE==='com'&&curBina==='__all'?' selected':'')+'>Bütün binalar</option>'+ck.map(function(n){return '<option value="com::'+esc(n)+'"'+(SMODE==='com'&&n===curBina?' selected':'')+'>Qeyri-yaşayış · '+esc(n)+'</option>';}).join('')+'</optgroup>':'')+(Object.keys(GAR||{}).length?'<optgroup label="Qaraj">'+Object.keys(GAR).map(function(n){return '<option value="gar::'+esc(n)+'"'+(SMODE==='gar'&&n===curBina?' selected':'')+'>'+esc(n)+'</option>';}).join('')+'</optgroup>':'');}var ar=document.getElementById('availRoom');if(ar&&!ar._f){ar.innerHTML='<option value="">Bütün otaqlar</option>'+[1,2,3,4].map(function(r){return '<option>'+r+'</option>';}).join('');ar._f=true;}if(curBina)selSalesBina((SMODE==='com'?'com::':SMODE==='gar'?'gar::':'')+curBina);else renderGrid();}
 function selSalesBina(name){name=name||'';if(name.indexOf('com::')===0){SMODE='com';curBina=name.slice(5);}else if(name.indexOf('gar::')===0){SMODE='gar';curBina=name.slice(5);}else{SMODE='res';curBina=name;}var sel=document.getElementById('salesBina');if(sel)sel.value=name;var fr=document.getElementById('sFilterRoom');if(fr)fr.style.display=SMODE!=='res'?'none':'';var mb=document.getElementById('btnMansard');if(mb)mb.style.display=SMODE!=='res'?'none':'';renderGrid();}
 function ovCell(e,bnEnc,f,ix){var bn=decodeURIComponent(bnEnc);_ovReturn=true;curBina=bn;openUnitPop(e,f,ix);}
+var _cameFromAll=false;
+function backToAll(){_cameFromAll=false;selSalesBina((SMODE==='gar'?'gar::':'com::')+'__all');}
 function renderAllOverview(D,lbl){
  var g=document.getElementById('salesGrid');var bks=Object.keys(D||{});
  if(!bks.length){g.innerHTML='<p class="muted">Məlumat yoxdur.</p>';renderSummary();return;}
@@ -742,10 +752,10 @@ function renderAllOverview(D,lbl){
  bks.forEach(function(bn){var b=D[bn];if(!b||!b.rows)return;
   var n=0,sd=0,m2=0;Object.keys(b.rows).forEach(function(f){(b.rows[f]||[]).forEach(function(u){n++;if(u.s==='satilib')sd++;m2+=parseFloat(u.area)||0;});});
   var openVal=(isGar?'gar::':'com::')+bn;
-  h+='<div class="ovblk"><div class="ovh"><b>'+esc(bn)+'</b><span>'+n+(isGar?' yer':' obyekt')+' · '+sd+' satılıb'+(m2?' · '+m2.toFixed(0)+' m²':'')+'</span><button class="btn ghost sm" onclick="selSalesBina(\''+openVal+'\')">Redaktə et →</button></div>';
-  Object.keys(b.rows).map(Number).sort(function(a,b){return b-a;}).forEach(function(f){var units=b.rows[f]||[];if(!units.length)return;var lb2=flLabel(b,f);
+  h+='<div class="ovblk"><div class="ovh"><b>'+esc(bn)+'</b><span>'+n+(isGar?' yer':' obyekt')+' · '+sd+' satılıb'+(m2?' · '+m2.toFixed(0)+' m²':'')+'</span><button class="btn ghost sm" onclick="_cameFromAll=true;selSalesBina(\''+openVal+'\')">Redaktə et →</button></div>';
+  var _fS=(document.getElementById('sFilter')||{}).value||'';Object.keys(b.rows).map(Number).sort(function(a,b){return b-a;}).forEach(function(f){var units=b.rows[f]||[];if(!units.length)return;var lb2=flLabel(b,f);
    h+='<div class="sfrow"><div class="sfnum">'+esc(lb2)+'</div>';
-   units.forEach(function(u,ix){var gl=u.s==='satisda';h+='<div class="scell2'+(gl?' gl':'')+'" style="'+(gl?'':'background:'+(SST[u.s]?SST[u.s][1]:'#888'))+';cursor:pointer" onclick="ovCell(event,\''+encodeURIComponent(bn)+'\','+f+','+ix+')" title="'+esc(bn)+' · '+(SST[u.s]?SST[u.s][0]:u.s)+'">'+esc(String(u.n||''))+(u.area?'<span class="a">'+u.area+'</span>':'')+'</div>';});
+   units.forEach(function(u,ix){var gl=u.s==='satisda';var mt=(!_fS||u.s===_fS);h+='<div class="scell2'+(gl?' gl':'')+(mt?'':' dim')+'" style="'+(gl?'':'background:'+(SST[u.s]?SST[u.s][1]:'#888'))+';cursor:pointer" onclick="ovCell(event,\''+encodeURIComponent(bn)+'\','+f+','+ix+')" title="'+esc(bn)+' · '+(SST[u.s]?SST[u.s][0]:u.s)+'">'+esc(String(u.n||''))+(u.area?'<span class="a">'+u.area+'</span>':'')+'</div>';});
    h+='</div>';});
   h+='</div>';});
  g.innerHTML=h;g.classList.remove('gwrap','wide');renderSummary();}
@@ -758,7 +768,7 @@ function renderGrid(){var g=document.getElementById('salesGrid');if(SMODE!=='res
   var _fS=(document.getElementById('sFilter')||{}).value||'';var _fR=(document.getElementById('sFilterRoom')||{}).value||'';units.forEach(function(u,ix){var gl=u.s==='satisda';var mt=(!_fS||u.s===_fS)&&(!_fR||String(u.room)===String(_fR));h+='<div class="scell2'+(gl?' gl':'')+(mt?'':' dim')+'" style="'+(gl?'':'background:'+(SST[u.s]?SST[u.s][1]:'#888')+(u.s==='sakin'?';color:#3a2410':''))+'" onclick="cellClick(event,'+f+','+ix+')" title="'+(SST[u.s]?SST[u.s][0]:u.s)+'">'+(SMODE!=='res'?esc(String(u.n||'')):(u.room||''))+(u.area&&u.s!=='sakin'?'<span class="a">'+u.area+'</span>':'')+'</div>';});
   h+='<button class="sfadd" onclick="addUnit('+f+')">+</button></div>';
  });
- g.innerHTML=h;g.classList.toggle('gwrap',SMODE==='gar');g.classList.toggle('wide',fls.some(function(f){return String(flLabel(b,f)).length>3;}));renderSummary();
+ if(_cameFromAll&&SMODE!=='res'&&curBina!=='__all'){h='<div class="ovback"><button class="btn ghost sm" onclick="backToAll()">← Bütün binalara qayıt</button><b>'+esc(curBina)+'</b></div>'+h;}g.innerHTML=h;g.classList.toggle('gwrap',SMODE==='gar');g.classList.toggle('wide',fls.some(function(f){return String(flLabel(b,f)).length>3;}));renderSummary();
 }
 function cellClick(e,f,ix){openUnitPop(e,f,ix);}
 function cycleStatus(f,ix){var u=SD()[curBina].rows[f][ix];var i=CYC.indexOf(u.s);u.s=CYC[(i+1)%CYC.length];if(u.s==='sakin')u.area='';salesSave();renderGrid();}

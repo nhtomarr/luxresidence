@@ -418,6 +418,17 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   .abt-hero h1,.inf-hero h1,.page-hero h1{font-size:26px;}
 }
 </style></head><body>
+<style>#maintScreen{display:none!important}#maintScreen.on{display:flex!important}</style>
+<div id="maintScreen" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#2a1b12,#4a2a18);color:#f5ece1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;font-family:-apple-system,'Inter',system-ui,sans-serif">
+  <div style="font-family:Georgia,serif;font-size:clamp(28px,6vw,52px);color:#e8c9a0;letter-spacing:.04em;margin-bottom:10px">LUX Residence</div>
+  <div style="width:54px;height:2px;background:#ba7a4c;margin:14px 0 26px"></div>
+  <h1 style="font-family:Georgia,serif;font-size:clamp(22px,4vw,34px);margin:0 0 14px;font-weight:600">Sayt baxımdadır</h1>
+  <p style="max-width:440px;line-height:1.7;color:#d8c3ad;font-size:clamp(14px,2.2vw,17px);margin:0 0 26px">Hazırda saytda yeniləmə işləri aparılır. Tezliklə yenidən xidmətinizdəyik. Anlayışınıza görə təşəkkür edirik.</p>
+  <div style="font-size:14px;color:#c9ad92">Əlaqə: <a href="tel:+994508090088" style="color:#e8c9a0;text-decoration:none;font-weight:600">+994 50 809 00 88</a></div>
+</div>
+<script>
+(function(){try{if(localStorage.getItem('lux_maintenance')==='1'){var m=document.getElementById('maintScreen');if(m){m.classList.add('on');document.body.style.overflow='hidden';}}}catch(e){}})();
+</script>
 <div class="nav-wrap"><header class="nav">
   <a href="#ana" class="logo"><img src="assets/img5.png" alt="LUX RESIDENCE"></a>
   <nav class="menu" id="menu">
@@ -716,6 +727,7 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
       if(!rows||!rows.length)return;
       var changed=false,sig='';
       rows.forEach(function(row){
+        if(row.key==="lux_maintenance"){var mv=String(row.value);try{localStorage.setItem("lux_maintenance",mv);}catch(e){}var m=document.getElementById("maintScreen");if(m){if(mv==="1"){m.classList.add("on");document.body.style.overflow="hidden";}else{m.classList.remove("on");document.body.style.overflow="";}}return;}
         var stored=(row.key==="lux_showprices")?String(row.value):JSON.stringify(row.value);
         var h=0;for(var i=0;i<stored.length;i+=7){h=(h*31+stored.charCodeAt(i))|0;}sig+=row.key+':'+stored.length+':'+h+';';
         if(localStorage.getItem(row.key)!==stored){try{localStorage.setItem(row.key,stored);changed=true;}catch(e){}}
