@@ -709,12 +709,14 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
     .then(function(r){return r.ok?r.json():null;})
     .then(function(rows){
       if(!rows||!rows.length)return;
-      var changed=false;
+      var changed=false,sig='';
       rows.forEach(function(row){
         var stored=(row.key==="lux_showprices")?String(row.value):JSON.stringify(row.value);
-        if(localStorage.getItem(row.key)!==stored){localStorage.setItem(row.key,stored);changed=true;}
+        var h=0;for(var i=0;i<stored.length;i+=7){h=(h*31+stored.charCodeAt(i))|0;}sig+=row.key+':'+stored.length+':'+h+';';
+        if(localStorage.getItem(row.key)!==stored){try{localStorage.setItem(row.key,stored);changed=true;}catch(e){}}
       });
-      if(changed&&!sessionStorage.getItem('lux_rl')){try{sessionStorage.setItem('lux_rl','1');}catch(e){}location.reload();}
+      /* yeni data gələndə bir dəfə yenilə; eyni data üçün təkrar yeniləmə yoxdur (sonsuz döngə qorunması) */
+      if(changed&&sessionStorage.getItem('lux_rl')!==sig){try{sessionStorage.setItem('lux_rl',sig);}catch(e){}location.reload();}
     }).catch(function(){});
   }catch(e){}
 })();
