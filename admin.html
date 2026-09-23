@@ -193,6 +193,8 @@ h1,h2,h3,h4{margin:0}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 </head>
 <body>
 
@@ -283,7 +285,7 @@ h1,h2,h3,h4{margin:0}
       <!-- SATIŞ LÖVHƏSİ -->
       <section class="sec" id="s-sales">
         <div class="page-h"><div><h1>Satış Lövhəsi</h1><div class="sub">Xanaya klik → status, otaq, sahə redaktə</div></div></div>
-        <div class="cpanel"><div class="two"><div class="field"><label>Bina</label><select id="salesBina" onchange="selSalesBina(this.value)"></select></div><div class="field" style="align-self:end"><button class="btn ghost" onclick="addFloor()">+ Mərtəbə</button> <button class="btn ghost" id="btnMansard" onclick="addMansard()">+ Mansard</button></div></div>
+        <div class="cpanel"><div class="two"><div class="field"><label>Bina</label><select id="salesBina" onchange="selSalesBina(this.value)"></select></div><div class="field" style="align-self:end"><button class="btn ghost" onclick="addFloor()">+ Mərtəbə</button> <button class="btn ghost" id="btnMansard" onclick="addMansard()">+ Mansard</button></div></div><div class="two" style="margin-top:8px"><div class="field" style="align-self:end"><button class="btn" onclick="exportSalesDoc()">📄 Word (.docx) Export</button></div><div class="field" style="align-self:end"><button class="btn ghost" onclick="exportSalesPDF()">🖨️ PDF / Çap</button></div></div>
           <div class="hint">🟢 Satışda · 🟩 Satılıb · 🟥 İnvestor · 🟡 Sakin · 🔵 Fond · ⬛ Satılmır. Xanaya <b>klik</b> → status, otaq və sahəni seçirsən. Sətir sonundakı <b>+</b> yeni mənzil əlavə edir. Mərtəbə <b>nömrəsinə klik</b> → adını dəyiş (məs. Mansard). <b>×</b> → mərtəbəni sil.</div>
         </div>
         <div class="cpanel" style="padding:12px 16px"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="hint" style="margin:0">Filter:</span><select id="sFilter" onchange="renderGrid()" style="border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-family:inherit;font-weight:600"><option value="">Hamısı</option><option value="satisda">Satışda</option><option value="satilib">Satılıb</option><option value="investor">İnvestor</option><option value="sakin">Sakin</option><option value="fond">Fond</option><option value="satilmir">Satılmır</option></select><select id="sFilterRoom" onchange="renderGrid()" style="border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-family:inherit;font-weight:600"><option value="">Bütün otaqlar</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div></div>
@@ -738,6 +740,126 @@ var SST={satisda:['Satışda','glass'],satilib:['Satılıb','#2f8a54'],investor:
 var CYC=['satisda','satilib','investor','sakin','fond','satilmir'];
 var COMM=get('lux_commercial',{}),GAR=get('lux_garage',{});var SMODE='res';var _ovReturn=false;
 function SD(){return SMODE==='com'?COMM:SMODE==='gar'?GAR:SALES;}
+/* ===== SATIŞ LÖVHƏSİ SƏNƏD EXPORT ===== */
+var EXPORT_ST={satisda:['Satışda','2f8a54','e8f5ec'],satilib:['Satılıb','2f8a54','dff0e6'],investor:['İnvestor','c0392b','f7dedb'],sakin:['Sakin','b8860b','faf1d8'],fond:['Fond','2e6fb0','dde8f5'],satilmir:['Satılmır','3a3a3a','e2e2e2'],qeyri:['Qeyri-yaşayış','8a8a8a','ededed'],zirzemi:['Zirzəmi','8a8a8a','ededed']};
+var BINA_ORDER=['Bina 1','Bina 2','Bina 3','Bina 4','Bina 5','Bina 6','Bina 9','Bina 10','Bina 11'];
+function _sortBinas(keys){return keys.slice().sort(function(a,b){var i=BINA_ORDER.indexOf(a),j=BINA_ORDER.indexOf(b);return (i<0?99:i)-(j<0?99:j);});}
+function _floorLabel(b,f){return (b.labels&&b.labels[f])?b.labels[f]:(String(f)==='-1'?'Zirzəmi':f);}
+function _todayStr(){var d=new Date();function z(n){return(n<10?'0':'')+n;}return z(d.getDate())+'.'+z(d.getMonth()+1)+'.'+d.getFullYear();}
+function _binaStats(b){var c={},total=0,m2=0;Object.keys(b.rows||{}).forEach(function(f){(b.rows[f]||[]).forEach(function(u){if(u.s==='qeyri'||u.s==='zirzemi')return;total++;c[u.s]=(c[u.s]||0)+1;var a=parseFloat(u.area)||0;m2+=a;});});return{c:c,total:total,m2:m2};}
+
+/* ---------- WORD (.docx) ---------- */
+function exportSalesDoc(){
+ if(!window.docx){toast('Sənəd kitabxanası yüklənmədi, internetə bağlanın');return;}
+ var D=docx;var SALESD=(typeof SALES!=='undefined')?SALES:get('lux_sales',{});
+ var keys=_sortBinas(Object.keys(SALESD).filter(function(k){return SALESD[k]&&SALESD[k].rows;}));
+ if(!keys.length){toast('Data yoxdur');return;}
+ toast('Word sənədi hazırlanır…');
+ var children=[];
+ /* Başlıq */
+ children.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{after:60},children:[new D.TextRun({text:'LUX RESIDENCE',bold:true,size:40,color:'8a4b2a',font:'Georgia'})]}));
+ children.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{after:40},children:[new D.TextRun({text:'Satış Lövhəsi — Mənzil Şkalası',size:26,color:'5f4e40'})]}));
+ children.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{after:300},children:[new D.TextRun({text:_todayStr(),size:22,italics:true,color:'8a8a8a'})]}));
+
+ var order=['satisda','satilib','investor','sakin','fond','satilmir'];
+ var G={total:0,m2:0,c:{}};
+ keys.forEach(function(bn,bi){
+  var b=SALESD[bn];var st=_binaStats(b);
+  G.total+=st.total;G.m2+=st.m2;order.forEach(function(k){G.c[k]=(G.c[k]||0)+(st.c[k]||0);});
+  /* Bina başlığı */
+  children.push(new D.Paragraph({spacing:{before:bi?200:0,after:100},border:{bottom:{color:'8a4b2a',size:12,style:D.BorderStyle.SINGLE}},children:[new D.TextRun({text:bn,bold:true,size:30,color:'8a4b2a',font:'Georgia'})]}));
+  /* Cədvəl: mərtəbə, №, otaq, sahə, status */
+  var rows=[];
+  var hdr=['Mərtəbə','№','Otaq','Sahə (m²)','Status'];
+  rows.push(new D.TableRow({tableHeader:true,children:hdr.map(function(t,ix){return new D.TableCell({width:{size:[1400,900,1100,1600,2400][ix],type:D.WidthType.DXA},shading:{type:D.ShadingType.CLEAR,fill:'3a2410'},children:[new D.Paragraph({children:[new D.TextRun({text:t,bold:true,color:'ffffff',size:18})]})]});})}));
+  var fls=Object.keys(b.rows).map(Number).sort(function(a,b){return b-a;});
+  fls.forEach(function(f){var units=b.rows[f]||[];if(!units.length)return;
+   var lbl=_floorLabel(b,f);
+   units.forEach(function(u,ui){
+    var si=EXPORT_ST[u.s]||['?','888','eee'];
+    rows.push(new D.TableRow({children:[
+     new D.TableCell({width:{size:1400,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:ui===0?String(lbl):'',size:18,bold:true})]})]}),
+     new D.TableCell({width:{size:900,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:String(u.n||''),size:18})]})]}),
+     new D.TableCell({width:{size:1100,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:u.room?String(u.room):'—',size:18})]})]}),
+     new D.TableCell({width:{size:1600,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:u.area?String(u.area):'—',size:18})]})]}),
+     new D.TableCell({width:{size:2400,type:D.WidthType.DXA},shading:{type:D.ShadingType.CLEAR,fill:si[2]},children:[new D.Paragraph({children:[new D.TextRun({text:si[0],size:18,bold:true,color:si[1]})]})]})
+    ]}));
+   });
+  });
+  children.push(new D.Table({width:{size:7400,type:D.WidthType.DXA},columnWidths:[1400,900,1100,1600,2400],rows:rows}));
+  /* Bina xülasəsi */
+  var parts=order.filter(function(k){return st.c[k];}).map(function(k){return EXPORT_ST[k][0]+': '+st.c[k];});
+  children.push(new D.Paragraph({spacing:{before:120,after:60},children:[
+   new D.TextRun({text:'Xülasə — ',bold:true,size:20,color:'3a2410'}),
+   new D.TextRun({text:'Cəmi '+st.total+' mənzil'+(st.m2?' · '+st.m2.toFixed(2)+' m²':''),size:20})
+  ]}));
+  children.push(new D.Paragraph({spacing:{after:80},children:[new D.TextRun({text:parts.join('  ·  '),size:19,color:'5f4e40'})]}));
+ });
+
+ /* Ümumi yekun */
+ children.push(new D.Paragraph({children:[new D.PageBreak()]}));
+ children.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{after:160},children:[new D.TextRun({text:'ÜMUMİ YEKUN',bold:true,size:32,color:'8a4b2a',font:'Georgia'})]}));
+ var yrows=[new D.TableRow({tableHeader:true,children:['Göstərici','Say'].map(function(t){return new D.TableCell({width:{size:t==='Say'?2000:4600,type:D.WidthType.DXA},shading:{type:D.ShadingType.CLEAR,fill:'3a2410'},children:[new D.Paragraph({children:[new D.TextRun({text:t,bold:true,color:'ffffff',size:20})]})]});})})];
+ yrows.push(new D.TableRow({children:[new D.TableCell({width:{size:4600,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:'Ümumi mənzil',bold:true,size:20})]})]}),new D.TableCell({width:{size:2000,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:String(G.total),bold:true,size:20})]})]})]}));
+ order.forEach(function(k){if(!G.c[k])return;var si=EXPORT_ST[k];yrows.push(new D.TableRow({children:[new D.TableCell({width:{size:4600,type:D.WidthType.DXA},shading:{type:D.ShadingType.CLEAR,fill:si[2]},children:[new D.Paragraph({children:[new D.TextRun({text:si[0],size:20,color:si[1],bold:true})]})]}),new D.TableCell({width:{size:2000,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:String(G.c[k]),size:20})]})]})]}));});
+ yrows.push(new D.TableRow({children:[new D.TableCell({width:{size:4600,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:'Ümumi sahə',bold:true,size:20})]})]}),new D.TableCell({width:{size:2000,type:D.WidthType.DXA},children:[new D.Paragraph({children:[new D.TextRun({text:G.m2.toFixed(2)+' m²',size:20})]})]})]}));
+ children.push(new D.Table({width:{size:6600,type:D.WidthType.DXA},columnWidths:[4600,2000],rows:yrows}));
+ children.push(new D.Paragraph({spacing:{before:240},alignment:D.AlignmentType.CENTER,children:[new D.TextRun({text:'LUX Residence · luxresidence.az · '+_todayStr(),size:16,italics:true,color:'8a8a8a'})]}));
+
+ var doc=new D.Document({sections:[{properties:{page:{margin:{top:720,bottom:720,left:720,right:720}}},children:children}]});
+ D.Packer.toBlob(doc).then(function(blob){
+  saveAs(blob,'LUX_Residence_Satis_Lovhesi_'+_todayStr().replace(/\./g,'_')+'.docx');
+  toast('Word sənədi yükləndi ✓');
+ }).catch(function(e){toast('Xəta: '+e.message);});
+}
+
+/* ---------- PDF / ÇAP ---------- */
+function exportSalesPDF(){
+ var SALESD=(typeof SALES!=='undefined')?SALES:get('lux_sales',{});
+ var keys=_sortBinas(Object.keys(SALESD).filter(function(k){return SALESD[k]&&SALESD[k].rows;}));
+ if(!keys.length){toast('Data yoxdur');return;}
+ var order=['satisda','satilib','investor','sakin','fond','satilmir'];
+ var G={total:0,m2:0,c:{}};
+ var h='<html><head><meta charset="utf-8"><title>LUX Residence — Satış Lövhəsi</title><style>'+
+  '@page{margin:14mm}body{font-family:Georgia,serif;color:#2a1b12;font-size:11px}'+
+  'h1{text-align:center;color:#8a4b2a;font-size:26px;margin:0 0 4px}'+
+  '.sub{text-align:center;color:#5f4e40;font-size:13px;margin:0 0 2px}'+
+  '.date{text-align:center;color:#8a8a8a;font-style:italic;margin:0 0 22px}'+
+  'h2{color:#8a4b2a;font-size:17px;border-bottom:2px solid #8a4b2a;padding-bottom:3px;margin:22px 0 8px}'+
+  'table{border-collapse:collapse;width:100%;margin-bottom:6px;font-family:Arial,sans-serif}'+
+  'th{background:#3a2410;color:#fff;font-size:10px;padding:5px 6px;text-align:left}'+
+  'td{border:1px solid #ddd;padding:4px 6px;font-size:10.5px}'+
+  '.sum{font-size:11px;margin:4px 0 2px}.sum b{color:#3a2410}'+
+  '.parts{font-size:10.5px;color:#5f4e40;margin-bottom:6px}'+
+  '.badge{font-weight:700;padding:1px 5px;border-radius:4px}'+
+  '.yekun{page-break-before:always}.yekun h1{margin-top:10px}'+
+  '.foot{text-align:center;color:#8a8a8a;font-style:italic;font-size:10px;margin-top:20px}'+
+  '</style></head><body>';
+ h+='<h1>LUX RESIDENCE</h1><div class="sub">Satış Lövhəsi — Mənzil Şkalası</div><div class="date">'+_todayStr()+'</div>';
+ function badge(s){var si=EXPORT_ST[s]||['?','#888','#eee'];return '<span class="badge" style="background:#'+si[2]+';color:#'+si[1]+'">'+si[0]+'</span>';}
+ keys.forEach(function(bn){var b=SALESD[bn];var st=_binaStats(b);
+  G.total+=st.total;G.m2+=st.m2;order.forEach(function(k){G.c[k]=(G.c[k]||0)+(st.c[k]||0);});
+  h+='<h2>'+bn+'</h2><table><thead><tr><th>Mərtəbə</th><th>№</th><th>Otaq</th><th>Sahə (m²)</th><th>Status</th></tr></thead><tbody>';
+  var fls=Object.keys(b.rows).map(Number).sort(function(a,b){return b-a;});
+  fls.forEach(function(f){var units=b.rows[f]||[];if(!units.length)return;var lbl=_floorLabel(b,f);
+   units.forEach(function(u,ui){h+='<tr><td><b>'+(ui===0?String(lbl):'')+'</b></td><td>'+(u.n||'')+'</td><td>'+(u.room||'—')+'</td><td>'+(u.area||'—')+'</td><td>'+badge(u.s)+'</td></tr>';});
+  });
+  h+='</tbody></table>';
+  var parts=order.filter(function(k){return st.c[k];}).map(function(k){return EXPORT_ST[k][0]+': '+st.c[k];});
+  h+='<div class="sum"><b>Xülasə —</b> Cəmi '+st.total+' mənzil'+(st.m2?' · '+st.m2.toFixed(2)+' m²':'')+'</div><div class="parts">'+parts.join('  ·  ')+'</div>';
+ });
+ h+='<div class="yekun"><h1>ÜMUMİ YEKUN</h1><table><thead><tr><th>Göstərici</th><th>Say</th></tr></thead><tbody>';
+ h+='<tr><td><b>Ümumi mənzil</b></td><td><b>'+G.total+'</b></td></tr>';
+ order.forEach(function(k){if(!G.c[k])return;h+='<tr><td>'+badge(k)+'</td><td>'+G.c[k]+'</td></tr>';});
+ h+='<tr><td><b>Ümumi sahə</b></td><td>'+G.m2.toFixed(2)+' m²</td></tr>';
+ h+='</tbody></table><div class="foot">LUX Residence · luxresidence.az · '+_todayStr()+'</div></div>';
+ h+='</body></html>';
+ var w=window.open('','_blank');if(!w){toast('Pop-up bloklandı, icazə verin');return;}
+ w.document.write(h);w.document.close();
+ setTimeout(function(){w.focus();w.print();},400);
+ toast('Çap pəncərəsi açıldı — PDF kimi saxlaya bilərsiniz');
+}
+
 function salesSave(){if(SMODE==='com')set('lux_commercial',COMM);else if(SMODE==='gar')set('lux_garage',GAR);else set('lux_sales',SALES);}
 function loadSampleSales(){if(!confirm('Nümunə (bütün 9 bina) data yüklənsin? Cari dəyişikliklər əvəz olunacaq.'))return;SALES=JSON.parse(JSON.stringify(DEFAULT_SALES));salesSave();curBina='';renderSales();toast('Nümunə data yükləndi ✓');}
 function renderSales(){var sel=document.getElementById('salesBina');var keys=BINA.slice();Object.keys(SALES).forEach(function(k){if(keys.indexOf(k)<0)keys.push(k);});if(!curBina){for(var i=0;i<keys.length;i++){if(SALES[keys[i]]&&SALES[keys[i]].rows){curBina=keys[i];break;}}}if(sel){var ck=Object.keys(COMM||{});sel.innerHTML='<option value="">— Bina seçin —</option><optgroup label="Yaşayış">'+keys.map(function(n){return '<option value="'+esc(n)+'"'+(SMODE==='res'&&n===curBina?' selected':'')+'>'+esc(n)+'</option>';}).join('')+'</optgroup>'+(ck.length?'<optgroup label="Qeyri-yaşayış"><option value="com::__all"'+(SMODE==='com'&&curBina==='__all'?' selected':'')+'>Bütün binalar</option>'+ck.map(function(n){return '<option value="com::'+esc(n)+'"'+(SMODE==='com'&&n===curBina?' selected':'')+'>Qeyri-yaşayış · '+esc(n)+'</option>';}).join('')+'</optgroup>':'')+(Object.keys(GAR||{}).length?'<optgroup label="Qaraj">'+Object.keys(GAR).map(function(n){return '<option value="gar::'+esc(n)+'"'+(SMODE==='gar'&&n===curBina?' selected':'')+'>'+esc(n)+'</option>';}).join('')+'</optgroup>':'');}var ar=document.getElementById('availRoom');if(ar&&!ar._f){ar.innerHTML='<option value="">Bütün otaqlar</option>'+[1,2,3,4].map(function(r){return '<option>'+r+'</option>';}).join('');ar._f=true;}if(curBina)selSalesBina((SMODE==='com'?'com::':SMODE==='gar'?'gar::':'')+curBina);else renderGrid();}
