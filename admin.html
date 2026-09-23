@@ -286,7 +286,7 @@ h1,h2,h3,h4{margin:0}
       <section class="sec" id="s-sales">
         <div class="page-h"><div><h1>Satış Lövhəsi</h1><div class="sub">Xanaya klik → status, otaq, sahə redaktə</div></div></div>
         <div class="cpanel"><div class="two"><div class="field"><label>Bina</label><select id="salesBina" onchange="selSalesBina(this.value)"></select></div><div class="field" style="align-self:end"><button class="btn ghost" onclick="addFloor()">+ Mərtəbə</button> <button class="btn ghost" id="btnMansard" onclick="addMansard()">+ Mansard</button></div></div><div class="two" style="margin-top:8px"><div class="field" style="align-self:end"><button class="btn" onclick="exportSalesDoc()">📄 Word (.docx) Export</button></div><div class="field" style="align-self:end"><button class="btn ghost" onclick="exportSalesPDF()">🖨️ PDF / Çap</button></div></div>
-          <div class="hint">🟢 Satışda · 🟩 Satılıb · 🟥 İnvestor · 🟡 Sakin · 🔵 Fond · ⬛ Satılmır. Xanaya <b>klik</b> → status, otaq və sahəni seçirsən. Sətir sonundakı <b>+</b> yeni mənzil əlavə edir. Mərtəbə <b>nömrəsinə klik</b> → adını dəyiş (məs. Mansard). <b>×</b> → mərtəbəni sil.</div>
+          <div class="hint">🟢 Satışda · 🟩 Satılıb · 🟥 İnvestor · 🌸 Bron · 🟡 Sakin · 🔵 Fond · ⬛ Satılmır. Xanaya <b>klik</b> → status, otaq və sahəni seçirsən. Sətir sonundakı <b>+</b> yeni mənzil əlavə edir. Mərtəbə <b>nömrəsinə klik</b> → adını dəyiş (məs. Mansard). <b>×</b> → mərtəbəni sil.</div>
         </div>
         <div class="cpanel" style="padding:12px 16px"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="hint" style="margin:0">Filter:</span><select id="sFilter" onchange="renderGrid()" style="border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-family:inherit;font-weight:600"><option value="">Hamısı</option><option value="satisda">Satışda</option><option value="satilib">Satılıb</option><option value="investor">İnvestor</option><option value="sakin">Sakin</option><option value="fond">Fond</option><option value="satilmir">Satılmır</option></select><select id="sFilterRoom" onchange="renderGrid()" style="border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-family:inherit;font-weight:600"><option value="">Bütün otaqlar</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div></div>
         <div id="salesSummary"></div>
@@ -736,8 +736,8 @@ function markLead(id){if(!sb)return;sb.from('lux_leads').update({status:'cavabla
 function delLead(id){if(!sb)return;if(!confirm('Bu sorğu silinsin?'))return;sb.from('lux_leads').delete().eq('id',id).then(function(){renderLeads();});}
 
 /* ---- sales board (rich model) ---- */
-var SST={satisda:['Satışda','glass'],satilib:['Satılıb','#2f8a54'],investor:['İnvestor','#c0392b'],sakin:['Sakin','#e0a800'],fond:['Fond','#2e6fb0'],satilmir:['Satılmır','#3a3a3a'],qeyri:['Qeyri-yaşayış','#8a8a8a'],zirzemi:['Zirzəmi','#8a8a8a']};
-var CYC=['satisda','satilib','investor','sakin','fond','satilmir'];
+var SST={satisda:['Satışda','glass'],satilib:['Satılıb','#2f8a54'],investor:['İnvestor','#c0392b'],bron:['Bron','#b03a6e'],sakin:['Sakin','#e0a800'],fond:['Fond','#2e6fb0'],satilmir:['Satılmır','#3a3a3a'],qeyri:['Qeyri-yaşayış','#8a8a8a'],zirzemi:['Zirzəmi','#8a8a8a']};
+var CYC=['satisda','satilib','investor','bron','sakin','fond','satilmir'];
 var COMM=get('lux_commercial',{}),GAR=get('lux_garage',{});var SMODE='res';var _ovReturn=false;
 function SD(){return SMODE==='com'?COMM:SMODE==='gar'?GAR:SALES;}
 /* ===== SATIŞ LÖVHƏSİ — KORPORATİV SƏNƏD EXPORT ===== */
@@ -746,6 +746,7 @@ var EXP_ST={
  satisda:['SATIŞDA','1a1a1a','ffffff'],
  satilib:['SATILIB','ffffff','2f7a44'],
  investor:['İNVESTOR','ffffff','b23b3b'],
+ bron:['BRON','ffffff','b03a6e'],
  sakin:['SAKİN','3a2a10','e8c766'],
  fond:['FOND','ffffff','2e6fb0'],
  satilmir:['SATILMIR','ffffff','3a3a3a'],
@@ -788,7 +789,7 @@ function exportSalesDoc(){
  /* qızıl ayırıcı */
  children.push(new D.Paragraph({spacing:{before:0,after:200},border:{bottom:{color:GOLD,size:18,style:D.BorderStyle.SINGLE}},children:[new D.TextRun({text:'',size:2})]}));
 
- var order=['satisda','satilib','investor','sakin','fond','satilmir'];
+ var order=['satisda','satilib','investor','bron','sakin','fond','satilmir'];
  var G={total:0,m2:0,c:{}};
  var COLW=[1500,1100,1300,2100,4800];var TW=COLW.reduce(function(a,b){return a+b;},0);
  function cell(w,txt,opt){opt=opt||{};return new D.TableCell({width:{size:w,type:D.WidthType.DXA},verticalAlign:D.VerticalAlign.CENTER,margins:{top:40,bottom:40,left:120,right:120},shading:opt.fill?{type:D.ShadingType.CLEAR,fill:opt.fill}:undefined,children:[new D.Paragraph({alignment:opt.align||D.AlignmentType.LEFT,children:[new D.TextRun({text:txt,bold:opt.bold,color:opt.color||INK,size:opt.size||19})]})]});}
@@ -848,7 +849,7 @@ function exportSalesPDF(){
  var SALESD=(typeof SALES!=='undefined')?SALES:get('lux_sales',{});
  var keys=_sortB(Object.keys(SALESD).filter(function(k){return SALESD[k]&&SALESD[k].rows;}));
  if(!keys.length){toast('Data yoxdur');return;}
- var order=['satisda','satilib','investor','sakin','fond','satilmir'];var G={total:0,m2:0,c:{}};
+ var order=['satisda','satilib','investor','bron','sakin','fond','satilmir'];var G={total:0,m2:0,c:{}};
  var h='<html><head><meta charset="utf-8"><title>LUX Residence — Satış Lövhəsi</title><style>'+
   '@page{margin:12mm}*{box-sizing:border-box}body{font-family:Georgia,serif;color:#1a1a1a;margin:0}'+
   '.hdr{display:flex;align-items:center;background:#24303a;color:#fff;padding:16px 20px;border-bottom:4px solid #b8894b}'+
@@ -946,9 +947,9 @@ function addMansard(){if(!curBina){toast('Bina seçin');return;}addFloor();var b
 function addFloor(){if(!curBina){toast('Bina seçin');return;}var b=SD()[curBina]||{floors:0,rows:{}};if(!b.rows)b.rows={};var mx=Object.keys(b.rows).map(Number).reduce(function(a,c){return Math.max(a,c);},0);var nf=mx+1;b.rows[String(nf)]=[{n:1,room:'',area:'',s:'satisda'}];b.floors=Math.max(b.floors||0,nf);SD()[curBina]=b;salesSave();renderGrid();}
 function renderAllSummary(D){var el=document.getElementById('salesSummary');var c={},t=0,m2=0,m2s=0;
  Object.keys(D||{}).forEach(function(bn){var rw=(D[bn]&&D[bn].rows)||{};Object.keys(rw).forEach(function(f){(rw[f]||[]).forEach(function(u){t++;c[u.s]=(c[u.s]||0)+1;var a=parseFloat(u.area)||0;m2+=a;if(u.s==='satisda')m2s+=a;});});});
- var order=['satisda','satilib','investor','sakin','fond','satilmir'];var lbl=(SMODE==='gar'?'qaraj yeri':'obyekt');
+ var order=['satisda','satilib','investor','bron','sakin','fond','satilmir'];var lbl=(SMODE==='gar'?'qaraj yeri':'obyekt');
  el.innerHTML='<div class="skpi"><b>'+t+'</b> '+lbl+order.map(function(k){return c[k]?' · <span style="color:'+(k==='satisda'?'#2f8a54':(SST[k]?SST[k][1]:'#888'))+'">'+c[k]+' '+(SST[k]?SST[k][0].toLowerCase():k)+'</span>':'';}).join('')+'</div>'+(SMODE==='gar'?'':'<div class="hint">Ümumi sahə: '+m2.toFixed(2)+' m² · Satışda: '+m2s.toFixed(2)+' m²</div>');}
-function renderSummary(){var el=document.getElementById('salesSummary');if(SMODE!=='res'&&(curBina==='__all'||_ovReturn)){renderAllSummary(SMODE==='gar'?GAR:COMM);return;}var b=SD()[curBina];if(!b||!b.rows){el.innerHTML='';return;}var c={},byRoom={},total=0;Object.keys(b.rows).forEach(function(f){b.rows[f].forEach(function(u){c[u.s]=(c[u.s]||0)+1;if(u.s==='qeyri'||u.s==='zirzemi')return;total++;if(u.s==='satisda'&&u.room)byRoom[u.room]=(byRoom[u.room]||0)+1;});});var order=['satisda','satilib','investor','sakin','fond','satilmir'];var m2=0,m2s=0;if(SMODE==='com'){Object.keys(b.rows).forEach(function(f){b.rows[f].forEach(function(u){var a=parseFloat(u.area)||0;m2+=a;if(u.s==='satisda')m2s+=a;});});}el.innerHTML='<div class="skpi"><b>'+total+'</b> '+(SMODE==='com'?'obyekt':SMODE==='gar'?'qaraj yeri':'mənzil')+order.map(function(k){return c[k]?' · <span style="color:'+(k==='satisda'?'#2f8a54':SST[k][1])+'">'+c[k]+' '+SST[k][0].toLowerCase()+'</span>':'';}).join('')+'</div>'+(SMODE==='gar'?'':SMODE==='com'?'<div class="hint">Ümumi sahə: '+m2.toFixed(2)+' m² · Satışda: '+m2s.toFixed(2)+' m²</div>':'<div class="hint">Boş otaqlar: '+(Object.keys(byRoom).length?Object.keys(byRoom).sort().map(function(r){return r+' otaq — '+byRoom[r];}).join(' · '):'—')+'</div>');}
+function renderSummary(){var el=document.getElementById('salesSummary');if(SMODE!=='res'&&(curBina==='__all'||_ovReturn)){renderAllSummary(SMODE==='gar'?GAR:COMM);return;}var b=SD()[curBina];if(!b||!b.rows){el.innerHTML='';return;}var c={},byRoom={},total=0;Object.keys(b.rows).forEach(function(f){b.rows[f].forEach(function(u){c[u.s]=(c[u.s]||0)+1;if(u.s==='qeyri'||u.s==='zirzemi')return;total++;if(u.s==='satisda'&&u.room)byRoom[u.room]=(byRoom[u.room]||0)+1;});});var order=['satisda','satilib','investor','bron','sakin','fond','satilmir'];var m2=0,m2s=0;if(SMODE==='com'){Object.keys(b.rows).forEach(function(f){b.rows[f].forEach(function(u){var a=parseFloat(u.area)||0;m2+=a;if(u.s==='satisda')m2s+=a;});});}el.innerHTML='<div class="skpi"><b>'+total+'</b> '+(SMODE==='com'?'obyekt':SMODE==='gar'?'qaraj yeri':'mənzil')+order.map(function(k){return c[k]?' · <span style="color:'+(k==='satisda'?'#2f8a54':SST[k][1])+'">'+c[k]+' '+SST[k][0].toLowerCase()+'</span>':'';}).join('')+'</div>'+(SMODE==='gar'?'':SMODE==='com'?'<div class="hint">Ümumi sahə: '+m2.toFixed(2)+' m² · Satışda: '+m2s.toFixed(2)+' m²</div>':'<div class="hint">Boş otaqlar: '+(Object.keys(byRoom).length?Object.keys(byRoom).sort().map(function(r){return r+' otaq — '+byRoom[r];}).join(' · '):'—')+'</div>');}
 function searchAvail(){var r=document.getElementById('availRoom').value,out=document.getElementById('availOut'),res=[];Object.keys(SALES).forEach(function(bn){var b=SALES[bn];if(!b.rows)return;Object.keys(b.rows).forEach(function(f){b.rows[f].forEach(function(u,ix){if(u.s==='satisda'&&(!r||String(u.room)===String(r)))res.push({bina:bn,floor:+f,unit:ix+1,r:u.room});});});});res.sort(function(a,b){return String(a.bina).localeCompare(String(b.bina))||a.floor-b.floor;});out.innerHTML=res.length?('<div class="hint" style="margin-top:10px">'+res.length+' boş:</div>'+res.map(function(x){return '<div class="arow">'+esc(x.bina)+' · '+x.floor+'-ci mərtəbə · M'+x.unit+(x.r?' · '+x.r+' otaqlı':'')+'</div>';}).join('')):'<div class="hint" style="margin-top:10px">Boş mənzil yoxdur.</div>';}
 document.getElementById('pin').focus();
 </script>
