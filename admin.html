@@ -963,7 +963,7 @@ function exportSalesPDF(){
 }
 
 /* ========= MÜQAVİLƏ ========= */
-var SELLER={ad:'"NEO ADS MEDİA" MMC',voen:'2008569251',unvan:'Bakı şəhəri, Nərimanov rayonu, Əhməd Rəcəbli küç. 9',bank:'Kapital Bank ASC, Nərimanov filialı',hesab:'AZ58AIIB400500H9443715557109',swift:'AIIBAZ2XXXX',muxbir:'AZ37NABZ01350100000000001944',bankvoen:'9900003611',filial:'200093',tel:'+994 12 566 09 38'};
+var SELLER={ad:'“LUX RESIDENCE” MMC',voen:'1404156671',unvan:'Bakı şəh., Yasamal ray., Ə.Ələkbərov ev 4C',bank:'“Kapital Bank” ASC 1 saylı Yasamal filialı',hesab:'AZ26AIIB40030019440439835103',swift:'AIIBAZ2X',muxbir:'AZ37NABZ01350100000000001944',bankvoen:'9900003611',bankunvan:'Bakı şəh., Landau küç., bina 6',kod:'200037',direktor:'Cəfərzadə Hüseyn İlşat oğlu'};
 function _mgSales(){return (typeof SALES!=='undefined')?SALES:get('lux_sales',{});}
 function initMugavile(){
  var sel=document.getElementById('mgBina');if(!sel)return;
@@ -997,27 +997,41 @@ function _mgData(){
   bina:g('mgBina'),floor:document.getElementById('mgFloor').selectedOptions[0]?document.getElementById('mgFloor').selectedOptions[0].textContent:'',
   unitno:document.getElementById('mgUnit').selectedOptions[0]?document.getElementById('mgUnit').selectedOptions[0].textContent.replace(/\s*\(.*/,''):'',
   otaq:g('mgOtaq'),sahe:g('mgSahe'),m2:g('mgM2'),total:g('mgTotal'),ilkin:g('mgIlkin')||'0',qaliq:g('mgQaliq'),ay:g('mgAy'),aylik:g('mgAylik'),
-  no:g('mgNo')||'________',date:g('mgDate')?g('mgDate').split('-').reverse().join('.'):_today()};
+  binaNo:(g('mgBina').match(/\d+/)||[''])[0],floorNo:(function(){var t=document.getElementById('mgFloor').selectedOptions[0]?document.getElementById('mgFloor').selectedOptions[0].textContent:'';var m=t.match(/-?\d+/);return m?m[0]:'';})(),no:g('mgNo')||'________',date:g('mgDate')?g('mgDate').split('-').reverse().join('.'):_today()};
 }
 function _mgValid(d){var miss=[];if(!d.ad)miss.push('Ad');if(!d.soyad)miss.push('Soyad');if(!d.fin)miss.push('FİN');if(!d.bina)miss.push('Bina');if(!d.unitno)miss.push('Mənzil');if(!d.total)miss.push('Qiymət');
  if(miss.length){toast('Doldurun: '+miss.join(', '));return false;}return true;}
 
 /* Müqavilə mətni (NÜMUNƏ) */
 function _mgClauses(d){
+ var m2word=d.m2||'____';var totalword=d.total||'____';
  return [
+  ['',
+   'Bir tərəfdən Azərbaycan Respublikasının qüvvədə olan qanunları və öz Nizamnaməsi əsasında fəaliyyət göstərən “Lux Residence” Məhdud Məsuliyyətli Cəmiyyəti (bundan sonra “Satıcı” adlandırılacaq), Direktor '+SELLER.direktor+' şəxsində təmsil olunan, digər tərəfdən, Azərbaycan Respublikasının vətəndaşı, '+(d.unvan||'________________________________')+' ünvanında qeydiyyatda olan '+(d.full||'____________________')+' ( Ş/V: '+(d.sv||'__________')+', FİN: '+(d.fin||'__________')+') (bundan sonra “Alıcı” adlandırılacaq) aşağıdakı şərtlərlə bu Müqaviləni imzalayırlar.'],
+  ['',
+   'Tərəflər bu Müqaviləni imzalayarkən nəzərə alırlar ki, Bakı şəhər İcra Hakimiyyətinin Başçısının 21.08.2020-ci il tarixli 164 saylı sərəncamı ilə, Bakı şəhəri Yasamal rayonu, İsmayıl Qutqaşınlı, Mikayıl Müşviq, Ələsgər Ələkbərov, Seyfəddin Dağlı və Kazım Kazımzadə küçələrinin əhatə etdiyi torpaq sahəsi “Lux Residence” MMC-yə ayrılmasını və müvafiq dövlət rəyini əsas tutaraq bu ərazidə müasir tələblərə uyğun yeni çoxmərtəbəli, çoxmənzilli yaşayış və qeyri-yaşayış binalarının tikilməsi nəzərdə tutulmuşdur.'],
   ['1. MÜQAVİLƏNİN PREDMETİ',
-   'Satıcı '+SELLER.ad+' (bundan sonra "Satıcı") aşağıda göstərilən mənzili Alıcıya satmağı, Alıcı '+d.full+' (bundan sonra "Alıcı") isə həmin mənzili qəbul edib dəyərini ödəməyi öhdəsinə götürür.\n'+
-   'Mənzil: '+d.bina+', '+d.floor+', mənzil №'+d.unitno+', '+d.otaq+' otaqlı, ümumi sahəsi '+d.sahe+' m².'],
-  ['2. MÜQAVİLƏNİN QİYMƏTİ VƏ ÖDƏNİŞ ŞƏRTLƏRİ',
-   'Mənzilin 1 m² qiyməti: '+d.m2+' AZN.\n'+
-   'Ümumi dəyər: '+d.total+' AZN.\n'+
-   'İlkin ödəniş: '+d.ilkin+' AZN.\n'+
-   'Qalıq məbləğ: '+d.qaliq+' AZN, '+(d.ay||'__')+' ay ərzində, aylıq '+(d.aylik||'__')+' AZN ödənilməklə.\n'+
-   'Ödənişlər Satıcının bank hesabına köçürülür.'],
-  ['3. TƏRƏFLƏRİN ÖHDƏLİKLƏRİ',
-   'Satıcı mənzili müqavilə şərtlərinə uyğun təhvil verməyi öhdəsinə götürür. Alıcı ödənişləri vaxtında yerinə yetirməyi öhdəsinə götürür. (Nümunə mətn — hüquqşünas tərəfindən dəqiqləşdiriləcək.)'],
-  ['4. YEKUN MÜDDƏALAR',
-   'Müqavilə imzalandığı andan qüvvəyə minir. Mübahisələr danışıqlar yolu ilə, həll olunmadıqda Azərbaycan Respublikasının qanunvericiliyinə uyğun məhkəmə qaydasında həll edilir. Müqavilə iki nüsxədə tərtib edilib, hər tərəfdə bir nüsxə saxlanılır.']
+   'Bu Müqavilə “Satıcı” tərəfindən, Bakı şəhəri Yasamal rayonu, İsmayıl Qutqaşınlı, Mikayıl Müşviq, Ələsgər Ələkbərov, Seyfəddin Dağlı və Kazım Kazımzadə küçələrinin kəsişməsində tikiləcək çoxmənzilli yaşayış kompleksinin '+(d.binaNo||'___')+'-cü binasının, '+(d.floorNo||'___')+'-cü mərtəbəsində, '+(d.otaq||'___')+' otaqlı, ümumi sahəsi '+(d.sahe||'_____')+' m² olan, (brutto, eyvan, lociya, daxili divar və sütunların, qonşu və çöl divaraltı sahəsinin yarısının, mənzilin içərisinə düşən şaxtanın sahələri daxil olmaqla) '+(d.unitno||'___')+' saylı mənzili “Alıcı”ya satması, “Alıcı”nın sözügedən yaşayış sahəsini qəbul etməsi və dəyərini “Satıcı”ya ödəməsi ilə əlaqədar tərəflərin hüquq və vəzifələrini müəyyənləşdirir.\n'+
+   'Nəzərə alınır ki, mənzilin çizgi ilə əhatə olunan sahəyə daxili divaraltı sahə, şaxtaların sahəsi, sütunaltı sahələr, qonşu və çöl divaraltı sahəsinin yarısı, eyvan və lociyanın tam sahəsi daxil edilir. Əmlak Məsələləri Dövlət Xidmətində qeydiyyata alındıqda çıxarışda verilən mənzil sahəsi mənzilin çizgi ilə əhatə olunan sahəsindən az göstərilə bilər və bununla bağlı yaranan fərqə görə tikinti şirkəti heç bir məsuliyyət daşımır.\n'+
+   '“Alıcı” binanın tikintisi tamamlandıqdan və mənzilin dəyəri “Satıcı”ya tam ödədikdən sonra mənzilin təmir işlərinə başlaya bilər.'],
+  ['2. YAŞAYIŞ SAHƏSİNİN DƏYƏRİ VƏ ÖDƏNİŞ ŞƏRTLƏRİ',
+   '2.1. Bu Müqavilədə nəzərdə tutulmuş yaşayış sahəsinin hər kvadrat metrinin dəyəri tərəflərin razılığına əsasən '+m2word+' manat müəyyən edilir və müəyyən edilmiş qiymət mənzil “Alıcı”ya təhvil verilənədək dəyişməz qalacaq.\n'+
+   '2.2. Bu Müqavilə üzrə satılması nəzərdə tutulmuş '+(d.sahe||'_____')+' m² mənzilin ümumi dəyəri 2.1-ci yarımbənd nəzərə alınaraq '+totalword+' manat müəyyən edilir.\n'+
+   '“Alıcı” alınan mənzilin dəyərindən ilkin ödəniş olaraq '+(d.ilkin||'__________')+' manat məbləği müqavilə bağlandığı gün ödəyir. Geri qalan '+(d.qaliq||'______')+' manat məbləği isə '+(d.ay?d.ay+' ay':'________')+' müddətinə (aylıq '+(d.aylik||'____')+' manat) “Satıcı”ya ödəməyi öhdəsinə götürür.\n'+
+   '“Alıcı” tərəfindən ödənişlər 2 dəfə ardıcıl olaraq (60 gün) gecikdirilərsə, “Satıcı” bu müqaviləni ləğv etməklə mənzilin dəyərinin tam ödənilməsini və ya mənzilin qaytarılmasını “Alıcı”dan tələb edə bilər.'],
+  ['3. TƏRƏFLƏRİN HÜQUQ VƏ ÖHDƏLİKLƏRİ',
+   '3.1. “Satıcı” binanın tikilməsi üçün lazım olan bütün sənədləri əldə etmiş, tikinti-quraşdırma işlərini layihə və normativ qaydalara uyğun aparır; “Alıcı”dan müqavilə öhdəliklərinin vaxtında və tam icrasını tələb edir.\n'+
+   '3.2. “Alıcı” öhdəliklərini tam və vaxtında ödədikdən sonra təhvil-təslim aktı əsasında yaşayış sahəsini qəbul edir; binanın konstruktiv daşıyıcı divar və sütunlarında, fasadında, eyvanında, kommunikasiya ana xətlərində və kompleksin hər hansı hissəsində zərərli dəyişiklik aparmamağı öhdəsinə götürür; Mənzil Məcəlləsinin müvafiq maddələri ilə nəzərdə tutulmuş öhdəlikləri (binanın saxlanması, kommunal xidmətlər və s.) icra edir.'],
+  ['4. MƏXFİLİK',
+   '4.1. “Alıcı” qəbul edir ki, bu müqavilənin şərtlərini (o cümlədən alqı-satqı həcmi, müqavilə qiyməti və digər iqtisadi münasibətlər) qanunla müəyyən hallar istisna olmaqla heç bir fiziki və ya hüquqi şəxsə açıqlamamalıdır.'],
+  ['5. MÜBAHİSƏLƏRİN HƏLLİ',
+   '5.1. Müqavilənin icrası zamanı yaranan mübahisələr tərəflərin qarşılıqlı razılığı ilə həll edilir.\n5.2. Razılıq əldə edilmədikdə, mübahisələr Azərbaycan Respublikası qanunvericiliyinə əsasən məhkəmə yolu ilə həll edilir.'],
+  ['6. FORS-MAJOR HALLARI',
+   '6.1. Tərəflər fors-major hallarında müqavilə şərtlərinin icra olunmamasına görə məsuliyyətdən azad olunurlar.\n6.2. Fors-major hallarına təbii fəlakətlər, epidemiyalar və karantinlər, fövqəladə hal, müharibə, dövlət hakimiyyətinin akt və hərəkətləri və digər qarşıalınmaz hallar aiddir.\n6.3-6.4. Fors-major halları səlahiyyətli dövlət orqanı tərəfindən təsdiq edilməli və digər tərəfə 5 iş günü ərzində yazılı məlumat verilməlidir.'],
+  ['7. YEKUN ŞƏRTLƏR',
+   '7.1. “Alıcı” tərəfindən müqavilə şərtlərinin pozulması “Satıcı”ya müqaviləni birtərəfli ləğv etmək və yaşayış sahəsinə dair üçüncü şəxslə yeni müqavilə bağlamaq hüququ verir.\n7.2. Müqavilənin şərtləri qarşılıqlı razılıqla, yazılı formada dəyişdirilə bilər.\n7.5. Mülkiyyət hüququnun dövlət qeydiyyatı üçün bütün xərcləri “Alıcı” öz öhdəsinə götürür (mənzil tam ödənildikdə).'],
+  ['8. MÜQAVİLƏNİN QÜVVƏYƏ MİNMƏSİ',
+   '8.1. Bu Müqavilə imzalanıb möhürləndiyi andan qüvvəyə minir və tərəflərin öhdəliklərini tam yerinə yetirdikləri anadək qüvvədədir.\n8.2. Müqavilə 2 nüsxədən ibarətdir, Azərbaycan dilində tərtib olunur, hər tərəfdə bir nüsxə saxlanılır.']
  ];
 }
 
@@ -1037,7 +1051,7 @@ function genMugavileDoc(_dOverride){
  /* Rekvizitlər */
  ch.push(new D.Paragraph({spacing:{before:220,after:80},children:[new D.TextRun({text:'TƏRƏFLƏRİN REKVİZİTLƏRİ',bold:true,size:20,color:NAVY})]}));
  function party(title,lines){var runs=[new D.TextRun({text:title,bold:true,size:18,color:INK}),new D.TextRun({text:'\n',size:18})];lines.forEach(function(l){runs.push(new D.TextRun({text:l+'\n',size:17,color:INK}));});return runs;}
- var sellerLines=['Ad: '+SELLER.ad,'VÖEN: '+SELLER.voen,'Ünvan: '+SELLER.unvan,'Bank: '+SELLER.bank,'Hesab: '+SELLER.hesab,'SWIFT: '+SELLER.swift,'Tel: '+SELLER.tel];
+ var sellerLines=['“SATICI”','',SELLER.ad,'Ünvan: '+SELLER.unvan,'VÖEN: '+SELLER.voen,'Benfisiar hesab: '+SELLER.hesab,SELLER.bank,'Bank ünvan: '+SELLER.bankunvan,'Bank VÖEN: '+SELLER.bankvoen,'M/H: '+SELLER.muxbir,'KOD: '+SELLER.kod,'SWIFT: '+SELLER.swift,'Direktor: '+SELLER.direktor,'','_______________  M.Y'];
  var buyerLines=['A.S.A: '+d.full,'FİN: '+d.fin,'Ş/V: '+(d.sv||'—'),'Ünvan: '+(d.unvan||'—'),'Tel: '+(d.tel||'—')];
  var rt=new D.Table({width:{size:10600,type:D.WidthType.DXA},columnWidths:[5300,5300],borders:{top:{color:'c9b48f',size:6,style:D.BorderStyle.SINGLE},bottom:{color:'c9b48f',size:6,style:D.BorderStyle.SINGLE},left:{color:'c9b48f',size:6,style:D.BorderStyle.SINGLE},right:{color:'c9b48f',size:6,style:D.BorderStyle.SINGLE},insideVertical:{color:'c9b48f',size:6,style:D.BorderStyle.SINGLE}},rows:[new D.TableRow({children:[
   new D.TableCell({width:{size:5300,type:D.WidthType.DXA},margins:{top:120,bottom:120,left:160,right:160},children:[new D.Paragraph({children:party('SATICI',sellerLines)})]}),
@@ -1061,8 +1075,8 @@ function genMugavilePDF(){
   '</style></head><body>';
  h+='<div class="top"><img src="data:image/png;base64,'+LOGO_W_B64+'" style="filter:none"><h1>ALQI-SATQI MÜQAVİLƏSİ</h1><div class="no">№ '+d.no+'</div><div class="row"><span>Bakı şəhəri</span><span>'+d.date+'</span></div></div>';
  _mgClauses(d).forEach(function(c){h+='<h2>'+c[0]+'</h2><p>'+c[1].replace(/</g,'&lt;')+'</p>';});
- h+='<h2>TƏRƏFLƏRİN REKVİZİTLƏRİ</h2><table><tr><td><b>SATICI</b><br>Ad: '+SELLER.ad+'<br>VÖEN: '+SELLER.voen+'<br>Ünvan: '+SELLER.unvan+'<br>Bank: '+SELLER.bank+'<br>Hesab: '+SELLER.hesab+'<br>SWIFT: '+SELLER.swift+'<br>Tel: '+SELLER.tel+'</td>'+
-   '<td><b>ALICI</b><br>A.S.A: '+d.full+'<br>FİN: '+d.fin+'<br>Ş/V: '+(d.sv||'—')+'<br>Ünvan: '+(d.unvan||'—')+'<br>Tel: '+(d.tel||'—')+'</td></tr></table>';
+ h+='<h2>TƏRƏFLƏRİN REKVİZİTLƏRİ</h2><table><tr><td><b>“SATICI”</b><br>'+SELLER.ad+'<br>Ünvan: '+SELLER.unvan+'<br>VÖEN: '+SELLER.voen+'<br>Benfisiar hesab: '+SELLER.hesab+'<br>'+SELLER.bank+'<br>Bank ünvan: '+SELLER.bankunvan+'<br>Bank VÖEN: '+SELLER.bankvoen+'<br>M/H: '+SELLER.muxbir+'<br>KOD: '+SELLER.kod+'<br>SWIFT: '+SELLER.swift+'<br>Direktor: '+SELLER.direktor+'<br><br>____________  M.Y</td>'+
+   '<td><b>“ALICI”</b><br><br>'+d.full+'<br>Ünvan: '+(d.unvan||'____________')+'<br>Ş/V: '+(d.sv||'________')+', FİN: '+(d.fin||'________')+'<br>Tel: '+(d.tel||'—')+'<br><br>____________  (imza)</td></tr></table>';
  h+='<div class="sign"><span class="l">Satıcı: ________________<div class="imza">(imza)</div></span><span class="l" style="text-align:right">Alıcı: ________________<div class="imza">(imza)</div></span></div>';
  h+='</body></html>';
  var w=window.open('','_blank');if(!w){toast('Pop-up bloklandı');return;}w.document.write(h);w.document.close();setTimeout(function(){w.focus();w.print();},400);toast('Çap pəncərəsi açıldı');
