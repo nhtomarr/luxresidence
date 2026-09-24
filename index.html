@@ -281,6 +281,20 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   .dc-mact .cact.on{background:var(--rust);color:#fff;}
   .dc-tabs{position:relative;z-index:2;}
   #cmpModal .list-modal{max-width:1100px;width:96%;}
+  .cmp-add{background:#f7f1e9;border:2px dashed #d8c3aa;border-radius:16px;min-height:180px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;}
+  .cmp-add:hover{border-color:var(--rust);background:#f3e8db;}
+  .cmp-add-in{text-align:center;color:#a9805c;}
+  .cmp-add-in .pl{display:block;font-size:38px;line-height:1;font-weight:300;}
+  .cmp-add-in .tx{font-size:13px;font-weight:600;}
+  .cmp-table td.empc{color:#c9b9a6;text-align:center;}
+  .pick-row{display:flex;align-items:center;gap:14px;padding:12px;border-radius:12px;cursor:pointer;transition:.12s;}
+  .pick-row:hover{background:#f7f1e9;}
+  .pick-row img{width:70px;height:56px;object-fit:contain;background:#f5f0e8;border-radius:8px;}
+  .pick-ph{width:70px;height:56px;background:#eee;border-radius:8px;}
+  .pick-inf{flex:1;display:flex;flex-direction:column;}
+  .pick-inf b{font-size:14px;color:var(--ink);}
+  .pick-inf span{font-size:12px;color:var(--muted);}
+  .pick-add{width:30px;height:30px;border-radius:50%;background:var(--rust);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;}
   .cmp-card{background:#f7f1e9;border-radius:16px;padding:12px;display:flex;flex-direction:column;align-items:center;}
   .cc-plan{width:100%;height:180px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
   .cc-plan img{width:100%;height:100%;object-fit:contain;padding:8px;box-sizing:border-box;}
@@ -576,6 +590,7 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   <h1 class="cmp-title">Sevimlilər</h1><div id="favBody2"></div>
 </div></div>
 <div class="modal-bg" id="favModal"><div class="list-modal"><button class="mclose" id="favClose">&times;</button><h2>Favorilər ♥</h2><div id="favBody"></div></div></div>
+<div class="modal-bg" id="cmpPicker"><div class="list-modal" style="max-width:520px"><button class="mclose" onclick="document.getElementById('cmpPicker').classList.remove('open')">&times;</button><h2>Mənzil əlavə et</h2><div id="cmpPickBody" style="max-height:60vh;overflow:auto"></div></div></div>
 <div class="modal-bg" id="cmpModal"><div class="list-modal"><button class="mclose" id="cmpClose">&times;</button><h2>Müqayisə</h2><div id="cmpBody"></div></div></div>
 <div class="modal-bg" id="aptModal"><div class="apt-detail"><button class="mclose" id="aptClose">&times;</button>
   <div class="ad-grid">
@@ -714,13 +729,27 @@ function eksp(a){var A=a.area,R=a.rooms,rows=[];var hall=+(A*0.10).toFixed(1),ki
 const PLANSVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 10h10M13 3v18M13 14h8"/></svg>';
 function ccCard(a){return '<div class="cmp-card"><div class="cc-actions"><button class="cc-ic on cact" data-act="cmp" data-id="'+a.id+'" title="Müqayisədən çıxar">\u00d7</button></div><div class="cc-plan">'+(a.plan?'<img src="'+a.plan+'" alt="plan">':PLANSVG)+'</div><div class="cc-title">'+a.rooms+' otaqlı · '+a.area+' m²</div><a class="cc-more" href="#apt-'+a.id+'" onclick="document.getElementById(\'cmpModal\').classList.remove(\'open\')">Ətraflı →</a></div>';}
 function renderCmp(){var b=document.getElementById('cmpBody2');if(!b)return;var list=APARTMENTS.filter(a=>CMP.has(a.id));
- if(list.length<2){b.innerHTML='<div class="cmp-empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg><p>Müqayisə üçün minimum 2 mənzil seçməlisiniz</p></div>';return;}
- var n=list.length;var money=a=>a.area*a.price;
+ var MAXC=3;var slots=Math.max(list.length+1,2);if(slots>MAXC)slots=MAXC;if(list.length>=MAXC)slots=MAXC;
+ // əgər heç bir mənzil yoxdursa, 2 boş slot; varsa dolu + 1 boş (maks 3)
+ var nEmpty=(list.length<MAXC)?1:0;var total=list.length+nEmpty;if(total<2)total=2;
+ var money=a=>a.area*a.price;
  var rows=[['Yaşayış kompleksi',a=>'LUX Residence'],['Otaq sayı / Sahəsi',a=>a.rooms+' / '+a.area+' m²'],['Bina',a=>a.bina],['Mərtəbə',a=>flTxt(a,'<br>')],['Status',a=>STL[a.status][0]]].concat(SHOWP?[['Qiymət',a=>fmt(money(a))+' AZN']]:[]);
- var cols='200px repeat('+n+',1fr)';
- var cards='<div class="cmp-cards" style="grid-template-columns:'+cols+';"><div></div>'+list.map(ccCard).join('')+'</div>';
- var table='<table class="cmp-table"><colgroup><col style="width:200px"></colgroup><tbody>'+rows.map(r=>'<tr><td class="rl">'+r[0]+'</td>'+list.map(a=>'<td>'+r[1](a)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
- b.innerHTML='<div class="cmp-scroll">'+cards+table+'</div>';}
+ var cols='200px repeat('+total+',minmax(0,1fr))';
+ var cardCells=list.map(ccCard).join('');
+ for(var e=0;e<(total-list.length);e++){cardCells+='<div class="cmp-add" onclick="openCmpPicker()"><div class="cmp-add-in"><span class="pl">+</span><span class="tx">Mənzil əlavə et</span></div></div>';}
+ var cards='<div class="cmp-cards" style="grid-template-columns:'+cols+';"><div></div>'+cardCells+'</div>';
+ var tblRows=rows.map(function(r){var tds='<td class="rl">'+r[0]+'</td>';list.forEach(function(a){tds+='<td>'+r[1](a)+'</td>';});for(var e=0;e<(total-list.length);e++){tds+='<td class="empc">—</td>';}return '<tr>'+tds+'</tr>';}).join('');
+ var table='<table class="cmp-table"><tbody>'+tblRows+'</tbody></table>';
+ b.innerHTML='<div class="cmp-scroll">'+cards+table+'</div>';
+}
+function openCmpPicker(){
+ var avail=APARTMENTS.filter(a=>!CMP.has(a.id));
+ var box=document.getElementById('cmpPickBody');
+ if(!avail.length){box.innerHTML='<p style="color:var(--muted);padding:20px;text-align:center">Əlavə ediləcək başqa mənzil yoxdur.</p>';}
+ else{box.innerHTML=avail.map(function(a){return '<div class="pick-row" onclick="addToCmp('+a.id+')">'+(a.plan?'<img src="'+a.plan+'">':'<div class="pick-ph"></div>')+'<div class="pick-inf"><b>'+a.rooms+' otaqlı · '+a.area+' m²</b><span>'+esc(a.bina||'')+'</span></div><span class="pick-add">+</span></div>';}).join('');}
+ document.getElementById('cmpPicker').classList.add('open');
+}
+function addToCmp(id){if(CMP.size>=3){alert('Ən çox 3 mənzil');return;}CMP.add(id);saveFC();updCounts();document.getElementById('cmpPicker').classList.remove('open');renderCmp();}
 function renderFav(){var b=document.getElementById('favBody2');if(!b)return;var list=APARTMENTS.filter(a=>FAV.has(a.id));
  b.innerHTML=list.length?('<div class="apt-grid">'+list.map(card).join('')+'</div>'):'<div class="cmp-empty"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg><p>Hələ sevimli mənzil yoxdur — kartdakı ♥ ilə əlavə edin</p></div>';}
 
