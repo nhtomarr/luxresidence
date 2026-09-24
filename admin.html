@@ -606,15 +606,16 @@ function renderApt(){
   var q=(aptSearch.value||'').toLowerCase();
   var list=APT.filter(a=>!q||(a.bina+' '+a.rooms+' otaq '+a.area+' '+STAT[a.status]).toLowerCase().indexOf(q)>=0);
   document.getElementById('aptGrid').innerHTML=list.length?list.map(a=>`
-    <div class="rec">
-      <div class="rec-top"><span class="pill s-${a.status}">${STAT[a.status]}</span>
-        <div class="rec-act"><button title="Redaktə" onclick="openApt(${a.id})">✎</button><button title="Sil" onclick="delApt(${a.id})">🗑</button></div></div>
+    <div class="rec" style="${a.hidden?'opacity:.5':''}">
+      <div class="rec-top"><span class="pill s-${a.status}">${STAT[a.status]}</span>${a.hidden?'<span class="pill" style="background:#eee;color:#888">Gizli</span>':''}
+        <div class="rec-act"><button title="${a.hidden?'Saytda göstər':'Saytdan gizlət'}" onclick="toggleAptHide(${a.id})">${a.hidden?'🙈':'👁'}</button><button title="Redaktə" onclick="openApt(${a.id})">✎</button><button title="Sil" onclick="delApt(${a.id})">🗑</button></div></div>
       <h4>${a.rooms} otaqlı · ${a.area} m²</h4>
       <div class="rec-meta">${esc(a.bina)} · ${esc(a.floor)} mərtəbə</div>
       <div class="rec-price">${a.price} AZN/m² &nbsp;·&nbsp; ${(a.area*a.price).toLocaleString('az')} AZN</div>
     </div>`).join(''):'<p class="muted">Uyğun mənzil yoxdur.</p>';
   document.getElementById('aptCount').textContent=APT.length+' mənzil';
 }
+function toggleAptHide(id){var a=APT.find(function(x){return x.id===id;});if(!a)return;a.hidden=!a.hidden;set('lux_apartments',APT);renderApt();toast(a.hidden?'Mənzil saytdan gizlədildi':'Mənzil saytda göstərilir');}
 let editId=null;
 function fillBinaSelect(){document.getElementById('fBina').innerHTML=BINA.map(n=>`<option>${esc(n)}</option>`).join('');}
 function openApt(id){
