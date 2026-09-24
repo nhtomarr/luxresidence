@@ -584,6 +584,36 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   }
 @media(max-width:820px){.disc-sec{padding-top:0!important;}.disc-banner{margin-top:0!important;}.disc-sec::before{display:none;}}
 .sec-panel:not(.open){box-shadow:none;}
+
+.floor-strip,.sn-m,.sp-grab{display:none;}
+@media(max-width:760px){
+ #v-secim .sec-head{margin-bottom:12px;gap:10px;}
+ #v-secim .se{font-size:13px;}
+ #v-secim .sec-h1{font-size:24px;margin-top:2px;}
+ .sec-filt{gap:6px;}
+ .sec-filt .sf{padding:7px 14px;font-size:13px;}
+ .bina-tabs{flex-wrap:nowrap;overflow-x:auto;gap:6px;margin:0 -16px 12px;padding:0 16px 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+ .bina-tabs::-webkit-scrollbar{display:none;}
+ .bina-tabs .bt{flex:none;padding:8px 14px;font-size:14px;border-radius:10px;}
+ .tower-row{display:flex;gap:8px;align-items:stretch;}
+ .tower-stage{flex:1;min-width:0;aspect-ratio:1.096;border-radius:16px;}
+ .tower-zoom{width:222.2%;margin-left:-73.33%;margin-top:-26.25%;cursor:default;}
+ .tz-ctrl{display:none;}
+ .floor-strip{display:flex;flex-direction:column;gap:3px;width:46px;flex:none;}
+ .fs-b{position:relative;flex:1;min-height:0;border:1px solid var(--line);background:#fff;border-radius:8px;font-size:13px;font-weight:700;color:var(--ink);padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+ .fs-b i{position:absolute;top:50%;right:4px;width:5px;height:5px;margin-top:-2.5px;border-radius:50%;background:#2f8a54;}
+ .fs-b.on{background:var(--rust);border-color:var(--rust);color:#fff;}
+ .fs-b.on i{background:#fff;}
+ .fs-b.dim{opacity:.35;}
+ .sn-d{display:none;}.sn-m{display:inline;}
+ .sec-note{font-size:13px;margin-top:10px;}
+ .sec-panel{top:auto;bottom:0;left:0;right:0;width:100%;max-width:none;height:auto;max-height:68vh;max-height:68dvh;border-radius:22px 22px 0 0;transform:translateY(105%);padding:14px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -18px 50px -20px rgba(0,0,0,.35);overscroll-behavior:contain;}
+ .sec-panel.open{transform:none;}
+ .sp-grab{display:block;width:40px;height:4px;border-radius:4px;background:#e2d6c8;margin:0 auto 14px;}
+ .sp-close{top:14px;right:14px;width:34px;height:34px;}
+ .sp-fl{font-size:22px;}
+ .sp-apt{padding:12px 0;}
+}
 </style>
 <div id="maintScreen" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#2a1b12,#4a2a18);color:#f5ece1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;font-family:-apple-system,'Inter',system-ui,sans-serif">
   <div style="font-family:Georgia,serif;font-size:clamp(28px,6vw,52px);color:#e8c9a0;letter-spacing:.04em;margin-bottom:10px">LUX Residence</div>
@@ -737,7 +767,7 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   </div>
   <div id="callOk">Təşəkkürlər! 🎉<br>Tezliklə sizinlə əlaqə saxlayacağıq.</div>
 </div></div>
-<div class="view" id="v-secim" data-nav="secim"><div class="wrap" style="padding-top:calc(var(--nav-h) + 12px);"><div class="sec-head"><div><div class="se">İnteraktiv seçim</div><h1 class="sec-h1">Binanı və mərtəbəni seçin</h1></div><div class="sec-filt" id="secFilt"><button class="sf on" data-st="all">Hamısı</button><button class="sf" data-st="available">Satışda</button><button class="sf" data-st="sold">Satılıb</button></div></div><div class="bina-tabs" id="binaTabs"></div><div class="tower-stage" id="towerStage"><div class="tower-zoom" id="towerZoom"><img src="assets/tower-3-8.jpg" alt="Bina" id="towerImg"><svg id="towerSvg" viewBox="0 0 1000 563" preserveAspectRatio="none"></svg></div><div class="floor-tip" id="floorTip" style="display:none"></div><div class="tz-ctrl"><button onclick="tzoom(1.3)" title="Böyüt">+</button><button onclick="tzoom(0.77)" title="Kiçilt">−</button><button onclick="tzreset()" title="Sıfırla">⟲</button></div></div><div class="sec-note">Bina üzərində gəzin — mərtəbə görünsün. <b>Klik edin</b> — mənzillər sağda açılsın.</div><div class="sec-panel" id="secPanel"><button class="sp-close" onclick="document.getElementById('secPanel').classList.remove('open')">×</button><div id="secPanelBody"></div></div></div></div>
+<div class="view" id="v-secim" data-nav="secim"><div class="wrap" style="padding-top:calc(var(--nav-h) + 12px);"><div class="sec-head"><div><div class="se">İnteraktiv seçim</div><h1 class="sec-h1">Binanı və mərtəbəni seçin</h1></div><div class="sec-filt" id="secFilt"><button class="sf on" data-st="all">Hamısı</button><button class="sf" data-st="available">Satışda</button><button class="sf" data-st="sold">Satılıb</button></div></div><div class="bina-tabs" id="binaTabs"></div><div class="tower-row"><div class="tower-stage" id="towerStage"><div class="tower-zoom" id="towerZoom"><img src="assets/tower-3-8.jpg" alt="Bina" id="towerImg"><svg id="towerSvg" viewBox="0 0 1000 563" preserveAspectRatio="none"></svg></div><div class="floor-tip" id="floorTip" style="display:none"></div><div class="tz-ctrl"><button onclick="tzoom(1.3)" title="Böyüt">+</button><button onclick="tzoom(0.77)" title="Kiçilt">−</button><button onclick="tzreset()" title="Sıfırla">⟲</button></div></div><div class="floor-strip" id="floorStrip" aria-label="Mərtəbələr"></div></div><div class="sec-note"><span class="sn-d">Bina üzərində gəzin — mərtəbə görünsün. <b>Klik edin</b> — mənzillər sağda açılsın.</span><span class="sn-m">Mərtəbəni binada və ya yandakı siyahıda seçin. Mənzillər aşağıda açılacaq.</span></div><div class="sec-panel" id="secPanel"><div class="sp-grab"></div><button class="sp-close" onclick="document.getElementById('secPanel').classList.remove('open')">×</button><div id="secPanelBody"></div></div></div></div>
 <div class="drawer" id="drawer"><button class="x" id="drawerX">&times;</button><div class="eyebrow-d">LUX RESIDENCE</div><h2 id="dName">Bina</h2><div class="dr-meta" id="dMeta"></div><div id="drawerBody"></div><a class="cta" id="drawerAll" href="#planlar" data-bina="">Bu binada bütün mənzillər →</a></div><footer><svg class="foot-mark" viewBox="0 0 120 120" fill="currentColor" aria-hidden="true"><path d="M20 16 h22 v66 h34 v22 h-56 z"/><path d="M100 104 h-22 v-66 h-34 v-22 h56 z"/></svg><div class="foot-grid">
   <div class="foot-brand"><img src="assets/img7.png" alt="LUX RESIDENCE"><p>Şəhərin imkanlarından uzaqlaşmadan, yaşıllıqların əhatəsində rahat və huzurlu yaşam.</p></div>
   <div class="foot-col"><h4>Səhifələr</h4><a href="#ana">Ana Səhifə</a><a href="#haqqimizda">Haqqımızda</a><a href="#infrastruktur">İnfrastruktur</a><a href="#xeberler">Xəbərlər</a><a href="#planlar">Planlar</a><a href="#elaqe">Əlaqə</a></div>
@@ -1049,7 +1079,24 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
    h+='<polygon points="'+pts+'" class="'+cls+'" data-floor="'+f.fl+'"></polygon>';
   });
   svg.innerHTML=h;
+  buildStrip();
  }
+ function buildStrip(){
+  var box=document.getElementById('floorStrip');if(!box)return;var h='';
+  for(var fl=FLOOR_TOP;fl>=FLOOR_BOT;fl--){var u=floorUnits(CURBINA,fl);var av=u.some(function(x){return x.st==='available';});var ok=curFilter==='all'||u.some(function(x){return x.st===curFilter;});
+   h+='<button class="fs-b'+(ok?'':' dim')+'" data-floor="'+fl+'">'+fl+(av?'<i></i>':'')+'</button>';}
+  box.innerHTML=h;
+ }
+ function markFloor(fl){
+  document.querySelectorAll('#towerSvg polygon').forEach(function(x){x.classList.toggle('sel',+x.dataset.floor===fl);});
+  document.querySelectorAll('#floorStrip .fs-b').forEach(function(x){x.classList.toggle('on',+x.dataset.floor===fl);});
+ }
+ document.addEventListener('click',function(e){
+  var fb=e.target.closest('#floorStrip .fs-b');
+  if(fb){if(!fb.classList.contains('dim')){openFloorPanel(+fb.dataset.floor);}return;}
+  var sp=document.getElementById('secPanel');
+  if(sp&&sp.classList.contains('open')&&window.innerWidth<=760&&!e.target.closest('#secPanel')&&!e.target.closest('#towerSvg polygon')){sp.classList.remove('open');markFloor(0);}
+ });
  function statusColor(st){return st==='available'?'#2f8a54':'#c0392b';}
  function statusLabel(st){return st==='available'?'Satışda':'Satılıb';}
  function openFloorTip(floor,evt){
@@ -1063,6 +1110,7 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
   tip.style.left=px+'px';tip.style.top=py+'px';
  }
  function openFloorPanel(floor){
+  markFloor(floor);
   var units=floorUnits(CURBINA,floor);
   if(curFilter!=='all')units=units.filter(function(u){return u.st===curFilter;});
   var body=document.getElementById('secPanelBody');
@@ -1098,7 +1146,7 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
    pg.classList.add('sel');openFloorPanel(+pg.dataset.floor);return;
   }
   var sf=e.target.closest('.sec-filt .sf');
-  if(sf){document.querySelectorAll('.sec-filt .sf').forEach(function(x){x.classList.remove('on');});sf.classList.add('on');curFilter=sf.dataset.st;drawTower();document.getElementById('floorPop').style.display='none';return;}
+  if(sf){document.querySelectorAll('.sec-filt .sf').forEach(function(x){x.classList.remove('on');});sf.classList.add('on');curFilter=sf.dataset.st;drawTower();var _fp=document.getElementById('floorPop');if(_fp)_fp.style.display='none';return;}
   // pop-dan kənar klik bağla
   if(!e.target.closest('.floor-pop')&&!e.target.closest('#towerSvg')){var fp=document.getElementById('floorPop');if(fp)fp.style.display='none';}
  });
@@ -1113,7 +1161,7 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
   var sp=document.getElementById('secPanel');if(sp)sp.classList.remove('open');
   var ft=document.getElementById('floorTip');if(ft)ft.style.display='none';
  });
- function initTower(){if(document.getElementById('towerSvg')){buildBinaTabs();drawTower();}}
+ function initTower(){if(document.getElementById('towerSvg')){buildBinaTabs();drawTower();if(!window._SALES){var _k=0,_t=setInterval(function(){if(window._SALES||++_k>40){clearInterval(_t);drawTower();}},250);}}}
  window.addEventListener('hashchange',function(){if(location.hash.indexOf('secim')>=0)setTimeout(initTower,200);});
  window._initTower=initTower;
  function _onSecim(){return location.hash.indexOf('secim')>=0||location.pathname.replace(/\/+$/,'')==='/secim';}
