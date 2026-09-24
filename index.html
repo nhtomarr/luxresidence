@@ -78,15 +78,16 @@ a{color:inherit;text-decoration:none;} img{max-width:100%;display:block;}
 .apt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px;margin-top:28px;}
 .apt-card{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;transition:.2s;}
 .apt-card:hover{transform:translateY(-4px);box-shadow:0 30px 55px -32px rgba(74,42,24,.35);}
-.apt-planimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#f5f0e8;}
+.apt-planimg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:10px;box-sizing:border-box;background:#f5f0e8;}
 .apt-thumb{aspect-ratio:4/3;background:linear-gradient(135deg,#f2e9dd,#e6d4c1);display:flex;align-items:center;justify-content:center;color:#c19a76;position:relative;}
 .apt-thumb svg{width:52px;height:52px;opacity:.55;}
 .apt-badge{position:absolute;top:13px;left:13px;font-size:11px;font-weight:700;padding:5px 11px;border-radius:99px;text-transform:uppercase;letter-spacing:.03em;}
 .b-available{background:#2f7d4f;color:#fff;} .b-sold{background:#9a3b2a;color:#fff;} .b-reserved{background:#c98a2e;color:#fff;}
 .apt-b{padding:18px 18px 20px;flex:1;display:flex;flex-direction:column;}
-.apt-b .p{font-family:var(--serif);font-weight:700;font-size:24px;color:var(--ink);}
+.apt-b .spec{font-family:var(--serif);font-weight:700;font-size:21px;color:var(--ink);}
+.apt-b .p{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--muted);margin-top:2px;}
 .apt-b .p span{font-size:13px;font-weight:600;color:var(--muted);font-family:var(--sans);}
-.apt-b .loc{font-size:13px;color:var(--muted);margin:8px 0 12px;display:flex;align-items:center;gap:7px;}
+.apt-b .loc{font-size:13px;color:var(--muted);margin:8px 0 10px;display:flex;align-items:flex-start;gap:7px;}
 .apt-b .loc svg{width:15px;height:15px;color:var(--rust);flex:none;}
 .loc:has(.locl){align-items:flex-start}.loc .locl{line-height:1.5}.loc:has(.locl) svg{margin-top:2px}
 .apt-b .spec{font-size:14px;font-weight:600;color:var(--ink);border-top:1px solid var(--line);padding-top:12px;margin-top:auto;}
@@ -608,7 +609,7 @@ function saveFC(){try{localStorage.setItem('lux_fav',JSON.stringify([...FAV]));l
 function priceLabel(a){return SHOWP?(fmt(a.price)+' <span>AZN/m²</span>'):'<span style="font-size:15px;color:var(--muted);font-weight:600;font-family:var(--sans);">Sorğu ilə</span>';}
 const PIN=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10a8 8 0 1 0-16 0c0 6 8 10 8 10z"/><circle cx="12" cy="12" r="2.5"/></svg>`,PLAN=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 10h10M13 3v18M13 14h8"/></svg>`;
 function fmt(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
-function card(a){const[l,c]=STL[a.status];const f=FAV.has(a.id)?" on":"",cm=CMP.has(a.id)?" on":"";return `<div class="apt-card" data-id="${a.id}" style="cursor:pointer;"><div class="apt-thumb"><span class="apt-badge ${c}">${l}</span><div class="card-actions"><button class="cact${f}" data-act="fav" data-id="${a.id}">${HEART}</button><button class="cact${cm}" data-act="cmp" data-id="${a.id}">${SCALE}</button></div>${a.plan?('<img class="apt-planimg" src="'+a.plan+'">'):PLAN}</div><div class="apt-b"><div class="p">${priceLabel(a)}</div><div class="loc">${PIN}<span class="locl">${locTxt(a,'<br>')}</span></div><div class="spec">${a.rooms} otaqlı · ${a.area} m²</div><div class="abtn">Ətraflı →</div></div></div>`;}
+function card(a){const[l,c]=STL[a.status];const f=FAV.has(a.id)?" on":"",cm=CMP.has(a.id)?" on":"";return `<div class="apt-card" data-id="${a.id}" style="cursor:pointer;"><div class="apt-thumb"><span class="apt-badge ${c}">${l}</span><div class="card-actions"><button class="cact${f}" data-act="fav" data-id="${a.id}">${HEART}</button><button class="cact${cm}" data-act="cmp" data-id="${a.id}">${SCALE}</button></div>${a.plan?('<img class="apt-planimg" src="'+a.plan+'">'):PLAN}</div><div class="apt-b"><div class="spec">${a.rooms} otaqlı · ${a.area} m²</div><div class="loc">${PIN}<span class="locl">${locTxt(a,'<br>')}</span></div><div class="p">${priceLabel(a)}</div><div class="abtn">Ətraflı →</div></div></div>`;}
 document.getElementById('featured-cards').innerHTML=APARTMENTS.filter(a=>a.status==='available').slice(0,4).map(card).join('');
 const F={rooms:new Set(),min:40,max:250,status:'all',bina:null};
 function renderCat(){const list=APARTMENTS.filter(a=>{if(F.rooms.size){const r=a.rooms>=4?4:a.rooms;if(!F.rooms.has(r))return false;}if(a.area<F.min||a.area>F.max)return false;if(F.status!=='all'&&a.status!==F.status)return false;if(F.bina&&!inB(a,F.bina))return false;return true;});document.getElementById('cat-cards').innerHTML=list.length?list.map(card).join(''):'<p style="color:var(--muted);grid-column:1/-1;">Uyğun mənzil tapılmadı.</p>';document.getElementById('catCount').textContent=list.length+' mənzil';}
