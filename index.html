@@ -199,6 +199,21 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   #towerSvg polygon:hover{fill:rgba(217,110,60,.62);stroke:#ffffff;stroke-width:1.5;}
   #towerSvg polygon.sel{fill:rgba(217,110,60,.7);stroke:#fff;stroke-width:2;}
   #towerSvg polygon.dim{fill:rgba(120,120,120,.18);stroke:rgba(255,255,255,.12);pointer-events:none;}
+  .floor-tip{position:absolute;background:rgba(20,26,38,.95);color:#fff;font-size:13px;font-weight:700;padding:6px 12px;border-radius:8px;z-index:16;pointer-events:none;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.4);}
+  .sec-panel{position:fixed;top:0;right:0;width:340px;max-width:88vw;height:100%;background:#fff;box-shadow:-16px 0 50px -20px rgba(0,0,0,.4);z-index:1200;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);padding:70px 24px 24px;overflow-y:auto;}
+  .sec-panel.open{transform:translateX(0);}
+  .sp-close{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;border:none;background:#f0e6da;color:var(--ink);font-size:20px;cursor:pointer;}
+  .sp-fl{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--ink);}
+  .sp-bina{font-size:14px;color:var(--muted);margin-bottom:18px;}
+  .sp-apt{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--line);cursor:pointer;transition:.12s;}
+  .sp-apt:hover{padding-left:4px;}
+  .sp-dot{width:11px;height:11px;border-radius:50%;flex:none;}
+  .sp-info{flex:1;}
+  .sp-info b{display:block;font-size:15px;color:var(--ink);}
+  .sp-st{font-size:12px;color:var(--muted);}
+  .sp-arrow{color:var(--rust);font-weight:700;}
+  .sp-empty{padding:20px 0;color:var(--muted);font-size:14px;}
+  @media(max-width:640px){.sec-panel{width:100%;}}
   .floor-pop{position:absolute;background:rgba(20,26,38,.96);color:#fff;border-radius:14px;padding:16px 18px;min-width:230px;max-width:300px;box-shadow:0 20px 50px rgba(0,0,0,.5);z-index:20;backdrop-filter:blur(8px);line-height:1.5;}
   .floor-pop h4{font-family:var(--serif);font-size:18px;margin-bottom:4px;}
   .floor-pop .fp-sub{font-size:12px;color:#9fb0c8;margin-bottom:12px;}
@@ -663,7 +678,7 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   </div>
   <div id="callOk">Təşəkkürlər! 🎉<br>Tezliklə sizinlə əlaqə saxlayacağıq.</div>
 </div></div>
-<div class="view" id="v-secim" data-nav="secim"><div class="wrap" style="padding-top:calc(var(--nav-h) + 12px);"><div class="sec-head"><div><div class="se">İnteraktiv seçim</div><h1 class="sec-h1">Binanı və mərtəbəni seçin</h1></div><div class="sec-filt" id="secFilt"><button class="sf on" data-st="all">Hamısı</button><button class="sf" data-st="available">Satışda</button><button class="sf" data-st="sold">Satılıb</button></div></div><div class="tower-stage" id="towerStage"><div class="tower-zoom" id="towerZoom"><img src="assets/tower-3-8.jpg" alt="Bina" id="towerImg"><svg id="towerSvg" viewBox="0 0 1000 563" preserveAspectRatio="none"></svg></div><div class="floor-pop" id="floorPop" style="display:none"></div><div class="tz-ctrl"><button onclick="tzoom(1.3)" title="Böyüt">+</button><button onclick="tzoom(0.77)" title="Kiçilt">−</button><button onclick="tzreset()" title="Sıfırla">⟲</button></div></div><div class="sec-note">Binanın üzərində mərtəbəyə klikləyin — həmin mərtəbədəki mənzillər açılacaq. Bina 3, 4, 5, 6, 7, 8 eyni tipdir.</div></div></div>
+<div class="view" id="v-secim" data-nav="secim"><div class="wrap" style="padding-top:calc(var(--nav-h) + 12px);"><div class="sec-head"><div><div class="se">İnteraktiv seçim</div><h1 class="sec-h1">Binanı və mərtəbəni seçin</h1></div><div class="sec-filt" id="secFilt"><button class="sf on" data-st="all">Hamısı</button><button class="sf" data-st="available">Satışda</button><button class="sf" data-st="sold">Satılıb</button></div></div><div class="tower-stage" id="towerStage"><div class="tower-zoom" id="towerZoom"><img src="assets/tower-3-8.jpg" alt="Bina" id="towerImg"><svg id="towerSvg" viewBox="0 0 1000 563" preserveAspectRatio="none"></svg></div><div class="floor-tip" id="floorTip" style="display:none"></div><div class="tz-ctrl"><button onclick="tzoom(1.3)" title="Böyüt">+</button><button onclick="tzoom(0.77)" title="Kiçilt">−</button><button onclick="tzreset()" title="Sıfırla">⟲</button></div></div><div class="sec-note">Bina üzərində gəzin — mərtəbə görünsün. <b>Klik edin</b> — mənzillər sağda açılsın.</div><div class="sec-panel" id="secPanel"><button class="sp-close" onclick="document.getElementById('secPanel').classList.remove('open')">×</button><div id="secPanelBody"></div></div></div></div>
 <div class="drawer" id="drawer"><button class="x" id="drawerX">&times;</button><div class="eyebrow-d">LUX RESIDENCE</div><h2 id="dName">Bina</h2><div class="dr-meta" id="dMeta"></div><div id="drawerBody"></div><a class="cta" id="drawerAll" href="#planlar" data-bina="">Bu binada bütün mənzillər →</a></div><footer><svg class="foot-mark" viewBox="0 0 120 120" fill="currentColor" aria-hidden="true"><path d="M20 16 h22 v66 h34 v22 h-56 z"/><path d="M100 104 h-22 v-66 h-34 v-22 h56 z"/></svg><div class="foot-grid">
   <div class="foot-brand"><img src="assets/img7.png" alt="LUX RESIDENCE"><p>Şəhərin imkanlarından uzaqlaşmadan, yaşıllıqların əhatəsində rahat və huzurlu yaşam.</p></div>
   <div class="foot-col"><h4>Səhifələr</h4><a href="#ana">Ana Səhifə</a><a href="#haqqimizda">Haqqımızda</a><a href="#infrastruktur">İnfrastruktur</a><a href="#xeberler">Xəbərlər</a><a href="#planlar">Planlar</a><a href="#elaqe">Əlaqə</a></div>
@@ -959,25 +974,28 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
  }
  function statusColor(st){return st==='available'?'#2f8a54':'#c0392b';}
  function statusLabel(st){return st==='available'?'Satışda':'Satılıb';}
- function openFloorPop(floor,evt){
-  var pop=document.getElementById('floorPop');
-  var units=floorUnits(CURBINA,floor);
-  if(curFilter!=='all')units=units.filter(function(u){return u.st===curFilter;});
-  var h='<span class="fp-close" onclick="document.getElementById(\'floorPop\').style.display=\'none\'">×</span>';
-  h+='<h4>Mərtəbə '+floor+'</h4><div class="fp-sub">'+CURBINA+'</div>';
-  if(!units.length){h+='<div class="fp-empty">Bu mərtəbədə uyğun mənzil yoxdur.</div>';}
-  else{units.forEach(function(u){
-   h+='<div class="fp-apt" onclick="_secApt('+u.area+')"><span class="fp-dot" style="background:'+statusColor(u.st)+'"></span>'
-    +'<div class="fp-info"><b>'+(u.room||'—')+' otaqlı · '+(u.area||'—')+' m²</b><span class="fp-st">№'+(u.n||'')+' · '+statusLabel(u.st)+'</span></div></div>';
-  });}
-  pop.innerHTML=h;pop.style.display='block';
-  // yerləşdir: klik nöqtəsinə yaxın
+ function openFloorTip(floor,evt){
+  var tip=document.getElementById('floorTip');
+  tip.textContent='Mərtəbə '+floor;tip.style.display='block';
   var stage=document.getElementById('towerStage');var r=stage.getBoundingClientRect();
   var x=evt.clientX-r.left,y=evt.clientY-r.top;
-  var pw=pop.offsetWidth,ph=pop.offsetHeight;
-  var px=x+16;if(px+pw>r.width)px=x-pw-16;if(px<8)px=8;
-  var py=y-ph/2;if(py<8)py=8;if(py+ph>r.height)py=r.height-ph-8;
-  pop.style.left=px+'px';pop.style.top=py+'px';
+  var tw=tip.offsetWidth;
+  var px=x+14;if(px+tw>r.width)px=x-tw-14;if(px<6)px=6;
+  var py=y-14;if(py<6)py=6;
+  tip.style.left=px+'px';tip.style.top=py+'px';
+ }
+ function openFloorPanel(floor){
+  var units=floorUnits(CURBINA,floor);
+  if(curFilter!=='all')units=units.filter(function(u){return u.st===curFilter;});
+  var body=document.getElementById('secPanelBody');
+  var h='<div class="sp-fl">Mərtəbə '+floor+'</div><div class="sp-bina">'+CURBINA+'</div>';
+  if(!units.length){h+='<div class="sp-empty">Bu mərtəbədə uyğun mənzil yoxdur.</div>';}
+  else{units.forEach(function(u){
+   h+='<div class="sp-apt" onclick="_secApt('+u.area+')"><span class="sp-dot" style="background:'+statusColor(u.st)+'"></span>'
+    +'<div class="sp-info"><b>'+(u.room||'—')+' otaqlı · '+(u.area||'—')+' m²</b><span class="sp-st">№'+(u.n||'')+' · '+statusLabel(u.st)+'</span></div><span class="sp-arrow">→</span></div>';
+  });}
+  body.innerHTML=h;
+  document.getElementById('secPanel').classList.add('open');
  }
  // mənzilə klik → kataloqda uyğun sahəli mənzili aç
  window._secApt=function(area){
@@ -990,16 +1008,16 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
   var pg=e.target.closest('#towerSvg polygon');
   if(pg&&!pg.classList.contains('dim')){
    document.querySelectorAll('#towerSvg polygon').forEach(function(x){x.classList.remove('sel');});
-   pg.classList.add('sel');openFloorPop(+pg.dataset.floor,e);
+   pg.classList.add('sel');openFloorTip(+pg.dataset.floor,e);
   }
  });
- // stage-dən çıxanda pop bağla
- (function(){var st=document.getElementById('towerStage');if(st)st.addEventListener('mouseleave',function(){var fp=document.getElementById('floorPop');if(fp)fp.style.display='none';document.querySelectorAll('#towerSvg polygon').forEach(function(x){x.classList.remove('sel');});});})();
+ // stage-dən çıxanda tip bağla
+ (function(){var st=document.getElementById('towerStage');if(st)st.addEventListener('mouseleave',function(){var fp=document.getElementById('floorTip');if(fp)fp.style.display='none';document.querySelectorAll('#towerSvg polygon').forEach(function(x){x.classList.remove('sel');});});})();
  document.addEventListener('click',function(e){
   var pg=e.target.closest('#towerSvg polygon');
   if(pg&&!pg.classList.contains('dim')){
    document.querySelectorAll('#towerSvg polygon').forEach(function(x){x.classList.remove('sel');});
-   pg.classList.add('sel');openFloorPop(+pg.dataset.floor,e);return;
+   pg.classList.add('sel');openFloorPanel(+pg.dataset.floor);return;
   }
   var sf=e.target.closest('.sec-filt .sf');
   if(sf){document.querySelectorAll('.sec-filt .sf').forEach(function(x){x.classList.remove('on');});sf.classList.add('on');curFilter=sf.dataset.st;drawTower();document.getElementById('floorPop').style.display='none';return;}
