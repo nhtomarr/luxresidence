@@ -529,10 +529,14 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
 
   /* ===== MOBİL DÜZƏLİŞLƏR ===== */
   @media(max-width:640px){
-    .hero{aspect-ratio:3/4;}
-    .hcap{left:0;right:0;bottom:0;max-width:100%;padding:44px 18px 18px;background:linear-gradient(to top,rgba(22,11,6,.95),rgba(22,11,6,.5) 55%,transparent);}
-    .hcap h1{font-size:clamp(26px,8vw,34px);text-shadow:0 2px 12px rgba(0,0,0,.8);margin-top:6px;}
-    .hcap .eyebrow{color:#f0c9a8;}
+    .hero{aspect-ratio:16/9;overflow:visible;background:transparent;box-shadow:none;}
+    /* şəkil+svg yuvarlaq kəsilsin */
+    .hero .sky,.hero .veil,.hero .overlay,.hero .slides,.hero .slide,.hero>img,.hero .hero-media{border-radius:20px;}
+    .hero .dn-badge{border-radius:99px;}
+    /* Slogan şəklin ALTINDA */
+    .hcap{position:static;left:auto;right:auto;bottom:auto;max-width:100%;padding:16px 2px 0;background:none;color:var(--ink);pointer-events:auto;}
+    .hcap h1{font-size:clamp(26px,7.5vw,34px);text-shadow:none;margin-top:6px;color:var(--ink);}
+    .hcap .eyebrow{color:var(--rust);}
     /* stats: 2 sütun, kiçik */
     .stats{margin:16px auto 0;display:grid !important;grid-template-columns:1fr 1fr;gap:0;border-radius:18px;}
     .stat{padding:16px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);}
@@ -565,8 +569,16 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   html{overflow-x:hidden;max-width:100%;}
   @media(max-width:640px){
     .marquee{margin-left:-18px;margin-right:-18px;width:calc(100% + 36px);}
-    .stats{margin-top:-30px;}
+    .stats{margin-top:16px;}
     .stat{padding:18px 16px;}
+  }
+
+  .hcap-mobile{display:none;}
+  @media(max-width:640px){
+    .hcap{display:none !important;}
+    .hcap-mobile{display:block;margin:18px 0 4px;}
+    .hcap-mobile .eyebrow{color:var(--rust);font-size:12px;letter-spacing:.18em;font-weight:700;text-transform:uppercase;}
+    .hcap-mobile h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,8vw,36px);line-height:1.08;margin:8px 0 0;color:var(--ink);}
   }
 </style>
 <div id="maintScreen" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#2a1b12,#4a2a18);color:#f5ece1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;font-family:-apple-system,'Inter',system-ui,sans-serif">
@@ -600,7 +612,7 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   </div>
 </header></div><div class="view active" id="v-ana" data-nav="ana">
   <div class="hero-sec"><div class="hero"><div class="sky day"></div><div class="sky night"></div><div class="veil"></div><svg class="overlay" viewBox="0 0 100 100" preserveAspectRatio="none"><g class="hots"></g></svg><div class="dn-badge">Gündüz</div><div class="hcap"><div class="eyebrow" id="cHomeEye">Şəhərin yeni ritmi</div><h1 id="cHomeTitle">Sizin istədiyiniz<br>kompleks</h1></div></div></div>
-  <div class="wrap"><div class="stats" id="homeStats">
+  <div class="wrap"><div class="hcap-mobile" id="hcapMobile"><div class="eyebrow">Şəhərin yeni ritmi</div><h1>Sizin istədiyiniz kompleks</h1></div><div class="stats" id="homeStats">
     <div class="stat"><b>10+</b><span>yaşayış binası</span></div>
     <div class="stat"><b>0%</b><span>daxili kredit</span></div>
     <div class="stat"><b>7/24</b><span>mühafizə</span></div>
