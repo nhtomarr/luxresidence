@@ -195,10 +195,10 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   .tz-ctrl{position:absolute;right:14px;bottom:14px;z-index:15;display:flex;flex-direction:column;gap:6px;}
   .tz-ctrl button{width:40px;height:40px;border-radius:10px;border:none;background:rgba(20,26,38,.92);color:#fff;font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;}
   .tz-ctrl button:hover{background:var(--rust);}
-  #towerSvg polygon{cursor:pointer;fill:rgba(255,255,255,0);stroke:rgba(255,255,255,0);transition:.12s;}
-  #towerSvg polygon:hover{fill:rgba(217,110,60,.42);stroke:rgba(255,255,255,.85);stroke-width:1.5;}
-  #towerSvg polygon.sel{fill:rgba(217,110,60,.55);stroke:#fff;stroke-width:2;}
-  #towerSvg polygon.dim{pointer-events:none;}
+  #towerSvg polygon{cursor:pointer;fill:rgba(217,110,60,.30);stroke:rgba(255,255,255,.35);stroke-width:.6;transition:.1s;}
+  #towerSvg polygon:hover{fill:rgba(217,110,60,.62);stroke:#ffffff;stroke-width:1.5;}
+  #towerSvg polygon.sel{fill:rgba(217,110,60,.7);stroke:#fff;stroke-width:2;}
+  #towerSvg polygon.dim{fill:rgba(120,120,120,.18);stroke:rgba(255,255,255,.12);pointer-events:none;}
   .floor-pop{position:absolute;background:rgba(20,26,38,.96);color:#fff;border-radius:14px;padding:16px 18px;min-width:230px;max-width:300px;box-shadow:0 20px 50px rgba(0,0,0,.5);z-index:20;backdrop-filter:blur(8px);line-height:1.5;}
   .floor-pop h4{font-family:var(--serif);font-size:18px;margin-bottom:4px;}
   .floor-pop .fp-sub{font-size:12px;color:#9fb0c8;margin-bottom:12px;}
@@ -985,6 +985,16 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
   if(a){location.hash='apt-'+a.id;}else{location.hash='planlar';}
  };
  // hadisələr
+ // hover ilə mərtəbə göstər (klik lazım deyil)
+ document.addEventListener('mouseover',function(e){
+  var pg=e.target.closest('#towerSvg polygon');
+  if(pg&&!pg.classList.contains('dim')){
+   document.querySelectorAll('#towerSvg polygon').forEach(function(x){x.classList.remove('sel');});
+   pg.classList.add('sel');openFloorPop(+pg.dataset.floor,e);
+  }
+ });
+ // stage-dən çıxanda pop bağla
+ (function(){var st=document.getElementById('towerStage');if(st)st.addEventListener('mouseleave',function(){var fp=document.getElementById('floorPop');if(fp)fp.style.display='none';document.querySelectorAll('#towerSvg polygon').forEach(function(x){x.classList.remove('sel');});});})();
  document.addEventListener('click',function(e){
   var pg=e.target.closest('#towerSvg polygon');
   if(pg&&!pg.classList.contains('dim')){
