@@ -607,7 +607,7 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
  .fs-b.dim{opacity:.35;}
  .sn-d{display:none;}.sn-m{display:inline;}
  .sec-note{font-size:13px;margin-top:10px;}
- .sec-panel{top:auto;bottom:0;left:0;right:0;width:100%;max-width:none;height:auto;max-height:68vh;max-height:68dvh;border-radius:22px 22px 0 0;transform:translateY(105%);padding:14px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -18px 50px -20px rgba(0,0,0,.35);overscroll-behavior:contain;}
+ .sec-panel{top:auto;bottom:0;left:0;right:0;width:100%;max-width:none;height:auto;max-height:52vh;max-height:52dvh;border-radius:22px 22px 0 0;transform:translateY(105%);padding:14px 20px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -18px 50px -20px rgba(0,0,0,.35);overscroll-behavior:contain;}
  .sec-panel.open{transform:none;}
  .sp-grab{display:block;width:40px;height:4px;border-radius:4px;background:#e2d6c8;margin:0 auto 14px;}
  .sp-close{top:14px;right:14px;width:34px;height:34px;}
@@ -1121,7 +1121,13 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
     +'<div class="sp-info"><b>'+(u.room||'—')+' otaqlı · '+(u.area||'—')+' m²</b><span class="sp-st">№'+(u.n||'')+' · '+statusLabel(u.st)+'</span></div><span class="sp-arrow">→</span></div>';
   });}
   body.innerHTML=h;
-  document.getElementById('secPanel').classList.add('open');
+  var _sp=document.getElementById('secPanel');_sp.classList.add('open');
+  if(window.innerWidth<=760){setTimeout(function(){
+   var pg=document.querySelector('#towerSvg polygon.sel');if(!pg)return;
+   var r=pg.getBoundingClientRect();var navH=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))||64;
+   var sheetTop=window.innerHeight-_sp.offsetHeight;var target=navH+(sheetTop-navH)/2;
+   var dy=(r.top+r.height/2)-target;if(Math.abs(dy)>8)window.scrollBy({top:dy,behavior:'smooth'});
+  },320);}
  }
  // mənzilə klik → kataloqda uyğun sahəli mənzili aç
  window._secApt=function(area){
