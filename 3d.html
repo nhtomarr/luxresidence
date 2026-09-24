@@ -130,6 +130,7 @@ button{font-family:inherit;cursor:pointer;}
 <script type="module">
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 
 const SUPA='https://avqchschbbltnnasabdm.supabase.co',KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2cWNoc2NoYmJsdG5uYXNhYmRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5NDA2NTAsImV4cCI6MjEwNTUxNjY1MH0.PVxxfLrj8KZH6AUaQQPx5sEqpiGEMDIFy3Mq206OMKI';
 const BINALAR=['Bina 3','Bina 4','Bina 5','Bina 6','Bina 7','Bina 8'];
@@ -190,6 +191,7 @@ for(let i=0;i<46;i++){const a=rnd()*Math.PI*2,r=34+rnd()*40;tree(Math.cos(a)*r,M
 [[-26,20],[-6,23],[6,23],[26,20],[-28,-18],[28,-18]].forEach(p=>tree(p[0],p[1],1));
 
 
+const FT={h:66,x:-70,z:300,y:-8,ry:0};
 /* dəniz, şəhər və Alov qüllələri (kompleksin arxa tərəfində, render istiqamətində) */
 {const bay=new THREE.Group();const f=new THREE.Vector3(-0.65,0,-0.76).normalize();bay.rotation.y=Math.atan2(f.x,f.z);scene.add(bay);
  const seaMat=new THREE.MeshStandardMaterial({color:0x4f8fa6,roughness:.18,metalness:.35});
@@ -207,8 +209,18 @@ for(let i=0;i<46;i++){const a=rnd()*Math.PI*2,r=34+rnd()*40;tree(Math.cos(a)*r,M
   for(let i=0;i<pa.count;i++){const y=pa.getY(i),t=y/192;pa.setX(i,pa.getX(i)*.72+Math.pow(t,1.8)*lean);}
   geo.computeVertexNormals();const m=new THREE.Mesh(geo,glass);m.scale.setScalar(sc);m.position.set(x,0,z);m.rotation.y=ry;bay.add(m);
   const ring=new THREE.Mesh(new THREE.CylinderGeometry(15.4*sc,16.2*sc,6*sc,40),MAT.dark);ring.scale.x=.72;ring.position.set(x,3*sc,z);ring.rotation.y=ry;bay.add(ring);}
+
+ const proc=new THREE.Group();bay.add(proc);const _add=bay.add.bind(bay);
  const hill=new THREE.Mesh(new THREE.CylinderGeometry(70,95,10,32),M(0xcdb99d,{roughness:1}));hill.position.set(-70,5,258);bay.add(hill);
  flame(.40,10,-55,252,0.3);flame(.48,12,-74,248,-0.2);flame(.36,8,-88,266,0.9);
+ /* real model (SketchUp → GLB); yüklənəndə sxematik qüllələr götürülür */
+ const procKids=bay.children.slice(-7);
+ new GLTFLoader().load('/assets/models/flame-towers.glb',gl=>{const m=gl.scene;const bb=new THREE.Box3().setFromObject(m),sz=new THREE.Vector3(),c=new THREE.Vector3();bb.getSize(sz);bb.getCenter(c);
+  const sc=FT.h/sz.y;m.scale.setScalar(sc);m.position.set(FT.x-c.x*sc,-bb.min.y*sc+FT.y,FT.z-c.z*sc);
+  const w=new THREE.Group();w.add(m);w.rotation.y=FT.ry;w.position.set(0,0,0);
+  const piv=new THREE.Group();piv.position.set(FT.x,0,FT.z);m.position.set(-c.x*sc,-bb.min.y*sc+FT.y,-c.z*sc);piv.add(m);piv.rotation.y=FT.ry;
+  m.traverse(o=>{if(o.isMesh){o.castShadow=false;o.receiveShadow=false;const mt=o.material;if(mt){mt.side=THREE.DoubleSide;if(mt.metalness!==undefined){mt.metalness=.2;mt.roughness=.45;}if(mt.emissive){mt.emissive.setHex(0x2a3440);mt.emissiveIntensity=.5;}}}});
+  procKids.forEach(k=>bay.remove(k));bay.add(piv);},undefined,()=>{});
 }
 
 /* podium (2 commercial floors) */
