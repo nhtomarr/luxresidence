@@ -145,6 +145,7 @@ a{color:inherit;text-decoration:none;} img{max-width:100%;display:block;}
 /* drawer */
 .drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,92%);background:#fff;border-left:1px solid var(--line);box-shadow:-20px 0 60px -20px rgba(74,42,24,.3);transform:translateX(105%);transition:.3s cubic-bezier(.3,.8,.3,1);z-index:120;padding:28px 26px;overflow:auto;}
 .drawer.open{transform:none;}
+@media (max-width:640px){.drawer{width:100%;border-left:none;box-shadow:none;padding:22px 18px calc(24px + env(safe-area-inset-bottom,0px));}.drawer .x{top:12px;right:12px;}}
 .drawer .x{position:absolute;top:16px;right:18px;background:none;border:none;font-size:26px;cursor:pointer;color:var(--muted);}
 .drawer .eyebrow-d{}
 .drawer h2{font-family:var(--serif);font-size:28px;margin:8px 0 4px;}
