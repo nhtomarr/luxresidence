@@ -614,6 +614,31 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
  .sp-fl{font-size:22px;}
  .sp-apt{padding:12px 0;}
 }
+
+@media(max-width:760px){
+ #v-muqayise .cmp-title{font-size:30px;margin:4px 0 18px;}
+ .cmpm-empty{text-align:center;padding:40px 16px 90px;}
+ .cmpm-empty svg{width:52px;height:52px;fill:none;stroke:#c9ae93;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;margin-bottom:18px;}
+ .cmpm-empty p{font-family:var(--serif);font-size:21px;font-weight:700;color:var(--ink);margin:0 0 6px;}
+ .cmpm-empty span{display:block;font-size:14px;color:var(--muted);margin-bottom:24px;}
+ .cmpm-empty .btn-primary{display:inline-flex;}
+ .cmpm{padding-bottom:60px;}
+ .cmpm-cards{display:grid;gap:8px;margin-bottom:10px;}
+ .cmpm .cmp-card{min-height:0;border-radius:14px;}
+ .cmpm .cc-plan{min-height:0;height:auto;aspect-ratio:1;}
+ .cmpm .cc-plan img{padding:6px;}
+ .cmpm .cc-plan svg{width:36px!important;height:36px!important;}
+ .cmpm .cc-actions{top:6px;right:6px;}
+ .cmpm .cc-ic{width:28px;height:28px;font-size:14px;}
+ .cmpm .cc-title{font-size:13px;line-height:1.25;margin:8px 6px 2px;}
+ .cmpm .cc-more{display:block;text-align:center;font-size:12px;padding-bottom:10px;}
+ .cmpm .cmp-add{min-height:0;border-radius:14px;}
+ .cmpm .cmp-add-in .pl{font-size:30px;}
+ .cmpm-row{border-top:1px solid var(--line);padding:10px 0 12px;}
+ .cmpm-l{font-size:12px;color:var(--muted);margin-bottom:6px;}
+ .cmpm-v{display:grid;gap:8px;font-size:14px;font-weight:600;color:var(--ink);text-align:center;word-break:break-word;}
+ .cmpm-v .empc{color:#c9b9a6;font-weight:400;}
+}
 </style>
 <div id="maintScreen" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#2a1b12,#4a2a18);color:#f5ece1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;font-family:-apple-system,'Inter',system-ui,sans-serif">
   <div style="font-family:Georgia,serif;font-size:clamp(28px,6vw,52px);color:#e8c9a0;letter-spacing:.04em;margin-bottom:10px">LUX Residence</div>
@@ -896,6 +921,13 @@ function renderCmp(){var b=document.getElementById('cmpBody2');if(!b)return;var 
  var nEmpty=(list.length<MAXC)?1:0;var total=list.length+nEmpty;if(total<2)total=2;
  var money=a=>a.area*a.price;
  var rows=[['Yaşayış kompleksi',a=>'LUX Residence'],['Otaq sayı / Sahəsi',a=>a.rooms+' / '+a.area+' m²'],['Bina',a=>a.bina],['Mərtəbə',a=>flTxt(a,'<br>')],['Status',a=>STL[a.status][0]]].concat(SHOWP?[['Qiymət',a=>fmt(money(a))+' AZN']]:[]);
+ if(window.innerWidth<=760){
+  if(!list.length){b.innerHTML='<div class="cmpm-empty"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0zM8 21h8"/></svg><p>Mənzilləri yan-yana müqayisə edin</p><span>Ən çox 3 mənzil seçə bilərsiniz</span><button class="btn btn-primary" onclick="openCmpPicker()">Mənzil əlavə et</button></div>';return;}
+  var n=list.length+(list.length<MAXC?1:0);var gc='repeat('+n+',minmax(0,1fr))';
+  var mc=list.map(function(a){return ccCard(a).replace(a.rooms+' otaqlı · '+a.area+' m²',a.rooms+' otaqlı<br><span style="white-space:nowrap">'+a.area+' m²</span>');}).join('')+(list.length<MAXC?'<div class="cmp-add" onclick="openCmpPicker()"><div class="cmp-add-in"><span class="pl">+</span><span class="tx">Əlavə et</span></div></div>':'');
+  var mr=rows.slice(1).map(function(r){var v=list.map(function(a){return '<div>'+r[1](a)+'</div>';}).join('')+(list.length<MAXC?'<div class="empc">—</div>':'');return '<div class="cmpm-row"><div class="cmpm-l">'+r[0]+'</div><div class="cmpm-v" style="grid-template-columns:'+gc+'">'+v+'</div></div>';}).join('');
+  b.innerHTML='<div class="cmpm"><div class="cmpm-cards" style="grid-template-columns:'+gc+'">'+mc+'</div>'+mr+'</div>';return;
+ }
  var cols='200px repeat('+total+',minmax(0,1fr))';
  var cardCells=list.map(ccCard).join('');
  for(var e=0;e<(total-list.length);e++){cardCells+='<div class="cmp-add" onclick="openCmpPicker()"><div class="cmp-add-in"><span class="pl">+</span><span class="tx">Mənzil əlavə et</span></div></div>';}
@@ -904,6 +936,7 @@ function renderCmp(){var b=document.getElementById('cmpBody2');if(!b)return;var 
  var table='<table class="cmp-table"><tbody>'+tblRows+'</tbody></table>';
  b.innerHTML='<div class="cmp-scroll">'+cards+table+'</div>';
 }
+(function(){var _w=window.innerWidth<=760;window.addEventListener('resize',function(){var w=window.innerWidth<=760;if(w!==_w){_w=w;renderCmp();}});})();
 function openCmpPicker(){
  var avail=VAPT().filter(a=>!CMP.has(a.id)&&!a.hidden);
  var box=document.getElementById('cmpPickBody');
