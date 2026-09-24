@@ -195,6 +195,7 @@ h1,h2,h3,h4{margin:0}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pizzip@3.1.6/dist/pizzip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 </head>
 <body>
@@ -362,7 +363,7 @@ h1,h2,h3,h4{margin:0}
           <div class="two">
             <div class="field"><label>Ödəniş müddəti (ay)</label><input id="mgAy" type="number" oninput="mgCalc()" placeholder="12"></div>
             <div class="field"><label>Aylıq ödəniş (AZN)</label><input id="mgAylik" readonly></div>
-          </div>
+          </div><div class="d" style="margin-top:6px;color:#8a6a3a">Məbləğlərin sözlə yazılışı (avtomatik, yoxlayıb düzəldə bilərsiniz):</div><div class="two"><div class="field"><label>1 m² — sözlə</label><input id="mgM2Word" placeholder="avtomatik"></div><div class="field"><label>Ümumi — sözlə</label><input id="mgTotalWord" placeholder="avtomatik"></div></div><div class="two"><div class="field"><label>İlkin — sözlə</label><input id="mgIlkinWord" placeholder="avtomatik"></div><div class="field"><label>Qalıq — sözlə</label><input id="mgQaliqWord" placeholder="avtomatik"></div></div>
           <div class="two">
             <div class="field"><label>Müqavilə №</label><input id="mgNo" placeholder="məs. LR-2026-001"></div>
             <div class="field"><label>Müqavilə tarixi</label><input id="mgDate" type="date"></div>
@@ -373,7 +374,7 @@ h1,h2,h3,h4{margin:0}
           <h3>Sənədi yarat</h3>
           <div class="d">Bütün vacib xanaları doldurun və müqaviləni yükləyin.</div>
           <div class="two" style="margin-top:8px">
-            <div class="field" style="align-self:end"><button class="btn" onclick="genMugavileDoc()">📄 Word (.docx) yüklə</button></div>
+            <div class="field" style="align-self:end"><button class="btn" onclick="genMugavileTpl()">📄 Word (.docx) yüklə</button></div>
             <div class="field" style="align-self:end"><button class="btn ghost" onclick="genMugavilePDF()">🖨️ PDF / Çap</button></div>
           </div>
         </div>
@@ -979,17 +980,17 @@ function initMugavile(){
  var D=_mgSales();var keys=_sortB(Object.keys(D).filter(function(k){return D[k]&&D[k].rows;}));
  sel.innerHTML='<option value="">— Bina seçin —</option>'+keys.map(function(k){return '<option>'+esc(k)+'</option>';}).join('');
  var d=document.getElementById('mgDate');if(d&&!d.value){var t=new Date();d.value=t.getFullYear()+'-'+('0'+(t.getMonth()+1)).slice(-2)+'-'+('0'+t.getDate()).slice(-2);}
- if(!document.getElementById('mgM2').value)document.getElementById('mgM2').value='3600';
+ if(!document.getElementById('mgM2').value)document.getElementById('mgM2').value='3600';['mgM2Word','mgTotalWord','mgIlkinWord','mgQaliqWord'].forEach(function(id){var e=document.getElementById(id);if(e&&!e._hooked){e._hooked=1;e.addEventListener('input',function(){this.dataset.edited='1';});}});mgCalc();
 }
 function mgFillFloors(){var D=_mgSales();var b=D[document.getElementById('mgBina').value];var fs=document.getElementById('mgFloor');
  if(!b){fs.innerHTML='';document.getElementById('mgUnit').innerHTML='';return;}
  var fls=Object.keys(b.rows).map(Number).sort(function(a,b){return b-a;});
- fs.innerHTML='<option value="">— Mərtəbə —</option>'+fls.map(function(f){return (b.rows[f]&&b.rows[f].length)?'<option value="'+f+'">'+_flLabel(b,f)+'</option>':'';}).join('');
+ fs.innerHTML='<option value="">— Mərtəbə —</option>'+fls.map(function(f){var has=(b.rows[f]||[]).some(function(u){return u.s==='satisda'||u.s==='investor';});return has?'<option value="'+f+'">'+_flLabel(b,f)+'</option>':'';}).join('');
  document.getElementById('mgUnit').innerHTML='';}
 function mgFillUnits(){var D=_mgSales();var b=D[document.getElementById('mgBina').value];var f=document.getElementById('mgFloor').value;var us=document.getElementById('mgUnit');
  if(!b||f===''){us.innerHTML='';return;}
  var units=b.rows[f]||[];
- us.innerHTML='<option value="">— Mənzil —</option>'+units.map(function(u,ix){return '<option value="'+ix+'">№'+esc(String(u.n||''))+' ('+(SST[u.s]?SST[u.s][0]:u.s)+(u.area?', '+u.area+' m²':'')+')</option>';}).join('');}
+ us.innerHTML='<option value="">— Mənzil —</option>'+units.map(function(u,ix){return (u.s==='satisda'||u.s==='investor')?('<option value="'+ix+'">№'+esc(String(u.n||''))+' ('+(SST[u.s]?SST[u.s][0]:u.s)+(u.area?', '+u.area+' m²':'')+')</option>'):'';}).join('');}
 function mgUnitPicked(){var D=_mgSales();var b=D[document.getElementById('mgBina').value];var f=document.getElementById('mgFloor').value;var ix=document.getElementById('mgUnit').value;
  if(!b||f===''||ix==='')return;var u=b.rows[f][ix];
  document.getElementById('mgOtaq').value=u.room||'';document.getElementById('mgSahe').value=u.area||'';mgCalc();}
@@ -997,7 +998,7 @@ function mgCalc(){var sahe=parseFloat(document.getElementById('mgSahe').value)||
  var total=Math.round(sahe*m2*100)/100;if(total)document.getElementById('mgTotal').value=total;
  var t=parseFloat(document.getElementById('mgTotal').value)||0;var ilkin=parseFloat(document.getElementById('mgIlkin').value)||0;
  var qaliq=Math.max(t-ilkin,0);document.getElementById('mgQaliq').value=qaliq.toFixed(2);
- var ay=parseInt(document.getElementById('mgAy').value)||0;document.getElementById('mgAylik').value=ay?(qaliq/ay).toFixed(2):'';}
+ var ay=parseInt(document.getElementById('mgAy').value)||0;document.getElementById('mgAylik').value=ay?(qaliq/ay).toFixed(2):'';if(typeof numToAz==='function'){var m2=document.getElementById('mgM2').value;var W=function(id,v){var e=document.getElementById(id);if(e&&!e.dataset.edited)e.value=v?numToAz(v):'';};W('mgM2Word',m2);W('mgTotalWord',t);W('mgIlkinWord',ilkin);W('mgQaliqWord',qaliq);}}
 function mgTotalManual(){mgCalc();}
 function _mgData(){
  var g=function(id){return (document.getElementById(id).value||'').trim();};
@@ -1124,6 +1125,97 @@ function reDownload(id){var d=window._CONTRACTS&&window._CONTRACTS[id];if(!d){to
 function reDownloadPDF(id){var d=window._CONTRACTS&&window._CONTRACTS[id];if(!d){toast('Tapılmadı');return;}_pdfFromData(d);}
 function delContract(id){if(!confirm('Bu müqavilə arxivdən silinsin? (Sənəd faylı silinmir, yalnız arxiv qeydi)'))return;
  sb.from('lux_contracts').delete().eq('id',id).then(function(r){if(r.error){toast('Xəta');return;}toast('Silindi');loadContracts();});}
+
+/* ========= WORD ŞABLONUNU DOLDURMA (dizayna toxunmadan) ========= */
+/* Azərbaycanca rəqəm → söz */
+function numToAz(n){n=Math.floor(Math.abs(parseFloat(String(n).replace(/[^0-9.]/g,''))||0));if(n===0)return 'sıfır';
+ var b=['','bir','iki','üç','dörd','beş','altı','yeddi','səkkiz','doqquz'],o=['','on','iyirmi','otuz','qırx','əlli','altmış','yetmiş','səksən','doxsan'],y=['','yüz','iki yüz','üç yüz','dörd yüz','beş yüz','altı yüz','yeddi yüz','səkkiz yüz','doqquz yüz'];
+ function uc(x){var s=[],yy=Math.floor(x/100),q=x%100,oo=Math.floor(q/10),bb=q%10;if(yy)s.push(y[yy]);if(oo)s.push(o[oo]);if(bb)s.push(b[bb]);return s.join(' ');}
+ var res=[],bol=[1000000000,1000000,1000,1],ad=['milyard','milyon','min',''];
+ for(var i=0;i<4;i++){var q=Math.floor(n/bol[i]);n=n%bol[i];if(q){if(bol[i]===1000&&q===1)res.push('min');else res.push(uc(q)+(ad[i]?' '+ad[i]:''));}}
+ return res.join(' ').replace(/\s+/g,' ').trim();}
+function _fmtMoney(v){var n=parseFloat(String(v).replace(/[^0-9.]/g,''))||0;return n.toLocaleString('az-AZ',{minimumFractionDigits:1,maximumFractionDigits:1}).replace(/\u00A0/g,' ');}
+
+var TPL_CACHE=null;
+function _loadTpl(){
+ if(TPL_CACHE)return Promise.resolve(TPL_CACHE);
+ return fetch('assets/muqavile-sablon.docx').then(function(r){if(!r.ok)throw new Error('şablon tapılmadı');return r.arrayBuffer();}).then(function(ab){TPL_CACHE=ab;return ab;});
+}
+
+/* XML-də underscore ardıcıllığını sıra ilə doldurur (run mətnləri <w:t> içindədir) */
+function _fillDocXml(xml,fills){
+ // fills: array of strings in document order for each underscore-run
+ var idx=0;
+ // Match <w:t ...>text</w:t> where text contains only underscores (and maybe trailing like 'o','m')
+ xml=xml.replace(/(<w:t[^>]*>)([^<]*)(<\/w:t>)/g,function(m,op,txt,cl){
+   if(/_/.test(txt)&&idx<fills.length){var v=fills[idx++];var suf='';
+     // preserve trailing non-underscore char (e.g. 'o' in '___o')
+     var tm=txt.match(/_+([^_]*)$/);if(tm&&tm[1])suf=tm[1];
+     return op+_xmlEsc(v)+suf+cl;
+   }
+   return m;
+ });
+ return xml;
+}
+function _xmlEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function _mgTplData(){
+ var g=function(id){var e=document.getElementById(id);return e?(e.value||'').trim():'';};
+ var d=_mgData();
+ // date parts
+ var dt=g('mgDate')?g('mgDate').split('-'):['','',''];
+ var aylar=['','Yanvar','Fevral','Mart','Aprel','May','İyun','İyul','Avqust','Sentyabr','Oktyabr','Noyabr','Dekabr'];
+ d.gun=dt[2]||'__';d.ayAd=aylar[parseInt(dt[1])||0]||'____';d.il=dt[0]||'____';
+ // full payment?
+ var tot=parseFloat(String(d.total).replace(/[^0-9.]/g,''))||0;
+ var ilk=parseFloat(String(d.ilkin).replace(/[^0-9.]/g,''))||0;
+ d.tamOdenis=(ilk>=tot&&tot>0);
+ // editable words override (menecer düzəldə bilər)
+ d.m2word=g('mgM2Word')||numToAz(d.m2);
+ d.totalword=g('mgTotalWord')||numToAz(d.total);
+ d.ilkinword=g('mgIlkinWord')||numToAz(d.ilkin);
+ d.qaliqword=g('mgQaliqWord')||numToAz(d.qaliq);
+ return d;
+}
+
+function genMugavileTpl(){
+ var d=_mgTplData();if(!_mgValid(d))return;
+ if(!window.PizZip){toast('Kitabxana yüklənmədi, internetə bağlanın');return;}
+ toast('Müqavilə hazırlanır…');
+ _loadTpl().then(function(ab){
+  var zip=new PizZip(ab);
+  var xml=zip.file('word/document.xml').asText();
+  // Build fills in DOCUMENT ORDER. Underscore-runs appear in this sequence:
+  // P8: unvan, ad, sv, fin
+  // P12: binaNo, floorNo, otaq(+'o' suffix preserved), sahe, unitNo
+  // P27: m2, m2word
+  // P28: sahe, total, totalword
+  // P29: ilkin, ilkinword, qaliq, qaliqword, muddet
+  // Table C0.P15: (satici imza blanks — buraxırıq boş) -> 3 blanks: leave as underscores? We'll skip by filling same length
+  // Table C1: unvan; sv,fin
+  // NOTE: date «28» «Avqust» 2026 are NOT underscores (they are real text) -> skip.
+  var muddet = d.tamOdenis ? '—' : (d.ay?d.ay+' ay':'________');
+  var qaliqNum = d.tamOdenis ? '0,0' : _fmtMoney(d.qaliq);
+  var qaliqW  = d.tamOdenis ? 'sıfır' : d.qaliqword;
+  var fills=[
+   d.unvan||'____', d.full||'____', d.sv||'____', d.fin||'____',            // P8
+   d.binaNo||'__', d.floorNo||'__', (d.otaq||'__'), d.sahe||'____', d.unitno||'__', // P12 (otaq keeps trailing 'o')
+   _fmtMoney(d.m2), d.m2word,                                                // P27
+   d.sahe||'____', _fmtMoney(d.total), d.totalword,                          // P28
+   _fmtMoney(d.ilkin), d.ilkinword, qaliqNum, qaliqW, muddet                 // P29
+  ];
+  xml=_fillDocXml(xml,fills);
+  // Full payment note: append sentence into P29 area — replace the installment tail text.
+  if(d.tamOdenis){
+   xml=xml.replace(/Geri qalan[\s\S]*?öhdəsinə götürür\./,'Ödəniş tam şəkildə (nağd) müqavilə bağlandığı gün həyata keçirilir.');
+  }
+  zip.file('word/document.xml',xml);
+  var out=zip.generate({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+  saveAs(out,'Muqavile_'+(d.soyad||'alici')+'_'+String(d.no).replace(/[^\w-]/g,'')+'.docx');
+  saveContract(d);
+  toast('Müqavilə yükləndi ✓');
+ }).catch(function(e){toast('Xəta: '+e.message);});
+}
 
 function salesSave(){if(SMODE==='com')set('lux_commercial',COMM);else if(SMODE==='gar')set('lux_garage',GAR);else set('lux_sales',SALES);}
 function loadSampleSales(){if(!confirm('Nümunə (bütün 9 bina) data yüklənsin? Cari dəyişikliklər əvəz olunacaq.'))return;SALES=JSON.parse(JSON.stringify(DEFAULT_SALES));salesSave();curBina='';renderSales();toast('Nümunə data yükləndi ✓');}
