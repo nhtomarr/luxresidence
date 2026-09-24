@@ -1,1 +1,5 @@
-/*    /index.html   200
+# Real fayllar olduğu kimi qalsın, qalan bütün yollar SPA index.html-ə
+/assets/*  /assets/:splat  200
+/apt/*    /index.html   200
+/xeber/*  /index.html   200
+/*  /index.html  200

@@ -753,8 +753,8 @@ document.addEventListener('click',e=>{
   const cd=e.target.closest('.apt-card');if(cd&&cd.dataset.id){history.pushState({},'','/apt/'+cd.dataset.id);route();return;}const nc=e.target.closest('.news-card');if(nc&&nc.dataset.newsid){history.pushState({},'','/xeber/'+nc.dataset.newsid);route();}
 });
 var ns=document.getElementById('navSearch');if(ns)ns.addEventListener('click',()=>(history.pushState({},'','/planlar'),route()));
-document.getElementById('navFav').addEventListener('click',function(){history.pushState({},'','/sevimliler');route();});
-document.getElementById('navCmp').addEventListener('click',function(){history.pushState({},'','/muqayise');route();});
+document.getElementById('navFav').addEventListener('click',function(){_go('sevimliler');});
+document.getElementById('navCmp').addEventListener('click',function(){_go('muqayise');});
 document.getElementById('favClose').addEventListener('click',()=>document.getElementById('favModal').classList.remove('open'));
 document.getElementById('cmpClose').addEventListener('click',()=>document.getElementById('cmpModal').classList.remove('open'));
 [document.getElementById('favModal'),document.getElementById('cmpModal')].forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
@@ -836,7 +836,7 @@ const drawer=document.getElementById('drawer');
 function openBuilding(b){document.getElementById('dName').textContent=b.name;var list=VAPT().filter(a=>inB(a,b.name));var meta=document.getElementById('dMeta'),body=document.getElementById('drawerBody'),all=document.getElementById('drawerAll');if(list.length){var av=list.filter(a=>a.status==='available').length;meta.textContent=list.length+' mənzil'+(av?' · '+av+' mövcud':'');var _sorted=list.slice().sort(function(x,y){return (parseFloat(x.area)||0)-(parseFloat(y.area)||0);});body.innerHTML=_sorted.map(function(a){var st=STL[a.status];return '<a class="dr-apt" href="#apt-'+a.id+'"><div class="dr-plan">'+(a.plan?'<img src="'+a.plan+'" alt="plan">':PLANSVG)+'</div>'+'<div class="dr-apt-b"><b>'+a.rooms+' otaqlı · '+a.area+' m²</b><span>Mərtəbə '+flOf(a,b.name)+'</span>'+'<span class="dr-badge" style="background:'+(st[1]==='glass'?'#e8f5ec':st[1])+';color:'+(st[1]==='glass'||st[0]==='Mövcud'?'#2f7a44':'#fff')+'">'+st[0]+'</span></div></a>';}).join('');all.style.display='';all.setAttribute('data-bina',b.name);}else{meta.textContent='Mənzillər tezliklə əlavə olunacaq';body.innerHTML='<div class="dr-empty">Bu binanın mərtəbələri, mənzil planları, sahələri və statusu tezliklə buraya əlavə olunacaq.</div>';all.style.display='none';}drawer.classList.add('open');}
 document.querySelectorAll('.hots').forEach(function(g){var hero=g.closest('.hero');BUILDINGS.forEach(function(b){var e=document.createElementNS('http://www.w3.org/2000/svg','polygon');e.setAttribute('points',ps(b.points));e.setAttribute('class','hot');e.addEventListener('click',function(){openBuilding(b);});g.appendChild(e);if(hero){var cx=b.points.reduce(function(s,p){return s+p[0];},0)/b.points.length,cy=b.points.reduce(function(s,p){return s+p[1];},0)/b.points.length;var mk=document.createElement('div');mk.className='bmark';mk.style.left=cx+'%';mk.style.top=cy+'%';mk.innerHTML='<span class="bmark-dot">'+b.name.replace(/\D/g,'')+'</span><span class="bmark-label">'+b.name+'</span>';mk.addEventListener('click',function(){openBuilding(b);});hero.appendChild(mk);}});});
 document.getElementById('drawerX').addEventListener('click',()=>drawer.classList.remove('open'));
-document.getElementById('drawerAll').addEventListener('click',function(e){e.preventDefault();F.bina=this.getAttribute('data-bina')||null;renderCat();drawer.classList.remove('open');history.pushState({},'','/planlar');route();});
+document.getElementById('drawerAll').addEventListener('click',function(e){e.preventDefault();F.bina=this.getAttribute('data-bina')||null;renderCat();drawer.classList.remove('open');_go('planlar');});
 document.addEventListener('click',function(e){if(e.target.closest('.bchip')){F.bina=null;renderCat();}});
 const badges=document.querySelectorAll('.dn-badge');setInterval(()=>{const t=(performance.now()/1000)%16;const s=(t>=6&&t<15.4)?'Gecə':'Gündüz';badges.forEach(b=>b.textContent=s);},500);
 (function(){const s=document.getElementById('aboutSlider');if(!s)return;const sl=[...s.querySelectorAll('.slide')],dots=document.getElementById('aboutDots');let cur=0;sl.forEach((_,i)=>{const b=document.createElement('button');if(i===0)b.className='on';b.addEventListener('click',()=>go(i));dots.appendChild(b);});function go(i){cur=i;sl.forEach((x,j)=>x.classList.toggle('on',j===i));[...dots.children].forEach((d,j)=>d.classList.toggle('on',j===i));}setInterval(()=>go((cur+1)%sl.length),5000);})();
@@ -855,15 +855,15 @@ function route(){
   if(!document.getElementById('v-'+p))p='ana';if(p==='muqayise')renderCmp();if(p==='sevimliler')renderFav();showView(p,p);
 }
 // Daxili linkləri path-ə çevir (pushState), hash-ı da dəstəklə
+function _go(seg){
+  var path='/'+seg.replace('apt-','apt/').replace('xeber-','xeber/');
+  try{history.pushState({},'',path);route();}
+  catch(err){location.hash='#'+seg;}
+}
 document.addEventListener('click',function(e){
   var a=e.target.closest('a[href^="#"]');if(!a)return;
   var h=a.getAttribute('href');if(h==='#'||h.length<2)return;
-  var seg=h.slice(1);
-  // apt-/xeber- detal linkləri path formasına
-  var path='/'+seg.replace('apt-','apt/').replace('xeber-','xeber/');
-  e.preventDefault();
-  history.pushState({},'',path);
-  route();
+  e.preventDefault();_go(h.slice(1));
 });
 window.addEventListener('popstate',route);
 window.addEventListener('hashchange',route);
@@ -1023,7 +1023,7 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
  // mənzilə klik → kataloqda uyğun sahəli mənzili aç
  window._secApt=function(area){
   var a=APARTMENTS.find(function(x){return !x.hidden&&Math.abs((parseFloat(x.area)||0)-area)<0.5;});
-  if(a){history.pushState({},'','/apt/'+a.id);route();}else{history.pushState({},'','/planlar');route();}
+  if(a){_go('apt-'+a.id);}else{_go('planlar');}
  };
  // hadisələr
  // hover ilə mərtəbə göstər (klik lazım deyil)
