@@ -187,6 +187,10 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   .sec-filt .sf{border:1px solid var(--line);background:#fff;border-radius:99px;padding:9px 18px;font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;transition:.15s;}
   .sec-filt .sf:hover{border-color:var(--rust);}
   .sec-filt .sf.on{background:var(--rust);color:#fff;border-color:var(--rust);}
+  .bina-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .bina-tabs .bt{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 20px;font-size:15px;font-weight:700;color:var(--ink);cursor:pointer;transition:.15s;font-family:var(--serif);}
+  .bina-tabs .bt:hover{border-color:var(--rust);}
+  .bina-tabs .bt.on{background:#24303a;color:#fff;border-color:#24303a;}
   .tower-stage{position:relative;border-radius:20px;overflow:hidden;box-shadow:0 24px 60px -30px rgba(74,42,24,.5);background:#0d1420;line-height:0;}
   .tower-zoom{transform-origin:0 0;transition:transform .05s;will-change:transform;cursor:grab;}
   .tower-zoom.drag{cursor:grabbing;transition:none;}
@@ -678,7 +682,7 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   </div>
   <div id="callOk">Təşəkkürlər! 🎉<br>Tezliklə sizinlə əlaqə saxlayacağıq.</div>
 </div></div>
-<div class="view" id="v-secim" data-nav="secim"><div class="wrap" style="padding-top:calc(var(--nav-h) + 12px);"><div class="sec-head"><div><div class="se">İnteraktiv seçim</div><h1 class="sec-h1">Binanı və mərtəbəni seçin</h1></div><div class="sec-filt" id="secFilt"><button class="sf on" data-st="all">Hamısı</button><button class="sf" data-st="available">Satışda</button><button class="sf" data-st="sold">Satılıb</button></div></div><div class="tower-stage" id="towerStage"><div class="tower-zoom" id="towerZoom"><img src="assets/tower-3-8.jpg" alt="Bina" id="towerImg"><svg id="towerSvg" viewBox="0 0 1000 563" preserveAspectRatio="none"></svg></div><div class="floor-tip" id="floorTip" style="display:none"></div><div class="tz-ctrl"><button onclick="tzoom(1.3)" title="Böyüt">+</button><button onclick="tzoom(0.77)" title="Kiçilt">−</button><button onclick="tzreset()" title="Sıfırla">⟲</button></div></div><div class="sec-note">Bina üzərində gəzin — mərtəbə görünsün. <b>Klik edin</b> — mənzillər sağda açılsın.</div><div class="sec-panel" id="secPanel"><button class="sp-close" onclick="document.getElementById('secPanel').classList.remove('open')">×</button><div id="secPanelBody"></div></div></div></div>
+<div class="view" id="v-secim" data-nav="secim"><div class="wrap" style="padding-top:calc(var(--nav-h) + 12px);"><div class="sec-head"><div><div class="se">İnteraktiv seçim</div><h1 class="sec-h1">Binanı və mərtəbəni seçin</h1></div><div class="sec-filt" id="secFilt"><button class="sf on" data-st="all">Hamısı</button><button class="sf" data-st="available">Satışda</button><button class="sf" data-st="sold">Satılıb</button></div></div><div class="bina-tabs" id="binaTabs"></div><div class="tower-stage" id="towerStage"><div class="tower-zoom" id="towerZoom"><img src="assets/tower-3-8.jpg" alt="Bina" id="towerImg"><svg id="towerSvg" viewBox="0 0 1000 563" preserveAspectRatio="none"></svg></div><div class="floor-tip" id="floorTip" style="display:none"></div><div class="tz-ctrl"><button onclick="tzoom(1.3)" title="Böyüt">+</button><button onclick="tzoom(0.77)" title="Kiçilt">−</button><button onclick="tzreset()" title="Sıfırla">⟲</button></div></div><div class="sec-note">Bina üzərində gəzin — mərtəbə görünsün. <b>Klik edin</b> — mənzillər sağda açılsın.</div><div class="sec-panel" id="secPanel"><button class="sp-close" onclick="document.getElementById('secPanel').classList.remove('open')">×</button><div id="secPanelBody"></div></div></div></div>
 <div class="drawer" id="drawer"><button class="x" id="drawerX">&times;</button><div class="eyebrow-d">LUX RESIDENCE</div><h2 id="dName">Bina</h2><div class="dr-meta" id="dMeta"></div><div id="drawerBody"></div><a class="cta" id="drawerAll" href="#planlar" data-bina="">Bu binada bütün mənzillər →</a></div><footer><svg class="foot-mark" viewBox="0 0 120 120" fill="currentColor" aria-hidden="true"><path d="M20 16 h22 v66 h34 v22 h-56 z"/><path d="M100 104 h-22 v-66 h-34 v-22 h56 z"/></svg><div class="foot-grid">
   <div class="foot-brand"><img src="assets/img7.png" alt="LUX RESIDENCE"><p>Şəhərin imkanlarından uzaqlaşmadan, yaşıllıqların əhatəsində rahat və huzurlu yaşam.</p></div>
   <div class="foot-col"><h4>Səhifələr</h4><a href="#ana">Ana Səhifə</a><a href="#haqqimizda">Haqqımızda</a><a href="#infrastruktur">İnfrastruktur</a><a href="#xeberler">Xəbərlər</a><a href="#planlar">Planlar</a><a href="#elaqe">Əlaqə</a></div>
@@ -1024,7 +1028,18 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
   // pop-dan kənar klik bağla
   if(!e.target.closest('.floor-pop')&&!e.target.closest('#towerSvg')){var fp=document.getElementById('floorPop');if(fp)fp.style.display='none';}
  });
- function initTower(){if(document.getElementById('towerSvg')){drawTower();}}
+ var BINALAR=['Bina 3','Bina 4','Bina 5','Bina 6','Bina 7','Bina 8'];
+ function buildBinaTabs(){
+  var box=document.getElementById('binaTabs');if(!box)return;
+  box.innerHTML=BINALAR.map(function(bn){return '<button class="bt'+(bn===CURBINA?' on':'')+'" data-bina="'+bn+'">'+bn+'</button>';}).join('');
+ }
+ document.addEventListener('click',function(e){
+  var bt=e.target.closest('.bina-tabs .bt');if(!bt)return;
+  CURBINA=bt.dataset.bina;buildBinaTabs();drawTower();
+  var sp=document.getElementById('secPanel');if(sp)sp.classList.remove('open');
+  var ft=document.getElementById('floorTip');if(ft)ft.style.display='none';
+ });
+ function initTower(){if(document.getElementById('towerSvg')){buildBinaTabs();drawTower();}}
  window.addEventListener('hashchange',function(){if(location.hash.indexOf('secim')>=0)setTimeout(initTower,200);});
  if(location.hash.indexOf('secim')>=0)setTimeout(initTower,500);
  // data gələndə yenilə
