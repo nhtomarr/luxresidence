@@ -159,7 +159,11 @@ h1,h2,h3,h4{margin:0}
 .wide .sfnum{width:66px;flex-basis:66px;font-size:11px}
 .gwrap .sfrow{flex-wrap:wrap;min-width:0;align-items:flex-start}.gwrap .sfrow .sfnum{align-self:center}
 .ovback{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.ctbl{width:100%;border-collapse:collapse;font-size:14px}.ctbl th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:10px 8px;border-bottom:1px solid var(--line)}.ctbl td{padding:10px 8px;border-bottom:1px solid var(--line)}.ctbl tr:last-child td{border-bottom:none}.ctbl .ca{white-space:nowrap;text-align:right}.ctbl .btn.sm{padding:4px 8px;font-size:12px}.ovback b{font-family:var(--serif);font-size:18px}
+.ctbl{width:100%;border-collapse:collapse;font-size:14px}.ctbl th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:10px 8px;border-bottom:1px solid var(--line)}.ctbl td{padding:10px 8px;border-bottom:1px solid var(--line)}.ctbl tr:last-child td{border-bottom:none}.ctbl .ca{white-space:nowrap;text-align:right}.ctbl .btn.sm{padding:4px 8px;font-size:12px}
+.cbadge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+.cbadge.done{background:#e3f2e8;color:#2f7a44}
+.cbadge.draft{background:#f7edda;color:#b8894b}
+.cfilt{font-size:14px;color:var(--muted);margin-bottom:12px}.ovback b{font-family:var(--serif);font-size:18px}
 .ovblk{margin-bottom:22px}.ovh{display:flex;align-items:center;gap:10px;margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);flex-wrap:wrap}.ovh b{font-family:var(--serif);font-size:17px}.ovh span{font-size:13px;color:var(--muted)}.ovh .btn{margin-left:auto}
 .scell2{min-width:46px;height:38px;border-radius:7px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;line-height:1.05;padding:0 3px;user-select:none}
 .scell2 .a{font-size:8px;opacity:.9;font-weight:500}
@@ -1073,7 +1077,7 @@ function genMugavileDoc(_dOverride){
 }
 
 /* ---- PDF ---- */
-function genMugavilePDF(){var d=_mgData();if(!_mgValid(d))return;_pdfFromData(d);}
+function genMugavilePDF(){var d=_mgTplData?_mgTplData():_mgData();if(!_mgValid(d))return;saveContract(d,'Qaralama');_pdfFromData(d);}
 function _pdfFromData(d){
  var h='<html><head><meta charset="utf-8"><title>Müqavilə '+d.no+'</title><style>@page{margin:16mm}body{font-family:Georgia,serif;color:#1a1a1a;font-size:13px;line-height:1.65}'+
   '.top{text-align:center;border-bottom:3px solid #b8894b;padding-bottom:14px;margin-bottom:18px}.top img{width:46px}.top h1{font-size:22px;color:#24303a;margin:8px 0 2px}.top .no{font-size:15px}.top .row{display:flex;justify-content:space-between;font-size:13px;margin-top:10px}'+
@@ -1097,11 +1101,17 @@ function _xor(str,key){var out='';for(var i=0;i<str.length;i++){out+=String.from
 function _encrypt(obj){try{var json=JSON.stringify(obj);var x=_xor(unescape(encodeURIComponent(json)),_encKey());return btoa(x);}catch(e){return '';}}
 function _decrypt(enc){try{var x=atob(enc);var json=decodeURIComponent(escape(_xor(x,_encKey())));return JSON.parse(json);}catch(e){return null;}}
 
-function saveContract(d){
+function saveContract(d,status){
  if(OFFLINE||!sb){toast('Onlayn rejim yoxdur, arxiv saxlanmadı');return Promise.resolve();}
- var id='C'+Date.now()+Math.floor(Math.random()*1000);
- var rec={id:id,enc:_encrypt(d)};
- return sb.from('lux_contracts').insert(rec).then(function(r){if(r.error)console.warn('arxiv:',r.error.message);});
+ d=Object.assign({},d,{_status:status||'Qaralama',_savedAt:new Date().toISOString()});
+ var enc=_encrypt(d);
+ // Eyni müqavilə № varsa yenilə, yoxsa yeni əlavə et
+ return sb.from('lux_contracts').select('id,enc').then(function(res){
+  var existing=null;(res.data||[]).forEach(function(r){var x=_decrypt(r.enc);if(x&&d.no&&x.no===d.no)existing=r.id;});
+  if(existing){return sb.from('lux_contracts').update({enc:enc}).eq('id',existing);}
+  var id='C'+Date.now()+Math.floor(Math.random()*1000);
+  return sb.from('lux_contracts').insert({id:id,enc:enc});
+ }).then(function(r){if(r&&r.error)console.warn('arxiv:',r.error.message);loadContracts();});
 }
 function loadContracts(){
  var box=document.getElementById('contractsList');if(!box)return;
@@ -1110,16 +1120,21 @@ function loadContracts(){
  sb.from('lux_contracts').select('id,enc,created_at').order('created_at',{ascending:false}).then(function(res){
   if(res.error){box.innerHTML='<div class="d">Xəta: '+res.error.message+'</div>';return;}
   var rows=res.data||[];if(!rows.length){box.innerHTML='<div class="d">Hələ müqavilə yaradılmayıb.</div>';return;}
-  var h='<table class="ctbl"><thead><tr><th>№</th><th>Alıcı</th><th>Mənzil</th><th>Qiymət</th><th>Tarix</th><th></th></tr></thead><tbody>';
   window._CONTRACTS={};
-  rows.forEach(function(r){var d=_decrypt(r.enc);if(!d){h+='<tr><td colspan="6" class="d">— (oxunmadı)</td></tr>';return;}window._CONTRACTS[r.id]=d;
-   h+='<tr><td>'+esc(d.no||'—')+'</td><td>'+esc(d.full||'—')+'</td><td>'+esc((d.bina||'')+', '+(d.floor||'')+', №'+(d.unitno||''))+'</td><td>'+esc(d.total||'—')+' AZN</td><td>'+esc(d.date||'—')+'</td>'+
-     '<td class="ca"><button class="btn ghost sm" onclick="reDownload(\''+r.id+'\')">📄 Word</button> <button class="btn ghost sm" onclick="reDownloadPDF(\''+r.id+'\')">🖨️</button> <button class="btn ghost sm" style="color:#c0392b" onclick="delContract(\''+r.id+'\')">Sil</button></td></tr>';
+  var items=[];rows.forEach(function(r){var d=_decrypt(r.enc);if(d){window._CONTRACTS[r.id]=d;items.push([r.id,d]);}});
+  var nT=items.filter(function(x){return (x[1]._status||'Qaralama')==='Tamamlandı';}).length;
+  var h='<div class="cfilt"><b>'+items.length+'</b> müqavilə · <span style="color:#2f7a44">'+nT+' tamamlandı</span> · <span style="color:#b8894b">'+(items.length-nT)+' qaralama</span></div>';
+  h+='<table class="ctbl"><thead><tr><th>№</th><th>Status</th><th>Alıcı</th><th>Mənzil</th><th>Qiymət</th><th>Tarix</th><th></th></tr></thead><tbody>';
+  items.forEach(function(it){var r0=it[0],d=it[1];var st=d._status||'Qaralama';var done=(st==='Tamamlandı');
+   var badge='<span class="cbadge '+(done?'done':'draft')+'">'+st+'</span>';
+   h+='<tr><td>'+esc(d.no||'—')+'</td><td>'+badge+'</td><td>'+esc(d.full||'—')+'</td><td>'+esc((d.bina||'')+', '+(d.floor||'')+', №'+(d.unitno||''))+'</td><td>'+esc(d.total||'—')+' AZN</td><td>'+esc(d.date||'—')+'</td>'+
+     '<td class="ca">'+(done?'':'<button class="btn ghost sm" style="color:#2f7a44" onclick="markDone(\''+r0+'\')">✓ Tamamla</button> ')+'<button class="btn ghost sm" onclick="reDownload(\''+r0+'\')">📄</button> <button class="btn ghost sm" onclick="reDownloadPDF(\''+r0+'\')">🖨️</button> <button class="btn ghost sm" style="color:#c0392b" onclick="delContract(\''+r0+'\')">Sil</button></td></tr>';
   });
   h+='</tbody></table>';box.innerHTML=h;
  });
 }
-function reDownload(id){var d=window._CONTRACTS&&window._CONTRACTS[id];if(!d){toast('Tapılmadı');return;}genMugavileDoc(d);}
+function markDone(id){var d=window._CONTRACTS&&window._CONTRACTS[id];if(!d)return;if(!confirm('Bu müqavilə “Tamamlandı” kimi işarələnsin?'))return;saveContract(d,'Tamamlandı');toast('Tamamlandı ✓');}
+function reDownload(id){var d=window._CONTRACTS&&window._CONTRACTS[id];if(!d){toast('Tapılmadı');return;}genMugavileTpl(false,d);}
 function reDownloadPDF(id){var d=window._CONTRACTS&&window._CONTRACTS[id];if(!d){toast('Tapılmadı');return;}_pdfFromData(d);}
 function delContract(id){if(!confirm('Bu müqavilə arxivdən silinsin? (Sənəd faylı silinmir, yalnız arxiv qeydi)'))return;
  sb.from('lux_contracts').delete().eq('id',id).then(function(r){if(r.error){toast('Xəta');return;}toast('Silindi');loadContracts();});}
@@ -1177,8 +1192,8 @@ function _mgTplData(){
 }
 
 function tamamlaMugavile(){var d=_mgTplData();if(!_mgValid(d))return;if(!confirm('Müqavilə tamamlansın və arxivə əlavə edilsin?\n\nAlıcı: '+d.full+'\nMənzil: '+d.bina+', '+d.floor+', №'+d.unitno+'\nQiymət: '+d.total+' AZN'))return;genMugavileTpl(true);}
-function genMugavileTpl(doArchive){
- var d=_mgTplData();if(!_mgValid(d))return;
+function genMugavileTpl(doArchive,dOverride){
+ var d=dOverride||_mgTplData();if(!dOverride&&!_mgValid(d))return;
  if(!window.PizZip){toast('Kitabxana yüklənmədi, internetə bağlanın');return;}
  toast('Müqavilə hazırlanır…');
  _loadTpl().then(function(ab){
@@ -1211,8 +1226,8 @@ function genMugavileTpl(doArchive){
   zip.file('word/document.xml',xml);
   var out=zip.generate({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
   saveAs(out,'Muqavile_'+(d.soyad||'alici')+'_'+String(d.no).replace(/[^\w-]/g,'')+'.docx');
-  if(doArchive)saveContract(d);
-  toast(doArchive?'Müqavilə arxivə əlavə edildi ✓':'Word yükləndi (yoxlama)');
+  if(!dOverride)saveContract(d,doArchive?'Tamamlandı':'Qaralama');
+  toast(dOverride?'Word yükləndi':(doArchive?'Müqavilə tamamlandı və arxivə əlavə edildi ✓':'Word yükləndi — arxivə “Qaralama” kimi düşdü'));
  }).catch(function(e){toast('Xəta: '+e.message);});
 }
 
