@@ -1,5 +1,6 @@
 # Real fayllar olduğu kimi qalsın, qalan bütün yollar SPA index.html-ə
 /assets/*  /assets/:splat  200
+/3d  /3d.html  200
 /apt/assets/*    /assets/:splat  200
 /xeber/assets/*  /assets/:splat  200
 /apt/*    /index.html   200
