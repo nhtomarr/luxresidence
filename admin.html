@@ -363,7 +363,8 @@ h1,h2,h3,h4{margin:0}
           <div class="two">
             <div class="field"><label>Ödəniş müddəti (ay)</label><input id="mgAy" type="number" oninput="mgCalc()" placeholder="12"></div>
             <div class="field"><label>Aylıq ödəniş (AZN)</label><input id="mgAylik" readonly></div>
-          </div><div class="d" style="margin-top:6px;color:#8a6a3a">Məbləğlərin sözlə yazılışı (avtomatik, yoxlayıb düzəldə bilərsiniz):</div><div class="two"><div class="field"><label>1 m² — sözlə</label><input id="mgM2Word" placeholder="avtomatik"></div><div class="field"><label>Ümumi — sözlə</label><input id="mgTotalWord" placeholder="avtomatik"></div></div><div class="two"><div class="field"><label>İlkin — sözlə</label><input id="mgIlkinWord" placeholder="avtomatik"></div><div class="field"><label>Qalıq — sözlə</label><input id="mgQaliqWord" placeholder="avtomatik"></div></div>
+          </div>
+          <div id="mgFullNote" style="display:none;color:#2f7a44;font-size:13px;margin-top:4px">✓ Tam (nağd) ödəniş — müqavilədə aylıq ödəniş bəndi olmayacaq.</div><div class="d" style="margin-top:6px;color:#8a6a3a">Məbləğlərin sözlə yazılışı (avtomatik, yoxlayıb düzəldə bilərsiniz):</div><div class="two"><div class="field"><label>1 m² — sözlə</label><input id="mgM2Word" placeholder="avtomatik"></div><div class="field"><label>Ümumi — sözlə</label><input id="mgTotalWord" placeholder="avtomatik"></div></div><div class="two"><div class="field"><label>İlkin — sözlə</label><input id="mgIlkinWord" placeholder="avtomatik"></div><div class="field"><label>Qalıq — sözlə</label><input id="mgQaliqWord" placeholder="avtomatik"></div></div>
           <div class="two">
             <div class="field"><label>Müqavilə №</label><input id="mgNo" placeholder="məs. LR-2026-001"></div>
             <div class="field"><label>Müqavilə tarixi</label><input id="mgDate" type="date"></div>
@@ -1000,7 +1001,7 @@ function mgCalc(){var sahe=parseFloat(document.getElementById('mgSahe').value)||
  var total=Math.round(sahe*m2*100)/100;if(total)document.getElementById('mgTotal').value=total;
  var t=parseFloat(document.getElementById('mgTotal').value)||0;var ilkin=parseFloat(document.getElementById('mgIlkin').value)||0;
  var qaliq=Math.max(t-ilkin,0);document.getElementById('mgQaliq').value=qaliq.toFixed(2);
- var ay=parseInt(document.getElementById('mgAy').value)||0;document.getElementById('mgAylik').value=ay?(qaliq/ay).toFixed(2):'';if(typeof numToAz==='function'){var m2=document.getElementById('mgM2').value;var W=function(id,v){var e=document.getElementById(id);if(e&&!e.dataset.edited)e.value=v?numToAz(v):'';};W('mgM2Word',m2);W('mgTotalWord',t);W('mgIlkinWord',ilkin);W('mgQaliqWord',qaliq);}}
+ var ay=parseInt(document.getElementById('mgAy').value)||0;document.getElementById('mgAylik').value=ay?(qaliq/ay).toFixed(2):'';var full=(qaliq<=0&&t>0);var ae=document.getElementById('mgAy'),le=document.getElementById('mgAylik');if(ae){ae.disabled=full;ae.style.opacity=full?'0.45':'';if(full)ae.value='';}if(le){le.style.opacity=full?'0.45':'';}var note=document.getElementById('mgFullNote');if(note)note.style.display=full?'block':'none';if(typeof numToAz==='function'){var m2=document.getElementById('mgM2').value;var W=function(id,v){var e=document.getElementById(id);if(e&&!e.dataset.edited)e.value=v?numToAz(v):'';};W('mgM2Word',m2);W('mgTotalWord',t);W('mgIlkinWord',ilkin);W('mgQaliqWord',qaliq);}}
 function mgTotalManual(){mgCalc();}
 function _mgData(){
  var g=function(id){return (document.getElementById(id).value||'').trim();};
@@ -1221,7 +1222,18 @@ function genMugavileTpl(doArchive,dOverride){
   xml=_fillDocXml(xml,fills);
   // Full payment note: append sentence into P29 area — replace the installment tail text.
   if(d.tamOdenis){
-   xml=xml.replace(/Geri qalan[\s\S]*?öhdəsinə götürür\./,'Ödəniş tam şəkildə (nağd) müqavilə bağlandığı gün həyata keçirilir.');
+   var esc2=function(t){return t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');};
+   // 1) İlk hissəni dəyiş
+   xml=xml.replace(new RegExp('(<w:t[^>]*>)'+esc2('məbləği müqavilə bağlandığı gün ödəyir. Geri qalan ')+'(<\\/w:t>)'),'$1məbləği müqavilə bağlandığı gün tam şəkildə (nağd) ödəyir.$2');
+   // 2) Anchor-dan sonrakı bütün köçürmə run-larını yalnız həmin hissədə boşalt
+   var anchor='tam şəkildə (nağd) ödəyir.</w:t>';var ap=xml.indexOf(anchor);
+   if(ap>=0){
+    var head=xml.slice(0,ap+anchor.length);var tail=xml.slice(ap+anchor.length);
+    [') manat',' (',' )',' məbləği isə ',' müddətinə ','“Satıcı”ya ','ödəməyi öhdəsinə götürür.'].forEach(function(t){
+      tail=tail.replace(new RegExp('(<w:t[^>]*>)'+esc2(t)+'(<\\/w:t>)'),'$1$2');
+    });
+    xml=head+tail;
+   }
   }
   zip.file('word/document.xml',xml);
   var out=zip.generate({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
