@@ -188,8 +188,13 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   .sec-filt .sf:hover{border-color:var(--rust);}
   .sec-filt .sf.on{background:var(--rust);color:#fff;border-color:var(--rust);}
   .tower-stage{position:relative;border-radius:20px;overflow:hidden;box-shadow:0 24px 60px -30px rgba(74,42,24,.5);background:#0d1420;line-height:0;}
+  .tower-zoom{transform-origin:0 0;transition:transform .05s;will-change:transform;cursor:grab;}
+  .tower-zoom.drag{cursor:grabbing;transition:none;}
   .tower-stage img{width:100%;height:auto;display:block;}
   #towerSvg{position:absolute;inset:0;width:100%;height:100%;}
+  .tz-ctrl{position:absolute;right:14px;bottom:14px;z-index:15;display:flex;flex-direction:column;gap:6px;}
+  .tz-ctrl button{width:40px;height:40px;border-radius:10px;border:none;background:rgba(20,26,38,.92);color:#fff;font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;}
+  .tz-ctrl button:hover{background:var(--rust);}
   #towerSvg polygon{cursor:pointer;fill:rgba(255,255,255,0);stroke:rgba(255,255,255,0);transition:.12s;}
   #towerSvg polygon:hover{fill:rgba(217,110,60,.42);stroke:rgba(255,255,255,.85);stroke-width:1.5;}
   #towerSvg polygon.sel{fill:rgba(217,110,60,.55);stroke:#fff;stroke-width:2;}
@@ -658,7 +663,7 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
   </div>
   <div id="callOk">Təşəkkürlər! 🎉<br>Tezliklə sizinlə əlaqə saxlayacağıq.</div>
 </div></div>
-<div class="view" id="v-secim" data-nav="secim"><div class="wrap" style="padding-top:calc(var(--nav-h) + 12px);"><div class="sec-head"><div><div class="se">İnteraktiv seçim</div><h1 class="sec-h1">Binanı və mərtəbəni seçin</h1></div><div class="sec-filt" id="secFilt"><button class="sf on" data-st="all">Hamısı</button><button class="sf" data-st="available">Satışda</button><button class="sf" data-st="sold">Satılıb</button></div></div><div class="tower-stage" id="towerStage"><img src="assets/tower-3-8.jpg" alt="Bina" id="towerImg"><svg id="towerSvg" viewBox="0 0 1000 563" preserveAspectRatio="none"></svg><div class="floor-pop" id="floorPop" style="display:none"></div></div><div class="sec-note">Binanın üzərində mərtəbəyə klikləyin — həmin mərtəbədəki mənzillər açılacaq. Bina 3, 4, 5, 6, 7, 8 eyni tipdir.</div></div></div>
+<div class="view" id="v-secim" data-nav="secim"><div class="wrap" style="padding-top:calc(var(--nav-h) + 12px);"><div class="sec-head"><div><div class="se">İnteraktiv seçim</div><h1 class="sec-h1">Binanı və mərtəbəni seçin</h1></div><div class="sec-filt" id="secFilt"><button class="sf on" data-st="all">Hamısı</button><button class="sf" data-st="available">Satışda</button><button class="sf" data-st="sold">Satılıb</button></div></div><div class="tower-stage" id="towerStage"><div class="tower-zoom" id="towerZoom"><img src="assets/tower-3-8.jpg" alt="Bina" id="towerImg"><svg id="towerSvg" viewBox="0 0 1000 563" preserveAspectRatio="none"></svg></div><div class="floor-pop" id="floorPop" style="display:none"></div><div class="tz-ctrl"><button onclick="tzoom(1.3)" title="Böyüt">+</button><button onclick="tzoom(0.77)" title="Kiçilt">−</button><button onclick="tzreset()" title="Sıfırla">⟲</button></div></div><div class="sec-note">Binanın üzərində mərtəbəyə klikləyin — həmin mərtəbədəki mənzillər açılacaq. Bina 3, 4, 5, 6, 7, 8 eyni tipdir.</div></div></div>
 <div class="drawer" id="drawer"><button class="x" id="drawerX">&times;</button><div class="eyebrow-d">LUX RESIDENCE</div><h2 id="dName">Bina</h2><div class="dr-meta" id="dMeta"></div><div id="drawerBody"></div><a class="cta" id="drawerAll" href="#planlar" data-bina="">Bu binada bütün mənzillər →</a></div><footer><svg class="foot-mark" viewBox="0 0 120 120" fill="currentColor" aria-hidden="true"><path d="M20 16 h22 v66 h34 v22 h-56 z"/><path d="M100 104 h-22 v-66 h-34 v-22 h56 z"/></svg><div class="foot-grid">
   <div class="foot-brand"><img src="assets/img7.png" alt="LUX RESIDENCE"><p>Şəhərin imkanlarından uzaqlaşmadan, yaşıllıqların əhatəsində rahat və huzurlu yaşam.</p></div>
   <div class="foot-col"><h4>Səhifələr</h4><a href="#ana">Ana Səhifə</a><a href="#haqqimizda">Haqqımızda</a><a href="#infrastruktur">İnfrastruktur</a><a href="#xeberler">Xəbərlər</a><a href="#planlar">Planlar</a><a href="#elaqe">Əlaqə</a></div>
@@ -995,6 +1000,19 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
  window.addEventListener('hashchange',function(){if(location.hash.indexOf('secim')>=0)setTimeout(initTower,200);});
  if(location.hash.indexOf('secim')>=0)setTimeout(initTower,500);
  // data gələndə yenilə
+ var tz=1,tox=0,toy=0;
+ function tzApply(){var z=document.getElementById('towerZoom');if(z)z.style.transform='translate('+tox+'px,'+toy+'px) scale('+tz+')';}
+ function clampTz(r){var minX=r.width-r.width*tz,minY=r.height-r.height*tz;tox=Math.min(0,Math.max(minX,tox));toy=Math.min(0,Math.max(minY,toy));}
+ window.tzoom=function(f){var st=document.getElementById('towerStage');if(!st)return;var r=st.getBoundingClientRect();var cx=r.width/2,cy=r.height/2;var ix=(cx-tox)/tz,iy=(cy-toy)/tz;tz=Math.max(1,Math.min(tz*f,4));tox=cx-ix*tz;toy=cy-iy*tz;clampTz(r);tzApply();};
+ window.tzreset=function(){tz=1;tox=0;toy=0;tzApply();};
+ (function(){var st=document.getElementById('towerStage');if(!st)return;
+  st.addEventListener('wheel',function(e){if(location.hash.indexOf('secim')<0)return;e.preventDefault();var r=st.getBoundingClientRect();var cx=e.clientX-r.left,cy=e.clientY-r.top;var ix=(cx-tox)/tz,iy=(cy-toy)/tz;tz=Math.max(1,Math.min(tz*(e.deltaY<0?1.12:0.89),4));tox=cx-ix*tz;toy=cy-iy*tz;clampTz(r);tzApply();},{passive:false});
+  var dragging=false,last=null,moved=false;
+  st.addEventListener('pointerdown',function(e){if(tz<=1)return;if(e.target.closest('.tz-ctrl'))return;dragging=true;moved=false;last=[e.clientX,e.clientY];document.getElementById('towerZoom').classList.add('drag');st.setPointerCapture(e.pointerId);});
+  st.addEventListener('pointermove',function(e){if(!dragging)return;var dx=e.clientX-last[0],dy=e.clientY-last[1];if(Math.abs(dx)+Math.abs(dy)>3)moved=true;tox+=dx;toy+=dy;last=[e.clientX,e.clientY];var r=st.getBoundingClientRect();clampTz(r);tzApply();});
+  st.addEventListener('pointerup',function(e){dragging=false;document.getElementById('towerZoom').classList.remove('drag');});
+  st.addEventListener('click',function(e){if(moved){e.stopPropagation();e.preventDefault();moved=false;}},true);
+ })();
  window._refreshTower=function(){if(location.hash.indexOf('secim')>=0)drawTower();};
 })();
 
