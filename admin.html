@@ -490,6 +490,7 @@ h1,h2,h3,h4{margin:0}
     <div class="field"><label>Qısa mətn (kartda görünür)</label><textarea id="nExcerpt"></textarea></div>
     <div class="field"><label>Tam mətn (detal səhifəsi)</label><textarea id="nBody" style="min-height:130px"></textarea></div>
     <div class="field"><label>SEO link (slug)</label><input id="nSlug" placeholder="avtomatik: başlıqdan"><div class="hint">URL-də görünür: #xeber-<b>bu-hisse</b>. Boş buraxsanız başlıqdan avtomatik yaranır.</div></div>
+    <div class="field"><label>Açar sözlər (SEO)</label><input id="nTags" placeholder="məs: ipoteka, yeni tikili, mənzil almaq"><div class="hint">Vergüllə ayırın. Google axtarışı üçün və yazının altında etiket kimi görünür.</div></div>
     <div class="field"><label>Xəbər şəkli</label><input type="file" id="nImg" accept="image/*"><div id="nImgPrev" class="imgprev"></div></div>
     <div class="modal-foot"><button class="btn ghost" onclick="closeNews()">Ləğv et</button><button class="btn" onclick="saveNews()">Yadda saxla</button></div>
   </div>
@@ -656,13 +657,13 @@ function renderNews(){
 function openNews(id){
   editNews=id||null;var n=id?NEWS.find(x=>x.id===id):{date:'',title:'',excerpt:'',body:''};
   document.getElementById('newsMTitle').textContent=id?'Xəbəri redaktə et':'Yeni xəbər';
-  nDate.value=n.date;nTitle.value=n.title;nExcerpt.value=n.excerpt;nBody.value=n.body;nSlug.value=n.slug||'';ntCount();
+  nDate.value=n.date;nTitle.value=n.title;nExcerpt.value=n.excerpt;nBody.value=n.body;nSlug.value=n.slug||'';var _nt=document.getElementById('nTags');if(_nt)_nt.value=(n.tags||[]).join(', ');ntCount();
   _newsImg=n.img||null;renderNewsImgPrev();
   document.getElementById('newsModal').classList.add('on');
 }
 function closeNews(){document.getElementById('newsModal').classList.remove('on');}
 function saveNews(){
-  var o={date:nDate.value.trim(),title:nTitle.value.trim(),excerpt:nExcerpt.value.trim(),body:nBody.value.trim(),slug:(nSlug.value.trim()||slugify(nTitle.value.trim())),img:_newsImg||''};
+  var o={date:nDate.value.trim(),title:nTitle.value.trim(),excerpt:nExcerpt.value.trim(),body:nBody.value.trim(),slug:(nSlug.value.trim()||slugify(nTitle.value.trim())),img:_newsImg||''};var _nt=document.getElementById('nTags');if(_nt)o.tags=_nt.value.split(',').map(function(x){return x.trim();}).filter(Boolean);
   if(!o.title){toast('Başlıq tələb olunur');return;}
   if(!o.img){toast('Xəbər üçün şəkil mütləqdir');return;}
   if(editNews){var n=NEWS.find(x=>x.id===editNews);Object.assign(n,o);}
