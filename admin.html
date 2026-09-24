@@ -158,7 +158,8 @@ h1,h2,h3,h4{margin:0}
 .sfnum{cursor:pointer;border-radius:6px}.sfnum:hover{color:var(--rust);background:#fff}
 .wide .sfnum{width:66px;flex-basis:66px;font-size:11px}
 .gwrap .sfrow{flex-wrap:wrap;min-width:0;align-items:flex-start}.gwrap .sfrow .sfnum{align-self:center}
-.ovback{display:flex;align-items:center;gap:12px;margin-bottom:16px}.ovback b{font-family:var(--serif);font-size:18px}
+.ovback{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.ctbl{width:100%;border-collapse:collapse;font-size:14px}.ctbl th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:10px 8px;border-bottom:1px solid var(--line)}.ctbl td{padding:10px 8px;border-bottom:1px solid var(--line)}.ctbl tr:last-child td{border-bottom:none}.ctbl .ca{white-space:nowrap;text-align:right}.ctbl .btn.sm{padding:4px 8px;font-size:12px}.ovback b{font-family:var(--serif);font-size:18px}
 .ovblk{margin-bottom:22px}.ovh{display:flex;align-items:center;gap:10px;margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);flex-wrap:wrap}.ovh b{font-family:var(--serif);font-size:17px}.ovh span{font-size:13px;color:var(--muted)}.ovh .btn{margin-left:auto}
 .scell2{min-width:46px;height:38px;border-radius:7px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;line-height:1.05;padding:0 3px;user-select:none}
 .scell2 .a{font-size:8px;opacity:.9;font-weight:500}
@@ -226,6 +227,7 @@ h1,h2,h3,h4{margin:0}
       <button data-s="content"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 10h16M4 15h10M4 20h7"/></svg>Kontent</button>
       <button data-s="calc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M12 10h2M16 10h.01M8 14h2M12 14h2M16 14h.01M8 18h6"/></svg>Kalkulyator</button>
       <button data-s="mugavile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>Müqavilə</button>
+      <button data-s="mlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h11l5 5v11H4z"/><path d="M9 12h6M9 16h6M9 8h3"/></svg>Müqavilələr</button>
       <button data-s="set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Qiymət & Tənzimləmə</button>
     </nav>
     <button class="logout" id="logout">Çıxış</button>
@@ -375,6 +377,13 @@ h1,h2,h3,h4{margin:0}
             <div class="field" style="align-self:end"><button class="btn ghost" onclick="genMugavilePDF()">🖨️ PDF / Çap</button></div>
           </div>
         </div>
+      </section>
+
+      <!-- MÜQAVİLƏLƏR ARXİVİ -->
+      <section class="sec" id="s-mlist">
+        <div class="page-h"><div><h1>Müqavilələr</h1><div class="sub">Yaradılmış müqavilələrin arxivi — bütün cihazlarda görünür, şifrələnmiş saxlanılır.</div></div>
+          <button class="btn ghost" onclick="loadContracts()">↻ Yenilə</button></div>
+        <div class="panel"><div id="contractsList"><div class="d">Yüklənir…</div></div></div>
       </section>
 
       <!-- TƏNZİMLƏMƏ -->
@@ -557,9 +566,9 @@ nav.addEventListener('click',e=>{var b=e.target.closest('button[data-s]');if(!b)
 function go(s){
   [...nav.children].forEach(x=>x.classList.toggle('on',x.dataset.s===s));
   document.querySelectorAll('.sec').forEach(x=>x.classList.toggle('on',x.id==='s-'+s));
-  var names={panel:'Panel',leads:'Sorğular',apt:'Mənzillər',bina:'Binalar',news:'Xəbərlər',sales:'Satış Lövhəsi',part:'Partnyorlar',content:'Kontent',calc:'Kalkulyator',mugavile:'Müqavilə',set:'Qiymət & Tənzimləmə'};
+  var names={panel:'Panel',leads:'Sorğular',apt:'Mənzillər',bina:'Binalar',news:'Xəbərlər',sales:'Satış Lövhəsi',part:'Partnyorlar',content:'Kontent',calc:'Kalkulyator',mugavile:'Müqavilə',mlist:'Müqavilələr',set:'Qiymət & Tənzimləmə'};
   document.getElementById('mobTitle').textContent=names[s]||'Panel';
-  if(s==='leads')renderLeads();if(s==='sales')renderSales();if(s==='mugavile')initMugavile();closeSide();window.scrollTo(0,0);
+  if(s==='leads')renderLeads();if(s==='sales')renderSales();if(s==='mugavile')initMugavile();if(s==='mlist')loadContracts();closeSide();window.scrollTo(0,0);
 }
 document.getElementById('burger').addEventListener('click',()=>{side.classList.add('open');backdrop.classList.add('on');});
 backdrop.addEventListener('click',closeSide);
@@ -1061,12 +1070,12 @@ function genMugavileDoc(_dOverride){
  ch.push(new D.Paragraph({spacing:{before:260},children:[new D.TextRun({text:'Satıcı: ________________________                    Alıcı: ________________________',size:19,color:INK})]}));
  ch.push(new D.Paragraph({spacing:{before:20},alignment:D.AlignmentType.CENTER,children:[new D.TextRun({text:'(imza)                                                                            (imza)',size:15,italics:true,color:'8a8a8a'})]}));
  var doc=new D.Document({sections:[{properties:{page:{margin:{top:900,bottom:720,left:900,right:900}}},children:ch}]});
- D.Packer.toBlob(doc).then(function(blob){saveAs(blob,'Muqavile_'+(d.soyad||'alici')+'_'+d.no.replace(/[^\w-]/g,'')+'.docx');toast('Müqavilə yükləndi ✓');}).catch(function(e){toast('Xəta: '+e.message);});
+ D.Packer.toBlob(doc).then(function(blob){saveAs(blob,'Muqavile_'+(d.soyad||'alici')+'_'+d.no.replace(/[^\w-]/g,'')+'.docx');if(!_dOverride)saveContract(d);toast('Müqavilə yükləndi ✓');}).catch(function(e){toast('Xəta: '+e.message);});
 }
 
 /* ---- PDF ---- */
-function genMugavilePDF(){
- var d=_mgData();if(!_mgValid(d))return;
+function genMugavilePDF(){var d=_mgData();if(!_mgValid(d))return;saveContract(d);_pdfFromData(d);}
+function _pdfFromData(d){
  var h='<html><head><meta charset="utf-8"><title>Müqavilə '+d.no+'</title><style>@page{margin:16mm}body{font-family:Georgia,serif;color:#1a1a1a;font-size:13px;line-height:1.65}'+
   '.top{text-align:center;border-bottom:3px solid #b8894b;padding-bottom:14px;margin-bottom:18px}.top img{width:46px}.top h1{font-size:22px;color:#24303a;margin:8px 0 2px}.top .no{font-size:15px}.top .row{display:flex;justify-content:space-between;font-size:13px;margin-top:10px}'+
   'h2{font-size:14px;color:#24303a;margin:16px 0 6px}p{margin:3px 0;white-space:pre-line}'+
@@ -1081,6 +1090,40 @@ function genMugavilePDF(){
  h+='</body></html>';
  var w=window.open('','_blank');if(!w){toast('Pop-up bloklandı');return;}w.document.write(h);w.document.close();setTimeout(function(){w.focus();w.print();},400);toast('Çap pəncərəsi açıldı');
 }
+
+/* ========= MÜQAVİLƏ ARXİVİ (şifrələnmiş) ========= */
+/* Sadə XOR+base64 şifrələmə — admin parolu açar kimi. Kənar şəxs anon açarla yalnız şifrəli mətn görər. */
+function _encKey(){try{return localStorage.getItem('lux_admin_pw')||'ferid245';}catch(e){return 'ferid245';}}
+function _xor(str,key){var out='';for(var i=0;i<str.length;i++){out+=String.fromCharCode(str.charCodeAt(i)^key.charCodeAt(i%key.length));}return out;}
+function _encrypt(obj){try{var json=JSON.stringify(obj);var x=_xor(unescape(encodeURIComponent(json)),_encKey());return btoa(x);}catch(e){return '';}}
+function _decrypt(enc){try{var x=atob(enc);var json=decodeURIComponent(escape(_xor(x,_encKey())));return JSON.parse(json);}catch(e){return null;}}
+
+function saveContract(d){
+ if(OFFLINE||!sb){toast('Onlayn rejim yoxdur, arxiv saxlanmadı');return Promise.resolve();}
+ var id='C'+Date.now()+Math.floor(Math.random()*1000);
+ var rec={id:id,enc:_encrypt(d)};
+ return sb.from('lux_contracts').insert(rec).then(function(r){if(r.error)console.warn('arxiv:',r.error.message);});
+}
+function loadContracts(){
+ var box=document.getElementById('contractsList');if(!box)return;
+ if(OFFLINE||!sb){box.innerHTML='<div class="d">Arxiv yalnız onlayn rejimdə işləyir.</div>';return;}
+ box.innerHTML='<div class="d">Yüklənir…</div>';
+ sb.from('lux_contracts').select('id,enc,created_at').order('created_at',{ascending:false}).then(function(res){
+  if(res.error){box.innerHTML='<div class="d">Xəta: '+res.error.message+'</div>';return;}
+  var rows=res.data||[];if(!rows.length){box.innerHTML='<div class="d">Hələ müqavilə yaradılmayıb.</div>';return;}
+  var h='<table class="ctbl"><thead><tr><th>№</th><th>Alıcı</th><th>Mənzil</th><th>Qiymət</th><th>Tarix</th><th></th></tr></thead><tbody>';
+  window._CONTRACTS={};
+  rows.forEach(function(r){var d=_decrypt(r.enc);if(!d){h+='<tr><td colspan="6" class="d">— (oxunmadı)</td></tr>';return;}window._CONTRACTS[r.id]=d;
+   h+='<tr><td>'+esc(d.no||'—')+'</td><td>'+esc(d.full||'—')+'</td><td>'+esc((d.bina||'')+', '+(d.floor||'')+', №'+(d.unitno||''))+'</td><td>'+esc(d.total||'—')+' AZN</td><td>'+esc(d.date||'—')+'</td>'+
+     '<td class="ca"><button class="btn ghost sm" onclick="reDownload(\''+r.id+'\')">📄 Word</button> <button class="btn ghost sm" onclick="reDownloadPDF(\''+r.id+'\')">🖨️</button> <button class="btn ghost sm" style="color:#c0392b" onclick="delContract(\''+r.id+'\')">Sil</button></td></tr>';
+  });
+  h+='</tbody></table>';box.innerHTML=h;
+ });
+}
+function reDownload(id){var d=window._CONTRACTS&&window._CONTRACTS[id];if(!d){toast('Tapılmadı');return;}genMugavileDoc(d);}
+function reDownloadPDF(id){var d=window._CONTRACTS&&window._CONTRACTS[id];if(!d){toast('Tapılmadı');return;}_pdfFromData(d);}
+function delContract(id){if(!confirm('Bu müqavilə arxivdən silinsin? (Sənəd faylı silinmir, yalnız arxiv qeydi)'))return;
+ sb.from('lux_contracts').delete().eq('id',id).then(function(r){if(r.error){toast('Xəta');return;}toast('Silindi');loadContracts();});}
 
 function salesSave(){if(SMODE==='com')set('lux_commercial',COMM);else if(SMODE==='gar')set('lux_garage',GAR);else set('lux_sales',SALES);}
 function loadSampleSales(){if(!confirm('Nümunə (bütün 9 bina) data yüklənsin? Cari dəyişikliklər əvəz olunacaq.'))return;SALES=JSON.parse(JSON.stringify(DEFAULT_SALES));salesSave();curBina='';renderSales();toast('Nümunə data yükləndi ✓');}
