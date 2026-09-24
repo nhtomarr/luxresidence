@@ -316,10 +316,6 @@ h1,h2,h3,h4{margin:0}
       <!-- MÜQAVİLƏ -->
       <section class="sec" id="s-mugavile">
         <div class="page-h"><div><h1>Müqavilə</h1><div class="sub">Alqı-satqı müqaviləsi yaradın — boşluqları doldurun, sənəd avtomatik yüklənsin.</div></div></div>
-        <div class="panel" style="background:#fff8ee;border:1px solid #e8d5b0">
-          <div class="d" style="color:#8a6a3a">⚠️ Diqqət: Bu <b>nümunə</b> şablondur. Müqavilənin hüquqi mətni hüquqşünas tərəfindən yoxlanılmalıdır. Real müqavilə mətni hazır olanda əvəz ediləcək.</div>
-        </div>
-
         <div class="panel">
           <h3>Alıcı məlumatları</h3>
           <div class="two">
@@ -373,10 +369,12 @@ h1,h2,h3,h4{margin:0}
         <div class="panel">
           <h3>Sənədi yarat</h3>
           <div class="d">Bütün vacib xanaları doldurun və müqaviləni yükləyin.</div>
+          <div class="d">1) Sənədi yoxlamaq üçün yükləyin. 2) Hər şey düzgündürsə <b>“Tamamla”</b> basın — müqavilə arxivə düşəcək.</div>
           <div class="two" style="margin-top:8px">
-            <div class="field" style="align-self:end"><button class="btn" onclick="genMugavileTpl()">📄 Word (.docx) yüklə</button></div>
+            <div class="field" style="align-self:end"><button class="btn ghost" onclick="genMugavileTpl(false)">📄 Word yüklə (yoxlama)</button></div>
             <div class="field" style="align-self:end"><button class="btn ghost" onclick="genMugavilePDF()">🖨️ PDF / Çap</button></div>
           </div>
+          <div style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px"><button class="btn" style="background:#2f7a44" onclick="tamamlaMugavile()">✓ Tamamla və arxivə əlavə et</button></div>
         </div>
       </section>
 
@@ -1075,7 +1073,7 @@ function genMugavileDoc(_dOverride){
 }
 
 /* ---- PDF ---- */
-function genMugavilePDF(){var d=_mgData();if(!_mgValid(d))return;saveContract(d);_pdfFromData(d);}
+function genMugavilePDF(){var d=_mgData();if(!_mgValid(d))return;_pdfFromData(d);}
 function _pdfFromData(d){
  var h='<html><head><meta charset="utf-8"><title>Müqavilə '+d.no+'</title><style>@page{margin:16mm}body{font-family:Georgia,serif;color:#1a1a1a;font-size:13px;line-height:1.65}'+
   '.top{text-align:center;border-bottom:3px solid #b8894b;padding-bottom:14px;margin-bottom:18px}.top img{width:46px}.top h1{font-size:22px;color:#24303a;margin:8px 0 2px}.top .no{font-size:15px}.top .row{display:flex;justify-content:space-between;font-size:13px;margin-top:10px}'+
@@ -1178,7 +1176,8 @@ function _mgTplData(){
  return d;
 }
 
-function genMugavileTpl(){
+function tamamlaMugavile(){var d=_mgTplData();if(!_mgValid(d))return;if(!confirm('Müqavilə tamamlansın və arxivə əlavə edilsin?\n\nAlıcı: '+d.full+'\nMənzil: '+d.bina+', '+d.floor+', №'+d.unitno+'\nQiymət: '+d.total+' AZN'))return;genMugavileTpl(true);}
+function genMugavileTpl(doArchive){
  var d=_mgTplData();if(!_mgValid(d))return;
  if(!window.PizZip){toast('Kitabxana yüklənmədi, internetə bağlanın');return;}
  toast('Müqavilə hazırlanır…');
@@ -1212,8 +1211,8 @@ function genMugavileTpl(){
   zip.file('word/document.xml',xml);
   var out=zip.generate({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
   saveAs(out,'Muqavile_'+(d.soyad||'alici')+'_'+String(d.no).replace(/[^\w-]/g,'')+'.docx');
-  saveContract(d);
-  toast('Müqavilə yükləndi ✓');
+  if(doArchive)saveContract(d);
+  toast(doArchive?'Müqavilə arxivə əlavə edildi ✓':'Word yükləndi (yoxlama)');
  }).catch(function(e){toast('Xəta: '+e.message);});
 }
 
