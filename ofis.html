@@ -129,7 +129,7 @@ a.btn{text-decoration:none}
 body.owner .tabs{display:none}
 body.owner main{font-size:18px;max-width:900px}
 body.owner #v-boss .bossh{font-size:30px}
-body.owner #v-boss > .row button{display:none}
+body.owner #v-boss > .row button:not(.givebtn){display:none}
 body.owner .bgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
 body.owner .btile{padding:24px;position:relative}.btile em{position:absolute;right:18px;bottom:14px;font-style:normal;color:var(--acc);font-size:15px;font-weight:600;display:none}
 body.owner .btile em{display:block}body.owner .btile span{font-size:18px}
@@ -160,6 +160,18 @@ body.owner .btile{padding:18px}body.owner .btile b{font-size:38px}body.owner .bt
 body.owner .olines p{font-size:16px;margin:5px 0}
 @media(max-width:1100px){body.owner .bgrid{grid-template-columns:repeat(3,minmax(0,1fr))}.odash{grid-template-columns:1fr}}
 @media(max-width:700px){body.owner .bgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.ocols{grid-template-columns:1fr}}
+
+.givebtn{background:linear-gradient(135deg,#b45309,#f59e0b);font-size:16px;padding:12px 18px;border-radius:14px;box-shadow:0 10px 24px -12px rgba(180,83,9,.7)}.givebtn:hover{background:linear-gradient(135deg,#92400e,#d97706)}
+.field .big{font-size:17px;padding:12px 14px}
+.ogt{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.ogt b{font-size:15px}
+.owncard{background:linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#f59e0b 100%);color:#fff;border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 18px 40px -18px rgba(194,65,12,.8);position:relative;overflow:hidden}
+.owncard::after{content:"👑";position:absolute;right:-6px;top:-14px;font-size:90px;opacity:.12}
+.owncard-h{font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.owntask{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:14px;padding:14px;margin-top:8px;cursor:pointer}
+.owntask b{font-size:19px;display:block}.owntask p{margin:6px 0 0;opacity:.95}
+.owntask-m{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.owntask-m span{color:#fff;background:rgba(0,0,0,.3);border-radius:99px;padding:4px 10px;font-size:13px;font-weight:600}.owntask-m .late{background:#fee2e2;color:#991b1b}
+.tk.ownt{background:linear-gradient(135deg,#fff7ed,#fde68a);border:2px solid #f59e0b}
+.ownbadge{display:inline-block;background:linear-gradient(135deg,#b45309,#f59e0b);color:#fff;font-size:11px;font-weight:800;border-radius:99px;padding:3px 9px;margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -173,6 +185,7 @@ body.owner .olines p{font-size:16px;margin:5px 0}
     <div><div class="muted small" id="tDate"></div><div class="clock" id="tClock">--:--</div><div id="tStatus" class="muted"></div></div>
     <div class="row" id="tBtns"></div></div>
     <div class="stat-line" id="tStats"></div></div>
+   <div id="tOwnerTasks"></div>
    <div class="card" id="noEmp" style="display:none"><b>Hesabınız işçi kartına bağlanmayıb.</b><p class="muted small">Gəliş-gediş qeydi üçün rəhbər sizi "İşçilər" bölməsində işçi kartına bağlamalıdır.</p></div>
    <div class="card"><div class="row" style="justify-content:space-between"><h3>Mənim tapşırıqlarım</h3><button class="btn sm" onclick="openTask()">+ Tapşırıq</button></div><div id="tMyTasks"></div></div>
    <div id="tHr"></div>
@@ -316,7 +329,7 @@ function loadAll(){return Promise.all([
 
 /* ---------- BU GÜN / check-in ---------- */
 var MYDAY=null;
-function renderToday(){$('noEmp').style.display=(EMP||MGR)?'none':'';var ck=document.querySelector('.checkcard');if(ck)ck.style.display=(!EMP&&MGR)?'none':'';renderTgCard();renderHrBoxes();renderTodayAnn();
+function renderToday(){renderOwnerTasksForEmp();$('noEmp').style.display=(EMP||MGR)?'none':'';var ck=document.querySelector('.checkcard');if(ck)ck.style.display=(!EMP&&MGR)?'none':'';renderTgCard();renderHrBoxes();renderTodayAnn();
  var my=TASKS.filter(function(t){return EMP&&t.assignee_id===EMP.id&&t.status!=='done';});
  $('tMyTasks').innerHTML=my.length?my.map(taskRow).join(''):'<div class="empty">Açıq tapşırığınız yoxdur 🎉</div>';
  if(!EMP){$('tStatus').textContent='';$('tBtns').innerHTML='';$('tStats').innerHTML='';return;}
@@ -378,7 +391,7 @@ function renderPanel(){var d=today();$('pDate').textContent=new Date().toLocaleD
 function kpi(v,l,c){return '<div class="kpi '+(c||'')+'"><b>'+v+'</b><span>'+l+'</span></div>';}
 
 /* ---------- TAPŞIRIQLAR ---------- */
-function taskRow(t){var over=t.status!=='done'&&t.due&&t.due<today();var cl=t.checklist||[],cd=cl.filter(function(x){return x.done;}).length;return '<div class="tk'+(over?' over':'')+'" draggable="true" data-id="'+t.id+'" onclick="openTask('+t.id+')"><b>'+esc(t.title)+'</b><div class="meta">'+(cl.length?'<span class="pill '+(cd===cl.length?'p-ok':'p-mut')+'">✓ '+cd+'/'+cl.length+'</span>':'')+((t.files||[]).length?'<span>📎 '+t.files.length+'</span>':'')+(t.recur?'<span title="Təkrarlanan">🔁</span>':'')+'<span class="pill prio-'+t.priority+'">'+PR[t.priority]+'</span><span class="pill p-mut">'+ST[t.status]+'</span>'+(t.assignee_id?'<span>👤 '+esc(empName(t.assignee_id))+'</span>':'')+(t.due?'<span'+(over?' style="color:var(--bad);font-weight:700"':'')+'>📅 '+t.due.slice(8)+'.'+t.due.slice(5,7)+'</span>':'')+'</div></div>';}
+function taskRow(t){var over=t.status!=='done'&&t.due&&t.due<today();var cl=t.checklist||[],cd=cl.filter(function(x){return x.done;}).length;return '<div class="tk'+(over?' over':'')+(t.from_owner?' ownt':'')+'" draggable="true" data-id="'+t.id+'" onclick="openTask('+t.id+')">'+(t.from_owner?'<div class="ownbadge">👑 Sahibkardan</div>':'')+'<b>'+esc(t.title)+'</b><div class="meta">'+(cl.length?'<span class="pill '+(cd===cl.length?'p-ok':'p-mut')+'">✓ '+cd+'/'+cl.length+'</span>':'')+((t.files||[]).length?'<span>📎 '+t.files.length+'</span>':'')+(t.recur?'<span title="Təkrarlanan">🔁</span>':'')+'<span class="pill prio-'+t.priority+'">'+PR[t.priority]+'</span><span class="pill p-mut">'+ST[t.status]+'</span>'+(t.assignee_id?'<span>👤 '+esc(empName(t.assignee_id))+'</span>':'')+(t.due?'<span'+(over?' style="color:var(--bad);font-weight:700"':'')+'>📅 '+t.due.slice(8)+'.'+t.due.slice(5,7)+'</span>':'')+'</div></div>';}
 function renderKanban(){var f=$('tkFilter').value;if(!MGR&&f==='all'){}
  var list=TASKS.filter(function(t){if(f==='mine')return EMP&&t.assignee_id===EMP.id;if(f==='created')return t.created_by===ME.user_id;return true;});
  if(!renderKanban._i){renderKanban._i=1;var fk=['doing','new','review','done'].find(function(k){return list.some(function(t){return t.status===k;});});if(fk)KB=fk;}
@@ -613,7 +626,7 @@ function grade(r,pp,over){var pts=0;var att=r.plan?(r.came+r.leave)/r.plan:1;if(
  return pts>=7?['Yaxşı','g-ok']:pts>=4?['Orta','g-warn']:['Zəif','g-bad'];}
 function renderOwner(){var d=today(),m=d.slice(0,7);
  $('bDate').textContent=new Date().toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long',year:'numeric'});
- var hs=document.querySelectorAll('#v-boss .bossh');var hr=+new Intl.DateTimeFormat('en-GB',{timeZone:TZ,hour:'2-digit',hour12:false}).format(new Date());var gr=hr>=5&&hr<12?'Sabahınız xeyir':hr>=12&&hr<17?'Günortanız xeyir':'Axşamınız xeyir';var nm=PREVIEW?'Afiq Rəhmanov':(ME.full_name||'Afiq Rəhmanov');hs[0].textContent=gr+', '+nm;if(hs[1])hs[1].parentNode.style.display='none';
+ var hs=document.querySelectorAll('#v-boss .bossh');var hr=+new Intl.DateTimeFormat('en-GB',{timeZone:TZ,hour:'2-digit',hour12:false}).format(new Date());var gr=hr>=5&&hr<12?'Sabahınız xeyir':hr>=12&&hr<17?'Günortanız xeyir':'Axşamınız xeyir';var nm=PREVIEW?'Afiq Rəhmanov':(ME.full_name||'Afiq Rəhmanov');hs[0].textContent=gr+', '+nm;var hb=$('ownGiveBtn');if(!hb){hb=document.createElement('button');hb.id='ownGiveBtn';hb.className='btn givebtn';hb.textContent='✍️ Tapşırıq ver';hb.onclick=function(){ownTaskModal();};hs[0].parentNode.insertBefore(hb,hs[0].nextSibling);}if(hs[1])hs[1].parentNode.style.display='none';
  var pm=document.querySelector('#v-boss > p.muted');if(pm)pm.style.display='none';$('bList').innerHTML='';
  Promise.all([run(sb.from('office_attendance').select('*').gte('day',m+'-01').lte('day',d)),loadPlans(m),loadChart()]).then(function(r){var matt=r[0],att=matt.filter(function(a){return a.day===d;});
   monthRows(function(R){var act=EMPS.filter(function(e){return e.active;});
@@ -644,7 +657,7 @@ function renderOwner(){var d=today(),m=d.slice(0,7);
    var deps='<div class="card"><h3>Şöbələr</h3><table class="dtbl"><tr><th>Şöbə</th><th>Bu gün</th><th>Plan</th><th>Gecikmə (ay)</th></tr>'+DEPTS.map(function(dp){var rs=rows.filter(function(x){var p2=posOf(x.e);return p2&&p2.department_id===dp.id;});if(!rs.length)return '';var cm=rs.filter(function(x){return x.a&&x.a.check_in;}).length,pl=rs.filter(function(x){return x.pp!==null;}),pa=pl.length?Math.round(pl.reduce(function(s2,x){return s2+x.pp;},0)/pl.length):null;
      return '<tr><td><b>'+esc(dp.name)+'</b></td><td>'+cm+'/'+rs.length+'</td><td>'+(pa===null?'—':pa+'%')+'</td><td>'+rs.reduce(function(s2,x){return s2+x.r.lateN;},0)+'</td></tr>';}).join('')+'</table></div>';
    var chart='<div class="card"><h3>Son 14 gün: işə gələnlər</h3><div class="chartbox" style="height:210px"><canvas id="chOwn"></canvas></div></div>';
-   $('ownDash').innerHTML='<div class="odash"><div class="omain">'+tbl+'</div><div class="oside">'+alerts+chart+deps+'</div></div>';
+   $('ownDash').innerHTML='<div class="odash"><div class="omain">'+tbl+'</div><div class="oside">'+ownGivenCard()+alerts+chart+deps+'</div></div>';
    var from=addDays(d,-13),labels=[],cm2=[],lt2=[],pl2=[];for(var i=0;i<14;i++){var ds=addDays(from,i);if(isoDow(ds)>5&&!matt.some(function(a){return a.day===ds;}))continue;labels.push(ds.slice(8)+'.'+ds.slice(5,7));var aa=matt.filter(function(a){return a.day===ds&&a.check_in;});cm2.push(aa.length);lt2.push(aa.filter(function(a){return a.late_min>0;}).length);pl2.push(isHol(ds)?0:act.filter(function(e){return (e.workdays||[]).indexOf(isoDow(ds))>=0&&!leaveOn(e.id,ds);}).length);}
    if(from<m+'-01'){}
    mkChart('chOwn',{type:'bar',data:{labels:labels,datasets:[{label:'Gəlib',data:cm2,backgroundColor:'#2563eb',borderRadius:5},{label:'Gecikib',data:lt2,backgroundColor:'#f59e0b',borderRadius:5},{type:'line',label:'Olmalı idi',data:pl2,borderColor:'#94a3b8',borderDash:[4,4],pointRadius:0}]},options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
@@ -678,8 +691,26 @@ function ownCard(eid){var x=OWN.rows.find(function(y){return y.e.id===eid;});if(
   cal+='<span class="'+c+'" title="'+esc(ds.slice(8)+'.'+ds.slice(5,7)+' '+tt)+'">'+dd+'</span>';}
  cal+='</div><div class="olegend"><span class="ok"></span>vaxtında <span class="lt"></span>gecikib <span class="ab"></span>gəlməyib <span class="lv"></span>icazəli <span class="off"></span>istirahət</div>';
  var tks=x.open.length||x.doneM.length?'<h4 class="ownh4">Tapşırıqlar</h4>'+x.open.map(function(t){var ov=t.due&&t.due<d;return '<div class="opi">'+(ov?'⚠️':'🔹')+' '+esc(t.title)+' <span class="muted">('+ST[t.status]+(t.due?', son tarix '+t.due.slice(8)+'.'+t.due.slice(5,7):'')+')</span></div>';}).join('')+x.doneM.map(function(t){return '<div class="opi">✅ '+esc(t.title)+' <span class="muted">(bitib '+String(t.done_at).slice(8,10)+'.'+String(t.done_at).slice(5,7)+')</span></div>';}).join(''):'';
- modal('<div class="mhead"><div><h3 class="ownh">'+esc(x.e.full_name)+'</h3><div class="muted">'+esc((posOf(x.e)||{}).title||'')+(x.e.phone?' · '+esc(x.e.phone):'')+'</div></div><button class="x" onclick="closeModal()">×</button></div><div class="grade big '+x.g[1]+'">Ümumi qiymət: '+x.g[0]+'</div><div class="ocols"><div><div class="olines">'+lines.map(function(l){return '<p>'+l+'</p>';}).join('')+'</div>'+cal+'</div><div>'+plan+tks+'</div></div>');
+ modal('<div class="mhead"><div><h3 class="ownh">'+esc(x.e.full_name)+'</h3><div class="muted">'+esc((posOf(x.e)||{}).title||'')+(x.e.phone?' · '+esc(x.e.phone):'')+'</div></div><button class="x" onclick="closeModal()">×</button></div><div class="row" style="gap:10px;align-items:stretch"><div class="grade big '+x.g[1]+'" style="flex:1">Ümumi qiymət: '+x.g[0]+'</div><button class="btn givebtn" onclick="ownTaskModal('+x.e.id+')">✍️ Tapşırıq ver</button></div><div class="ocols"><div><div class="olines">'+lines.map(function(l){return '<p>'+l+'</p>';}).join('')+'</div>'+cal+'</div><div>'+plan+tks+'</div></div>');
  $('mbox').classList.add('wide');}
+
+
+/* ---------- SAHİBKARIN TAPŞIRIQLARI ---------- */
+function renderOwnerTasksForEmp(){var b=$('tOwnerTasks');if(!b)return;var l=EMP?TASKS.filter(function(t){return t.from_owner&&t.assignee_id===EMP.id&&t.status!=='done';}):[];
+ b.innerHTML=l.length?'<div class="owncard"><div class="owncard-h">👑 Sahibkardan tapşırıq'+(l.length>1?' ('+l.length+')':'')+'</div>'+l.map(function(t){var over=t.due&&t.due<today();return '<div class="owntask" onclick="openTask('+t.id+')"><b>'+esc(t.title)+'</b>'+(t.description?'<p>'+esc(t.description)+'</p>':'')+'<div class="owntask-m">'+(t.priority==='urgent'?'<span>🔥 Təcili</span>':'')+(t.due?'<span'+(over?' class="late"':'')+'>📅 '+(over?'Son tarix keçib: ':'Son tarix: ')+t.due.slice(8)+'.'+t.due.slice(5,7)+'</span>':'')+'<span>'+ST[t.status]+'</span></div></div>';}).join('')+'</div>':'';}
+function ownTaskModal(eid){var act=EMPS.filter(function(e){return e.active;});var d3=addDays(today(),3);
+ modal('<div class="mhead"><h3 class="ownh">✍️ Tapşırıq ver</h3><button class="x" onclick="closeModal()">×</button></div>'+
+  '<div class="field"><label>Kimə</label><select id="otE" class="big">'+act.map(function(e){return '<option value="'+e.id+'"'+(e.id===eid?' selected':'')+'>'+esc(e.full_name)+' — '+esc((posOf(e)||{}).title||'')+'</option>';}).join('')+'</select></div>'+
+  '<div class="field"><label>Nə etməlidir</label><input id="otT" class="big" placeholder="Məs: Bina 6 üzrə satış hesabatını hazırla"></div>'+
+  '<div class="field"><label>Ətraflı (istəyə bağlı)</label><textarea id="otD" class="big"></textarea></div>'+
+  '<div class="grid g2"><div class="field"><label>Son tarix</label><input id="otDue" type="date" class="big" value="'+d3+'"></div><div class="field"><label>Vaciblik</label><select id="otP" class="big"><option value="high">Vacib</option><option value="urgent">🔥 Təcili</option></select></div></div>'+
+  '<button class="btn" style="width:100%;font-size:18px;padding:15px" onclick="ownTaskSave()">Göndər</button>');}
+function ownTaskSave(){var b={title:$('otT').value.trim(),description:$('otD').value.trim(),assignee_id:+$('otE').value,due:$('otDue').value||null,priority:$('otP').value,status:'new',created_by:ME.user_id,from_owner:true};
+ if(!b.title)return toast('Tapşırığı yazın');
+ run(sb.from('office_tasks').insert(b).select().single()).then(function(t){TASKS.unshift(t);closeModal();toast('Tapşırıq göndərildi: '+empName(t.assignee_id));notify('task_assigned',{id:t.id});if(OWNER)renderOwner();}).catch(err);}
+function ownGivenCard(){var l=TASKS.filter(function(t){return t.from_owner;}).sort(function(a,b){return (a.status==='done')-(b.status==='done')||String(b.created_at).localeCompare(String(a.created_at));}).slice(0,12);
+ return '<div class="card"><div class="row" style="justify-content:space-between"><h3>Verdiyim tapşırıqlar</h3><button class="btn sm" onclick="ownTaskModal()">+ Yeni</button></div>'+(l.length?l.map(function(t){var over=t.status!=='done'&&t.due&&t.due<today();var st=t.status==='done'?'<span class="pill p-ok">✅ bitib</span>':over?'<span class="pill p-bad">gecikir</span>':'<span class="pill '+(t.status==='new'?'p-mut':'p-acc')+'">'+ST[t.status]+'</span>';
+  return '<div class="ogt"><div><b>'+esc(t.title)+'</b><div class="muted small">'+esc(empName(t.assignee_id))+(t.due?' · son tarix '+t.due.slice(8)+'.'+t.due.slice(5,7):'')+'</div></div>'+st+'</div>';}).join(''):'<p class="muted">Hələ tapşırıq verməmisiniz. “+ Yeni” ilə istənilən işçiyə tapşırıq verə bilərsiniz.</p>')+'</div>';}
 
 /* ---------- TELEGRAM ---------- */
 var TGBOT=null;
