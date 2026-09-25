@@ -155,7 +155,8 @@ function findApt(u){const a=parseFloat(u.area)||0;return APTS.find(x=>!x.hidden&
 async function loadData(){
  try{SALES=JSON.parse(localStorage.getItem('lux_sales_pub')||'null');}catch(e){}
  try{APTS=JSON.parse(localStorage.getItem('lux_apartments')||'[]')||[];}catch(e){}
- try{const r=await fetch(SUPA+'/rest/v1/lux_kv?select=key,value&key=in.(lux_sales,lux_apartments,lux_hidefloors,lux_hidestatus)',{headers:{apikey:KEY,Authorization:'Bearer '+KEY}});
+ try{const rs=await fetch(SUPA+'/rest/v1/rpc/lux_public_sales',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json'},body:'{}'});if(rs.ok){const v=await rs.json();if(v&&Object.keys(v).length){SALES=v;try{localStorage.setItem('lux_sales_pub',JSON.stringify(SALES));}catch(e){}}}}catch(e){}
+ try{const r=await fetch(SUPA+'/rest/v1/lux_kv?select=key,value&key=in.(lux_apartments,lux_hidefloors,lux_hidestatus)',{headers:{apikey:KEY,Authorization:'Bearer '+KEY}});
   if(r.ok){const rows=await r.json();rows.forEach(row=>{if(row.key==='lux_sales'){SALES=sanitize(row.value);try{localStorage.setItem('lux_sales_pub',JSON.stringify(SALES));}catch(e){}}if(row.key==='lux_apartments'&&Array.isArray(row.value))APTS=row.value;if(row.key==='lux_hidestatus'){HST=String(row.value)==='1';try{localStorage.setItem('lux_hidestatus',HST?'1':'0');}catch(e){}}if(row.key==='lux_hidefloors'){HIDE=String(row.value)==='1';try{localStorage.setItem('lux_hidefloors',HIDE?'1':'0');}catch(e){}}});}}catch(e){}
 }
 

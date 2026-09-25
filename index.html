@@ -1079,13 +1079,15 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
 (function(){
   var U="https://avqchschbbltnnasabdm.supabase.co",K="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2cWNoc2NoYmJsdG5uYXNhYmRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5NDA2NTAsImV4cCI6MjEwNTUxNjY1MH0.PVxxfLrj8KZH6AUaQQPx5sEqpiGEMDIFy3Mq206OMKI";
   try{
+    /* satış datası yalnız təhlükəsiz funksiyadan (status/otaq/sahə) */
+    fetch(U+"/rest/v1/rpc/lux_public_sales",{method:"POST",headers:{apikey:K,Authorization:"Bearer "+K,"Content-Type":"application/json"},body:"{}"}).then(function(r){return r.ok?r.json():null;}).then(function(v){if(v&&typeof v==="object"&&Object.keys(v).length){window._SALES=v;try{localStorage.setItem("lux_sales_pub",JSON.stringify(v));}catch(e){}}}).catch(function(){});
     fetch(U+"/rest/v1/lux_kv?select=key,value",{headers:{apikey:K,Authorization:"Bearer "+K}})
     .then(function(r){return r.ok?r.json():null;})
     .then(function(rows){
       if(!rows||!rows.length)return;
       var changed=false,sig='';
       rows.forEach(function(row){
-        if(row.key==="lux_sales"){try{window._SALES=_sanitizeSales(row.value);localStorage.setItem("lux_sales_pub",JSON.stringify(window._SALES));}catch(e){}return;}
+        if(row.key==="lux_sales"||row.key==="lux_commercial"||row.key==="lux_garage"){try{localStorage.removeItem(row.key);}catch(e){}return;}
         if(row.key==="lux_maintenance"){var mv=String(row.value);try{localStorage.setItem("lux_maintenance",mv);}catch(e){}var m=document.getElementById("maintScreen");if(m){if(mv==="1"){m.classList.add("on");document.body.style.overflow="hidden";}else{m.classList.remove("on");document.body.style.overflow="";}}return;}
         var stored=(row.key==="lux_showprices"||row.key==="lux_hidefloors"||row.key==="lux_hidestatus")?String(row.value):JSON.stringify(row.value);
         var h=0;for(var i=0;i<stored.length;i+=7){h=(h*31+stored.charCodeAt(i))|0;}sig+=row.key+':'+stored.length+':'+h+';';

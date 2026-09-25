@@ -189,7 +189,10 @@
 .sales-link{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0));z-index:50;background:#ba4d2c;color:#fff;padding:13px 20px;border-radius:14px;font-weight:700;text-decoration:none;box-shadow:0 14px 34px -12px rgba(186,77,44,.65);display:inline-flex;align-items:center;gap:9px;font-size:14px;transition:.2s;}
 .sales-link:hover{filter:brightness(1.08);transform:translateY(-2px);}
 .sales-link svg{width:18px;height:18px;}
+
+.adm-field:has(#admPin){display:none!important}
 </style>
+<script src="/assets/lux-auth.js"></script>
 </head>
 <body>
 <div id="calcGate" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(130% 130% at 15% 0%,#3a1d0d,#25120a 60%,#1b0d06);font-family:system-ui,-apple-system,sans-serif;">
@@ -202,15 +205,8 @@
   </div>
 </div>
 <script>
-(function(){
-  function gp(){try{var c=JSON.parse(localStorage.getItem('lux_cfg')||'{}');return (c.gatePass!=null&&c.gatePass!=='')?String(c.gatePass):'1234';}catch(e){return '1234';}}
-  var g=document.getElementById('calcGate');
-  if(sessionStorage.getItem('lux_calc_ok')==='1'){g.style.display='none';return;}
-  function go(){var v=(document.getElementById('calcPass').value||'').trim();if(v===gp()){sessionStorage.setItem('lux_calc_ok','1');g.style.display='none';}else{document.getElementById('calcErr').textContent='Parol yanlışdır';document.getElementById('calcPass').value='';}}
-  document.getElementById('calcBtn').addEventListener('click',go);
-  document.getElementById('calcPass').addEventListener('keydown',function(e){if(e.key==='Enter')go();});
-  setTimeout(function(){try{document.getElementById('calcPass').focus();}catch(e){}},50);
-})();
+document.getElementById('calcGate').style.display='none';
+luxAuth({perm:'calc',title:'Ödəniş kalkulyatoru'});
 </script>
 <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div>
 <button class="admin-fab" id="admFab" title="Satış direktoru paneli"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
@@ -555,10 +551,10 @@ $('modalX').addEventListener('click',closeModal);
 $('admCancel').addEventListener('click',closeModal);
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
 function closeModal(){modal.classList.remove('open');}
-function showPin(){$('pinScreen').style.display='block';$('admScreen').style.display='none';$('pinInput').value='';$('pinErr').style.display='none';setTimeout(()=>$('pinInput').focus(),60);}
+function showPin(){openAdmin();return;$('pinScreen').style.display='block';$('admScreen').style.display='none';$('pinInput').value='';$('pinErr').style.display='none';setTimeout(()=>$('pinInput').focus(),60);}
 $('pinGo').addEventListener('click',tryPin);
 $('pinInput').addEventListener('keydown',e=>{if(e.key==='Enter')tryPin();});
-function tryPin(){if($('pinInput').value===String(CFG.pin)){openAdmin();}else{$('pinErr').style.display='block';}}
+function tryPin(){openAdmin();}
 function openAdmin(){admWork=JSON.parse(JSON.stringify(CFG));$('pinScreen').style.display='none';$('admScreen').style.display='block';fillAdmin();}
 function fillAdmin(){
   $('admMortEnabled').checked=admWork.mortgageEnabled;
@@ -596,10 +592,10 @@ $('admSave').addEventListener('click',()=>{
   admWork.area={min:+$('admAreaMin').value||40,max:+$('admAreaMax').value||200,def:+$('admAreaDef').value||60};
   admWork.price={min:+$('admPriceMin').value||1300,max:+$('admPriceMax').value||5000,def:+$('admPriceDef').value||1350};
   admWork.downDef=+$('admDownDef').value||30;
-  admWork.pin=$('admPin').value||'1234';
   if(admWork.area.min>=admWork.area.max||admWork.price.min>=admWork.price.max){alert('Hüdudlarda min < max olmalıdır');return;}
   if(!admWork.terms.some(t=>t.enabled)){alert('Ən azı bir müddət aktiv olmalıdır');return;}
-  CFG=admWork;saveCfg();try{localStorage.setItem('lux_showprices',$('admShowPrices').checked?'1':'0');}catch(e){}
+  CFG=admWork;delete CFG.pin;delete CFG.gatePass;saveCfg();try{localStorage.setItem('lux_showprices',$('admShowPrices').checked?'1':'0');}catch(e){}
+  if(window.luxSb){window.luxSb.from('lux_kv').upsert({key:'lux_cfg',value:CFG,updated_at:new Date().toISOString()}).then(function(r){if(r.error)alert('Serverdə saxlanmadı: '+r.error.message);});window.luxSb.from('lux_kv').upsert({key:'lux_showprices',value:$('admShowPrices').checked?'1':'0',updated_at:new Date().toISOString()}).then(function(){});}
   state.down=CFG.downDef;$('down').value=state.down;$('downVal').value=state.down;setFill($('down'));
   applyCfg();render();closeModal();
 });
