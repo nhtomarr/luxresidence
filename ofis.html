@@ -137,7 +137,7 @@ a.btn{text-decoration:none}
     <div><div class="muted small" id="tDate"></div><div class="clock" id="tClock">--:--</div><div id="tStatus" class="muted"></div></div>
     <div class="row" id="tBtns"></div></div>
     <div class="stat-line" id="tStats"></div></div>
-   <div class="card" id="noEmp" style="display:none"><b>Hesabınız işçi kartına bağlanmayıb.</b><p class="muted small">Gəliş-gediş qeydi üçün rəhbər sizi "Ştat" bölməsində işçi kartına bağlamalıdır.</p></div>
+   <div class="card" id="noEmp" style="display:none"><b>Hesabınız işçi kartına bağlanmayıb.</b><p class="muted small">Gəliş-gediş qeydi üçün rəhbər sizi "İşçilər" bölməsində işçi kartına bağlamalıdır.</p></div>
    <div class="card"><div class="row" style="justify-content:space-between"><h3>Mənim tapşırıqlarım</h3><button class="btn sm" onclick="openTask()">+ Tapşırıq</button></div><div id="tMyTasks"></div></div>
    <div id="tHr"></div>
    <div class="card" id="tAnn" style="display:none"></div>
@@ -199,7 +199,7 @@ a.btn{text-decoration:none}
   </section>
   <!-- ŞTAT -->
   <section class="view" id="v-staff">
-   <div class="row" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">Ştat cədvəli</h2><div class="row"><button class="btn ghost sm" onclick="addDept()">+ Şöbə</button><button class="btn sm" onclick="openEmp()">+ İşçi</button></div></div>
+   <div class="row" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">İşçilər və ştat</h2><div class="row"><button class="btn ghost sm" onclick="addDept()">+ Şöbə</button><button class="btn sm" onclick="openEmp()">+ İşçi</button></div></div>
    <div class="grid g4" id="sKpi" style="margin-bottom:14px"></div>
    <div id="deptList"></div>
    <h3 style="margin-top:18px">İşçilər</h3><div class="card tbl" id="empTbl"></div>
@@ -258,7 +258,7 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
  $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href='/ofis';});};
  var tabs;
  if(OWNER)tabs=[['boss','Nəzarət'],['plans','Aylıq planlar'],['tasks','Tapşırıqlar'],['team','Davamiyyət'],['leave','Sorğular'],['news','Elanlar']];
- else{tabs=[['today','Bu gün']];if(MGR)tabs.push(['boss','Nəzarət'],['panel','Panel']);tabs.push(['plans',MGR?'Aylıq planlar':'Aylıq plan'],['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['news','Elanlar'],['cal','Təqvim']);if(MGR){tabs.push(['team','Davamiyyət'],['staff','Ştat'],['set','Ayarlar']);}}
+ else{tabs=[['today','Bu gün']];if(MGR)tabs.push(['boss','Nəzarət'],['panel','Panel']);tabs.push(['plans',MGR?'Aylıq planlar':'Aylıq plan'],['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['news','Elanlar'],['cal','Təqvim']);if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}}
  document.body.classList.toggle('is-mgr',MGR);
  $('tabs').innerHTML=tabs.map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');
  $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};
@@ -502,7 +502,7 @@ function renderLeads(){run(sb.from('lux_leads').select('*').order('created_at',{
    (l.message?'<p style="margin-top:8px;white-space:pre-line">'+esc(l.message)+'</p>':'')+'<div class="row small muted" style="margin-top:8px">Məsul: '+(MGR?'<select onchange="leadAssign(\''+l.id+'\',this.value)" class="btn ghost sm"><option value="">— yoxdur —</option>'+EMPS.filter(function(e){return e.active;}).map(function(e){return '<option value="'+e.id+'"'+(e.id===l.assigned_to?' selected':'')+'>'+esc(e.full_name)+'</option>';}).join('')+'</select>':'<b>'+esc(empName(l.assigned_to))+'</b>')+'</div></div>';}).join(''):'<div class="card empty">'+(f==='open'?'Cavabsız müraciət yoxdur 👏':'Müraciət yoxdur')+'</div>';
  if(MGR){var rot=EMPS.filter(function(e){return e.active&&(e.lead_rotation||mon.some(function(l){return l.assigned_to===e.id;}));});
   $('ldMgr').innerHTML=rot.length?'<table><tr><th>Menecer</th><th>Müraciət</th><th>Cavabsız</th><th>Orta cavab</th><th>Növbədə</th></tr>'+rot.map(function(e){var x=mon.filter(function(l){return l.assigned_to===e.id;}),r=x.filter(function(l){return l.first_response_at&&l.assigned_at;});var a=r.length?Math.round(r.reduce(function(s2,l){return s2+minsBetween(l.assigned_at,l.first_response_at);},0)/r.length):null;
-   return '<tr><td><b>'+esc(e.full_name)+'</b></td><td>'+x.length+'</td><td>'+(x.filter(function(l){return l.status==='yeni';}).length||'0')+'</td><td>'+(a===null?'—':hmin(a))+'</td><td>'+(e.lead_rotation?'<span class="pill p-ok">bəli</span>':'<span class="pill p-mut">xeyr</span>')+'</td></tr>';}).join('')+'</table>':'<div class="empty">Növbədə menecer yoxdur. Ştat → işçi kartında “müraciətləri növbə ilə payla” işarələyin.</div>';}
+   return '<tr><td><b>'+esc(e.full_name)+'</b></td><td>'+x.length+'</td><td>'+(x.filter(function(l){return l.status==='yeni';}).length||'0')+'</td><td>'+(a===null?'—':hmin(a))+'</td><td>'+(e.lead_rotation?'<span class="pill p-ok">bəli</span>':'<span class="pill p-mut">xeyr</span>')+'</td></tr>';}).join('')+'</table>':'<div class="empty">Növbədə menecer yoxdur. İşçilər → işçi kartında “müraciətləri növbə ilə payla” işarələyin.</div>';}
  }).catch(err);}
 function leadDone(id){run(sb.from('lux_leads').update({status:'cavablandı'}).eq('id',id)).then(function(){toast('Qeyd olundu');renderLeads();}).catch(err);}
 function leadAssign(id,eid){run(sb.from('lux_leads').update({assigned_to:+eid||null,assigned_at:new Date().toISOString(),sla_alerted:false}).eq('id',id)).then(function(){toast('Təyin olundu');if(eid)notify('lead_reassigned',{id:id});renderLeads();}).catch(err);}
