@@ -6,6 +6,10 @@
   X-Robots-Tag: noindex, nofollow
 /satis
   X-Robots-Tag: noindex, nofollow
+/ofis.html
+  X-Robots-Tag: noindex, nofollow
+/ofis
+  X-Robots-Tag: noindex, nofollow
 /brand.html
   X-Robots-Tag: noindex, nofollow
 /brand

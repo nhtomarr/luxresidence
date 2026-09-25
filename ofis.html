@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>Baş Ofis — İdarəetmə</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="/assets/lux-auth.js?v=1790340647"></script>
+<style>
+:root{--bg:#f1f5f9;--card:#fff;--ink:#0f172a;--mut:#64748b;--line:#e2e8f0;--acc:#2563eb;--acc2:#1d4ed8;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--soft:#eff6ff;
+--sans:'Inter',-apple-system,system-ui,'Segoe UI',sans-serif;box-sizing:border-box;}
+*,*::before,*::after{box-sizing:inherit;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.top{position:sticky;top:0;z-index:30;background:#0f172a;color:#fff;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px;display:flex;align-items:center;gap:12px}
+.top .brand{font-weight:800;letter-spacing:.02em}.top .brand small{display:block;font-weight:500;font-size:11px;color:#94a3b8;letter-spacing:.08em;text-transform:uppercase}
+.top .me{margin-left:auto;font-size:13px;color:#cbd5e1;text-align:right}.top .me b{color:#fff;display:block;font-size:14px}
+.top .out{border:1px solid #334155;background:none;color:#fff;border-radius:10px;padding:7px 11px;font-size:13px}
+.tabs{display:flex;gap:4px;background:#fff;border-bottom:1px solid var(--line);padding:8px 12px;overflow-x:auto;scrollbar-width:none;position:sticky;top:calc(58px + env(safe-area-inset-top,0px));z-index:20}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;border:none;background:none;border-radius:10px;padding:9px 14px;font-weight:600;color:var(--mut);white-space:nowrap}
+.tabs button.on{background:var(--soft);color:var(--acc)}
+main{max-width:1180px;margin:0 auto;padding:18px 14px calc(90px + env(safe-area-inset-bottom,0px))}
+.view{display:none}.view.on{display:block}
+h2{font-size:22px;font-weight:800;margin-bottom:12px}h3{font-size:16px;font-weight:700;margin-bottom:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grid{display:grid;gap:12px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.btn{border:none;border-radius:12px;padding:11px 16px;font-weight:700;background:var(--acc);color:#fff;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn:hover{background:var(--acc2)}.btn.ghost{background:#f1f5f9;color:var(--ink)}.btn.ghost:hover{background:#e2e8f0}.btn.red{background:#fee2e2;color:var(--bad)}.btn.sm{padding:7px 11px;font-size:13px;border-radius:10px}
+.btn:disabled{opacity:.5;cursor:default}
+.muted{color:var(--mut)}.small{font-size:13px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}.kpi b{display:block;font-size:30px;font-weight:800;line-height:1.1}.kpi span{color:var(--mut);font-size:13px}
+.kpi.ok b{color:var(--ok)}.kpi.warn b{color:var(--warn)}.kpi.bad b{color:var(--bad)}
+.pill{display:inline-block;font-size:12px;font-weight:700;border-radius:99px;padding:3px 9px}
+.p-ok{background:#dcfce7;color:#166534}.p-warn{background:#fef3c7;color:#92400e}.p-bad{background:#fee2e2;color:#991b1b}.p-mut{background:#f1f5f9;color:#475569}.p-acc{background:var(--soft);color:var(--acc)}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}th{font-size:12px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.tbl{overflow-x:auto}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}.field label{font-size:13px;color:var(--mut);font-weight:600}
+.field input,.field select,.field textarea{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;width:100%}
+.field textarea{min-height:80px;resize:vertical}
+/* check-in */
+.clock{font-size:44px;font-weight:800;letter-spacing:-.02em}
+.checkcard{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;border:none}
+.checkcard .muted{color:#cbd5e1}
+.checkcard .btn{background:#fff;color:#0f172a}.checkcard .btn.ghost{background:rgba(255,255,255,.12);color:#fff}
+.stat-line{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px}.stat-line div b{display:block;font-size:20px}
+/* kanban */
+.kanban{display:grid;grid-template-columns:repeat(4,minmax(220px,1fr));gap:12px;overflow-x:auto}
+.col{background:#e2e8f0;border-radius:14px;padding:10px;min-height:120px}
+.col h4{font-size:13px;font-weight:700;color:#334155;margin:2px 4px 10px;display:flex;justify-content:space-between}
+.tk{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;border:1px solid var(--line);cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.tk b{display:block;font-size:14px;margin-bottom:6px}.tk .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--mut)}
+.tk.over{border-left:4px solid var(--bad)}
+.prio-urgent{background:#fee2e2;color:#991b1b}.prio-high{background:#ffedd5;color:#9a3412}.prio-normal{background:#e0e7ff;color:#3730a3}.prio-low{background:#f1f5f9;color:#475569}
+.mtabs{display:none;gap:6px;margin-bottom:10px;overflow-x:auto}
+.mtabs button{flex:none;border:1px solid var(--line);background:#fff;border-radius:99px;padding:7px 12px;font-size:13px;font-weight:600}
+.mtabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.modal.on{display:flex}
+.mbox{background:#fff;width:min(620px,100%);max-height:92vh;overflow-y:auto;border-radius:20px 20px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px))}
+@media(min-width:700px){.modal{align-items:center}.mbox{border-radius:20px}}
+.mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.mhead h3{margin:0;font-size:19px}
+.x{width:34px;height:34px;border-radius:50%;border:none;background:#f1f5f9;font-size:18px}
+.cm{border-top:1px solid var(--line);padding:10px 0}.cm b{font-size:13px}.cm p{font-size:14px;white-space:pre-line}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#0f172a;color:#fff;border-radius:99px;padding:11px 18px;font-weight:600;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:200;max-width:92vw;text-align:center}
+.toast.on{opacity:1}
+.qrwrap{position:fixed;inset:0;background:#0f172a;color:#fff;z-index:150;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:20px}
+.qrwrap.on{display:flex}.qrwrap #qrBox{background:#fff;padding:18px;border-radius:20px}.qrwrap h1{font-size:28px}.qrwrap p{color:#94a3b8}
+.empty{color:var(--mut);padding:18px;text-align:center}
+.dept{border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.dept-h{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f8fafc;font-weight:700}
+.pos{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line);font-size:14px;flex-wrap:wrap}
+.pos .who{color:var(--mut);font-size:13px;flex:1;min-width:160px}
+.days{display:flex;gap:4px;flex-wrap:wrap}.days label{display:flex;align-items:center;gap:3px;font-size:13px;border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+@media(max-width:760px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g2{grid-template-columns:1fr}.kanban{display:block}.kanban .col{display:none}.kanban .col.on{display:block}.mtabs{display:flex}.clock{font-size:38px}.hide-m{display:none}}
+</style>
+</head>
+<body>
+<div id="app" style="display:none">
+ <header class="top"><div class="brand">Baş Ofis<small>İdarəetmə sistemi</small></div><div class="me" id="meBox"></div><button class="out" id="outBtn">Çıxış</button></header>
+ <nav class="tabs" id="tabs"></nav>
+ <main>
+  <!-- BU GÜN -->
+  <section class="view" id="v-today">
+   <div class="card checkcard"><div class="row" style="justify-content:space-between;align-items:flex-start">
+    <div><div class="muted small" id="tDate"></div><div class="clock" id="tClock">--:--</div><div id="tStatus" class="muted"></div></div>
+    <div class="row" id="tBtns"></div></div>
+    <div class="stat-line" id="tStats"></div></div>
+   <div class="card" id="noEmp" style="display:none"><b>Hesabınız işçi kartına bağlanmayıb.</b><p class="muted small">Gəliş-gediş qeydi üçün rəhbər sizi "Ştat" bölməsində işçi kartına bağlamalıdır.</p></div>
+   <div class="card"><div class="row" style="justify-content:space-between"><h3>Mənim tapşırıqlarım</h3><button class="btn sm" onclick="openTask()">+ Tapşırıq</button></div><div id="tMyTasks"></div></div>
+   <div class="card"><h3>Bu ay</h3><div id="tMonth" class="small muted"></div></div>
+  </section>
+  <!-- PANEL (rəhbər) -->
+  <section class="view" id="v-panel">
+   <div class="row" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">Rəhbər paneli</h2><span class="muted small" id="pDate"></span></div>
+   <div class="grid g4" id="pKpi" style="margin-bottom:14px"></div>
+   <div class="grid g2">
+    <div class="card"><h3>Bu gün gecikənlər və gəlməyənlər</h3><div id="pLate"></div></div>
+    <div class="card"><h3>Vaxtı keçmiş tapşırıqlar</h3><div id="pOver"></div></div>
+   </div>
+   <div class="card"><h3>İşçilər üzrə tapşırıqlar</h3><div class="tbl" id="pPeople"></div></div>
+  </section>
+  <!-- TAPŞIRIQLAR -->
+  <section class="view" id="v-tasks">
+   <div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">Tapşırıqlar</h2>
+    <div class="row"><select id="tkFilter" class="btn ghost sm" style="padding-right:8px"><option value="mine">Mənə aid</option><option value="created">Mənim verdiklərim</option><option value="all">Hamısı</option></select><button class="btn" onclick="openTask()">+ Yeni</button></div></div>
+   <div class="mtabs" id="kbTabs"></div>
+   <div class="kanban" id="kanban"></div>
+  </section>
+  <!-- KOMANDA / DAVAMİYYƏT -->
+  <section class="view" id="v-team">
+   <div class="row" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">Davamiyyət</h2><div class="row"><input type="date" id="dDay" class="btn ghost sm"><button class="btn ghost sm" onclick="exportDay()">Excel</button></div></div>
+   <div class="card tbl" id="dayTbl"></div>
+   <div class="row" style="justify-content:space-between;margin:18px 0 10px"><h2 style="margin:0">Aylıq tabel</h2><div class="row"><input type="month" id="mMonth" class="btn ghost sm"><button class="btn ghost sm" onclick="exportMonth()">Excel</button></div></div>
+   <div class="card tbl" id="monthTbl"></div>
+  </section>
+  <!-- ŞTAT -->
+  <section class="view" id="v-staff">
+   <div class="row" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">Ştat cədvəli</h2><div class="row"><button class="btn ghost sm" onclick="addDept()">+ Şöbə</button><button class="btn sm" onclick="openEmp()">+ İşçi</button></div></div>
+   <div class="grid g4" id="sKpi" style="margin-bottom:14px"></div>
+   <div id="deptList"></div>
+   <h3 style="margin-top:18px">İşçilər</h3><div class="card tbl" id="empTbl"></div>
+  </section>
+  <!-- AYARLAR -->
+  <section class="view" id="v-set">
+   <h2>Ayarlar</h2>
+   <div class="card"><h3>Ofisin yeri</h3><p class="muted small">Gəliş-gediş yalnız bu nöqtəyə yaxın olanda qəbul edilir.</p>
+    <div class="grid g2"><div class="field"><label>Enlik (lat)</label><input id="cLat" inputmode="decimal"></div><div class="field"><label>Uzunluq (lng)</label><input id="cLng" inputmode="decimal"></div></div>
+    <button class="btn ghost sm" onclick="useHere()">📍 Hazırkı yerimi ofis kimi götür</button>
+    <div class="grid g2" style="margin-top:12px"><div class="field"><label>İcazəli radius (metr)</label><input id="cRad" type="number"></div><div class="field"><label>Gecikməyə güzəşt (dəqiqə)</label><input id="cGrace" type="number"></div></div>
+    <label class="row small" style="margin-bottom:12px"><input type="checkbox" id="cGeo"> Yer yoxlaması məcburidir</label>
+    <button class="btn" onclick="saveCfg()">Yadda saxla</button></div>
+   <div class="card"><h3>QR ekranı</h3><p class="muted small">Ofisin girişindəki planşet və ya monitorda açın. Kod hər dəqiqə yenilənir, işçilər telefonun kamerası ilə skan edir.</p><button class="btn" onclick="openQR()">QR ekranını aç</button></div>
+  </section>
+ </main>
+</div>
+
+<div class="qrwrap" id="qrWrap"><h1>Gəliş / Gediş</h1><div id="qrBox"></div><p>Telefonun kamerası ilə skan edin · kod <span id="qrLeft">60</span> san sonra yenilənir</p><button class="btn ghost" style="background:rgba(255,255,255,.12);color:#fff" onclick="closeQR()">Bağla</button></div>
+<div class="modal" id="modal"><div class="mbox" id="mbox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+var sb=null,ME=null,MGR=false,EMP=null,EMPS=[],DEPTS=[],POS=[],TASKS=[],PROFS=[],CFG=null,KB='new';
+var TZ='Asia/Baku';
+var ST={new:'Yeni',doing:'İcrada',review:'Yoxlamada',done:'Bitdi'},PR={urgent:'Təcili',high:'Yüksək',normal:'Normal',low:'Aşağı'};
+var WD=['B.e','Ç.a','Çər','C.a','Cüm','Şən','Baz'];
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function toast(t){var e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on');},3200);}
+function today(){return new Intl.DateTimeFormat('en-CA',{timeZone:TZ}).format(new Date());}
+function hm(ts){return ts?new Date(ts).toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit'}):'—';}
+function isoDow(dstr){var d=new Date(dstr+'T12:00:00Z').getUTCDay();return d===0?7:d;}
+function hmin(m){m=m||0;var h=Math.floor(m/60),mm=m%60;return h?(h+' s '+mm+' dəq'):(mm+' dəq');}
+function empName(id){var e=EMPS.find(function(x){return x.id===id;});return e?e.full_name:'—';}
+function posOf(e){var p=POS.find(function(x){return x.id===e.position_id;});return p;}
+function err(e){toast((e&&e.message)||'Xəta baş verdi');console.warn(e);}
+function run(q){return q.then(function(r){if(r.error)throw r.error;return r.data;});}
+
+/* ---------- start ---------- */
+luxAuth({perms:['ofis','ofis_admin'],title:'Baş Ofis',sub:'İşçi hesabınızla daxil olun',logo:false,noAdminLink:true,accent:'#2563eb',bg:'linear-gradient(135deg,#e2e8f0,#f8fafc)',onReady:function(client,me){sb=client;ME=me;MGR=me.is_admin||(me.perms||[]).indexOf('ofis_admin')>=0;start();}});
+function start(){$('app').style.display='';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
+ $('meBox').innerHTML='<b>'+esc(ME.full_name||ME.email)+'</b>'+(MGR?'Rəhbər':'İşçi');
+ $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href='/ofis';});};
+ var tabs=[['today','Bu gün']];if(MGR)tabs.push(['panel','Panel']);tabs.push(['tasks','Tapşırıqlar']);if(MGR){tabs.push(['team','Davamiyyət'],['staff','Ştat'],['set','Ayarlar']);}
+ $('tabs').innerHTML=tabs.map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');
+ $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};
+ $('dDay').value=today();$('mMonth').value=today().slice(0,7);$('dDay').onchange=renderDay;$('mMonth').onchange=renderMonth;$('tkFilter').onchange=renderKanban;
+ setInterval(tick,1000);tick();
+ loadAll().then(function(){var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':'today');if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
+}
+function show(v){document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
+ if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();window.scrollTo(0,0);}
+function tick(){var n=new Date();$('tClock').textContent=n.toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit',second:'2-digit'});$('tDate').textContent=n.toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});}
+function loadAll(){return Promise.all([
+  run(sb.from('office_employees').select('*').order('full_name')),run(sb.from('office_departments').select('*').order('sort').order('id')),run(sb.from('office_positions').select('*').order('sort').order('id')),
+  run(sb.from('office_tasks').select('*').order('due',{ascending:true,nullsFirst:false}).order('id',{ascending:false})),
+  MGR?run(sb.from('lux_profiles').select('user_id,email,full_name,perms,is_admin,active')):Promise.resolve([]),MGR?run(sb.from('office_config').select('*').eq('id',1).maybeSingle()):Promise.resolve(null)
+ ]).then(function(r){EMPS=r[0]||[];DEPTS=r[1]||[];POS=r[2]||[];TASKS=r[3]||[];PROFS=r[4]||[];CFG=r[5];EMP=EMPS.find(function(e){return e.user_id===ME.user_id&&e.active;})||null;}).catch(err);}
+
+/* ---------- BU GÜN / check-in ---------- */
+var MYDAY=null;
+function renderToday(){$('noEmp').style.display=EMP?'none':'';
+ var my=TASKS.filter(function(t){return EMP&&t.assignee_id===EMP.id&&t.status!=='done';});
+ $('tMyTasks').innerHTML=my.length?my.map(taskRow).join(''):'<div class="empty">Açıq tapşırığınız yoxdur 🎉</div>';
+ if(!EMP){$('tStatus').textContent='';$('tBtns').innerHTML='';$('tStats').innerHTML='';return;}
+ run(sb.from('office_attendance').select('*').eq('employee_id',EMP.id).gte('day',today().slice(0,7)+'-01').order('day')).then(function(rows){
+  MYDAY=rows.find(function(r){return r.day===today();})||null;
+  var s,btn;if(!MYDAY||!MYDAY.check_in){s='Bu gün hələ gəliş qeyd olunmayıb · iş saatı '+String(EMP.work_start).slice(0,5)+'–'+String(EMP.work_end).slice(0,5);btn='<button class="btn" onclick="scan(\'in\')">📷 Gəlişi qeyd et</button>';}
+  else if(!MYDAY.check_out){s='Gəliş: '+hm(MYDAY.check_in)+(MYDAY.late_min?' · '+MYDAY.late_min+' dəq gecikmə':' · vaxtında');btn='<button class="btn" onclick="scan(\'out\')">📷 Çıxışı qeyd et</button>';}
+  else{s='Gəliş '+hm(MYDAY.check_in)+' · Çıxış '+hm(MYDAY.check_out)+' · '+hmin(MYDAY.worked_min);btn='';}
+  $('tStatus').textContent=s;$('tBtns').innerHTML=btn;
+  var d=rows.filter(function(r){return r.check_in;}),late=rows.filter(function(r){return r.late_min>0;});
+  $('tStats').innerHTML='<div><b>'+d.length+'</b><span class="muted small">iş günü</span></div><div><b>'+late.length+'</b><span class="muted small">gecikmə</span></div><div><b>'+hmin(late.reduce(function(a,r){return a+r.late_min;},0))+'</b><span class="muted small">cəmi gecikmə</span></div>';
+  $('tMonth').innerHTML=d.length?('<div class="tbl"><table><tr><th>Gün</th><th>Gəliş</th><th>Çıxış</th><th>Qeyd</th></tr>'+rows.slice().reverse().map(function(r){return '<tr><td>'+r.day.slice(8)+'.'+r.day.slice(5,7)+'</td><td>'+hm(r.check_in)+'</td><td>'+hm(r.check_out)+'</td><td>'+(r.late_min?'<span class="pill p-warn">'+r.late_min+' dəq gec</span>':'')+(r.early_min?' <span class="pill p-mut">'+r.early_min+' dəq tez</span>':'')+'</td></tr>';}).join('')+'</table></div>'):'Bu ay hələ qeyd yoxdur.';
+ }).catch(err);}
+var _scanKind='in';
+function scan(kind){_scanKind=kind;var has=('BarcodeDetector' in window)&&navigator.mediaDevices;
+ modal('<div class="mhead"><h3>'+(kind==='in'?'Gəliş':'Çıxış')+' — QR skan</h3><button class="x" onclick="closeModal()">×</button></div>'+
+  (has?'<video id="cam" playsinline style="width:100%;border-radius:14px;background:#000;aspect-ratio:1;object-fit:cover"></video><p class="muted small" style="margin-top:8px">Kameranı ofisdəki QR koda tutun.</p>':'<p>Telefonun <b>Kamera</b> tətbiqini açın və ofisdəki QR kodu skan edin — açılan link qeydi avtomatik edəcək.</p>'));
+ if(has){var det=new BarcodeDetector({formats:['qr_code']});navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(function(st){var v=$('cam');v.srcObject=st;v.play();scan._st=st;
+  (function loop(){if(!$('cam'))return st.getTracks().forEach(function(t){t.stop();});det.detect(v).then(function(c){if(c&&c[0]){var m=String(c[0].rawValue).match(/[?&]c=([0-9a-f]{16})/)||String(c[0].rawValue).match(/^([0-9a-f]{16})$/);if(m){st.getTracks().forEach(function(t){t.stop();});closeModal();doCheck(kind,m[1]);return;}}requestAnimationFrame(loop);}).catch(function(){setTimeout(loop,300);});})();
+ }).catch(function(){$('mbox').insertAdjacentHTML('beforeend','<p class="small" style="color:var(--bad)">Kameraya icazə verilmədi. Telefonun Kamera tətbiqi ilə skan edin.</p>');});}}
+function autoCheck(token){history.replaceState(null,'','/ofis');if(!EMP){toast('Hesabınız işçi kartına bağlanmayıb');return;}
+ run(sb.from('office_attendance').select('*').eq('employee_id',EMP.id).eq('day',today()).maybeSingle()).then(function(r){var kind=(!r||!r.check_in)?'in':(!r.check_out?'out':null);
+  if(!kind){toast('Bu gün gəliş və çıxış artıq qeyd olunub');return;}
+  if(kind==='out'&&!confirm('Çıxışı qeyd edək?'))return;doCheck(kind,token);}).catch(err);}
+function doCheck(kind,token){toast('Yer yoxlanılır…');
+ function send(lat,lng){sb.rpc('office_check',{p_kind:kind,p_token:token,p_lat:lat,p_lng:lng}).then(function(r){if(r.error)throw r.error;toast((r.data&&r.data.msg)||'Qeyd olundu');renderToday();}).catch(err);}
+ if(!navigator.geolocation)return send(null,null);
+ navigator.geolocation.getCurrentPosition(function(p){send(p.coords.latitude,p.coords.longitude);},function(){send(null,null);},{enableHighAccuracy:true,timeout:12000,maximumAge:0});}
+
+/* ---------- PANEL ---------- */
+function renderPanel(){var d=today();$('pDate').textContent=new Date().toLocaleDateString('az-AZ',{timeZone:TZ,day:'numeric',month:'long',year:'numeric'});
+ run(sb.from('office_attendance').select('*').eq('day',d)).then(function(att){var act=EMPS.filter(function(e){return e.active&&(e.workdays||[]).indexOf(isoDow(d))>=0;});
+  var came=att.filter(function(a){return a.check_in;}),late=att.filter(function(a){return a.late_min>0;}),absent=act.filter(function(e){return !att.some(function(a){return a.employee_id===e.id&&a.check_in;});});
+  var open=TASKS.filter(function(t){return t.status!=='done';}),over=open.filter(function(t){return t.due&&t.due<d;});
+  $('pKpi').innerHTML=kpi(came.length+' / '+act.length,'bu gün işdədir','ok')+kpi(late.length,'gecikib','warn')+kpi(absent.length,'gəlməyib','bad')+kpi(over.length+' / '+open.length,'vaxtı keçmiş / açıq tapşırıq',over.length?'bad':'');
+  $('pLate').innerHTML=(late.map(function(a){return '<div class="row" style="justify-content:space-between;padding:6px 0"><span>'+esc(empName(a.employee_id))+'</span><span class="pill p-warn">'+hm(a.check_in)+' · '+a.late_min+' dəq</span></div>';}).join('')+absent.map(function(e){return '<div class="row" style="justify-content:space-between;padding:6px 0"><span>'+esc(e.full_name)+'</span><span class="pill p-bad">gəlməyib</span></div>';}).join(''))||'<div class="empty">Hamı vaxtında 👏</div>';
+  $('pOver').innerHTML=over.length?over.map(taskRow).join(''):'<div class="empty">Vaxtı keçmiş tapşırıq yoxdur</div>';
+  var rows=EMPS.filter(function(e){return e.active;}).map(function(e){var t=TASKS.filter(function(x){return x.assignee_id===e.id;});var o=t.filter(function(x){return x.status!=='done';}),ov=o.filter(function(x){return x.due&&x.due<d;}),dn=t.filter(function(x){return x.status==='done'&&x.done_at&&(Date.now()-new Date(x.done_at))<30*864e5;});
+   return '<tr><td><b>'+esc(e.full_name)+'</b><div class="muted small">'+esc((posOf(e)||{}).title||'')+'</div></td><td>'+o.length+'</td><td>'+(ov.length?'<span class="pill p-bad">'+ov.length+'</span>':'0')+'</td><td>'+dn.length+'</td></tr>';}).join('');
+  $('pPeople').innerHTML=rows?'<table><tr><th>İşçi</th><th>Açıq</th><th>Vaxtı keçmiş</th><th>Son 30 gündə bitib</th></tr>'+rows+'</table>':'<div class="empty">Ştatda işçi yoxdur</div>';
+ }).catch(err);}
+function kpi(v,l,c){return '<div class="kpi '+(c||'')+'"><b>'+v+'</b><span>'+l+'</span></div>';}
+
+/* ---------- TAPŞIRIQLAR ---------- */
+function taskRow(t){var over=t.status!=='done'&&t.due&&t.due<today();return '<div class="tk'+(over?' over':'')+'" onclick="openTask('+t.id+')"><b>'+esc(t.title)+'</b><div class="meta"><span class="pill prio-'+t.priority+'">'+PR[t.priority]+'</span><span class="pill p-mut">'+ST[t.status]+'</span>'+(t.assignee_id?'<span>👤 '+esc(empName(t.assignee_id))+'</span>':'')+(t.due?'<span'+(over?' style="color:var(--bad);font-weight:700"':'')+'>📅 '+t.due.slice(8)+'.'+t.due.slice(5,7)+'</span>':'')+'</div></div>';}
+function renderKanban(){var f=$('tkFilter').value;if(!MGR&&f==='all'){}
+ var list=TASKS.filter(function(t){if(f==='mine')return EMP&&t.assignee_id===EMP.id;if(f==='created')return t.created_by===ME.user_id;return true;});
+ if(!renderKanban._i){renderKanban._i=1;var fk=['doing','new','review','done'].find(function(k){return list.some(function(t){return t.status===k;});});if(fk)KB=fk;}
+ $('kbTabs').innerHTML=Object.keys(ST).map(function(k){var n=list.filter(function(t){return t.status===k;}).length;return '<button data-k="'+k+'" class="'+(KB===k?'on':'')+'">'+ST[k]+' ('+n+')</button>';}).join('');
+ $('kbTabs').onclick=function(e){var b=e.target.closest('button');if(!b)return;KB=b.dataset.k;renderKanban();};
+ $('kanban').innerHTML=Object.keys(ST).map(function(k){var l=list.filter(function(t){return t.status===k;});return '<div class="col'+(KB===k?' on':'')+'"><h4>'+ST[k]+'<span>'+l.length+'</span></h4>'+(l.map(taskRow).join('')||'<div class="empty small">—</div>')+'</div>';}).join('');}
+function empOpts(sel){return '<option value="">— təyin edilməyib —</option>'+EMPS.filter(function(e){return e.active;}).map(function(e){return '<option value="'+e.id+'"'+(e.id===sel?' selected':'')+'>'+esc(e.full_name)+'</option>';}).join('');}
+function openTask(id){var t=id?TASKS.find(function(x){return x.id===id;}):null;var canEdit=!t||MGR||t.created_by===ME.user_id;
+ modal('<div class="mhead"><h3>'+(t?'Tapşırıq':'Yeni tapşırıq')+'</h3><button class="x" onclick="closeModal()">×</button></div>'+
+  '<div class="field"><label>Başlıq</label><input id="fT" value="'+esc(t?t.title:'')+'"'+(canEdit?'':' disabled')+'></div>'+
+  '<div class="field"><label>Təsvir</label><textarea id="fD"'+(canEdit?'':' disabled')+'>'+esc(t?t.description:'')+'</textarea></div>'+
+  '<div class="grid g2"><div class="field"><label>Məsul</label><select id="fA"'+(canEdit?'':' disabled')+'>'+empOpts(t?t.assignee_id:(EMP&&!MGR?EMP.id:null))+'</select></div><div class="field"><label>Son tarix</label><input id="fDue" type="date" value="'+(t&&t.due?t.due:'')+'"'+(canEdit?'':' disabled')+'></div>'+
+  '<div class="field"><label>Prioritet</label><select id="fP"'+(canEdit?'':' disabled')+'>'+Object.keys(PR).map(function(k){return '<option value="'+k+'"'+((t?t.priority:'normal')===k?' selected':'')+'>'+PR[k]+'</option>';}).join('')+'</select></div>'+
+  '<div class="field"><label>Status</label><select id="fS">'+Object.keys(ST).map(function(k){return '<option value="'+k+'"'+((t?t.status:'new')===k?' selected':'')+'>'+ST[k]+'</option>';}).join('')+'</select></div></div>'+
+  (t?'<p class="muted small">Yaradıb: '+esc(profName(t.created_by))+' · '+new Date(t.created_at).toLocaleDateString('az-AZ')+(t.done_at?' · bitib: '+new Date(t.done_at).toLocaleDateString('az-AZ'):'')+'</p>':'')+
+  '<div class="row" style="justify-content:flex-end;margin-top:12px">'+(t&&(MGR||t.created_by===ME.user_id)?'<button class="btn red" onclick="delTask('+t.id+')">Sil</button>':'')+'<span style="flex:1"></span><button class="btn" onclick="saveTask('+(t?t.id:0)+')">Yadda saxla</button></div>'+
+  (t?'<h3 style="margin-top:18px">Şərhlər</h3><div id="cmList"><div class="muted small">Yüklənir…</div></div><div class="field" style="margin-top:8px"><textarea id="cmNew" placeholder="Şərh yazın…" style="min-height:60px"></textarea></div><button class="btn ghost sm" onclick="addCm('+t.id+')">Göndər</button>':''));
+ if(t)loadCm(t.id);}
+function profName(uid){var p=PROFS.find(function(x){return x.user_id===uid;});if(p)return p.full_name||p.email;var e=EMPS.find(function(x){return x.user_id===uid;});return e?e.full_name:(uid===ME.user_id?(ME.full_name||ME.email):'—');}
+function saveTask(id){var b={title:$('fT').value.trim(),description:$('fD').value.trim(),assignee_id:+$('fA').value||null,due:$('fDue').value||null,priority:$('fP').value,status:$('fS').value};
+ if(!b.title){toast('Başlıq yazın');return;}
+ var q=id?sb.from('office_tasks').update(b).eq('id',id).select().single():sb.from('office_tasks').insert(Object.assign(b,{created_by:ME.user_id})).select().single();
+ run(q).then(function(t){var i=TASKS.findIndex(function(x){return x.id===t.id;});if(i>=0)TASKS[i]=t;else TASKS.unshift(t);closeModal();toast('Yadda saxlanıldı');refreshCurrent();}).catch(err);}
+function delTask(id){if(!confirm('Tapşırıq silinsin?'))return;run(sb.from('office_tasks').delete().eq('id',id)).then(function(){TASKS=TASKS.filter(function(x){return x.id!==id;});closeModal();refreshCurrent();}).catch(err);}
+function loadCm(id){run(sb.from('office_task_comments').select('*').eq('task_id',id).order('created_at')).then(function(c){$('cmList').innerHTML=c.length?c.map(function(x){return '<div class="cm"><b>'+esc(profName(x.author))+'</b> <span class="muted small">'+new Date(x.created_at).toLocaleString('az-AZ',{timeZone:TZ})+'</span><p>'+esc(x.body)+'</p></div>';}).join(''):'<div class="muted small">Hələ şərh yoxdur</div>';}).catch(err);}
+function addCm(id){var v=$('cmNew').value.trim();if(!v)return;run(sb.from('office_task_comments').insert({task_id:id,body:v,author:ME.user_id})).then(function(){$('cmNew').value='';loadCm(id);}).catch(err);}
+function refreshCurrent(){var v=(document.querySelector('#tabs button.on')||{}).dataset;show(v&&v.v||'today');}
+
+/* ---------- DAVAMİYYƏT ---------- */
+function renderDay(){var d=$('dDay').value||today();run(sb.from('office_attendance').select('*').eq('day',d)).then(function(att){var act=EMPS.filter(function(e){return e.active;});
+ $('dayTbl').innerHTML='<table><tr><th>İşçi</th><th>Gəliş</th><th>Çıxış</th><th>Status</th><th class="hide-m">Məsafə</th><th></th></tr>'+act.map(function(e){var a=att.find(function(x){return x.employee_id===e.id;});var work=(e.workdays||[]).indexOf(isoDow(d))>=0;
+  var st=a&&a.check_in?(a.late_min?'<span class="pill p-warn">'+a.late_min+' dəq gec</span>':'<span class="pill p-ok">vaxtında</span>')+(a.early_min?' <span class="pill p-mut">'+a.early_min+' dəq tez</span>':''):(work?'<span class="pill p-bad">gəlməyib</span>':'<span class="pill p-mut">istirahət</span>');
+  return '<tr><td><b>'+esc(e.full_name)+'</b></td><td>'+hm(a&&a.check_in)+'</td><td>'+hm(a&&a.check_out)+'</td><td>'+st+(a&&a.note?'<div class="muted small">'+esc(a.note)+'</div>':'')+'</td><td class="hide-m muted small">'+(a&&a.in_dist!=null?a.in_dist+' m':'')+'</td><td><button class="btn ghost sm" onclick="editAtt('+e.id+',\''+d+'\')">✎</button></td></tr>';}).join('')+'</table>';
+ renderDay._att=att;}).catch(err);}
+function editAtt(eid,d){var a=(renderDay._att||[]).find(function(x){return x.employee_id===eid;})||{};function t(ts){return ts?hm(ts):'';}
+ modal('<div class="mhead"><h3>'+esc(empName(eid))+' · '+d+'</h3><button class="x" onclick="closeModal()">×</button></div><div class="grid g2"><div class="field"><label>Gəliş</label><input id="eIn" type="time" value="'+t(a.check_in)+'"></div><div class="field"><label>Çıxış</label><input id="eOut" type="time" value="'+t(a.check_out)+'"></div></div><div class="field"><label>Qeyd (məs: icazəli, xəstə, ezamiyyət)</label><input id="eNote" value="'+esc(a.note||'')+'"></div><button class="btn" onclick="saveAtt('+eid+',\''+d+'\')">Yadda saxla</button>');}
+function bakuTs(d,t){return t?new Date(d+'T'+t+':00+04:00').toISOString():null;}
+function saveAtt(eid,d){var e=EMPS.find(function(x){return x.id===eid;}),ci=$('eIn').value,co=$('eOut').value;var g=(CFG&&CFG.grace_min)||0;
+ function mins(t){var p=String(t).slice(0,5).split(':');return (+p[0])*60+(+p[1]);}
+ var late=ci?Math.max(0,mins(ci)-mins(e.work_start)):0;if(late<=g)late=0;var early=co?Math.max(0,mins(e.work_end)-mins(co)):0;var worked=ci&&co?Math.max(0,mins(co)-mins(ci)):0;
+ run(sb.from('office_attendance').upsert({employee_id:eid,day:d,check_in:bakuTs(d,ci),check_out:bakuTs(d,co),late_min:late,early_min:early,worked_min:worked,note:$('eNote').value.trim(),source:'manual'},{onConflict:'employee_id,day'})).then(function(){closeModal();toast('Yadda saxlanıldı');renderDay();renderMonth();}).catch(err);}
+function monthRows(cb){var m=$('mMonth').value||today().slice(0,7);var y=+m.slice(0,4),mo=+m.slice(5,7);var last=new Date(Date.UTC(y,mo,0)).getUTCDate();var to=m+'-'+String(last).padStart(2,'0');
+ run(sb.from('office_attendance').select('*').gte('day',m+'-01').lte('day',to)).then(function(att){var upto=(m===today().slice(0,7))?+today().slice(8):last;
+  cb(EMPS.filter(function(e){return e.active;}).map(function(e){var a=att.filter(function(x){return x.employee_id===e.id;});var st0=[e.hire_date||'',String(e.created_at||'').slice(0,10)].sort().pop();var plan=0;for(var i=1;i<=upto;i++){var ds=m+'-'+String(i).padStart(2,'0');if(ds>=st0&&(e.workdays||[]).indexOf(isoDow(ds))>=0)plan++;}
+   var came=a.filter(function(x){return x.check_in;}).length;return {e:e,plan:plan,came:came,absent:Math.max(0,plan-came),lateN:a.filter(function(x){return x.late_min>0;}).length,lateM:a.reduce(function(s,x){return s+(x.late_min||0);},0),earlyM:a.reduce(function(s,x){return s+(x.early_min||0);},0),work:a.reduce(function(s,x){return s+(x.worked_min||0);},0)};}),m);}).catch(err);}
+function renderMonth(){monthRows(function(R){$('monthTbl').innerHTML='<table><tr><th>İşçi</th><th>Plan</th><th>Gəlib</th><th>Gəlməyib</th><th>Gecikmə</th><th class="hide-m">Tez çıxma</th><th>İşlənib</th></tr>'+R.map(function(r){return '<tr><td><b>'+esc(r.e.full_name)+'</b></td><td>'+r.plan+'</td><td>'+r.came+'</td><td>'+(r.absent?'<span class="pill p-bad">'+r.absent+'</span>':'0')+'</td><td>'+(r.lateN?'<span class="pill p-warn">'+r.lateN+' dəfə · '+hmin(r.lateM)+'</span>':'—')+'</td><td class="hide-m">'+(r.earlyM?hmin(r.earlyM):'—')+'</td><td>'+hmin(r.work)+'</td></tr>';}).join('')+'</table>';});}
+function xlsx(rows,name){function go(){var ws=XLSX.utils.aoa_to_sheet(rows);var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Tabel');XLSX.writeFile(wb,name);}
+ if(window.XLSX)return go();var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=go;document.head.appendChild(s);}
+function exportMonth(){monthRows(function(R,m){xlsx([['İşçi','Vəzifə','Plan günləri','Gəlib','Gəlməyib','Gecikmə sayı','Gecikmə (dəq)','Tez çıxma (dəq)','İşlənib (saat)']].concat(R.map(function(r){return [r.e.full_name,(posOf(r.e)||{}).title||'',r.plan,r.came,r.absent,r.lateN,r.lateM,r.earlyM,Math.round(r.work/6)/10];})),'tabel-'+m+'.xlsx');});}
+function exportDay(){var d=$('dDay').value;var att=renderDay._att||[];xlsx([['İşçi','Gəliş','Çıxış','Gecikmə (dəq)','Tez çıxma (dəq)','Qeyd']].concat(EMPS.filter(function(e){return e.active;}).map(function(e){var a=att.find(function(x){return x.employee_id===e.id;})||{};return [e.full_name,hm(a.check_in),hm(a.check_out),a.late_min||0,a.early_min||0,a.note||''];})),'davamiyyet-'+d+'.xlsx');}
+
+/* ---------- ŞTAT ---------- */
+function renderStaff(){var act=EMPS.filter(function(e){return e.active;});var total=POS.reduce(function(s,p){return s+(p.headcount||0);},0);
+ $('sKpi').innerHTML=kpi(DEPTS.length,'şöbə')+kpi(total,'ştat vahidi')+kpi(act.length,'işçi','ok')+kpi(Math.max(0,total-act.filter(function(e){return e.position_id;}).length),'vakansiya','warn');
+ $('deptList').innerHTML=(DEPTS.map(function(d){var ps=POS.filter(function(p){return p.department_id===d.id;});
+  return '<div class="dept"><div class="dept-h"><span style="flex:1">'+esc(d.name)+'</span><button class="btn ghost sm" onclick="addPos('+d.id+')">+ Vəzifə</button><button class="btn ghost sm" onclick="renDept('+d.id+')">✎</button></div>'+
+   (ps.map(function(p){var who=act.filter(function(e){return e.position_id===p.id;});var vac=(p.headcount||0)-who.length;
+    return '<div class="pos"><b>'+esc(p.title)+'</b><span class="pill '+(vac>0?'p-warn':'p-ok')+'">'+who.length+' / '+p.headcount+'</span><span class="who">'+(who.map(function(e){return esc(e.full_name);}).join(', ')||'boşdur')+'</span><button class="btn ghost sm" onclick="editPos('+p.id+')">✎</button></div>';}).join('')||'<div class="pos muted small">Vəzifə yoxdur</div>')+'</div>';}).join(''))||'<div class="card empty">Hələ şöbə yoxdur. "+ Şöbə" ilə başlayın.</div>';
+ $('empTbl').innerHTML=EMPS.length?'<table><tr><th>Ad</th><th>Vəzifə</th><th class="hide-m">Rəhbəri</th><th class="hide-m">Qrafik</th><th>Hesab</th><th></th></tr>'+EMPS.map(function(e){var p=posOf(e);return '<tr style="'+(e.active?'':'opacity:.5')+'"><td><b>'+esc(e.full_name)+'</b><div class="muted small">'+esc(e.phone||'')+'</div></td><td>'+esc(p?p.title:'—')+'</td><td class="hide-m">'+esc(e.manager_id?empName(e.manager_id):'—')+'</td><td class="hide-m small">'+String(e.work_start).slice(0,5)+'–'+String(e.work_end).slice(0,5)+'</td><td>'+(e.user_id?'<span class="pill p-ok">bağlı</span>':'<span class="pill p-mut">yox</span>')+'</td><td><button class="btn ghost sm" onclick="openEmp('+e.id+')">✎</button></td></tr>';}).join('')+'</table>':'<div class="empty">Hələ işçi yoxdur</div>';}
+function addDept(){var n=prompt('Şöbənin adı:');if(!n)return;run(sb.from('office_departments').insert({name:n.trim()}).select().single()).then(function(d){DEPTS.push(d);renderStaff();}).catch(err);}
+function renDept(id){var d=DEPTS.find(function(x){return x.id===id;});var n=prompt('Şöbənin adı (silmək üçün boş buraxın):',d.name);if(n===null)return;
+ if(!n.trim()){if(!confirm('Şöbə və onun vəzifələri silinsin?'))return;run(sb.from('office_departments').delete().eq('id',id)).then(function(){return loadAll();}).then(renderStaff).catch(err);return;}
+ run(sb.from('office_departments').update({name:n.trim()}).eq('id',id)).then(function(){d.name=n.trim();renderStaff();}).catch(err);}
+function addPos(did){posModal({department_id:did,title:'',headcount:1});}
+function editPos(id){posModal(POS.find(function(x){return x.id===id;}));}
+function posModal(p){modal('<div class="mhead"><h3>'+(p.id?'Vəzifə':'Yeni vəzifə')+'</h3><button class="x" onclick="closeModal()">×</button></div><div class="field"><label>Vəzifə adı</label><input id="pT" value="'+esc(p.title)+'"></div><div class="field"><label>Ştat vahidi (neçə nəfər)</label><input id="pH" type="number" min="0" value="'+(p.headcount||1)+'"></div><div class="row">'+(p.id?'<button class="btn red" onclick="delPos('+p.id+')">Sil</button>':'')+'<span style="flex:1"></span><button class="btn" onclick="savePos('+(p.id||0)+','+p.department_id+')">Yadda saxla</button></div>');}
+function savePos(id,did){var b={title:$('pT').value.trim(),headcount:+$('pH').value||0,department_id:did};if(!b.title)return toast('Ad yazın');
+ run(id?sb.from('office_positions').update(b).eq('id',id).select().single():sb.from('office_positions').insert(b).select().single()).then(function(p){var i=POS.findIndex(function(x){return x.id===p.id;});if(i>=0)POS[i]=p;else POS.push(p);closeModal();renderStaff();}).catch(err);}
+function delPos(id){if(!confirm('Vəzifə silinsin?'))return;run(sb.from('office_positions').delete().eq('id',id)).then(function(){POS=POS.filter(function(x){return x.id!==id;});closeModal();renderStaff();}).catch(err);}
+function openEmp(id){var e=id?EMPS.find(function(x){return x.id===id;}):{full_name:'',work_start:'09:00',work_end:'18:00',workdays:[1,2,3,4,5],active:true};
+ var used=EMPS.filter(function(x){return x.user_id&&x.id!==e.id;}).map(function(x){return x.user_id;});
+ var accs=PROFS.filter(function(p){return p.active&&used.indexOf(p.user_id)<0;});
+ modal('<div class="mhead"><h3>'+(id?'İşçi kartı':'Yeni işçi')+'</h3><button class="x" onclick="closeModal()">×</button></div>'+
+  '<div class="grid g2"><div class="field"><label>Ad, soyad</label><input id="eN" value="'+esc(e.full_name)+'"></div><div class="field"><label>Vəzifə</label><select id="eP"><option value="">—</option>'+DEPTS.map(function(d){return '<optgroup label="'+esc(d.name)+'">'+POS.filter(function(p){return p.department_id===d.id;}).map(function(p){return '<option value="'+p.id+'"'+(p.id===e.position_id?' selected':'')+'>'+esc(p.title)+'</option>';}).join('')+'</optgroup>';}).join('')+'</select></div>'+
+  '<div class="field"><label>Rəhbəri</label><select id="eM">'+empOpts(e.manager_id).replace('— təyin edilməyib —','—')+'</select></div><div class="field"><label>İşə qəbul tarixi</label><input id="eH" type="date" value="'+(e.hire_date||'')+'"></div>'+
+  '<div class="field"><label>Telefon</label><input id="ePh" value="'+esc(e.phone||'')+'"></div><div class="field"><label>Email</label><input id="eE" value="'+esc(e.email||'')+'"></div>'+
+  '<div class="field"><label>İş başlayır</label><input id="eS" type="time" value="'+String(e.work_start||'09:00').slice(0,5)+'"></div><div class="field"><label>İş bitir</label><input id="eF" type="time" value="'+String(e.work_end||'18:00').slice(0,5)+'"></div></div>'+
+  '<div class="field"><label>İş günləri</label><div class="days" id="eD">'+WD.map(function(w,i){return '<label><input type="checkbox" value="'+(i+1)+'"'+((e.workdays||[]).indexOf(i+1)>=0?' checked':'')+'>'+w+'</label>';}).join('')+'</div></div>'+
+  '<div class="field"><label>Sistemdəki hesabı (gəliş-gediş üçün)</label><select id="eU"><option value="">— bağlı deyil —</option>'+(e.user_id&&!accs.some(function(p){return p.user_id===e.user_id;})?'<option value="'+e.user_id+'" selected>'+esc(profName(e.user_id))+'</option>':'')+accs.map(function(p){return '<option value="'+p.user_id+'"'+(p.user_id===e.user_id?' selected':'')+'>'+esc((p.full_name?p.full_name+' · ':'')+p.email)+'</option>';}).join('')+'</select><span class="muted small">Hesabı Admin panel → İstifadəçilər bölməsində yaradın və "Ofis — işçi" səlahiyyəti verin.</span></div>'+
+  '<label class="row small" style="margin-bottom:12px"><input type="checkbox" id="eA"'+(e.active?' checked':'')+'> Aktiv işçi</label>'+
+  '<div class="row">'+(id?'<button class="btn red" onclick="delEmp('+id+')">Sil</button>':'')+'<span style="flex:1"></span><button class="btn" onclick="saveEmp('+(id||0)+')">Yadda saxla</button></div>');}
+function saveEmp(id){var b={full_name:$('eN').value.trim(),position_id:+$('eP').value||null,manager_id:+$('eM').value||null,hire_date:$('eH').value||null,phone:$('ePh').value.trim(),email:$('eE').value.trim(),work_start:$('eS').value||'09:00',work_end:$('eF').value||'18:00',workdays:[].slice.call(document.querySelectorAll('#eD input:checked')).map(function(x){return +x.value;}),user_id:$('eU').value||null,active:$('eA').checked};
+ if(!b.full_name)return toast('Ad yazın');if(id&&b.manager_id===id)b.manager_id=null;
+ run(id?sb.from('office_employees').update(b).eq('id',id).select().single():sb.from('office_employees').insert(b).select().single()).then(function(e){var i=EMPS.findIndex(function(x){return x.id===e.id;});if(i>=0)EMPS[i]=e;else EMPS.push(e);EMP=EMPS.find(function(x){return x.user_id===ME.user_id&&x.active;})||null;closeModal();renderStaff();toast('Yadda saxlanıldı');}).catch(err);}
+function delEmp(id){if(!confirm('İşçi kartı və onun davamiyyət tarixçəsi silinsin? (İşdən çıxıbsa, "Aktiv" işarəsini söndürmək daha yaxşıdır)'))return;run(sb.from('office_employees').delete().eq('id',id)).then(function(){EMPS=EMPS.filter(function(x){return x.id!==id;});closeModal();renderStaff();}).catch(err);}
+
+/* ---------- AYARLAR / QR ---------- */
+function renderSet(){var c=CFG||{};$('cLat').value=c.lat||'';$('cLng').value=c.lng||'';$('cRad').value=c.radius_m||150;$('cGrace').value=c.grace_min||10;$('cGeo').checked=c.require_geo!==false;}
+function useHere(){if(!navigator.geolocation)return toast('Brauzer yeri dəstəkləmir');toast('Yer alınır…');navigator.geolocation.getCurrentPosition(function(p){$('cLat').value=p.coords.latitude.toFixed(6);$('cLng').value=p.coords.longitude.toFixed(6);toast('Dəqiqlik: ±'+Math.round(p.coords.accuracy)+' m. "Yadda saxla" basın.');},function(){toast('Yer icazəsi verilmədi');},{enableHighAccuracy:true,timeout:15000});}
+function saveCfg(){var b={lat:parseFloat($('cLat').value)||null,lng:parseFloat($('cLng').value)||null,radius_m:+$('cRad').value||150,grace_min:+$('cGrace').value||0,require_geo:$('cGeo').checked,updated_at:new Date().toISOString()};
+ run(sb.from('office_config').update(b).eq('id',1).select().single()).then(function(c){CFG=c;toast('Ayarlar saxlanıldı');}).catch(err);}
+var _qrT=null,_qrTick=null;
+function openQR(){$('qrWrap').classList.add('on');var box=$('qrBox'),qr=null;function draw(){sb.rpc('office_qr_token').then(function(r){if(r.error)throw r.error;var url=location.origin+'/ofis?c='+r.data;box.innerHTML='';qr=new QRCode(box,{text:url,width:300,height:300,correctLevel:QRCode.CorrectLevel.M});}).catch(err);}
+ draw();clearInterval(_qrT);clearInterval(_qrTick);var left=60-new Date().getSeconds();$('qrLeft').textContent=left;
+ _qrTick=setInterval(function(){left=60-new Date().getSeconds();$('qrLeft').textContent=left;if(left===60||left===1){setTimeout(draw,1200);}},1000);
+ if(document.documentElement.requestFullscreen&&new URLSearchParams(location.search).get('qr'))try{document.documentElement.requestFullscreen();}catch(e){}}
+function closeQR(){$('qrWrap').classList.remove('on');clearInterval(_qrTick);if(document.fullscreenElement)document.exitFullscreen();}
+
+/* ---------- modal ---------- */
+function modal(h){$('mbox').innerHTML=h;$('modal').classList.add('on');}
+function closeModal(){$('modal').classList.remove('on');$('mbox').innerHTML='';}
+$('modal').addEventListener('click',function(e){if(e.target===$('modal'))closeModal();});
+</script>
+</body>
+</html>
