@@ -489,6 +489,7 @@ function applyCfg(){
   state.price=Math.min(CFG.price.max,Math.max(CFG.price.min,state.price));
   $('area').value=state.area;$('areaVal').value=state.area;setFill($('area'));
   $('price').value=state.price;$('priceVal').value=state.price;setFill($('price'));
+  state.down=Math.min(100,Math.max(10,+state.down||CFG.downDef));$('down').value=state.down;$('downVal').value=state.down;setFill($('down'));
   state.rate=CFG.mortgageRate;$('rate').value=CFG.mortgageRate;$('rateRange').value=Math.min(20,Math.max(0,CFG.mortgageRate));setFill($('rateRange'));
   const mBtn=document.querySelector('.seg button[data-pay="mortgage"]');
   if(mBtn){mBtn.style.display=CFG.mortgageEnabled?'':'none';
@@ -613,7 +614,7 @@ render();
  .then(function(r){return r.ok?r.json():null;}).then(function(rows){
    if(!rows||!rows.length)return;var changed=false;
    rows.forEach(function(row){var stored=(row.key==="lux_showprices")?String(row.value):JSON.stringify(row.value);if(localStorage.getItem(row.key)!==stored){localStorage.setItem(row.key,stored);changed=true;}});
-   if(changed&&!sessionStorage.getItem('lux_rl')){try{sessionStorage.setItem('lux_rl','1');}catch(e){}location.reload();}
+   if(changed){try{CFG=loadCfg();state.area=CFG.area.def;state.price=CFG.price.def;state.down=CFG.downDef;state.rate=CFG.mortgageRate;applyCfg();if(typeof renderChips==='function')renderChips();render();}catch(e){if(!sessionStorage.getItem('lux_rl')){try{sessionStorage.setItem('lux_rl','1');}catch(_){}location.reload();}}}
  }).catch(function(){});
 }catch(e){}})();
 </script>
