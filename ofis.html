@@ -86,6 +86,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
 @media print{body>*{display:none!important}#printSheet{display:block!important}#printSheet .ps-in{display:flex;flex-direction:column;align-items:center;text-align:center;padding:14mm 10mm;font-family:var(--sans);color:#0f172a}
 .ps-t{font-size:44px;font-weight:800;letter-spacing:.06em}.ps-s{font-size:22px;color:#475569;margin:6px 0 22px}#psQr img,#psQr canvas{width:120mm!important;height:120mm!important}
 .ps-l{text-align:left;font-size:18px;margin:24px auto 0;line-height:1.8}.ps-f{margin-top:26px;color:#64748b;font-size:14px}@page{size:A4;margin:10mm}}
+.lvrow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}.lvrow:last-child{border-bottom:none}
 </style>
 </head>
 <body>
@@ -119,6 +120,14 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
     <div class="row"><select id="tkFilter" class="btn ghost sm" style="padding-right:8px"><option value="mine">Mənə aid</option><option value="created">Mənim verdiklərim</option><option value="all">Hamısı</option></select><button class="btn" onclick="openTask()">+ Yeni</button></div></div>
    <div class="mtabs" id="kbTabs"></div>
    <div class="kanban" id="kanban"></div>
+  </section>
+  <!-- SORĞULAR -->
+  <section class="view" id="v-leave">
+   <div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">Sorğular</h2><button class="btn" onclick="openLeave()">+ Yeni sorğu</button></div>
+   <div class="grid g4" id="lvKpi" style="margin-bottom:14px"></div>
+   <div class="card" id="lvPendBox" style="display:none"><h3>Təsdiq gözləyənlər</h3><div id="lvPend"></div></div>
+   <div class="card"><div class="row" style="justify-content:space-between"><h3 id="lvListH">Mənim sorğularım</h3>
+    <select id="lvF" class="btn ghost sm" style="display:none"><option value="all">Hamısı</option><option value="pending">Gözləyir</option><option value="approved">Təsdiqlənib</option><option value="rejected">Rədd edilib</option></select></div><div class="tbl" id="lvList"></div></div>
   </section>
   <!-- KOMANDA / DAVAMİYYƏT -->
   <section class="view" id="v-team">
@@ -159,7 +168,8 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-var sb=null,ME=null,MGR=false,EMP=null,EMPS=[],DEPTS=[],POS=[],TASKS=[],PROFS=[],CFG=null,KB='new';
+var sb=null,ME=null,MGR=false,EMP=null,EMPS=[],DEPTS=[],POS=[],TASKS=[],PROFS=[],CFG=null,KB='new',LEAVES=[],HOL=[];
+var LT={mezuniyyet:'Məzuniyyət',xestelik:'Xəstəlik',ezamiyyet:'Ezamiyyət',uzaqdan:'Uzaqdan iş',icaze:'Saatlıq icazə',odenissiz:'Ödənişsiz məzuniyyət'};
 var TZ='Asia/Baku';
 var ST={new:'Yeni',doing:'İcrada',review:'Yoxlamada',done:'Bitdi'},PR={urgent:'Təcili',high:'Yüksək',normal:'Normal',low:'Aşağı'};
 var WD=['B.e','Ç.a','Çər','C.a','Cüm','Şən','Baz'];
@@ -180,7 +190,7 @@ luxAuth({perms:['ofis','ofis_admin'],title:'Baş Ofis',sub:'İşçi hesabınızl
 function start(){$('app').style.display='';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
  $('meBox').innerHTML='<b>'+esc(ME.full_name||ME.email)+'</b>'+(MGR?'Rəhbər':'İşçi');
  $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href='/ofis';});};
- var tabs=[['today','Bu gün']];if(MGR)tabs.push(['panel','Panel']);tabs.push(['tasks','Tapşırıqlar']);if(MGR){tabs.push(['team','Davamiyyət'],['staff','Ştat'],['set','Ayarlar']);}
+ var tabs=[['today','Bu gün']];if(MGR)tabs.push(['panel','Panel']);tabs.push(['tasks','Tapşırıqlar'],['leave','Sorğular']);if(MGR){tabs.push(['team','Davamiyyət'],['staff','Ştat'],['set','Ayarlar']);}
  $('tabs').innerHTML=tabs.map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');
  $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};
  $('dDay').value=today();$('mMonth').value=today().slice(0,7);$('dDay').onchange=renderDay;$('mMonth').onchange=renderMonth;$('tkFilter').onchange=renderKanban;
@@ -188,13 +198,14 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
  loadAll().then(function(){var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':'today');if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
 }
 function show(v){document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
- if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();window.scrollTo(0,0);}
+ if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();window.scrollTo(0,0);}
 function tick(){var n=new Date();$('tClock').textContent=n.toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit',second:'2-digit'});$('tDate').textContent=n.toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});}
 function loadAll(){return Promise.all([
   run(sb.from('office_employees').select('*').order('full_name')),run(sb.from('office_departments').select('*').order('sort').order('id')),run(sb.from('office_positions').select('*').order('sort').order('id')),
   run(sb.from('office_tasks').select('*').order('due',{ascending:true,nullsFirst:false}).order('id',{ascending:false})),
-  MGR?run(sb.from('lux_profiles').select('user_id,email,full_name,perms,is_admin,active')):Promise.resolve([]),MGR?run(sb.from('office_config').select('*').eq('id',1).maybeSingle()):Promise.resolve(null)
- ]).then(function(r){EMPS=r[0]||[];DEPTS=r[1]||[];POS=r[2]||[];TASKS=r[3]||[];PROFS=r[4]||[];CFG=r[5];EMP=EMPS.find(function(e){return e.user_id===ME.user_id&&e.active;})||null;}).catch(err);}
+  MGR?run(sb.from('lux_profiles').select('user_id,email,full_name,perms,is_admin,active')):Promise.resolve([]),MGR?run(sb.from('office_config').select('*').eq('id',1).maybeSingle()):Promise.resolve(null),
+  run(sb.from('office_leaves').select('*').order('date_from',{ascending:false})),run(sb.from('office_holidays').select('*').order('day'))
+ ]).then(function(r){EMPS=r[0]||[];DEPTS=r[1]||[];POS=r[2]||[];TASKS=r[3]||[];PROFS=r[4]||[];CFG=r[5];LEAVES=r[6]||[];HOL=r[7]||[];EMP=EMPS.find(function(e){return e.user_id===ME.user_id&&e.active;})||null;}).catch(err);}
 
 /* ---------- BU GÜN / check-in ---------- */
 var MYDAY=null;
@@ -246,10 +257,10 @@ function doCheck(kind,token){toast('Yer yoxlanılır…');
 
 /* ---------- PANEL ---------- */
 function renderPanel(){var d=today();$('pDate').textContent=new Date().toLocaleDateString('az-AZ',{timeZone:TZ,day:'numeric',month:'long',year:'numeric'});
- run(sb.from('office_attendance').select('*').eq('day',d)).then(function(att){var act=EMPS.filter(function(e){return e.active&&(e.workdays||[]).indexOf(isoDow(d))>=0;});
+ run(sb.from('office_attendance').select('*').eq('day',d)).then(function(att){var act=EMPS.filter(function(e){return e.active&&(e.workdays||[]).indexOf(isoDow(d))>=0&&!isHol(d)&&!leaveOn(e.id,d);});var onLeave=EMPS.filter(function(e){return e.active&&leaveOn(e.id,d);});
   var came=att.filter(function(a){return a.check_in;}),late=att.filter(function(a){return a.late_min>0;}),absent=act.filter(function(e){return !att.some(function(a){return a.employee_id===e.id&&a.check_in;});});
   var open=TASKS.filter(function(t){return t.status!=='done';}),over=open.filter(function(t){return t.due&&t.due<d;});
-  $('pKpi').innerHTML=kpi(came.length+' / '+act.length,'bu gün işdədir','ok')+kpi(late.length,'gecikib','warn')+kpi(absent.length,'gəlməyib','bad')+kpi(over.length+' / '+open.length,'vaxtı keçmiş / açıq tapşırıq',over.length?'bad':'');
+  $('pKpi').innerHTML=kpi(came.length+' / '+act.length,'bu gün işdədir','ok')+kpi(late.length,'gecikib','warn')+kpi(absent.length,'gəlməyib'+(onLeave.length?' · '+onLeave.length+' icazəli':''),'bad')+kpi(over.length+' / '+open.length,'vaxtı keçmiş / açıq tapşırıq',over.length?'bad':'');
   $('pLate').innerHTML=(late.map(function(a){return '<div class="row" style="justify-content:space-between;padding:6px 0"><span>'+esc(empName(a.employee_id))+'</span><span class="pill p-warn">'+hm(a.check_in)+' · '+a.late_min+' dəq</span></div>';}).join('')+absent.map(function(e){return '<div class="row" style="justify-content:space-between;padding:6px 0"><span>'+esc(e.full_name)+'</span><span class="pill p-bad">gəlməyib</span></div>';}).join(''))||'<div class="empty">Hamı vaxtında 👏</div>';
   $('pOver').innerHTML=over.length?over.map(taskRow).join(''):'<div class="empty">Vaxtı keçmiş tapşırıq yoxdur</div>';
   var rows=EMPS.filter(function(e){return e.active;}).map(function(e){var t=TASKS.filter(function(x){return x.assignee_id===e.id;});var o=t.filter(function(x){return x.status!=='done';}),ov=o.filter(function(x){return x.due&&x.due<d;}),dn=t.filter(function(x){return x.status==='done'&&x.done_at&&(Date.now()-new Date(x.done_at))<30*864e5;});
@@ -288,10 +299,43 @@ function loadCm(id){run(sb.from('office_task_comments').select('*').eq('task_id'
 function addCm(id){var v=$('cmNew').value.trim();if(!v)return;run(sb.from('office_task_comments').insert({task_id:id,body:v,author:ME.user_id})).then(function(){$('cmNew').value='';loadCm(id);}).catch(err);}
 function refreshCurrent(){var v=(document.querySelector('#tabs button.on')||{}).dataset;show(v&&v.v||'today');}
 
+
+/* ---------- SORĞULAR (məzuniyyət, icazə) ---------- */
+function dDays(a,b){return Math.round((new Date(b+'T12:00:00Z')-new Date(a+'T12:00:00Z'))/864e5)+1;}
+function isHol(d){return HOL.some(function(h){return h.day===d;});}
+function leaveOn(eid,d){return LEAVES.find(function(l){return l.employee_id===eid&&l.status==='approved'&&l.date_from<=d&&l.date_to>=d;});}
+function leaveUsed(eid,yr){return LEAVES.filter(function(l){return l.employee_id===eid&&l.type==='mezuniyyet'&&l.status!=='rejected'&&l.date_from.slice(0,4)===String(yr);}).reduce(function(s,l){return s+dDays(l.date_from,l.date_to);},0);}
+function lvPill(st){return st==='approved'?'<span class="pill p-ok">təsdiqlənib</span>':st==='rejected'?'<span class="pill p-bad">rədd edilib</span>':'<span class="pill p-warn">gözləyir</span>';}
+function lvRange(l){var f=l.date_from.slice(8)+'.'+l.date_from.slice(5,7),t=l.date_to.slice(8)+'.'+l.date_to.slice(5,7);return (f===t?f:f+' – '+t)+(l.type==='icaze'&&l.hours?' · '+l.hours+' saat':' · '+dDays(l.date_from,l.date_to)+' gün');}
+function renderLeave(){var yr=today().slice(0,4);
+ if(EMP){var used=leaveUsed(EMP.id,yr),tot=EMP.leave_days||21,mine=LEAVES.filter(function(l){return l.employee_id===EMP.id;});
+  $('lvKpi').innerHTML=kpi(Math.max(0,tot-used)+' gün','məzuniyyət qalığı ('+yr+')','ok')+kpi(used,'istifadə olunub')+kpi(mine.filter(function(l){return l.status==='pending';}).length,'gözləyən sorğu','warn')+kpi(mine.filter(function(l){return l.type==='xestelik'&&l.date_from.slice(0,4)===yr;}).reduce(function(s,l){return s+dDays(l.date_from,l.date_to);},0),'xəstəlik günü');}
+ else $('lvKpi').innerHTML='';
+ var pend=LEAVES.filter(function(l){return l.status==='pending';});
+ $('lvPendBox').style.display=MGR?'':'none';$('lvF').style.display=MGR?'':'none';$('lvListH').textContent=MGR?'Bütün sorğular':'Mənim sorğularım';
+ if(MGR)$('lvPend').innerHTML=pend.length?pend.map(function(l){var e=EMPS.find(function(x){return x.id===l.employee_id;})||{};var bal=l.type==='mezuniyyet'?' · qalıq: '+Math.max(0,(e.leave_days||21)-leaveUsed(l.employee_id,l.date_from.slice(0,4))+dDays(l.date_from,l.date_to))+' gün':'';
+   return '<div class="lvrow"><div><b>'+esc(e.full_name||'—')+'</b> · '+LT[l.type]+'<div class="muted small">'+lvRange(l)+bal+(l.reason?' · '+esc(l.reason):'')+'</div></div><div class="row"><button class="btn sm" onclick="decideLeave('+l.id+',\'approved\')">Təsdiqlə</button><button class="btn red sm" onclick="decideLeave('+l.id+',\'rejected\')">Rədd et</button></div></div>';}).join(''):'<div class="empty">Gözləyən sorğu yoxdur</div>';
+ var f=$('lvF').value||'all';$('lvF').onchange=renderLeave;
+ var list=(MGR?LEAVES:LEAVES.filter(function(l){return EMP&&l.employee_id===EMP.id;})).filter(function(l){return f==='all'||l.status===f;});
+ $('lvList').innerHTML=list.length?'<table><tr>'+(MGR?'<th>İşçi</th>':'')+'<th>Növ</th><th>Tarix</th><th>Status</th><th></th></tr>'+list.map(function(l){var mine=EMP&&l.employee_id===EMP.id;return '<tr>'+(MGR?'<td><b>'+esc(empName(l.employee_id))+'</b></td>':'')+'<td>'+LT[l.type]+(l.reason?'<div class="muted small">'+esc(l.reason)+'</div>':'')+'</td><td class="small">'+lvRange(l)+'</td><td>'+lvPill(l.status)+(l.decision_note?'<div class="muted small">'+esc(l.decision_note)+'</div>':'')+'</td><td>'+((l.status==='pending'&&mine)||MGR?'<button class="btn ghost sm" onclick="delLeave('+l.id+')">'+(l.status==='pending'?'Ləğv et':'Sil')+'</button>':'')+'</td></tr>';}).join('')+'</table>':'<div class="empty">Sorğu yoxdur</div>';}
+function openLeave(){if(!EMP&&!MGR){toast('Hesabınız işçi kartına bağlanmayıb');return;}var t=today();
+ modal('<div class="mhead"><h3>Yeni sorğu</h3><button class="x" onclick="closeModal()">×</button></div>'+(MGR?'<div class="field"><label>İşçi</label><select id="lE">'+EMPS.filter(function(e){return e.active;}).map(function(e){return '<option value="'+e.id+'"'+(EMP&&e.id===EMP.id?' selected':'')+'>'+esc(e.full_name)+'</option>';}).join('')+'</select></div>':'')+
+  '<div class="field"><label>Növ</label><select id="lT" onchange="$(\'lHw\').style.display=this.value===\'icaze\'?\'\':\'none\'">'+Object.keys(LT).map(function(k){return '<option value="'+k+'">'+LT[k]+'</option>';}).join('')+'</select></div>'+
+  '<div class="grid g2"><div class="field"><label>Başlanğıc</label><input id="lF" type="date" value="'+t+'"></div><div class="field"><label>Son gün</label><input id="lTo" type="date" value="'+t+'"></div></div>'+
+  '<div class="field" id="lHw" style="display:none"><label>Neçə saat</label><input id="lH" type="number" step="0.5" min="0.5" max="8" value="2"></div>'+
+  '<div class="field"><label>Səbəb / qeyd</label><textarea id="lR" placeholder="İstəyə bağlı"></textarea></div><div class="row" style="justify-content:flex-end"><button class="btn" onclick="saveLeave()">Göndər</button></div>');}
+function saveLeave(){var b={employee_id:MGR&&$('lE')?+$('lE').value:EMP.id,type:$('lT').value,date_from:$('lF').value,date_to:$('lTo').value,reason:$('lR').value.trim()};
+ if(!b.date_from||!b.date_to||b.date_to<b.date_from)return toast('Tarixləri düzgün seçin');if(b.type==='icaze')b.hours=+$('lH').value||null;
+ if(MGR&&(!EMP||b.employee_id!==EMP.id)){b.status='approved';b.decided_by=ME.user_id;b.decided_at=new Date().toISOString();}
+ run(sb.from('office_leaves').insert(b).select().single()).then(function(l){LEAVES.unshift(l);closeModal();toast(l.status==='approved'?'Əlavə olundu':'Sorğu göndərildi');renderLeave();if(typeof notify==='function'&&l.status==='pending')notify('leave_new',{id:l.id});}).catch(err);}
+function decideLeave(id,st){var note=st==='rejected'?(prompt('Rədd səbəbi (istəyə bağlı):')||''):'';
+ run(sb.from('office_leaves').update({status:st,decided_by:ME.user_id,decided_at:new Date().toISOString(),decision_note:note}).eq('id',id).select().single()).then(function(l){var i=LEAVES.findIndex(function(x){return x.id===id;});LEAVES[i]=l;toast(st==='approved'?'Təsdiqləndi':'Rədd edildi');renderLeave();if(typeof notify==='function')notify('leave_decided',{id:id});}).catch(err);}
+function delLeave(id){if(!confirm('Sorğu silinsin?'))return;run(sb.from('office_leaves').delete().eq('id',id)).then(function(){LEAVES=LEAVES.filter(function(x){return x.id!==id;});renderLeave();}).catch(err);}
+
 /* ---------- DAVAMİYYƏT ---------- */
 function renderDay(){var d=$('dDay').value||today();run(sb.from('office_attendance').select('*').eq('day',d)).then(function(att){var act=EMPS.filter(function(e){return e.active;});
- $('dayTbl').innerHTML='<table><tr><th>İşçi</th><th>Gəliş</th><th>Çıxış</th><th>Status</th><th class="hide-m">Məsafə</th><th></th></tr>'+act.map(function(e){var a=att.find(function(x){return x.employee_id===e.id;});var work=(e.workdays||[]).indexOf(isoDow(d))>=0;
-  var st=a&&a.check_in?(a.late_min?'<span class="pill p-warn">'+a.late_min+' dəq gec</span>':'<span class="pill p-ok">vaxtında</span>')+(a.early_min?' <span class="pill p-mut">'+a.early_min+' dəq tez</span>':''):(work?'<span class="pill p-bad">gəlməyib</span>':'<span class="pill p-mut">istirahət</span>');
+ $('dayTbl').innerHTML='<table><tr><th>İşçi</th><th>Gəliş</th><th>Çıxış</th><th>Status</th><th class="hide-m">Məsafə</th><th></th></tr>'+act.map(function(e){var a=att.find(function(x){return x.employee_id===e.id;});var work=(e.workdays||[]).indexOf(isoDow(d))>=0&&!isHol(d);var lv=leaveOn(e.id,d);
+  var st=lv&&!(a&&a.check_in)?'<span class="pill p-acc">'+LT[lv.type]+'</span>':a&&a.check_in?(a.late_min?'<span class="pill p-warn">'+a.late_min+' dəq gec</span>':'<span class="pill p-ok">vaxtında</span>')+(a.early_min?' <span class="pill p-mut">'+a.early_min+' dəq tez</span>':''):(work?'<span class="pill p-bad">gəlməyib</span>':'<span class="pill p-mut">'+(isHol(d)?'bayram':'istirahət')+'</span>');
   return '<tr><td><b>'+esc(e.full_name)+'</b></td><td>'+hm(a&&a.check_in)+'</td><td>'+hm(a&&a.check_out)+'</td><td>'+st+(a&&a.note?'<div class="muted small">'+esc(a.note)+'</div>':'')+'</td><td class="hide-m muted small">'+(a&&a.in_dist!=null?a.in_dist+' m':'')+'</td><td><button class="btn ghost sm" onclick="editAtt('+e.id+',\''+d+'\')">✎</button></td></tr>';}).join('')+'</table>';
  renderDay._att=att;}).catch(err);}
 function editAtt(eid,d){var a=(renderDay._att||[]).find(function(x){return x.employee_id===eid;})||{};function t(ts){return ts?hm(ts):'';}
@@ -303,12 +347,12 @@ function saveAtt(eid,d){var e=EMPS.find(function(x){return x.id===eid;}),ci=$('e
  run(sb.from('office_attendance').upsert({employee_id:eid,day:d,check_in:bakuTs(d,ci),check_out:bakuTs(d,co),late_min:late,early_min:early,worked_min:worked,note:$('eNote').value.trim(),source:'manual'},{onConflict:'employee_id,day'})).then(function(){closeModal();toast('Yadda saxlanıldı');renderDay();renderMonth();}).catch(err);}
 function monthRows(cb){var m=$('mMonth').value||today().slice(0,7);var y=+m.slice(0,4),mo=+m.slice(5,7);var last=new Date(Date.UTC(y,mo,0)).getUTCDate();var to=m+'-'+String(last).padStart(2,'0');
  run(sb.from('office_attendance').select('*').gte('day',m+'-01').lte('day',to)).then(function(att){var upto=(m===today().slice(0,7))?+today().slice(8):last;
-  cb(EMPS.filter(function(e){return e.active;}).map(function(e){var a=att.filter(function(x){return x.employee_id===e.id;});var st0=[e.hire_date||'',String(e.created_at||'').slice(0,10)].sort().pop();var plan=0;for(var i=1;i<=upto;i++){var ds=m+'-'+String(i).padStart(2,'0');if(ds>=st0&&(e.workdays||[]).indexOf(isoDow(ds))>=0)plan++;}
-   var came=a.filter(function(x){return x.check_in;}).length;return {e:e,plan:plan,came:came,absent:Math.max(0,plan-came),lateN:a.filter(function(x){return x.late_min>0;}).length,lateM:a.reduce(function(s,x){return s+(x.late_min||0);},0),earlyM:a.reduce(function(s,x){return s+(x.early_min||0);},0),work:a.reduce(function(s,x){return s+(x.worked_min||0);},0)};}),m);}).catch(err);}
-function renderMonth(){monthRows(function(R){$('monthTbl').innerHTML='<table><tr><th>İşçi</th><th>Plan</th><th>Gəlib</th><th>Gəlməyib</th><th>Gecikmə</th><th class="hide-m">Tez çıxma</th><th>İşlənib</th></tr>'+R.map(function(r){return '<tr><td><b>'+esc(r.e.full_name)+'</b></td><td>'+r.plan+'</td><td>'+r.came+'</td><td>'+(r.absent?'<span class="pill p-bad">'+r.absent+'</span>':'0')+'</td><td>'+(r.lateN?'<span class="pill p-warn">'+r.lateN+' dəfə · '+hmin(r.lateM)+'</span>':'—')+'</td><td class="hide-m">'+(r.earlyM?hmin(r.earlyM):'—')+'</td><td>'+hmin(r.work)+'</td></tr>';}).join('')+'</table>';});}
+  cb(EMPS.filter(function(e){return e.active;}).map(function(e){var a=att.filter(function(x){return x.employee_id===e.id;});var st0=[e.hire_date||'',String(e.created_at||'').slice(0,10)].sort().pop();var plan=0,lvd=0;for(var i=1;i<=upto;i++){var ds=m+'-'+String(i).padStart(2,'0');if(ds>=st0&&(e.workdays||[]).indexOf(isoDow(ds))>=0&&!isHol(ds)){plan++;if(leaveOn(e.id,ds)&&!a.some(function(x){return x.day===ds&&x.check_in;}))lvd++;}}
+   var came=a.filter(function(x){return x.check_in;}).length;return {e:e,plan:plan,came:came,leave:lvd,absent:Math.max(0,plan-came-lvd),lateN:a.filter(function(x){return x.late_min>0;}).length,lateM:a.reduce(function(s,x){return s+(x.late_min||0);},0),earlyM:a.reduce(function(s,x){return s+(x.early_min||0);},0),work:a.reduce(function(s,x){return s+(x.worked_min||0);},0)};}),m);}).catch(err);}
+function renderMonth(){monthRows(function(R){$('monthTbl').innerHTML='<table><tr><th>İşçi</th><th>Plan</th><th>Gəlib</th><th>İcazəli</th><th>Gəlməyib</th><th>Gecikmə</th><th class="hide-m">Tez çıxma</th><th>İşlənib</th></tr>'+R.map(function(r){return '<tr><td><b>'+esc(r.e.full_name)+'</b></td><td>'+r.plan+'</td><td>'+r.came+'</td><td>'+(r.leave||'—')+'</td><td>'+(r.absent?'<span class="pill p-bad">'+r.absent+'</span>':'0')+'</td><td>'+(r.lateN?'<span class="pill p-warn">'+r.lateN+' dəfə · '+hmin(r.lateM)+'</span>':'—')+'</td><td class="hide-m">'+(r.earlyM?hmin(r.earlyM):'—')+'</td><td>'+hmin(r.work)+'</td></tr>';}).join('')+'</table>';});}
 function xlsx(rows,name){function go(){var ws=XLSX.utils.aoa_to_sheet(rows);var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Tabel');XLSX.writeFile(wb,name);}
  if(window.XLSX)return go();var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=go;document.head.appendChild(s);}
-function exportMonth(){monthRows(function(R,m){xlsx([['İşçi','Vəzifə','Plan günləri','Gəlib','Gəlməyib','Gecikmə sayı','Gecikmə (dəq)','Tez çıxma (dəq)','İşlənib (saat)']].concat(R.map(function(r){return [r.e.full_name,(posOf(r.e)||{}).title||'',r.plan,r.came,r.absent,r.lateN,r.lateM,r.earlyM,Math.round(r.work/6)/10];})),'tabel-'+m+'.xlsx');});}
+function exportMonth(){monthRows(function(R,m){xlsx([['İşçi','Vəzifə','Plan günləri','Gəlib','İcazəli','Gəlməyib','Gecikmə sayı','Gecikmə (dəq)','Tez çıxma (dəq)','İşlənib (saat)']].concat(R.map(function(r){return [r.e.full_name,(posOf(r.e)||{}).title||'',r.plan,r.came,r.leave,r.absent,r.lateN,r.lateM,r.earlyM,Math.round(r.work/6)/10];})),'tabel-'+m+'.xlsx');});}
 function exportDay(){var d=$('dDay').value;var att=renderDay._att||[];xlsx([['İşçi','Gəliş','Çıxış','Gecikmə (dəq)','Tez çıxma (dəq)','Qeyd']].concat(EMPS.filter(function(e){return e.active;}).map(function(e){var a=att.find(function(x){return x.employee_id===e.id;})||{};return [e.full_name,hm(a.check_in),hm(a.check_out),a.late_min||0,a.early_min||0,a.note||''];})),'davamiyyet-'+d+'.xlsx');}
 
 /* ---------- ŞTAT ---------- */
