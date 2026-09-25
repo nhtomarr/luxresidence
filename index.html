@@ -1191,7 +1191,8 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
  function floorUnits(bn,floor){
   var b=salesForBina(bn);if(!b||!b.rows)return [];
   var arr=b.rows[floor]||b.rows[String(floor)]||[];
-  return arr.filter(function(u){return u.st!=='other';}); // qeyri-yaşayış/zirzəmi çıxarılır
+  // otaq sayı saytda kataloqdakı satış adına görə göstərilir (məs: sənəddə 3, satışda 4 otaq)
+  return arr.filter(function(u){return u.st!=='other';}).map(function(u){var ar=parseFloat(u.area)||0;var c=(typeof APARTMENTS!=='undefined'?APARTMENTS:[]).find(function(x){return Math.abs((parseFloat(x.area)||0)-ar)<0.05;});return c&&c.rooms?Object.assign({},u,{room:String(c.rooms)}):u;});
  }
  function drawTower(){
   var svg=document.getElementById('towerSvg');if(!svg)return;

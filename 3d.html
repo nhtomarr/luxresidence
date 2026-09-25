@@ -148,7 +148,7 @@ const qs=new URLSearchParams(location.search);if(BINALAR.includes(qs.get('bina')
 /* ---------- data (yalnız satışda / satılıb) ---------- */
 function sanitize(raw){const out={};Object.keys(raw||{}).forEach(bn=>{const b=raw[bn];if(!b||!b.rows)return;const nb={rows:{}};Object.keys(b.rows).forEach(f=>{nb.rows[f]=(b.rows[f]||[]).map(u=>({n:u.n,room:u.room,area:u.area,st:u.s==='satisda'?'available':((u.s==='qeyri'||u.s==='zirzemi')?'other':'sold')}));});out[bn]=nb;});return out;}
 function salesFor(bn){if(!SALES)return null;if(SALES[bn])return SALES[bn];const num=bn.replace(/\D/g,'');for(const k of Object.keys(SALES)){const parts=k.replace(/Bina/gi,'').split(/[,\s]+/).filter(Boolean);if(parts.includes(num))return SALES[k];}return null;}
-function units(f){const b=salesFor(CUR);if(!b||!b.rows)return[];return (b.rows[f]||b.rows[String(f)]||[]).filter(u=>u.st!=='other').slice().sort((a,b)=>(+a.n||0)-(+b.n||0));}
+function units(f){const b=salesFor(CUR);if(!b||!b.rows)return[];return (b.rows[f]||b.rows[String(f)]||[]).filter(u=>u.st!=='other').map(u=>{const ar=parseFloat(u.area)||0,c=APTS.find(x=>Math.abs((parseFloat(x.area)||0)-ar)<0.05);return c&&c.rooms?Object.assign({},u,{room:String(c.rooms)}):u;}).sort((a,b)=>(+a.n||0)-(+b.n||0));}
 function match(u){return OFF()||FILTER==='all'||u.st===FILTER;}
 function ord(n){const l=n%10,t=n%100;if(t===10||t===30)return n+'-cu';if(l===0)return n+(t===20||t===50||t===70||t===80?'-ci':'-cı');return n+({1:'-ci',2:'-ci',3:'-cü',4:'-cü',5:'-ci',6:'-cı',7:'-ci',8:'-ci',9:'-cu'})[l];}
 function findApt(u){const a=parseFloat(u.area)||0;return APTS.find(x=>!x.hidden&&Math.abs((parseFloat(x.area)||0)-a)<0.5);}
