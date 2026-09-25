@@ -108,6 +108,8 @@ body:not(.is-mgr) .mgr-only{display:none!important}
 .ann.unread{border-left:4px solid var(--acc)}
 .evr{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}.evr:first-of-type{border-top:none}.evr.mine .evt{color:var(--acc)}
 .evt{width:52px;font-weight:800;font-size:15px;line-height:1.2}
+.lead.breach{border-left:4px solid var(--bad)}
+a.btn{text-decoration:none}
 </style>
 </head>
 <body>
@@ -159,6 +161,9 @@ body:not(.is-mgr) .mgr-only{display:none!important}
    <div class="card"><div class="row" style="justify-content:space-between"><h3 id="lvListH">Mənim sorğularım</h3>
     <select id="lvF" class="btn ghost sm" style="display:none"><option value="all">Hamısı</option><option value="pending">Gözləyir</option><option value="approved">Təsdiqlənib</option><option value="rejected">Rədd edilib</option></select></div><div class="tbl" id="lvList"></div></div>
   </section>
+  <!-- MÜRACİƏTLƏR (sayt) -->
+  <section class="view" id="v-leads"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">Saytdan müraciətlər</h2><select id="ldF" class="btn ghost sm"><option value="open">Cavabsız</option><option value="mine">Mənimkilər</option><option value="all">Hamısı</option></select></div>
+   <div class="grid g4" id="ldKpi" style="margin-bottom:14px"></div><div id="ldList"></div><div class="card mgr-only"><h3>Menecerlər üzrə (bu ay)</h3><div class="tbl" id="ldMgr"></div></div></section>
   <!-- ELANLAR -->
   <section class="view" id="v-news"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">Elanlar</h2><button class="btn mgr-only" onclick="openAnn()">+ Elan</button></div><div id="annList"></div></section>
   <!-- TƏQVİM -->
@@ -228,16 +233,16 @@ luxAuth({perms:['ofis','ofis_admin'],title:'Baş Ofis',sub:'İşçi hesabınızl
 function start(){$('app').style.display='';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
  $('meBox').innerHTML='<b>'+esc(ME.full_name||ME.email)+'</b>'+(MGR?'Rəhbər':'İşçi');
  $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href='/ofis';});};
- var tabs=[['today','Bu gün']];if(MGR)tabs.push(['panel','Panel']);tabs.push(['tasks','Tapşırıqlar'],['leave','Sorğular'],['news','Elanlar'],['cal','Təqvim']);if(MGR){tabs.push(['team','Davamiyyət'],['staff','Ştat'],['set','Ayarlar']);}
+ var tabs=[['today','Bu gün']];if(MGR)tabs.push(['panel','Panel']);tabs.push(['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['news','Elanlar'],['cal','Təqvim']);if(MGR){tabs.push(['team','Davamiyyət'],['staff','Ştat'],['set','Ayarlar']);}
  document.body.classList.toggle('is-mgr',MGR);
  $('tabs').innerHTML=tabs.map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');
  $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};
  $('dDay').value=today();$('mMonth').value=today().slice(0,7);$('dDay').onchange=renderDay;$('mMonth').onchange=renderMonth;$('tkFilter').onchange=renderKanban;
  setInterval(tick,1000);tick();
- loadAll().then(function(){var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':'today');if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
+ loadAll().then(function(){if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':'today');if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
 }
 function show(v){document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
- if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='news')renderNews();if(v==='cal')renderCal();window.scrollTo(0,0);}
+ if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();window.scrollTo(0,0);}
 function tick(){var n=new Date();$('tClock').textContent=n.toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit',second:'2-digit'});$('tDate').textContent=n.toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});}
 function loadAll(){return Promise.all([
   run(sb.from('office_employees').select('*').order('full_name')),run(sb.from('office_departments').select('*').order('sort').order('id')),run(sb.from('office_positions').select('*').order('sort').order('id')),
@@ -452,6 +457,29 @@ function hrUpcoming(){var out=[],t=today();EMPS.filter(function(e){return e.acti
   if(e.contract_end&&e.contract_end>=t){var n3=dDays(t,e.contract_end)-1;if(n3<=30)out.push({n:n3,txt:'📄 '+e.full_name+' — müqavilə bitir',d:e.contract_end.slice(5)});}});return out.sort(function(a,b){return a.n-b.n;});}
 function renderHrBoxes(){var u=hrUpcoming();var p=$('pHr');if(p)p.innerHTML=u.length?u.map(function(x){return '<div class="row" style="justify-content:space-between;padding:6px 0"><span>'+esc(x.txt)+'</span><span class="pill '+(x.n===0?'p-ok':x.n<=7?'p-warn':'p-mut')+'">'+(x.n===0?'bu gün':x.n+' gün sonra')+' · '+x.d.slice(3)+'.'+x.d.slice(0,2)+'</span></div>';}).join(''):'<div class="empty">Yaxın 30 gündə yoxdur</div>';
  var t=$('tHr');if(t){var bd=u.filter(function(x){return x.n===0&&x.txt.indexOf('🎂')===0;});t.innerHTML=bd.length?'<div class="card" style="background:#fef3c7;border-color:#fde68a"><b>'+bd.map(function(x){return esc(x.txt.replace(' — ad günü',''));}).join(', ')+'</b> — bu gün ad günüdür 🎉</div>':'';}}
+
+
+/* ---------- SAYTDAN MÜRACİƏTLƏR ---------- */
+var LEADS=[];var SLA=30;
+function minsBetween(a,b){return Math.round((new Date(b)-new Date(a))/60000);}
+function renderLeads(){run(sb.from('lux_leads').select('*').order('created_at',{ascending:false}).limit(300)).then(function(L){LEADS=L;var f=$('ldF').value;$('ldF').onchange=renderLeads;
+ var m=today().slice(0,7),now=new Date().toISOString();
+ var list=L.filter(function(l){if(f==='open')return l.status==='yeni'&&(MGR||(EMP&&l.assigned_to===EMP.id));if(f==='mine')return EMP&&l.assigned_to===EMP.id;return true;});
+ var mon=L.filter(function(l){return String(l.created_at).slice(0,7)===m;}),resp=mon.filter(function(l){return l.first_response_at&&l.assigned_at;});
+ var avg=resp.length?Math.round(resp.reduce(function(s2,l){return s2+minsBetween(l.assigned_at,l.first_response_at);},0)/resp.length):0;
+ var breach=mon.filter(function(l){return l.assigned_at&&((l.first_response_at&&minsBetween(l.assigned_at,l.first_response_at)>SLA)||(!l.first_response_at&&l.status==='yeni'&&minsBetween(l.assigned_at,now)>SLA));}).length;
+ $('ldKpi').innerHTML=kpi(L.filter(function(l){return l.status==='yeni';}).length,'cavabsız',L.some(function(l){return l.status==='yeni';})?'bad':'ok')+kpi(mon.length,'bu ay müraciət')+kpi(hmin(avg),'orta cavab müddəti',avg>SLA?'warn':'ok')+kpi(breach,SLA+' dəq-dən gec cavab',breach?'warn':'ok');
+ $('ldList').innerHTML=list.length?list.map(function(l){var wait=l.status==='yeni'&&l.assigned_at?minsBetween(l.assigned_at,now):null;var ph=String(l.phone||'').replace(/[^\d+]/g,'');
+  return '<div class="card lead'+(wait!==null&&wait>SLA?' breach':'')+'"><div class="row" style="justify-content:space-between;align-items:flex-start"><div><b style="font-size:16px">'+esc(l.name||'—')+'</b> '+(l.status==='yeni'?'<span class="pill p-bad">cavabsız'+(wait!==null?' · '+hmin(wait):'')+'</span>':'<span class="pill p-ok">cavablandı'+(l.first_response_at&&l.assigned_at?' · '+hmin(minsBetween(l.assigned_at,l.first_response_at)):'')+'</span>')+
+   '<div class="muted small">'+new Date(l.created_at).toLocaleString('az-AZ',{timeZone:TZ})+(l.subject?' · '+esc(l.subject):'')+(l.apartment?' · 🏠 '+esc(l.apartment):'')+'</div></div>'+
+   '<div class="row">'+(ph?'<a class="btn sm" href="tel:'+esc(ph)+'">📞 Zəng</a><a class="btn ghost sm" target="_blank" rel="noopener" href="https://wa.me/'+esc(ph.replace('+',''))+'">WhatsApp</a>':'')+(l.status==='yeni'?'<button class="btn ghost sm" onclick="leadDone(\''+l.id+'\')">✓ Cavablandı</button>':'')+'</div></div>'+
+   (l.message?'<p style="margin-top:8px;white-space:pre-line">'+esc(l.message)+'</p>':'')+'<div class="row small muted" style="margin-top:8px">Məsul: '+(MGR?'<select onchange="leadAssign(\''+l.id+'\',this.value)" class="btn ghost sm"><option value="">— yoxdur —</option>'+EMPS.filter(function(e){return e.active;}).map(function(e){return '<option value="'+e.id+'"'+(e.id===l.assigned_to?' selected':'')+'>'+esc(e.full_name)+'</option>';}).join('')+'</select>':'<b>'+esc(empName(l.assigned_to))+'</b>')+'</div></div>';}).join(''):'<div class="card empty">'+(f==='open'?'Cavabsız müraciət yoxdur 👏':'Müraciət yoxdur')+'</div>';
+ if(MGR){var rot=EMPS.filter(function(e){return e.active&&(e.lead_rotation||mon.some(function(l){return l.assigned_to===e.id;}));});
+  $('ldMgr').innerHTML=rot.length?'<table><tr><th>Menecer</th><th>Müraciət</th><th>Cavabsız</th><th>Orta cavab</th><th>Növbədə</th></tr>'+rot.map(function(e){var x=mon.filter(function(l){return l.assigned_to===e.id;}),r=x.filter(function(l){return l.first_response_at&&l.assigned_at;});var a=r.length?Math.round(r.reduce(function(s2,l){return s2+minsBetween(l.assigned_at,l.first_response_at);},0)/r.length):null;
+   return '<tr><td><b>'+esc(e.full_name)+'</b></td><td>'+x.length+'</td><td>'+(x.filter(function(l){return l.status==='yeni';}).length||'0')+'</td><td>'+(a===null?'—':hmin(a))+'</td><td>'+(e.lead_rotation?'<span class="pill p-ok">bəli</span>':'<span class="pill p-mut">xeyr</span>')+'</td></tr>';}).join('')+'</table>':'<div class="empty">Növbədə menecer yoxdur. Ştat → işçi kartında “müraciətləri növbə ilə payla” işarələyin.</div>';}
+ }).catch(err);}
+function leadDone(id){run(sb.from('lux_leads').update({status:'cavablandı'}).eq('id',id)).then(function(){toast('Qeyd olundu');renderLeads();}).catch(err);}
+function leadAssign(id,eid){run(sb.from('lux_leads').update({assigned_to:+eid||null,assigned_at:new Date().toISOString(),sla_alerted:false}).eq('id',id)).then(function(){toast('Təyin olundu');if(eid)notify('lead_reassigned',{id:id});renderLeads();}).catch(err);}
 
 /* ---------- TELEGRAM ---------- */
 var TGBOT=null;
