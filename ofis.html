@@ -281,7 +281,7 @@ function toast(t){var e=$('toast');e.textContent=t;e.classList.add('on');clearTi
 function today(){return new Intl.DateTimeFormat('en-CA',{timeZone:TZ}).format(new Date());}
 function hm(ts){return ts?new Date(ts).toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit'}):'—';}
 function isoDow(dstr){var d=new Date(dstr+'T12:00:00Z').getUTCDay();return d===0?7:d;}
-function hmin(m){m=m||0;var h=Math.floor(m/60),mm=m%60;return h?(h+' s '+mm+' dəq'):(mm+' dəq');}
+function hmin(m){m=m||0;var h=Math.floor(m/60),mm=m%60;return h?(h+' saat'+(mm?' '+mm+' dəq':'')):(mm+' dəq');}
 function empName(id){var e=EMPS.find(function(x){return x.id===id;});return e?e.full_name:'—';}
 function posOf(e){var p=POS.find(function(x){return x.id===e.position_id;});return p;}
 function err(e){toast((e&&e.message)||'Xəta baş verdi');console.warn(e);}
@@ -290,7 +290,7 @@ function run(q){return q.then(function(r){if(r.error)throw r.error;return r.data
 /* ---------- start ---------- */
 luxAuth({perms:['ofis','ofis_admin','ofis_owner'],title:'Baş Ofis',sub:'İşçi hesabınızla daxil olun',logo:false,noAdminLink:true,accent:'#2563eb',bg:'linear-gradient(135deg,#e2e8f0,#f8fafc)',onReady:function(client,me){sb=client;ME=me;OWNER=(me.perms||[]).indexOf('ofis_owner')>=0;PREVIEW=!!(me.is_admin&&new URLSearchParams(location.search).get('baxis')==='sahibkar');if(PREVIEW)OWNER=true;MGR=me.is_admin||OWNER||(me.perms||[]).indexOf('ofis_admin')>=0;start();}});
 function start(){$('app').style.display='';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
- $('meBox').innerHTML='<b>'+esc(PREVIEW?'Afiq Rəhmanov':(ME.full_name||ME.email))+'</b>'+(ME.is_admin?'Sistem admini':OWNER?'Sahibkar':MGR?'HR rəhbəri':'İşçi');
+ $('meBox').innerHTML='<b>'+esc(PREVIEW?'Afiq Rəhmanov':(ME.full_name||ME.email))+'</b>'+(PREVIEW?'Sahibkar':ME.is_admin?'Sistem admini':OWNER?'Sahibkar':MGR?'HR rəhbəri':'İşçi');
  $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href='/ofis';});};
  if(ME.is_admin){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';pv.onclick=function(){location.href=PREVIEW?'/ofis':'/ofis?baxis=sahibkar';};$('outBtn').parentNode.insertBefore(pv,$('outBtn'));}
  if(PREVIEW){var bn=document.createElement('div');bn.className='pvbar';bn.innerHTML='👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.';document.body.insertBefore(bn,$('app'));}
@@ -626,8 +626,8 @@ function renderOwner(){var d=today(),m=d.slice(0,7);
    var appr=rows.filter(function(x){return x.pp!==null;}),avg=appr.length?Math.round(appr.reduce(function(s2,x){return s2+x.pp;},0)/appr.length):0,overAll=rows.reduce(function(s2,x){return s2+x.over.length;},0);
    var monLate=R.reduce(function(s2,x){return s2+x.lateN;},0),monLateM=R.reduce(function(s2,x){return s2+x.lateM;},0),monAbs=R.reduce(function(s2,x){return s2+x.absent;},0);
    function tile(v,l,sub,c,k){return '<div class="btile '+c+'" onclick="ownList(\''+k+'\')"><b>'+v+'</b><span>'+l+'</span>'+(sub?'<small>'+sub+'</small>':'')+'</div>';}
-   $('bKpi').innerHTML=tile(came.length+'/'+work.length,'bu gün işdədir',onLv.length?onLv.length+' nəfər icazəli':'','ok','came')+tile(late.length,'bu gün gecikib','bu ay cəmi '+monLate+' dəfə, '+hmin(monLateM),late.length?'warn':'ok','late')+tile(absent.length,'bu gün gəlməyib','bu ay cəmi '+monAbs+' gün',absent.length?'bad':'ok','absent')+
-    tile(avg+'%','aylıq plan icrası',appr.length+'/'+act.length+' nəfərin planı təsdiqlənib',avg>=70?'ok':avg>=40?'warn':'bad','plans')+tile(overAll,'vaxtı keçmiş iş',TASKS.filter(function(t){return t.status!=='done';}).length+' açıq tapşırıq',overAll?'bad':'ok','over')+tile(TASKS.filter(function(t){return t.done_at&&String(t.done_at).slice(0,7)===m;}).length,'bu ay bitmiş iş','',  'ok','done');
+   $('bKpi').innerHTML=tile(came.length+'/'+work.length,'nəfər bu gün işdədir',onLv.length?'Bundan başqa '+onLv.length+' nəfər icazəlidir':'','ok','came')+tile(late.length,'nəfər bu gün gecikib','Bu ay bütün işçilər birlikdə '+monLate+' dəfə gecikib (cəmi '+hmin(monLateM)+')',late.length?'warn':'ok','late')+tile(absent.length,'nəfər bu gün gəlməyib',monAbs?'Bu ay bütün işçilər birlikdə cəmi '+monAbs+' gün xəbərsiz gəlməyib':'Bu ay xəbərsiz gəlməyən olmayıb',absent.length?'bad':'ok','absent')+
+    tile(avg+'%','aylıq planlar yerinə yetirilib',act.length+' işçidən '+appr.length+'-nin planı təsdiqlənib',avg>=70?'ok':avg>=40?'warn':'bad','plans')+tile(overAll,'işin son tarixi keçib','Hələ bitməmiş '+TASKS.filter(function(t){return t.status!=='done';}).length+' işdən '+overAll+'-i gecikir',overAll?'bad':'ok','over')+tile(TASKS.filter(function(t){return t.done_at&&String(t.done_at).slice(0,7)===m;}).length,'iş bu ay tamamlanıb','','ok','done');
    rows.sort(function(a,b){var o={'g-bad':0,'g-warn':1,'g-ok':2};return o[a.g[1]]-o[b.g[1]]||a.e.full_name.localeCompare(b.e.full_name);});
    var tbl='<div class="card otbl"><div class="row" style="justify-content:space-between"><h3>İşçilər</h3><span class="muted small">Sətrə toxunun — ətraflı</span></div><div class="tbl"><table><tr><th>İşçi</th><th>Bu gün</th><th>Bu ay gəlib</th><th>Gecikmə</th><th>Aylıq plan</th><th>Tapşırıqlar</th><th>Qiymət</th></tr>'+rows.map(function(x){var e=x.e,r2=x.r;
      var tdy=leaveOn(e.id,d)?'<span class="pill p-acc">'+LT[leaveOn(e.id,d).type]+'</span>':x.a&&x.a.check_in?(x.a.late_min?'<span class="pill p-warn">'+hm(x.a.check_in)+' · '+x.a.late_min+' dəq gec</span>':'<span class="pill p-ok">'+hm(x.a.check_in)+'</span>'):(work.indexOf(e)>=0?'<span class="pill p-bad">gəlməyib</span>':'<span class="pill p-mut">istirahət</span>');
