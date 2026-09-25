@@ -1183,11 +1183,12 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
   var keys=Object.keys(S);for(var i=0;i<keys.length;i++){var parts=keys[i].replace(/Bina/gi,'').split(/[,\s]+/).filter(Boolean);var num=bn.replace(/\D/g,'');if(parts.indexOf(num)>=0)return S[keys[i]];}
   return null;
  }
+ function _aptHas(x,ar,tol){return [x.area].concat(x.alt||[]).some(function(v){return Math.abs((parseFloat(v)||0)-ar)<tol;});}
  function floorUnits(bn,floor){
   var b=salesForBina(bn);if(!b||!b.rows)return [];
   var arr=b.rows[floor]||b.rows[String(floor)]||[];
   // otaq sayı saytda kataloqdakı satış adına görə göstərilir (məs: sənəddə 3, satışda 4 otaq)
-  return arr.filter(function(u){return u.st!=='other';}).map(function(u){var ar=parseFloat(u.area)||0;var c=(typeof APARTMENTS!=='undefined'?APARTMENTS:[]).find(function(x){return Math.abs((parseFloat(x.area)||0)-ar)<0.05;});return c&&c.rooms?Object.assign({},u,{room:String(c.rooms)}):u;});
+  return arr.filter(function(u){return u.st!=='other';}).map(function(u){var ar=parseFloat(u.area)||0;var c=(typeof APARTMENTS!=='undefined'?APARTMENTS:[]).find(function(x){return _aptHas(x,ar,0.05);});return c&&c.rooms?Object.assign({},u,{room:String(c.rooms)}):u;});
  }
  function drawTower(){
   var svg=document.getElementById('towerSvg');if(!svg)return;
@@ -1253,7 +1254,7 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
  }
  // mənzilə klik → kataloqda uyğun sahəli mənzili aç
  window._secApt=function(area){
-  var a=APARTMENTS.find(function(x){return !x.hidden&&Math.abs((parseFloat(x.area)||0)-area)<0.5;});
+  var a=APARTMENTS.find(function(x){return !x.hidden&&_aptHas(x,area,0.05);})||APARTMENTS.find(function(x){return !x.hidden&&_aptHas(x,area,0.5);});
   if(a){_go('apt-'+a.id);}else{_go('planlar');}
  };
  // hadisələr
