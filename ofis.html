@@ -102,6 +102,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
     <div class="stat-line" id="tStats"></div></div>
    <div class="card" id="noEmp" style="display:none"><b>Hesabınız işçi kartına bağlanmayıb.</b><p class="muted small">Gəliş-gediş qeydi üçün rəhbər sizi "Ştat" bölməsində işçi kartına bağlamalıdır.</p></div>
    <div class="card"><div class="row" style="justify-content:space-between"><h3>Mənim tapşırıqlarım</h3><button class="btn sm" onclick="openTask()">+ Tapşırıq</button></div><div id="tMyTasks"></div></div>
+   <div class="card" id="tgCard"></div>
    <div class="card"><h3>Bu ay</h3><div id="tMonth" class="small muted"></div></div>
   </section>
   <!-- PANEL (rəhbər) -->
@@ -146,6 +147,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
   <!-- AYARLAR -->
   <section class="view" id="v-set">
    <h2>Ayarlar</h2>
+   <div class="card"><h3>Telegram bildirişləri</h3><div id="tgSet"></div></div>
    <div class="card"><h3>Ofisin yeri</h3><p class="muted small">Gəliş-gediş yalnız bu nöqtəyə yaxın olanda qəbul edilir.</p>
     <div class="grid g2"><div class="field"><label>Enlik (lat)</label><input id="cLat" inputmode="decimal"></div><div class="field"><label>Uzunluq (lng)</label><input id="cLng" inputmode="decimal"></div></div>
     <button class="btn ghost sm" onclick="useHere()">📍 Hazırkı yerimi ofis kimi götür</button>
@@ -209,7 +211,7 @@ function loadAll(){return Promise.all([
 
 /* ---------- BU GÜN / check-in ---------- */
 var MYDAY=null;
-function renderToday(){$('noEmp').style.display=EMP?'none':'';
+function renderToday(){$('noEmp').style.display=EMP?'none':'';renderTgCard();
  var my=TASKS.filter(function(t){return EMP&&t.assignee_id===EMP.id&&t.status!=='done';});
  $('tMyTasks').innerHTML=my.length?my.map(taskRow).join(''):'<div class="empty">Açıq tapşırığınız yoxdur 🎉</div>';
  if(!EMP){$('tStatus').textContent='';$('tBtns').innerHTML='';$('tStats').innerHTML='';return;}
@@ -293,12 +295,31 @@ function profName(uid){var p=PROFS.find(function(x){return x.user_id===uid;});if
 function saveTask(id){var b={title:$('fT').value.trim(),description:$('fD').value.trim(),assignee_id:+$('fA').value||null,due:$('fDue').value||null,priority:$('fP').value,status:$('fS').value};
  if(!b.title){toast('Başlıq yazın');return;}
  var q=id?sb.from('office_tasks').update(b).eq('id',id).select().single():sb.from('office_tasks').insert(Object.assign(b,{created_by:ME.user_id})).select().single();
- run(q).then(function(t){var i=TASKS.findIndex(function(x){return x.id===t.id;});if(i>=0)TASKS[i]=t;else TASKS.unshift(t);closeModal();toast('Yadda saxlanıldı');refreshCurrent();}).catch(err);}
+ var prevA=id?(TASKS.find(function(x){return x.id===id;})||{}).assignee_id:null;
+ run(q).then(function(t){var i=TASKS.findIndex(function(x){return x.id===t.id;});if(i>=0)TASKS[i]=t;else TASKS.unshift(t);closeModal();toast('Yadda saxlanıldı');refreshCurrent();if(t.assignee_id&&t.assignee_id!==prevA)notify('task_assigned',{id:t.id});}).catch(err);}
 function delTask(id){if(!confirm('Tapşırıq silinsin?'))return;run(sb.from('office_tasks').delete().eq('id',id)).then(function(){TASKS=TASKS.filter(function(x){return x.id!==id;});closeModal();refreshCurrent();}).catch(err);}
 function loadCm(id){run(sb.from('office_task_comments').select('*').eq('task_id',id).order('created_at')).then(function(c){$('cmList').innerHTML=c.length?c.map(function(x){return '<div class="cm"><b>'+esc(profName(x.author))+'</b> <span class="muted small">'+new Date(x.created_at).toLocaleString('az-AZ',{timeZone:TZ})+'</span><p>'+esc(x.body)+'</p></div>';}).join(''):'<div class="muted small">Hələ şərh yoxdur</div>';}).catch(err);}
-function addCm(id){var v=$('cmNew').value.trim();if(!v)return;run(sb.from('office_task_comments').insert({task_id:id,body:v,author:ME.user_id})).then(function(){$('cmNew').value='';loadCm(id);}).catch(err);}
+function addCm(id){var v=$('cmNew').value.trim();if(!v)return;var mentions=EMPS.filter(function(e){return e.active&&v.indexOf('@'+e.full_name.split(' ')[0])>=0;}).map(function(e){return e.id;});
+ run(sb.from('office_task_comments').insert({task_id:id,body:v,author:ME.user_id})).then(function(){$('cmNew').value='';loadCm(id);notify('task_comment',{id:id,text:v,mentions:mentions});}).catch(err);}
 function refreshCurrent(){var v=(document.querySelector('#tabs button.on')||{}).dataset;show(v&&v.v||'today');}
 
+
+
+/* ---------- TELEGRAM ---------- */
+var TGBOT=null;
+function notify(action,payload){try{sb.functions.invoke('office-telegram',{body:Object.assign({action:action},payload||{})}).catch(function(){});}catch(e){}}
+function tgBot(){return TGBOT!==null?Promise.resolve(TGBOT):sb.rpc('office_tg_bot').then(function(r){TGBOT=(r&&r.data)||'';return TGBOT;});}
+function renderTgCard(){var c=$('tgCard');if(!c)return;if(!EMP){c.style.display='none';return;}c.style.display='';
+ tgBot().then(function(bot){if(EMP.tg_chat_id){c.innerHTML='<div class="row" style="justify-content:space-between"><div><h3 style="margin:0">🔔 Telegram bildirişləri aktivdir</h3><div class="muted small">Tapşırıq, son tarix və sorğu bildirişləri Telegram-a gəlir.</div></div><button class="btn ghost sm" onclick="tgTest()">Test göndər</button></div>';return;}
+  if(!bot){c.innerHTML='<h3>🔔 Telegram bildirişləri</h3><p class="muted small">Rəhbər hələ Telegram botunu qoşmayıb.</p>';return;}
+  c.innerHTML='<div class="row" style="justify-content:space-between"><div><h3 style="margin:0">🔔 Telegram bildirişlərini aktiv et</h3><div class="muted small">Yeni tapşırıq, son tarix xatırlatması, sorğu cavabı telefonuna gəlsin.</div></div><a class="btn" target="_blank" rel="noopener" href="https://t.me/'+encodeURIComponent(bot)+'?start='+EMP.tg_code+'">Telegram-ı qoş</a></div><p class="muted small" style="margin-top:8px">Açılan Telegram-da <b>START</b> basın, sonra bu səhifəni yeniləyin.</p>';});}
+function tgTest(){sb.functions.invoke('office-telegram',{body:{action:'test'}}).then(function(r){toast(r&&r.data&&r.data.ok?'Göndərildi — Telegram-a baxın':'Göndərilmədi');});}
+function renderTgSet(){var c=$('tgSet');if(!c)return;var bot=(CFG&&CFG.tg_bot)||'';
+ c.innerHTML=(bot?'<p>✅ Qoşulub: <b>@'+esc(bot)+'</b></p><p class="muted small">İşçilər "Bu gün" bölməsindən <b>“Telegram-ı qoş”</b> basıb aktiv edirlər. Rəhbərlər hər iş günü 09:30-da səhər xülasəsi alır; 19:00-da çıxışı unudanlara xatırlatma gedir; ad günü, sınaq və müqavilə bitmə xəbərdarlıqları 08:00-da gəlir.</p><div class="row" style="margin-top:8px"><button class="btn ghost sm" onclick="tgTest()">Özümə test göndər</button></div><details style="margin-top:12px"><summary class="small muted" style="cursor:pointer">Botu dəyiş</summary>':'<ol class="small" style="margin:0 0 10px 18px;line-height:1.7"><li>Telegram-da <b>@BotFather</b>-ı açın → <b>/newbot</b></li><li>Bota ad verin (məs: “Baş Ofis”) və istifadəçi adı (məs: <i>sirket_ofis_bot</i>)</li><li>BotFather-in verdiyi <b>token</b>-i aşağıya yapışdırın</li></ol>')+
+  '<div class="row"><input id="tgTok" class="btn ghost" style="flex:1;min-width:220px;text-align:left;font-weight:500" placeholder="123456789:AA..." autocomplete="off"><button class="btn" onclick="tgSetup()">Qoş</button></div>'+(bot?'</details>':'');}
+function tgSetup(){var t=$('tgTok').value.trim();if(!/^\d+:[\w-]{30,}$/.test(t))return toast('Token formatı səhvdir');toast('Qoşulur…');
+ sb.functions.invoke('office-telegram',{body:{action:'setup',token:t}}).then(function(r){if(r.error){var c=r.error.context;return (c&&c.json?c.json():Promise.resolve({})).then(function(j){throw new Error(j.error||r.error.message);});}if(r.data&&r.data.error)throw new Error(r.data.error);
+  CFG.tg_bot=r.data.bot;TGBOT=r.data.bot;renderTgSet();toast('Bot qoşuldu: @'+r.data.bot);}).catch(err);}
 
 /* ---------- SORĞULAR (məzuniyyət, icazə) ---------- */
 function dDays(a,b){return Math.round((new Date(b+'T12:00:00Z')-new Date(a+'T12:00:00Z'))/864e5)+1;}
@@ -412,7 +433,7 @@ function showCreds(name,em,pw){var link=location.origin+'/ofis';var txt=name+', 
 function delEmp(id){if(!confirm('İşçi kartı və onun davamiyyət tarixçəsi silinsin? (İşdən çıxıbsa, "Aktiv" işarəsini söndürmək daha yaxşıdır)'))return;run(sb.from('office_employees').delete().eq('id',id)).then(function(){EMPS=EMPS.filter(function(x){return x.id!==id;});closeModal();renderStaff();}).catch(err);}
 
 /* ---------- AYARLAR / QR ---------- */
-function renderSet(){var c=CFG||{};document.querySelectorAll('input[name=qmode]').forEach(function(r){r.checked=(r.value==='static')===!!c.static_qr;});$('cLat').value=c.lat||'';$('cLng').value=c.lng||'';$('cRad').value=c.radius_m||150;$('cGrace').value=c.grace_min||10;$('cGeo').checked=c.require_geo!==false;}
+function renderSet(){var c=CFG||{};renderTgSet();document.querySelectorAll('input[name=qmode]').forEach(function(r){r.checked=(r.value==='static')===!!c.static_qr;});$('cLat').value=c.lat||'';$('cLng').value=c.lng||'';$('cRad').value=c.radius_m||150;$('cGrace').value=c.grace_min||10;$('cGeo').checked=c.require_geo!==false;}
 function useHere(){if(!navigator.geolocation)return toast('Brauzer yeri dəstəkləmir');toast('Yer alınır…');navigator.geolocation.getCurrentPosition(function(p){$('cLat').value=p.coords.latitude.toFixed(6);$('cLng').value=p.coords.longitude.toFixed(6);toast('Dəqiqlik: ±'+Math.round(p.coords.accuracy)+' m. "Yadda saxla" basın.');},function(){toast('Yer icazəsi verilmədi');},{enableHighAccuracy:true,timeout:15000});}
 function saveCfg(){var qm=(document.querySelector('input[name=qmode]:checked')||{}).value;var b={lat:parseFloat($('cLat').value)||null,lng:parseFloat($('cLng').value)||null,radius_m:+$('cRad').value||150,grace_min:+$('cGrace').value||0,require_geo:$('cGeo').checked,static_qr:qm==='static',updated_at:new Date().toISOString()};
  if(b.static_qr&&(b.lat==null||b.lng==null))return toast('Sabit QR üçün əvvəlcə ofisin yerini təyin edin');
