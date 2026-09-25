@@ -729,6 +729,38 @@ body.hidest .apt-badge,body.hidest .dr-badge,body.hidest .fg-status,body.hidest 
 .faq-cta b{font-family:var(--serif);font-size:18px}.faq-cta span{color:var(--muted);flex:1;min-width:200px}.faq-cta .btn{flex:none;min-width:0}
 @media(max-width:860px){.bp-hero{grid-template-columns:1fr;gap:18px}}
 .faq,.faq-cta{margin-left:auto!important;margin-right:auto!important}
+
+.finder-sec{padding-top:0!important}
+.finder{background:#fff;border:1px solid var(--line);border-radius:28px;padding:34px 36px 30px;box-shadow:0 30px 60px -40px rgba(74,42,24,.35)}
+.fd-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.fd-head h2{font-family:var(--serif);font-size:clamp(26px,3vw,38px);font-weight:700;margin:0}
+.fd-all{color:var(--rust);font-weight:600;font-size:15px}
+.fd-grid{display:grid;grid-template-columns:1fr 1.1fr 1.5fr;gap:22px;align-items:start}
+.fd-f label{display:block;font-size:13.5px;color:var(--muted);margin-bottom:8px;font-weight:500}
+.fd-sel{position:relative}
+.fd-sel select{width:100%;appearance:none;-webkit-appearance:none;background:#f8f3ee;border:1px solid var(--line);border-radius:14px;padding:15px 44px 15px 16px;font:600 16px var(--sans);color:var(--ink);cursor:pointer}
+.fd-sel::after{content:"";position:absolute;right:18px;top:50%;width:9px;height:9px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.fd-rooms{display:flex;background:#f8f3ee;border:1px solid var(--line);border-radius:14px;padding:5px;gap:4px}
+.fd-rooms button{flex:1;border:none;background:none;border-radius:10px;padding:11px 0;font:700 16px var(--sans);color:var(--ink);cursor:pointer;transition:.15s}
+.fd-rooms button:hover{background:#efe4d8}.fd-rooms button.on{background:var(--rust);color:#fff}
+.fd-ins{display:flex;background:#f8f3ee;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.fd-ins div{flex:1;display:flex;align-items:center;padding:0 14px}.fd-ins div+div{border-left:1px solid var(--line)}
+.fd-ins input{width:100%;border:none;background:none;font:700 16px var(--sans);color:var(--ink);padding:14px 0;outline:none;-moz-appearance:textfield}
+.fd-ins input::-webkit-outer-spin-button,.fd-ins input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.fd-ins span{color:var(--muted);font-size:13px}
+.fd-range{position:relative;height:22px;margin-top:8px}
+.fd-track{position:absolute;left:0;right:0;top:10px;height:3px;background:#e7dccf;border-radius:3px}
+.fd-track i{position:absolute;top:0;bottom:0;background:var(--rust);border-radius:3px}
+.fd-range input{position:absolute;left:0;right:0;top:0;width:100%;height:22px;margin:0;background:none;pointer-events:none;-webkit-appearance:none;appearance:none}
+.fd-range input::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--rust);pointer-events:auto;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.fd-range input::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--rust);pointer-events:auto;cursor:pointer}
+.fd-range input::-webkit-slider-runnable-track{background:none}.fd-range input::-moz-range-track{background:none}
+.fd-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:24px}
+.fd-note{font-size:13px;color:var(--muted)}
+.fd-go{display:inline-flex;align-items:center;gap:14px;border:none;background:var(--rust);color:#fff;border-radius:99px;padding:16px 30px;font:700 16px var(--sans);cursor:pointer;box-shadow:0 14px 28px -14px rgba(186,77,44,.7);transition:.15s}
+.fd-go:hover{background:var(--rust-deep)}.fd-go svg{width:22px;height:22px}.fd-go.dis{opacity:.55}
+@media(max-width:900px){.fd-grid{grid-template-columns:1fr 1fr}.fd-area{grid-column:1/-1}}
+@media(max-width:600px){.finder{padding:22px 18px 20px;border-radius:22px}.fd-grid{grid-template-columns:1fr;gap:16px}.fd-go{width:100%;justify-content:center}.fd-foot{flex-direction:column-reverse;align-items:stretch}.fd-note{text-align:center}}
 </style>
 <div id="maintScreen" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#2a1b12,#4a2a18);color:#f5ece1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;font-family:-apple-system,'Inter',system-ui,sans-serif">
   <div style="font-family:Georgia,serif;font-size:clamp(28px,6vw,52px);color:#e8c9a0;letter-spacing:.04em;margin-bottom:10px">LUX Residence</div>
@@ -779,6 +811,16 @@ body.hidest .apt-badge,body.hidest .dr-badge,body.hidest .fg-status,body.hidest 
     <div class="sec-head" style="justify-content:center;text-align:center;flex-direction:column;align-items:center;"><div class="eyebrow-d">Tərəfdaşlar</div><h2 class="h2">Etibarlı brendlərlə</h2></div>
     <div class="partners-box"><div class="marquee"><div class="mq-track" id="partnersMq"><div class="pt">TƏRƏFDAŞ 1</div><div class="pt">TƏRƏFDAŞ 2</div><div class="pt">TƏRƏFDAŞ 3</div><div class="pt">TƏRƏFDAŞ 4</div><div class="pt">TƏRƏFDAŞ 5</div><div class="pt">TƏRƏFDAŞ 6</div><div class="pt">TƏRƏFDAŞ 1</div><div class="pt">TƏRƏFDAŞ 2</div><div class="pt">TƏRƏFDAŞ 3</div><div class="pt">TƏRƏFDAŞ 4</div><div class="pt">TƏRƏFDAŞ 5</div><div class="pt">TƏRƏFDAŞ 6</div></div></div></div>
   </div></section>
+  <section class="sec finder-sec"><div class="wrap"><div class="finder">
+    <div class="fd-head"><h2>Xəyalınızdakı mənzili tapın</h2><a href="/planlar" class="fd-all">Bütün planlar →</a></div>
+    <div class="fd-grid">
+      <div class="fd-f"><label for="fdBina">Bina</label><div class="fd-sel"><select id="fdBina"><option value="">Bütün binalar</option></select></div></div>
+      <div class="fd-f"><label>Otaq sayı</label><div class="fd-rooms" id="fdRooms"><button type="button" data-r="1">1</button><button type="button" data-r="2">2</button><button type="button" data-r="3">3</button><button type="button" data-r="4">4+</button></div></div>
+      <div class="fd-f fd-area"><label>Sahə</label><div class="fd-ins"><div><input id="fdMin" type="number" inputmode="numeric" value="70" min="70" max="250"><span>m²</span></div><div><input id="fdMax" type="number" inputmode="numeric" value="250" min="70" max="250"><span>m²</span></div></div>
+        <div class="fd-range"><div class="fd-track"><i id="fdFill"></i></div><input id="fdRMin" type="range" min="70" max="250" step="1" value="70" aria-label="Minimum sahə"><input id="fdRMax" type="range" min="70" max="250" step="1" value="250" aria-label="Maksimum sahə"></div></div>
+    </div>
+    <div class="fd-foot"><span class="fd-note">Qiymət mənzilə və ödəniş şərtinə görə dəyişir — sorğu ilə.</span><button type="button" class="fd-go" id="fdGo"><span id="fdGoTxt">Axtarış et</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h15M14 6l6 6-6 6"/></svg></button></div>
+  </div></div></section>
   <section class="sec disc-sec"><div class="wrap">
     <div class="disc-banner"><div class="db-text"><div class="eyebrow-d">Kəşf edin</div><h2 class="db-title" id="cDiscTitle">Şəhərin yeni<br>ritmini yaşayın</h2><p id="cDiscText">Müasir memarlıq, yaşıllıq və şəhər mərkəzinə yaxınlıq — bir ünvanda.</p><div class="db-cta"><a class="btn btn-primary db-btn" href="/planlar">Mənzillərə bax</a><a class="db-link" href="/haqqimizda">Daha ətraflı →</a></div></div><div class="db-media"><img id="cDiscImg" class="bld" src="/assets/img6.webp" alt="LUX Residence"></div></div></div></section>
 
@@ -1122,6 +1164,26 @@ function renderFaq(){var box=document.getElementById('faqList');if(!box)return;
  function draw(){box.innerHTML=FAQ.map(function(f,i){return '<details class="faq-i"'+(i===0?' open':'')+'><summary>'+esc(f.q)+'</summary><p>'+esc(f.a)+'</p></details>';}).join('');
   var old=document.getElementById('ldFaq');if(old)old.remove();var sc=document.createElement('script');sc.type='application/ld+json';sc.id='ldFaq';sc.textContent=JSON.stringify({'@context':'https://schema.org','@type':'FAQPage',mainEntity:FAQ.map(function(f){return {'@type':'Question',name:f.q,acceptedAnswer:{'@type':'Answer',text:f.a}};})});document.head.appendChild(sc);}
  if(FAQ)return draw();box.innerHTML='<p class="muted">Yüklənir…</p>';fetch('/assets/faq.json').then(function(r){return r.json();}).then(function(d){FAQ=d;draw();}).catch(function(){box.innerHTML='';});}
+
+
+/* ===== Mənzil axtarışı (ana səhifə) ===== */
+(function(){var sel=document.getElementById('fdBina');if(!sel)return;var R=new Set();
+ var mn=document.getElementById('fdMin'),mx=document.getElementById('fdMax'),rmn=document.getElementById('fdRMin'),rmx=document.getElementById('fdRMax'),fill=document.getElementById('fdFill');
+ function fillBinas(){var have={};VAPT().forEach(function(a){String(a.bina||'').replace(/Bina/gi,'').split(/[^0-9]+/).filter(Boolean).forEach(function(k){have[k]=1;});});
+  var cur=sel.value;sel.innerHTML='<option value="">Bütün binalar</option>'+Object.keys(have).map(Number).sort(function(a,b){return a-b;}).map(function(k){return '<option value="Bina '+k+'">Bina '+k+'</option>';}).join('');sel.value=cur;}
+ function vals(){var a=+rmn.value,b=+rmx.value;if(a>b){var t=a;a=b;b=t;}return [a,b];}
+ function list(){var v=vals();return VAPT().filter(function(a){if(R.size){var r=a.rooms>=4?4:a.rooms;if(!R.has(r))return false;}var ar=parseFloat(a.area)||0;if(ar<v[0]||ar>v[1])return false;if(sel.value&&!inB(a,sel.value))return false;return true;});}
+ function upd(){var v=vals(),lo=+rmn.min,hi=+rmn.max;fill.style.left=((v[0]-lo)/(hi-lo)*100)+'%';fill.style.right=(100-(v[1]-lo)/(hi-lo)*100)+'%';
+  var n=list().length;document.getElementById('fdGoTxt').textContent=n?(n+' mənzil göstər'):'Uyğun mənzil yoxdur';document.getElementById('fdGo').classList.toggle('dis',!n);}
+ rmn.addEventListener('input',function(){mn.value=vals()[0];mx.value=vals()[1];upd();});rmx.addEventListener('input',function(){mn.value=vals()[0];mx.value=vals()[1];upd();});
+ function fromIn(){var a=Math.max(70,Math.min(250,+mn.value||70)),b=Math.max(70,Math.min(250,+mx.value||250));rmn.value=a;rmx.value=b;upd();}
+ mn.addEventListener('change',fromIn);mx.addEventListener('change',fromIn);sel.addEventListener('change',upd);
+ document.getElementById('fdRooms').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var r=+b.dataset.r;b.classList.toggle('on');R.has(r)?R.delete(r):R.add(r);upd();});
+ document.getElementById('fdGo').addEventListener('click',function(){var v=vals();F.rooms=new Set(R);F.min=v[0];F.max=v[1];F.bina=sel.value||null;F.status='all';
+  try{document.querySelectorAll('#fRooms button').forEach(function(b){b.classList.toggle('on',R.has(+b.dataset.r));});amin.value=v[0];amax.value=v[1];albl.textContent=v[0]+'–'+v[1]+' m²';document.getElementById('fStatus').value='all';}catch(e){}
+  renderCat();_go('planlar');});
+ fillBinas();upd();window._fdRefresh=function(){fillBinas();upd();};
+})();
 
 function route(){
   var p;
