@@ -10,7 +10,7 @@ export async function onRequest(ctx) {
     if (!a) { const r = await ctx.env.ASSETS.fetch(new URL('/', ctx.request.url)); return new Response(r.body, { status: 404, headers: r.headers }); }
     const bina = a.bina || 'LUX Residence';
     const title = `${a.rooms} otaqlı mənzil, ${a.area} m² — ${bina} | LUX Residence`;
-    const desc = `${bina}: ${a.rooms} otaqlı, ${a.area} m² sahəli yeni tikili mənzil. Yaşayışa hazır təhvil, Yasamal, Elmlər Akademiyası metrosu yaxınlığı. Qiymət sorğu ilə.`;
+    const desc = `${bina}: ${a.rooms} otaqlı, ${a.area} m² sahəli yeni tikili mənzil. Yasamal, Elmlər Akademiyası metrosu yaxınlığı. Qiymət sorğu ilə.`;
     const og = `/assets/og/apt-${id}.jpg`;
     const hasOg = await exists(ctx, og);
     const image = hasOg ? BASE + og : BASE + '/assets/og-cover.jpg';
