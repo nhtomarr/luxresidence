@@ -254,6 +254,9 @@ h1,h2,h3,h4{margin:0}
 .ufoot{display:flex;gap:8px;align-items:center;margin-top:10px}
 .btn.ghost{background:#f0e6da;color:var(--ink)}.btn.danger{background:#fbe9e7;color:#a13a2e}
 @media(max-width:760px){.urow{grid-template-columns:1fr auto}.urow .chips{grid-column:1/-1;order:3}.ugrid,.uperms{grid-template-columns:1fr}.arow{grid-template-columns:1fr}}
+
+.remember{display:flex;align-items:center;gap:8px;justify-content:flex-start;margin:4px 2px 6px;font-size:14px;color:var(--muted);cursor:pointer;user-select:none}.remember input{width:18px;height:18px;accent-color:var(--rust);margin:0;padding:0}
+#pin{text-align:left!important;letter-spacing:normal!important;font-size:15px!important;padding:14px 16px!important}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
@@ -265,14 +268,15 @@ h1,h2,h3,h4{margin:0}
 
 <!-- LOGIN -->
 <div id="login">
-  <div class="login-card">
+  <form class="login-card" id="loginForm" autocomplete="on" onsubmit="return false">
     <div class="logo">LUX Residence</div>
     <div class="sub">Admin Panel</div>
     <input id="email" type="email" placeholder="Email" autocomplete="username" style="width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:15px;margin-bottom:10px;box-sizing:border-box;text-align:left;letter-spacing:normal;">
     <input id="pin" type="password" placeholder="Parol" autocomplete="current-password">
+    <label class="remember"><input type="checkbox" id="remember" checked> <span>Yadda saxla</span></label>
     <div class="login-err" id="loginErr"></div>
-    <button id="loginBtn">Daxil ol</button>
-  </div>
+    <button id="loginBtn" type="button">Daxil ol</button>
+  </form>
 </div>
 
 <!-- APP -->
@@ -638,16 +642,29 @@ function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','
 
 /* ---------- login ---------- */
 function pinOK(v){return v===(localStorage.getItem('lux_pin')||'ferid245');}
+
+/* ---------- Yadda saxla ---------- */
+function _saveRemember(email,pass){var rem=document.getElementById('remember').checked;
+ try{if(rem){localStorage.setItem('lux_remember','1');localStorage.setItem('lux_remember_email',email);}else{localStorage.removeItem('lux_remember');localStorage.removeItem('lux_remember_email');}sessionStorage.setItem('lux_sess','1');}catch(e){}
+ /* parol brauzerin təhlükəsiz parol meneceri ilə saxlanılır (açıq mətn kimi yox) */
+ if(rem&&window.PasswordCredential&&navigator.credentials){try{navigator.credentials.store(new PasswordCredential({id:email,password:pass,name:email})).catch(function(){});}catch(e){}}}
+(function(){try{var rem=localStorage.getItem('lux_remember')==='1',em=localStorage.getItem('lux_remember_email')||'';
+ var cb=document.getElementById('remember');if(cb)cb.checked=rem||!localStorage.getItem('lux_remember_email');
+ if(em)document.getElementById('email').value=em;
+ /* "Yadda saxla" seçilməyibsə, brauzer bağlananda sessiya bitir */
+ if(!rem&&!sessionStorage.getItem('lux_sess')&&localStorage.getItem('lux_admin_mode')){localStorage.removeItem('lux_admin_mode');localStorage.removeItem('lux_admin_until');}
+ if(rem&&window.PasswordCredential&&navigator.credentials&&!localStorage.getItem('lux_admin_mode')){navigator.credentials.get({password:true,mediation:'optional'}).then(function(c){if(c&&c.password){document.getElementById('email').value=c.id;document.getElementById('pin').value=c.password;}}).catch(function(){});}
+}catch(e){}})();
 document.getElementById('loginBtn').addEventListener('click',doLogin);
 document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-function enterApp(){try{sessionStorage.setItem('lux_admin_ok','1');localStorage.setItem('lux_admin_mode','sb');localStorage.setItem('lux_admin_until',String(Date.now()+12*3600*1000));}catch(e){}document.getElementById('login').style.display='none';document.getElementById('app').hidden=false;boot();applyPerms();}
+function enterApp(){try{var rem=localStorage.getItem('lux_remember')==='1';sessionStorage.setItem('lux_admin_ok','1');localStorage.setItem('lux_admin_mode','sb');localStorage.setItem('lux_admin_until',String(Date.now()+(rem?30*24:12)*3600*1000));}catch(e){}document.getElementById('login').style.display='none';document.getElementById('app').hidden=false;boot();applyPerms();}
 function doLogin(){var email=(document.getElementById('email').value||'').trim();var pass=(document.getElementById('pin').value||'').trim();var errEl=document.getElementById('loginErr');errEl.textContent='';
  if(!email||!pass){errEl.textContent='Email və parolu daxil edin';return;}
  if(!sb){errEl.textContent='Serverə qoşulmaq mümkün olmadı. İnterneti yoxlayın.';return;}
  errEl.textContent='Yoxlanılır…';
  sb.auth.signInWithPassword({email:email,password:pass}).then(function(res){
    if(res.error){errEl.textContent=/banned/i.test(res.error.message)?'Hesabınız dondurulub. Adminə müraciət edin.':'Email və ya parol yanlışdır';return;}
-   OFFLINE=false;return loadMe().then(pullAll).then(enterApp).catch(function(e){errEl.textContent=(e&&e.message)||'Giriş alınmadı';sb.auth.signOut();});
+   OFFLINE=false;_saveRemember(email,pass);return loadMe().then(pullAll).then(enterApp).catch(function(e){errEl.textContent=(e&&e.message)||'Giriş alınmadı';sb.auth.signOut();});
  }).catch(function(){errEl.textContent='Bağlantı xətası';});}
 document.getElementById('logout').addEventListener('click',function(){_clearPrivate();try{localStorage.removeItem('lux_admin_mode');localStorage.removeItem('lux_admin_until');sessionStorage.removeItem('lux_admin_ok');sessionStorage.removeItem('lux_calc_ok');}catch(e){}
  var go=function(){location.reload();};if(sb&&sb.auth){sb.auth.signOut().then(go,go);}else go();});
