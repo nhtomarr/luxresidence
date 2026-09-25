@@ -903,7 +903,7 @@ function saveContent(){var C=Object.assign({},JSON.parse(JSON.stringify(DEF_C)),
 /* ---- calculator config ---- */
 var DEF_CFG={pin:'1234',gatePass:'1234',mortgageEnabled:true,mortgageRate:8,area:{min:40,max:200,def:60},price:{min:1300,max:5000,def:1350},downDef:30,terms:[{months:6,surcharge:0,enabled:true},{months:12,surcharge:200,enabled:true},{months:24,surcharge:400,enabled:true},{months:36,surcharge:600,enabled:true}]};
 var CFG=get('lux_cfg',DEF_CFG);
-var DEFAULT_SALES={};
+var DEFAULT_SALES={};var SALES=get('lux_sales',{});function _hasR(o){try{var k=Object.keys(o)[0];return o[k]&&o[k].rows;}catch(e){return false;}}if(!SALES||Object.keys(SALES).length<3||!_hasR(SALES)){SALES=JSON.parse(JSON.stringify(DEFAULT_SALES));}var curBina='';
 var ST_ORDER=['bos','satilib','rezerv','investor'];var ST_LBL={bos:'Boş',satilib:'Satılıb',rezerv:'Rezerv',investor:'İnvestor'};var ST_COL={bos:'#2f8a54',satilib:'#b23b3b',rezerv:'#b98328',investor:'#3b6db2'};
 if(!CFG.terms)CFG=JSON.parse(JSON.stringify(DEF_CFG));
 function renderCalc(){
