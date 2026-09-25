@@ -87,6 +87,12 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
 .ps-t{font-size:44px;font-weight:800;letter-spacing:.06em}.ps-s{font-size:22px;color:#475569;margin:6px 0 22px}#psQr img,#psQr canvas{width:120mm!important;height:120mm!important}
 .ps-l{text-align:left;font-size:18px;margin:24px auto 0;line-height:1.8}.ps-f{margin-top:26px;color:#64748b;font-size:14px}@page{size:A4;margin:10mm}}
 .lvrow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}.lvrow:last-child{border-bottom:none}
+
+.clbar{height:6px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin-bottom:6px}.clbar i{display:block;height:100%;background:var(--ok)}
+.cli{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:14px;cursor:pointer}.cli input{width:17px;height:17px;accent-color:var(--ok)}.cli span{flex:1}.cli button,.fli button{border:none;background:none;color:var(--mut);font-size:18px;padding:0 4px}
+.fli{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:14px}.fli a{color:var(--acc);font-weight:600;flex:1;text-decoration:none}
+.col.dropon{outline:2px dashed var(--acc);outline-offset:-4px}
+.field .cli{font-size:14px!important;color:var(--ink)!important;font-weight:400!important}
 </style>
 </head>
 <body>
@@ -272,27 +278,32 @@ function renderPanel(){var d=today();$('pDate').textContent=new Date().toLocaleD
 function kpi(v,l,c){return '<div class="kpi '+(c||'')+'"><b>'+v+'</b><span>'+l+'</span></div>';}
 
 /* ---------- TAPŞIRIQLAR ---------- */
-function taskRow(t){var over=t.status!=='done'&&t.due&&t.due<today();return '<div class="tk'+(over?' over':'')+'" onclick="openTask('+t.id+')"><b>'+esc(t.title)+'</b><div class="meta"><span class="pill prio-'+t.priority+'">'+PR[t.priority]+'</span><span class="pill p-mut">'+ST[t.status]+'</span>'+(t.assignee_id?'<span>👤 '+esc(empName(t.assignee_id))+'</span>':'')+(t.due?'<span'+(over?' style="color:var(--bad);font-weight:700"':'')+'>📅 '+t.due.slice(8)+'.'+t.due.slice(5,7)+'</span>':'')+'</div></div>';}
+function taskRow(t){var over=t.status!=='done'&&t.due&&t.due<today();var cl=t.checklist||[],cd=cl.filter(function(x){return x.done;}).length;return '<div class="tk'+(over?' over':'')+'" draggable="true" data-id="'+t.id+'" onclick="openTask('+t.id+')"><b>'+esc(t.title)+'</b><div class="meta">'+(cl.length?'<span class="pill '+(cd===cl.length?'p-ok':'p-mut')+'">✓ '+cd+'/'+cl.length+'</span>':'')+((t.files||[]).length?'<span>📎 '+t.files.length+'</span>':'')+(t.recur?'<span title="Təkrarlanan">🔁</span>':'')+'<span class="pill prio-'+t.priority+'">'+PR[t.priority]+'</span><span class="pill p-mut">'+ST[t.status]+'</span>'+(t.assignee_id?'<span>👤 '+esc(empName(t.assignee_id))+'</span>':'')+(t.due?'<span'+(over?' style="color:var(--bad);font-weight:700"':'')+'>📅 '+t.due.slice(8)+'.'+t.due.slice(5,7)+'</span>':'')+'</div></div>';}
 function renderKanban(){var f=$('tkFilter').value;if(!MGR&&f==='all'){}
  var list=TASKS.filter(function(t){if(f==='mine')return EMP&&t.assignee_id===EMP.id;if(f==='created')return t.created_by===ME.user_id;return true;});
  if(!renderKanban._i){renderKanban._i=1;var fk=['doing','new','review','done'].find(function(k){return list.some(function(t){return t.status===k;});});if(fk)KB=fk;}
  $('kbTabs').innerHTML=Object.keys(ST).map(function(k){var n=list.filter(function(t){return t.status===k;}).length;return '<button data-k="'+k+'" class="'+(KB===k?'on':'')+'">'+ST[k]+' ('+n+')</button>';}).join('');
  $('kbTabs').onclick=function(e){var b=e.target.closest('button');if(!b)return;KB=b.dataset.k;renderKanban();};
- $('kanban').innerHTML=Object.keys(ST).map(function(k){var l=list.filter(function(t){return t.status===k;});return '<div class="col'+(KB===k?' on':'')+'"><h4>'+ST[k]+'<span>'+l.length+'</span></h4>'+(l.map(taskRow).join('')||'<div class="empty small">—</div>')+'</div>';}).join('');}
+ $('kanban').innerHTML=Object.keys(ST).map(function(k){var l=list.filter(function(t){return t.status===k;});return '<div class="col'+(KB===k?' on':'')+'" data-st="'+k+'"><h4>'+ST[k]+'<span>'+l.length+'</span></h4>'+(l.map(taskRow).join('')||'<div class="empty small">—</div>')+'</div>';}).join('');}
 function empOpts(sel){return '<option value="">— təyin edilməyib —</option>'+EMPS.filter(function(e){return e.active;}).map(function(e){return '<option value="'+e.id+'"'+(e.id===sel?' selected':'')+'>'+esc(e.full_name)+'</option>';}).join('');}
-function openTask(id){var t=id?TASKS.find(function(x){return x.id===id;}):null;var canEdit=!t||MGR||t.created_by===ME.user_id;
+var CL=[];
+function openTask(id){var t=id?TASKS.find(function(x){return x.id===id;}):null;var canEdit=!t||MGR||t.created_by===ME.user_id;CL=JSON.parse(JSON.stringify((t&&t.checklist)||[]));
  modal('<div class="mhead"><h3>'+(t?'Tapşırıq':'Yeni tapşırıq')+'</h3><button class="x" onclick="closeModal()">×</button></div>'+
+  (!t?'<div class="field"><label>Şablon</label><select id="fTpl" onchange="applyTaskTpl(this.value)"><option value="">— boş —</option>'+TTPL.map(function(x,i){return '<option value="'+i+'">'+esc(x.title)+'</option>';}).join('')+'</select></div>':'')+
   '<div class="field"><label>Başlıq</label><input id="fT" value="'+esc(t?t.title:'')+'"'+(canEdit?'':' disabled')+'></div>'+
   '<div class="field"><label>Təsvir</label><textarea id="fD"'+(canEdit?'':' disabled')+'>'+esc(t?t.description:'')+'</textarea></div>'+
   '<div class="grid g2"><div class="field"><label>Məsul</label><select id="fA"'+(canEdit?'':' disabled')+'>'+empOpts(t?t.assignee_id:(EMP&&!MGR?EMP.id:null))+'</select></div><div class="field"><label>Son tarix</label><input id="fDue" type="date" value="'+(t&&t.due?t.due:'')+'"'+(canEdit?'':' disabled')+'></div>'+
   '<div class="field"><label>Prioritet</label><select id="fP"'+(canEdit?'':' disabled')+'>'+Object.keys(PR).map(function(k){return '<option value="'+k+'"'+((t?t.priority:'normal')===k?' selected':'')+'>'+PR[k]+'</option>';}).join('')+'</select></div>'+
-  '<div class="field"><label>Status</label><select id="fS">'+Object.keys(ST).map(function(k){return '<option value="'+k+'"'+((t?t.status:'new')===k?' selected':'')+'>'+ST[k]+'</option>';}).join('')+'</select></div></div>'+
+  '<div class="field"><label>Status</label><select id="fS">'+Object.keys(ST).map(function(k){return '<option value="'+k+'"'+((t?t.status:'new')===k?' selected':'')+'>'+ST[k]+'</option>';}).join('')+'</select></div>'+
+  '<div class="field"><label>Təkrarlanma</label><select id="fR"'+(canEdit?'':' disabled')+'><option value="">Təkrarlanmır</option><option value="daily"'+(t&&t.recur==='daily'?' selected':'')+'>Hər gün</option><option value="weekly"'+(t&&t.recur==='weekly'?' selected':'')+'>Hər həftə</option><option value="monthly"'+(t&&t.recur==='monthly'?' selected':'')+'>Hər ay</option></select></div></div>'+
+  '<div class="field"><label>Yoxlama siyahısı</label><div id="clBox"></div><div class="row" style="margin-top:6px"><input id="clNew" placeholder="Yeni bənd…" style="flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 12px" onkeydown="if(event.key===\'Enter\'){event.preventDefault();clAdd();}"><button type="button" class="btn ghost sm" onclick="clAdd()">+</button></div></div>'+
+  (t?'<div class="field"><label>Fayllar</label><div id="flBox"></div><label class="btn ghost sm" style="margin-top:6px;cursor:pointer">📎 Fayl əlavə et<input type="file" id="flIn" multiple hidden onchange="upFiles('+t.id+',this.files)"></label></div>':'<p class="muted small">Fayl əlavə etmək üçün əvvəlcə tapşırığı yadda saxlayın.</p>')+
   (t?'<p class="muted small">Yaradıb: '+esc(profName(t.created_by))+' · '+new Date(t.created_at).toLocaleDateString('az-AZ')+(t.done_at?' · bitib: '+new Date(t.done_at).toLocaleDateString('az-AZ'):'')+'</p>':'')+
   '<div class="row" style="justify-content:flex-end;margin-top:12px">'+(t&&(MGR||t.created_by===ME.user_id)?'<button class="btn red" onclick="delTask('+t.id+')">Sil</button>':'')+'<span style="flex:1"></span><button class="btn" onclick="saveTask('+(t?t.id:0)+')">Yadda saxla</button></div>'+
   (t?'<h3 style="margin-top:18px">Şərhlər</h3><div id="cmList"><div class="muted small">Yüklənir…</div></div><div class="field" style="margin-top:8px"><textarea id="cmNew" placeholder="Şərh yazın…" style="min-height:60px"></textarea></div><button class="btn ghost sm" onclick="addCm('+t.id+')">Göndər</button>':''));
- if(t)loadCm(t.id);}
+ drawCL();if(t){loadCm(t.id);drawFiles(t);}}
 function profName(uid){var p=PROFS.find(function(x){return x.user_id===uid;});if(p)return p.full_name||p.email;var e=EMPS.find(function(x){return x.user_id===uid;});return e?e.full_name:(uid===ME.user_id?(ME.full_name||ME.email):'—');}
-function saveTask(id){var b={title:$('fT').value.trim(),description:$('fD').value.trim(),assignee_id:+$('fA').value||null,due:$('fDue').value||null,priority:$('fP').value,status:$('fS').value};
+function saveTask(id){var b={title:$('fT').value.trim(),description:$('fD').value.trim(),assignee_id:+$('fA').value||null,due:$('fDue').value||null,priority:$('fP').value,status:$('fS').value,recur:$('fR').value||null,checklist:CL};
  if(!b.title){toast('Başlıq yazın');return;}
  var q=id?sb.from('office_tasks').update(b).eq('id',id).select().single():sb.from('office_tasks').insert(Object.assign(b,{created_by:ME.user_id})).select().single();
  var prevA=id?(TASKS.find(function(x){return x.id===id;})||{}).assignee_id:null;
@@ -304,6 +315,34 @@ function addCm(id){var v=$('cmNew').value.trim();if(!v)return;var mentions=EMPS.
 function refreshCurrent(){var v=(document.querySelector('#tabs button.on')||{}).dataset;show(v&&v.v||'today');}
 
 
+
+
+/* ---------- tapşırıq əlavələri ---------- */
+var TTPL=[
+ {title:'Yeni işçinin işə qəbulu',priority:'normal',items:['Əmək müqaviləsi imzalanıb','Sənədlər (şəxsiyyət, diplom) qəbul olunub','Sistem hesabı yaradılıb','İş yeri və avadanlıq hazırdır','Komanda ilə tanışlıq','Sınaq müddəti planı']},
+ {title:'Həftəlik hesabat',priority:'normal',recur:'weekly',items:['Satış nəticələri','Görülən işlər','Növbəti həftənin planı']},
+ {title:'Aylıq tabelin hazırlanması',priority:'high',recur:'monthly',items:['Davamiyyət yoxlanıldı','İcazəli günlər təsdiqləndi','Tabel Excel-ə çıxarıldı','Mühasibatlığa göndərildi']},
+ {title:'İşdən çıxma prosesi',priority:'high',items:['Ərizə qəbul olunub','Avadanlıq təhvil alınıb','Sistem hesabı dondurulub','Son hesablaşma']}];
+function applyTaskTpl(i){var x=TTPL[+i];if(!x)return;$('fT').value=x.title;$('fP').value=x.priority;if(x.recur)$('fR').value=x.recur;CL=x.items.map(function(t){return {t:t,done:false};});drawCL();}
+function drawCL(){var b=$('clBox');if(!b)return;var n=CL.filter(function(x){return x.done;}).length;
+ b.innerHTML=(CL.length?'<div class="clbar"><i style="width:'+Math.round(n/CL.length*100)+'%"></i></div>':'')+CL.map(function(x,i){return '<label class="cli"><input type="checkbox"'+(x.done?' checked':'')+' onchange="CL['+i+'].done=this.checked;drawCL()"><span'+(x.done?' style="text-decoration:line-through;color:var(--mut)"':'')+'>'+esc(x.t)+'</span><button type="button" onclick="event.preventDefault();CL.splice('+i+',1);drawCL()">×</button></label>';}).join('');}
+function clAdd(){var v=$('clNew').value.trim();if(!v)return;CL.push({t:v,done:false});$('clNew').value='';drawCL();}
+function drawFiles(t){var b=$('flBox');if(!b)return;var fs=t.files||[];b.innerHTML=fs.length?fs.map(function(f,i){return '<div class="fli"><a href="javascript:dlFile(\''+encodeURIComponent(f.path)+'\')">📄 '+esc(f.name)+'</a><span class="muted small">'+Math.max(1,Math.round((f.size||0)/1024))+' KB</span>'+((MGR||t.created_by===ME.user_id)?'<button type="button" onclick="rmFile('+t.id+','+i+')">×</button>':'')+'</div>';}).join(''):'<div class="muted small">Fayl yoxdur</div>';}
+function dlFile(p){sb.storage.from('office').createSignedUrl(decodeURIComponent(p),120).then(function(r){if(r.error)throw r.error;window.open(r.data.signedUrl,'_blank');}).catch(err);}
+function upFiles(id,files){var t=TASKS.find(function(x){return x.id===id;});if(!t||!files||!files.length)return;toast('Yüklənir…');
+ var arr=[].slice.call(files);Promise.all(arr.map(function(f){if(f.size>15*1024*1024){toast(f.name+': 15 MB-dan böyükdür');return null;}var path='tasks/'+id+'/'+Date.now()+'-'+f.name.replace(/[^\w.\-]+/g,'_');
+  return sb.storage.from('office').upload(path,f,{upsert:false}).then(function(r){if(r.error)throw r.error;return {name:f.name,path:path,size:f.size};});}))
+ .then(function(res){var nf=(t.files||[]).concat(res.filter(Boolean));return run(sb.from('office_tasks').update({files:nf}).eq('id',id).select().single());})
+ .then(function(nt){var i=TASKS.findIndex(function(x){return x.id===id;});TASKS[i]=nt;drawFiles(nt);toast('Fayl əlavə olundu');}).catch(err);}
+function rmFile(id,i){var t=TASKS.find(function(x){return x.id===id;});var f=t.files[i];if(!confirm(f.name+' silinsin?'))return;
+ sb.storage.from('office').remove([f.path]).then(function(){var nf=t.files.slice();nf.splice(i,1);return run(sb.from('office_tasks').update({files:nf}).eq('id',id).select().single());}).then(function(nt){var k=TASKS.findIndex(function(x){return x.id===id;});TASKS[k]=nt;drawFiles(nt);}).catch(err);}
+/* kanban: kartı sütunlar arasında sürüşdür */
+document.addEventListener('dragstart',function(e){var c=e.target.closest&&e.target.closest('.tk[data-id]');if(c){e.dataTransfer.setData('text/plain',c.dataset.id);c.style.opacity='.5';}});
+document.addEventListener('dragend',function(e){var c=e.target.closest&&e.target.closest('.tk[data-id]');if(c)c.style.opacity='';});
+document.addEventListener('dragover',function(e){var col=e.target.closest&&e.target.closest('.col[data-st]');if(col){e.preventDefault();col.classList.add('dropon');}});
+document.addEventListener('dragleave',function(e){var col=e.target.closest&&e.target.closest('.col[data-st]');if(col)col.classList.remove('dropon');});
+document.addEventListener('drop',function(e){var col=e.target.closest&&e.target.closest('.col[data-st]');if(!col)return;e.preventDefault();col.classList.remove('dropon');var id=+e.dataTransfer.getData('text/plain'),st=col.dataset.st;var t=TASKS.find(function(x){return x.id===id;});if(!t||t.status===st)return;
+ var old=t.status;t.status=st;renderKanban();run(sb.from('office_tasks').update({status:st}).eq('id',id).select().single()).then(function(nt){var i=TASKS.findIndex(function(x){return x.id===id;});TASKS[i]=nt;renderKanban();toast(ST[st]);}).catch(function(er){t.status=old;renderKanban();err(er);});});
 
 /* ---------- TELEGRAM ---------- */
 var TGBOT=null;
