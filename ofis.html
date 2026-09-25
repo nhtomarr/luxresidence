@@ -253,7 +253,7 @@ function loadAll(){return Promise.all([
 
 /* ---------- BU GÜN / check-in ---------- */
 var MYDAY=null;
-function renderToday(){$('noEmp').style.display=EMP?'none':'';renderTgCard();renderHrBoxes();renderTodayAnn();
+function renderToday(){$('noEmp').style.display=(EMP||MGR)?'none':'';var ck=document.querySelector('.checkcard');if(ck)ck.style.display=(!EMP&&MGR)?'none':'';renderTgCard();renderHrBoxes();renderTodayAnn();
  var my=TASKS.filter(function(t){return EMP&&t.assignee_id===EMP.id&&t.status!=='done';});
  $('tMyTasks').innerHTML=my.length?my.map(taskRow).join(''):'<div class="empty">Açıq tapşırığınız yoxdur 🎉</div>';
  if(!EMP){$('tStatus').textContent='';$('tBtns').innerHTML='';$('tStats').innerHTML='';return;}
@@ -485,7 +485,12 @@ function leadAssign(id,eid){run(sb.from('lux_leads').update({assigned_to:+eid||n
 var TGBOT=null;
 function notify(action,payload){try{sb.functions.invoke('office-telegram',{body:Object.assign({action:action},payload||{})}).catch(function(){});}catch(e){}}
 function tgBot(){return TGBOT!==null?Promise.resolve(TGBOT):sb.rpc('office_tg_bot').then(function(r){TGBOT=(r&&r.data)||'';return TGBOT;});}
-function renderTgCard(){var c=$('tgCard');if(!c)return;if(!EMP){c.style.display='none';return;}c.style.display='';
+function renderTgCard(){var c=$('tgCard');if(!c)return;if(!EMP){if(!MGR){c.style.display='none';return;}c.style.display='';
+  Promise.all([tgBot(),sb.rpc('office_tg_code')]).then(function(r){var bot=r[0],d=(r[1]&&r[1].data)||{};
+   if(!bot){c.innerHTML='<h3>🔔 Telegram bildirişləri</h3><p class="muted small">Botu Ayarlar bölməsində qoşun.</p>';return;}
+   if(d.connected){c.innerHTML='<div class="row" style="justify-content:space-between"><div><h3 style="margin:0">🔔 Rəhbər bildirişləri aktivdir</h3><div class="muted small">Səhər xülasəsi, sorğular, cavabsız müraciətlər və HR xatırlatmaları Telegram-a gəlir.</div></div><button class="btn ghost sm" onclick="tgTest()">Test göndər</button></div>';return;}
+   c.innerHTML='<div class="row" style="justify-content:space-between"><div><h3 style="margin:0">🔔 Rəhbər bildirişlərini aktiv et</h3><div class="muted small">İşçi kartınız olmasa da, rəhbər bildirişlərini Telegram-da ala bilərsiniz.</div></div><a class="btn" target="_blank" rel="noopener" href="https://t.me/'+encodeURIComponent(bot)+'?start='+esc(d.code)+'">Telegram-ı qoş</a></div><p class="muted small" style="margin-top:8px">Açılan Telegram-da <b>START</b> basın, sonra bu səhifəni yeniləyin.</p>';}).catch(function(){});return;}
+ c.style.display='';
  tgBot().then(function(bot){if(EMP.tg_chat_id){c.innerHTML='<div class="row" style="justify-content:space-between"><div><h3 style="margin:0">🔔 Telegram bildirişləri aktivdir</h3><div class="muted small">Tapşırıq, son tarix və sorğu bildirişləri Telegram-a gəlir.</div></div><button class="btn ghost sm" onclick="tgTest()">Test göndər</button></div>';return;}
   if(!bot){c.innerHTML='<h3>🔔 Telegram bildirişləri</h3><p class="muted small">Rəhbər hələ Telegram botunu qoşmayıb.</p>';return;}
   c.innerHTML='<div class="row" style="justify-content:space-between"><div><h3 style="margin:0">🔔 Telegram bildirişlərini aktiv et</h3><div class="muted small">Yeni tapşırıq, son tarix xatırlatması, sorğu cavabı telefonuna gəlsin.</div></div><a class="btn" target="_blank" rel="noopener" href="https://t.me/'+encodeURIComponent(bot)+'?start='+EMP.tg_code+'">Telegram-ı qoş</a></div><p class="muted small" style="margin-top:8px">Açılan Telegram-da <b>START</b> basın, sonra bu səhifəni yeniləyin.</p>';});}
