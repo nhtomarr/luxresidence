@@ -601,7 +601,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','
 function pinOK(v){return v===(localStorage.getItem('lux_pin')||'ferid245');}
 document.getElementById('loginBtn').addEventListener('click',doLogin);
 document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-function enterApp(){try{sessionStorage.setItem('lux_admin_ok','1');}catch(e){}document.getElementById('login').style.display='none';document.getElementById('app').hidden=false;boot();}
+function enterApp(){try{sessionStorage.setItem('lux_admin_ok','1');localStorage.setItem('lux_admin_mode',OFFLINE?'pin':'sb');localStorage.setItem('lux_admin_until',String(Date.now()+12*3600*1000));}catch(e){}document.getElementById('login').style.display='none';document.getElementById('app').hidden=false;boot();}
 function doLogin(){var email=(document.getElementById('email').value||'').trim();var pass=(document.getElementById('pin').value||'').trim();var errEl=document.getElementById('loginErr');errEl.textContent='';
  var lp=(localStorage.getItem('lux_pin')||'ferid245');
  if(email&&sb){errEl.textContent='Yoxlanılır…';sb.auth.signInWithPassword({email:email,password:pass}).then(function(res){
@@ -609,7 +609,16 @@ function doLogin(){var email=(document.getElementById('email').value||'').trim()
    OFFLINE=false;pullAll().then(function(){enterApp();}); }).catch(function(){ if(pass===lp){OFFLINE=true;enterApp();toast('Lokal rejim');} else {errEl.textContent='Bağlantı xətası'; } });
    return; }
  if(pass===lp){OFFLINE=true;enterApp();toast('Lokal rejim (Supabase-siz)');}else{errEl.textContent='Parol yanlışdır';document.getElementById('pin').value='';}}
-document.getElementById('logout').addEventListener('click',()=>location.reload());
+document.getElementById('logout').addEventListener('click',function(){try{localStorage.removeItem('lux_admin_mode');localStorage.removeItem('lux_admin_until');sessionStorage.removeItem('lux_admin_ok');}catch(e){}
+ var go=function(){location.reload();};if(sb&&sb.auth&&!OFFLINE){sb.auth.signOut().then(go,go);}else go();});
+(function(){try{var m=localStorage.getItem('lux_admin_mode'),u=+localStorage.getItem('lux_admin_until')||0;if(m&&u>Date.now()){var l=document.getElementById('login');if(l)l.style.visibility='hidden';}}catch(e){}})();
+/* yeniləmədə girişi yadda saxla: Supabase sessiyası (12 saat ərzində) və ya lokal parol rejimi */
+setTimeout(function(){var mode=null,until=0;try{mode=localStorage.getItem('lux_admin_mode');until=+localStorage.getItem('lux_admin_until')||0;}catch(e){}
+ if(!mode||until<Date.now())return;var lg=document.getElementById('login');if(lg)lg.style.visibility='hidden';
+ function fail(){if(lg)lg.style.visibility='';}
+ if(mode==='sb'){if(!(sb&&sb.auth&&sb.auth.getSession))return fail();
+  sb.auth.getSession().then(function(r){var ses=r&&r.data&&r.data.session;if(ses){OFFLINE=false;pullAll().then(enterApp,enterApp);}else fail();}).catch(fail);}
+ else if(mode==='pin'){OFFLINE=true;enterApp();}else fail();},0);
 
 /* ---------- nav ---------- */
 const nav=document.getElementById('nav'),side=document.getElementById('side'),backdrop=document.getElementById('backdrop');
