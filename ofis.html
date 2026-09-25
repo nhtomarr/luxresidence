@@ -290,7 +290,7 @@ function run(q){return q.then(function(r){if(r.error)throw r.error;return r.data
 /* ---------- start ---------- */
 luxAuth({perms:['ofis','ofis_admin','ofis_owner'],title:'Baş Ofis',sub:'İşçi hesabınızla daxil olun',logo:false,noAdminLink:true,accent:'#2563eb',bg:'linear-gradient(135deg,#e2e8f0,#f8fafc)',onReady:function(client,me){sb=client;ME=me;OWNER=(me.perms||[]).indexOf('ofis_owner')>=0;PREVIEW=!!(me.is_admin&&new URLSearchParams(location.search).get('baxis')==='sahibkar');if(PREVIEW)OWNER=true;MGR=me.is_admin||OWNER||(me.perms||[]).indexOf('ofis_admin')>=0;start();}});
 function start(){$('app').style.display='';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
- $('meBox').innerHTML='<b>'+esc(ME.full_name||ME.email)+'</b>'+(ME.is_admin?'Sistem admini':OWNER?'Sahibkar':MGR?'HR rəhbəri':'İşçi');
+ $('meBox').innerHTML='<b>'+esc(PREVIEW?'Afiq Rəhmanov':(ME.full_name||ME.email))+'</b>'+(ME.is_admin?'Sistem admini':OWNER?'Sahibkar':MGR?'HR rəhbəri':'İşçi');
  $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href='/ofis';});};
  if(ME.is_admin){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';pv.onclick=function(){location.href=PREVIEW?'/ofis':'/ofis?baxis=sahibkar';};$('outBtn').parentNode.insertBefore(pv,$('outBtn'));}
  if(PREVIEW){var bn=document.createElement('div');bn.className='pvbar';bn.innerHTML='👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.';document.body.insertBefore(bn,$('app'));}
@@ -613,7 +613,7 @@ function grade(r,pp,over){var pts=0;var att=r.plan?(r.came+r.leave)/r.plan:1;if(
  return pts>=7?['Yaxşı','g-ok']:pts>=4?['Orta','g-warn']:['Zəif','g-bad'];}
 function renderOwner(){var d=today(),m=d.slice(0,7);
  $('bDate').textContent=new Date().toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long',year:'numeric'});
- var hs=document.querySelectorAll('#v-boss .bossh');hs[0].textContent='Salam, '+String(ME.full_name||'').split(' ')[0]+' 👋';if(hs[1])hs[1].parentNode.style.display='none';
+ var hs=document.querySelectorAll('#v-boss .bossh');var hr=+new Intl.DateTimeFormat('en-GB',{timeZone:TZ,hour:'2-digit',hour12:false}).format(new Date());var gr=hr>=5&&hr<12?'Sabahınız xeyir':hr>=12&&hr<17?'Günortanız xeyir':'Axşamınız xeyir';var nm=PREVIEW?'Afiq Rəhmanov':(ME.full_name||'Afiq Rəhmanov');hs[0].textContent=gr+', '+nm;if(hs[1])hs[1].parentNode.style.display='none';
  var pm=document.querySelector('#v-boss > p.muted');if(pm)pm.style.display='none';$('bList').innerHTML='';
  Promise.all([run(sb.from('office_attendance').select('*').gte('day',m+'-01').lte('day',d)),loadPlans(m),loadChart()]).then(function(r){var matt=r[0],att=matt.filter(function(a){return a.day===d;});
   monthRows(function(R){var act=EMPS.filter(function(e){return e.active;});
