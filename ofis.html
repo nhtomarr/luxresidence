@@ -158,7 +158,9 @@ body.owner .btile{padding:18px}body.owner .btile b{font-size:38px}body.owner .bt
 .ocal span{padding:7px 0;border-radius:8px;font-size:13px;font-weight:600}.ocal .ok{background:#dcfce7;color:#166534}.ocal .lt{background:#fef3c7;color:#92400e}.ocal .ab{background:#fee2e2;color:#991b1b}.ocal .lv{background:#dbeafe;color:#1e40af}.ocal .off{background:#f1f5f9;color:#94a3b8}.ocal .fut{color:#cbd5e1}
 .olegend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--mut);margin-top:8px;align-items:center}.olegend span{width:12px;height:12px;border-radius:3px;display:inline-block}.olegend .ok{background:#dcfce7}.olegend .lt{background:#fef3c7}.olegend .ab{background:#fee2e2}.olegend .lv{background:#dbeafe}.olegend .off{background:#f1f5f9}
 body.owner .olines p{font-size:16px;margin:5px 0}
-@media(max-width:1100px){body.owner .bgrid{grid-template-columns:repeat(3,minmax(0,1fr))}.odash{grid-template-columns:1fr}}
+@media(max-width:1100px){body.owner .bgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:1300px){.odash{grid-template-columns:1fr}.oside{display:grid;grid-template-columns:1fr 1fr;gap:16px}.oside .card{margin-bottom:0}}
+@media(max-width:760px){.oside{grid-template-columns:1fr}}
 @media(max-width:700px){body.owner .bgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.ocols{grid-template-columns:1fr}}
 
 .givebtn{background:linear-gradient(135deg,#b45309,#f59e0b);font-size:16px;padding:12px 18px;border-radius:14px;box-shadow:0 10px 24px -12px rgba(180,83,9,.7)}.givebtn:hover{background:linear-gradient(135deg,#92400e,#d97706)}
@@ -172,6 +174,17 @@ body.owner .olines p{font-size:16px;margin:5px 0}
 .owntask-m{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.owntask-m span{color:#fff;background:rgba(0,0,0,.3);border-radius:99px;padding:4px 10px;font-size:13px;font-weight:600}.owntask-m .late{background:#fee2e2;color:#991b1b}
 .tk.ownt{background:linear-gradient(135deg,#fff7ed,#fde68a);border:2px solid #f59e0b}
 .ownbadge{display:inline-block;background:linear-gradient(135deg,#b45309,#f59e0b);color:#fff;font-size:11px;font-weight:800;border-radius:99px;padding:3px 9px;margin-bottom:6px}
+
+/* toxunma ekranı (iPad) üçün */
+button,.btn,.btile,.orow,.otbl tr,.ocal span,.oli,.tk,.owntask,.brow{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn,.x{min-height:44px}.x{min-width:44px;font-size:22px}
+.btile:active,.orow:active,.otbl tr:active td,.brow:active,.owntask:active{transform:scale(.985);opacity:.9}
+.ocal span{cursor:pointer;padding:10px 0;font-size:14px}.ocal span.sel{outline:3px solid var(--ink);outline-offset:1px}
+.calinfo{margin-top:10px;background:#f1f5f9;border-radius:12px;padding:12px 14px;font-size:16px;font-weight:600;color:var(--ink)}
+.otbl td{padding-top:14px;padding-bottom:14px}
+.mbox{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+@media (hover:none){.btile:hover,.orow:hover,.brow:hover{border-color:var(--line)}.otbl tr[onclick]:hover td{background:none}}
+body.owner .otbl .small,body.owner .otbl .muted.small{font-size:14px}
 </style>
 </head>
 <body>
@@ -468,7 +481,7 @@ function delHol(d){run(sb.from('office_holidays').delete().eq('day',d)).then(fun
 var CH={};
 function loadChart(){return window.Chart?Promise.resolve():new Promise(function(res,rej){var sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';sc.onload=res;sc.onerror=rej;document.head.appendChild(sc);});}
 function addDays(d,n){var x=new Date(d+'T12:00:00Z');x.setUTCDate(x.getUTCDate()+n);return x.toISOString().slice(0,10);}
-function mkChart(id,cfg){if(CH[id])CH[id].destroy();var c=$(id);if(!c)return;CH[id]=new Chart(c,cfg);}
+function mkChart(id,cfg){cfg.options=cfg.options||{};cfg.options.interaction={mode:'index',intersect:false};cfg.options.events=['click','touchstart','mousemove','mouseout'];if(CH[id])CH[id].destroy();var c=$(id);if(!c)return;CH[id]=new Chart(c,cfg);}
 function drawCharts(){var d=today(),from=addDays(d,-13);
  Promise.all([loadChart(),run(sb.from('office_attendance').select('employee_id,day,check_in,late_min').gte('day',from).lte('day',d))]).then(function(r){var att=r[1];
   Chart.defaults.font.family="Inter,system-ui,sans-serif";Chart.defaults.color='#64748b';
@@ -666,6 +679,7 @@ function renderOwner(){var d=today(),m=d.slice(0,7);
 
 function ownTg(){var c=$('ownTg');if(!c)return;Promise.all([tgBot(),sb.rpc('office_tg_code')]).then(function(r){var bot=r[0],d=(r[1]&&r[1].data)||{};if(!bot){c.innerHTML='';return;}
  c.innerHTML=d.connected?'<div class="card" style="margin-top:16px">📲 Hər iş günü səhər saat 09:30-da bu məlumatlar Telegram-a da gəlir.</div>':'<div class="card" style="margin-top:16px"><b>📲 Hər səhər qısa xülasə Telegram-a gəlsin?</b><p class="muted" style="margin:6px 0 12px">Düyməyə basın, Telegram açılanda <b>START</b> basın.</p><a class="btn" style="font-size:17px;padding:14px 20px" target="_blank" rel="noopener" href="https://t.me/'+encodeURIComponent(bot)+'?start='+esc(d.code)+'">Telegram-a qoş</a></div>';}).catch(function(){});}
+function calTap(el){document.querySelectorAll('.ocal span.sel').forEach(function(x){x.classList.remove('sel');});el.classList.add('sel');var b=$('calInfo');if(b)b.textContent=el.dataset.info;}
 function ownList(k){var t={done:'Bu ay bitmiş işlər',came:'Bu gün işdə olanlar',late:'Bu gün gecikənlər',absent:'Bu gün gəlməyənlər',plans:'Bu ayın planları',over:'Vaxtında görülməyən işlər',leave:'Məzuniyyətdə / icazəli'}[k];var h='';
  if(k==='came')h=OWN.rows.filter(function(x){return x.a&&x.a.check_in;}).map(function(x){return li(x.e.full_name,'gəlib: '+hm(x.a.check_in)+(x.a.late_min?' ('+x.a.late_min+' dəq gec)':''));}).join('');
  if(k==='late')h=OWN.late.map(function(a){return li(empName(a.employee_id),hm(a.check_in)+' — '+a.late_min+' dəqiqə gec');}).join('');
@@ -688,8 +702,8 @@ function ownCard(eid){var x=OWN.rows.find(function(y){return y.e.id===eid;});if(
  var d=today(),m=d.slice(0,7),y=+m.slice(0,4),mo=+m.slice(5,7),last=new Date(Date.UTC(y,mo,0)).getUTCDate(),first=isoDow(m+'-01');var cal='<h4 class="ownh4">Bu ay gün-gün</h4><div class="ocal">'+['B.e','Ç.a','Çər','C.a','Cüm','Şən','Baz'].map(function(w){return '<i>'+w+'</i>';}).join('');for(var k=1;k<first;k++)cal+='<span></span>';
  for(var dd=1;dd<=last;dd++){var ds=m+'-'+String(dd).padStart(2,'0');var a=(OWN.matt||[]).find(function(z){return z.employee_id===x.e.id&&z.day===ds;});var lv=leaveOn(x.e.id,ds);var wk=(x.e.workdays||[]).indexOf(isoDow(ds))>=0&&!isHol(ds);var c,tt;
   if(ds>d){c='fut';tt='';}else if(lv&&!(a&&a.check_in)){c='lv';tt=LT[lv.type];}else if(a&&a.check_in){c=a.late_min?'lt':'ok';tt=hm(a.check_in)+(a.late_min?' · '+a.late_min+' dəq gec':'')+(a.check_out?' – '+hm(a.check_out):'');}else if(wk){c='ab';tt='gəlməyib';}else{c='off';tt=isHol(ds)?'bayram':'istirahət';}
-  cal+='<span class="'+c+'" title="'+esc(ds.slice(8)+'.'+ds.slice(5,7)+' '+tt)+'">'+dd+'</span>';}
- cal+='</div><div class="olegend"><span class="ok"></span>vaxtında <span class="lt"></span>gecikib <span class="ab"></span>gəlməyib <span class="lv"></span>icazəli <span class="off"></span>istirahət</div>';
+  var info=ds.slice(8)+'.'+ds.slice(5,7)+' — '+(tt||'hələ gəlməyib');cal+='<span class="'+c+'" data-info="'+esc(info)+'" onclick="calTap(this)">'+dd+'</span>';}
+ cal+='</div><div class="calinfo" id="calInfo">👆 Günə toxunun — gəliş və çıxış saatı burada görünəcək</div><div class="olegend"><span class="ok"></span>vaxtında <span class="lt"></span>gecikib <span class="ab"></span>gəlməyib <span class="lv"></span>icazəli <span class="off"></span>istirahət</div>';
  var tks=x.open.length||x.doneM.length?'<h4 class="ownh4">Tapşırıqlar</h4>'+x.open.map(function(t){var ov=t.due&&t.due<d;return '<div class="opi">'+(ov?'⚠️':'🔹')+' '+esc(t.title)+' <span class="muted">('+ST[t.status]+(t.due?', son tarix '+t.due.slice(8)+'.'+t.due.slice(5,7):'')+')</span></div>';}).join('')+x.doneM.map(function(t){return '<div class="opi">✅ '+esc(t.title)+' <span class="muted">(bitib '+String(t.done_at).slice(8,10)+'.'+String(t.done_at).slice(5,7)+')</span></div>';}).join(''):'';
  modal('<div class="mhead"><div><h3 class="ownh">'+esc(x.e.full_name)+'</h3><div class="muted">'+esc((posOf(x.e)||{}).title||'')+(x.e.phone?' · '+esc(x.e.phone):'')+'</div></div><button class="x" onclick="closeModal()">×</button></div><div class="row" style="gap:10px;align-items:stretch"><div class="grade big '+x.g[1]+'" style="flex:1">Ümumi qiymət: '+x.g[0]+'</div><button class="btn givebtn" onclick="ownTaskModal('+x.e.id+')">✍️ Tapşırıq ver</button></div><div class="ocols"><div><div class="olines">'+lines.map(function(l){return '<p>'+l+'</p>';}).join('')+'</div>'+cal+'</div><div>'+plan+tks+'</div></div>');
  $('mbox').classList.add('wide');}
