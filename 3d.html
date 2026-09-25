@@ -78,6 +78,7 @@ button{font-family:inherit;cursor:pointer;}
 .pbtn.pri{background:var(--rust);color:#fff;}
 .pbtn.sec{background:#f0e6da;color:var(--ink);}
 .note{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.5;}
+body.hide .filt,body.hide .legend,body.hide .fr .dots{display:none!important;}
 .load{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:#f3e6d8;font-family:var(--serif);font-size:18px;color:var(--ink);transition:opacity .5s;}
 .load.off{opacity:0;pointer-events:none;}
 .err{max-width:320px;text-align:center;font-family:var(--sans);font-size:14px;line-height:1.6;}
@@ -139,6 +140,7 @@ const SUPA='https://avqchschbbltnnasabdm.supabase.co',KEY='eyJhbGciOiJIUzI1NiIsI
 const BINALAR=['Bina 3','Bina 4','Bina 5','Bina 6','Bina 7','Bina 8'];
 const F0=3,F1=16,W=30,D=22,FH=3.2,POD=9.2;
 const MOB=matchMedia('(max-width:760px)').matches;
+let HIDE=false;try{HIDE=localStorage.getItem('lux_hidefloors')==='1';}catch(e){}
 let SALES=null,APTS=[],CUR=BINALAR[0],FILTER='all',SEL=null,HOV=null,ASEL=null;
 const qs=new URLSearchParams(location.search);if(BINALAR.includes(qs.get('bina')))CUR=qs.get('bina');
 
@@ -146,14 +148,14 @@ const qs=new URLSearchParams(location.search);if(BINALAR.includes(qs.get('bina')
 function sanitize(raw){const out={};Object.keys(raw||{}).forEach(bn=>{const b=raw[bn];if(!b||!b.rows)return;const nb={rows:{}};Object.keys(b.rows).forEach(f=>{nb.rows[f]=(b.rows[f]||[]).map(u=>({n:u.n,room:u.room,area:u.area,st:u.s==='satisda'?'available':((u.s==='qeyri'||u.s==='zirzemi')?'other':'sold')}));});out[bn]=nb;});return out;}
 function salesFor(bn){if(!SALES)return null;if(SALES[bn])return SALES[bn];const num=bn.replace(/\D/g,'');for(const k of Object.keys(SALES)){const parts=k.replace(/Bina/gi,'').split(/[,\s]+/).filter(Boolean);if(parts.includes(num))return SALES[k];}return null;}
 function units(f){const b=salesFor(CUR);if(!b||!b.rows)return[];return (b.rows[f]||b.rows[String(f)]||[]).filter(u=>u.st!=='other').slice().sort((a,b)=>(+a.n||0)-(+b.n||0));}
-function match(u){return FILTER==='all'||u.st===FILTER;}
+function match(u){return HIDE||FILTER==='all'||u.st===FILTER;}
 function ord(n){const l=n%10,t=n%100;if(t===10||t===30)return n+'-cu';if(l===0)return n+(t===20||t===50||t===70||t===80?'-ci':'-cı');return n+({1:'-ci',2:'-ci',3:'-cü',4:'-cü',5:'-ci',6:'-cı',7:'-ci',8:'-ci',9:'-cu'})[l];}
 function findApt(u){const a=parseFloat(u.area)||0;return APTS.find(x=>!x.hidden&&Math.abs((parseFloat(x.area)||0)-a)<0.5);}
 async function loadData(){
  try{SALES=JSON.parse(localStorage.getItem('lux_sales_pub')||'null');}catch(e){}
  try{APTS=JSON.parse(localStorage.getItem('lux_apartments')||'[]')||[];}catch(e){}
- try{const r=await fetch(SUPA+'/rest/v1/lux_kv?select=key,value&key=in.(lux_sales,lux_apartments)',{headers:{apikey:KEY,Authorization:'Bearer '+KEY}});
-  if(r.ok){const rows=await r.json();rows.forEach(row=>{if(row.key==='lux_sales'){SALES=sanitize(row.value);try{localStorage.setItem('lux_sales_pub',JSON.stringify(SALES));}catch(e){}}if(row.key==='lux_apartments'&&Array.isArray(row.value))APTS=row.value;});}}catch(e){}
+ try{const r=await fetch(SUPA+'/rest/v1/lux_kv?select=key,value&key=in.(lux_sales,lux_apartments,lux_hidefloors)',{headers:{apikey:KEY,Authorization:'Bearer '+KEY}});
+  if(r.ok){const rows=await r.json();rows.forEach(row=>{if(row.key==='lux_sales'){SALES=sanitize(row.value);try{localStorage.setItem('lux_sales_pub',JSON.stringify(SALES));}catch(e){}}if(row.key==='lux_apartments'&&Array.isArray(row.value))APTS=row.value;if(row.key==='lux_hidefloors'){HIDE=String(row.value)==='1';try{localStorage.setItem('lux_hidefloors',HIDE?'1':'0');}catch(e){}}});}}catch(e){}
 }
 
 /* ---------- scene ---------- */
@@ -283,8 +285,8 @@ function buildInner(f){
  [[north,1],[south,-1]].forEach(([row,side])=>{
   if(!row.length)return;const tot=row.reduce((s,u)=>s+(parseFloat(u.area)||80),0);let x=-W/2+0.3;const z0=side*1.9,z1=side*(D/2-0.3),zc=(z0+z1)/2,dz=Math.abs(z1-z0);
   row.forEach(u=>{const w=(W-0.6)*((parseFloat(u.area)||80)/tot),xc=x+w/2;
-   const ok=match(u),mat=new THREE.MeshStandardMaterial({color:ok?COL[u.st]:COL.dim,roughness:.7,emissive:0x000000});
-   const t=box(w-0.35,0.16,dz-0.35,mat,xc,y+0.2,zc,inner,false);t.userData={u,ok,base:ok?COL[u.st]:COL.dim};tiles.push(t);
+   const ok=match(u),mat=new THREE.MeshStandardMaterial({color:HIDE?0xd8c3a6:(ok?COL[u.st]:COL.dim),roughness:.7,emissive:0x000000});
+   const t=box(w-0.35,0.16,dz-0.35,mat,xc,y+0.2,zc,inner,false);t.userData={u,ok,base:HIDE?0xd8c3a6:(ok?COL[u.st]:COL.dim)};tiles.push(t);
    box(0.18,1.0,dz,MAT.wall,x,y+0.55,zc,inner);
    x+=w;});
   box(0.18,1.0,dz,MAT.wall,W/2-0.3,y+0.55,zc,inner);
@@ -302,8 +304,8 @@ function updLabels(){lblItems.forEach(o=>{v3.copy(o.p).project(camera);const on=
 /* ---------- UI ---------- */
 const $=id=>document.getElementById(id);
 function buildTabs(){$('tabs').innerHTML=BINALAR.map(b=>'<button class="'+(b===CUR?'on':'')+'" data-b="'+b+'">'+b+'</button>').join('');}
-function buildList(){let h='';for(let f=F1;f>=F0;f--){const us=units(f),av=us.filter(u=>u.st==='available').length,ok=us.some(match);
- h+='<button class="fr'+(SEL===f?' on':'')+(ok||!us.length?'':' dim')+(av?' av':'')+'" data-f="'+f+'"><span class="num">'+f+'</span><span class="inf"><b>'+ord(f)+' mərtəbə</b><span>'+(us.length?(av?av+' mənzil satışda':'Hamısı satılıb'):'Məlumat yoxdur')+'</span></span><span class="dots">'+us.map(u=>'<i style="background:'+(u.st==='available'?'var(--av)':'var(--sd)')+';opacity:'+(match(u)?1:.25)+'"></i>').join('')+'</span></button>';}
+function buildList(){document.body.classList.toggle('hide',HIDE);let h='';for(let f=F1;f>=F0;f--){const us=units(f),av=HIDE?0:us.filter(u=>u.st==='available').length,ok=HIDE||us.some(match);
+ h+='<button class="fr'+(SEL===f?' on':'')+(ok||!us.length?'':' dim')+(av?' av':'')+'" data-f="'+f+'"><span class="num">'+f+'</span><span class="inf"><b>'+ord(f)+' mərtəbə</b><span>'+(HIDE?'Mənzillərə baxın':(us.length?(av?av+' mənzil satışda':'Hamısı satılıb'):'Məlumat yoxdur'))+'</span></span><span class="dots">'+(HIDE?[]:us).map(u=>'<i style="background:'+(u.st==='available'?'var(--av)':'var(--sd)')+';opacity:'+(match(u)?1:.25)+'"></i>').join('')+'</span></button>';}
  $('fl').innerHTML=h;}
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;CUR=b.dataset.b;buildTabs();closePanel();if(SEL)selectFloor(SEL,true);buildList();history.replaceState(null,'','?bina='+encodeURIComponent(CUR));});
 $('filt').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;FILTER=b.dataset.f;[...$('filt').children].forEach(x=>x.classList.toggle('on',x===b));buildList();if(SEL)selectFloor(SEL,true);});
@@ -325,7 +327,7 @@ function exitFloor(){SEL=null;closePanel(true);for(let k=F0;k<=F1;k++){const F=f
 function stBadge(st){return st==='available'?'<span class="pst" style="background:#e5f3ea;color:#2f7a44">● Satışda</span>':'<span class="pst" style="background:#f7e4e0;color:#a13a2e">● Satılıb</span>';}
 function openApt(u){
  const a=findApt(u);ASEL=u;
- $('pbody').innerHTML=stBadge(u.st)+'<h3>Mənzil № '+u.n+'</h3><div class="psub">'+CUR+' · '+ord(SEL)+' mərtəbə · '+(u.room||'—')+' otaqlı</div>'
+ $('pbody').innerHTML=(HIDE?'':stBadge(u.st))+'<h3>Mənzil № '+u.n+'</h3><div class="psub">'+CUR+' · '+ord(SEL)+' mərtəbə · '+(u.room||'—')+' otaqlı</div>'
  +'<div class="pplan">'+(a&&a.plan?'<img src="'+(String(a.plan).charAt(0)==='/'||/^https?:|^data:/.test(a.plan)?a.plan:'/'+a.plan)+'" alt="Mənzil planı">':'<em>Plan tezliklə əlavə olunacaq</em>')+'</div>'
  +'<div class="pgrid"><div><small>Sahə</small><b>'+(u.area||'—')+' m²</b></div><div><small>Otaq</small><b>'+(u.room||'—')+'</b></div><div><small>Mərtəbə</small><b>'+SEL+' / '+F1+'</b></div><div><small>Qiymət</small><b>Sorğu ilə</b></div></div>'
  +(a?'<a class="pbtn pri" href="/apt/'+a.id+'">Mənzilə ətraflı bax</a>':'<a class="pbtn pri" href="/planlar">Planlara bax</a>')
@@ -344,7 +346,7 @@ function pick(e){const r=canvas.getBoundingClientRect();mp.x=((e.clientX-r.left)
  const hits=ray.intersectObjects(hitboxes,false);return hits.length?{f:hits[0].object.userData.f}:null;}
 function setHover(f){if(HOV===f)return;if(HOV&&floors[HOV])floors[HOV].hl.visible=false;HOV=f;if(f&&floors[f])floors[f].hl.visible=true;}
 canvas.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;const p=pick(e),tip=$('tip');
- if(!SEL&&p&&p.f){setHover(p.f);const us=units(p.f),av=us.filter(u=>u.st==='available').length;tip.innerHTML=ord(p.f)+' mərtəbə<span>'+(us.length?(av?av+' satışda':'satılıb'):'')+'</span>';tip.style.display='block';tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';canvas.style.cursor='pointer';}
+ if(!SEL&&p&&p.f){setHover(p.f);const us=units(p.f),av=us.filter(u=>u.st==='available').length;tip.innerHTML=ord(p.f)+' mərtəbə<span>'+(HIDE?'':(us.length?(av?av+' satışda':'satılıb'):''))+'</span>';tip.style.display='block';tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';canvas.style.cursor='pointer';}
  else if(SEL&&p&&p.tile&&p.tile.userData.ok){tip.innerHTML='Mənzil № '+p.tile.userData.u.n+'<span>'+p.tile.userData.u.area+' m²</span>';tip.style.display='block';tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';canvas.style.cursor='pointer';}
  else{setHover(null);tip.style.display='none';canvas.style.cursor='';}});
 canvas.addEventListener('pointerleave',()=>{setHover(null);$('tip').style.display='none';});
