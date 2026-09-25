@@ -698,6 +698,37 @@ body.hidefl .sec-filt{display:none!important;}
 body.hidest .apt-badge,body.hidest .dr-badge,body.hidest .fg-status,body.hidest .sp-dot,body.hidest .sec-filt{display:none!important;}
 .ek-dl{display:inline-flex!important;margin-top:16px;width:auto!important;}
 .ek-dls{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.ek-dls .ek-dl{margin-top:0}.ek-dl2{background:#f3e7dc!important;color:var(--ink)!important}
+
+.back-link{display:inline-block;margin:6px 0 14px;color:var(--rust);font-weight:600;font-size:14px}
+.bp-hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;align-items:center;margin-bottom:34px}
+.bp-img{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:16/9;box-shadow:0 24px 50px -30px rgba(74,42,24,.45)}
+.bp-img img{width:100%;height:100%;object-fit:cover;display:block}
+.bp-img svg{position:absolute;inset:0;width:100%;height:100%}
+.bp-img polygon{fill:rgba(20,12,8,.28);stroke:none}.bp-img polygon.on{fill:rgba(186,77,44,.5);stroke:#fff;stroke-width:.35;vector-effect:non-scaling-stroke}
+.bp-info h1{font-family:var(--serif);font-size:clamp(36px,5vw,56px);margin:6px 0 10px;line-height:1.05}
+.bp-info p{color:#6b5a4d;font-size:16px;line-height:1.6;margin:0 0 18px}
+.bp-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:18px}
+.bp-stats div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.bp-stats b{display:block;font-family:var(--serif);font-size:24px;color:var(--rust)}.bp-stats span{font-size:12.5px;color:var(--muted)}
+.bp-btns{display:flex;flex-wrap:wrap;gap:8px}.bp-btns .btn{flex:none;min-width:0}
+.btn.bp-b2,.btn.faq-b2{background:#f0e6da;color:var(--ink)}
+.bp-h2{font-family:var(--serif);font-size:clamp(24px,3vw,32px);margin:10px 0 16px}
+.bp-empty{color:var(--muted);grid-column:1/-1}
+.bp-others{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:60px}
+.bp-others a{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 16px;font-family:var(--serif);font-weight:700}
+.bp-others a:hover{border-color:var(--rust);color:var(--rust)}
+.faq-lead{color:#6b5a4d;margin-top:8px}
+.faq{max-width:860px;display:grid;gap:10px;margin:10px 0 26px}
+.faq-i{background:#fff;border:1px solid var(--line);border-radius:14px;padding:4px 18px}
+.faq-i summary{cursor:pointer;list-style:none;padding:14px 28px 14px 0;font-weight:600;font-size:16px;position:relative}
+.faq-i summary::-webkit-details-marker{display:none}
+.faq-i summary::after{content:"+";position:absolute;right:0;top:10px;font-size:22px;color:var(--rust);font-weight:400}
+.faq-i[open] summary::after{content:"–"}
+.faq-i p{margin:0 0 16px;color:#5f4e40;line-height:1.65}
+.faq-cta{max-width:860px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:60px}
+.faq-cta b{font-family:var(--serif);font-size:18px}.faq-cta span{color:var(--muted);flex:1;min-width:200px}.faq-cta .btn{flex:none;min-width:0}
+@media(max-width:860px){.bp-hero{grid-template-columns:1fr;gap:18px}}
+.faq,.faq-cta{margin-left:auto!important;margin-right:auto!important}
 </style>
 <div id="maintScreen" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#2a1b12,#4a2a18);color:#f5ece1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;font-family:-apple-system,'Inter',system-ui,sans-serif">
   <div style="font-family:Georgia,serif;font-size:clamp(28px,6vw,52px);color:#e8c9a0;letter-spacing:.04em;margin-bottom:10px">LUX Residence</div>
@@ -852,10 +883,22 @@ body.hidest .apt-badge,body.hidest .dr-badge,body.hidest .fg-status,body.hidest 
   <div id="callOk">Təşəkkürlər! 🎉<br>Tezliklə sizinlə əlaqə saxlayacağıq.</div>
 </div></div>
 <div class="view" id="v-secim" data-nav="secim"><div class="wrap" style="padding-top:calc(var(--nav-h) + 12px);"><div class="sec-head"><div><div class="se">İnteraktiv seçim</div><h1 class="sec-h1">Binanı və mərtəbəni seçin</h1></div><div class="sec-filt" id="secFilt"><button class="sf on" data-st="all">Hamısı</button><button class="sf" data-st="available">Satışda</button><button class="sf" data-st="sold">Satılıb</button></div></div><div class="bina-tabs" id="binaTabs"></div><a class="go3d" href="/3d" onclick="this.href='/3d?bina='+encodeURIComponent(window._curBina3d||'Bina 3')">3D-də bax <span>yeni</span></a><div class="tower-row"><div class="tower-stage" id="towerStage"><div class="tower-zoom" id="towerZoom"><img src="/assets/tower-3-8.webp" alt="Bina" id="towerImg"><svg id="towerSvg" viewBox="0 0 1000 563" preserveAspectRatio="none"></svg></div><div class="floor-tip" id="floorTip" style="display:none"></div><div class="tz-ctrl"><button onclick="tzoom(1.3)" title="Böyüt">+</button><button onclick="tzoom(0.77)" title="Kiçilt">−</button><button onclick="tzreset()" title="Sıfırla">⟲</button></div></div><div class="floor-strip" id="floorStrip" aria-label="Mərtəbələr"></div></div><div class="sec-note"><span class="sn-d">Bina üzərində gəzin — mərtəbə görünsün. <b>Klik edin</b> — mənzillər sağda açılsın.</span><span class="sn-m">Mərtəbəni binada və ya yandakı siyahıda seçin. Mənzillər aşağıda açılacaq.</span></div><div class="sec-panel" id="secPanel"><div class="sp-grab"></div><button class="sp-close" onclick="document.getElementById('secPanel').classList.remove('open')">×</button><div id="secPanelBody"></div></div></div></div>
+<div class="view" id="v-bina" data-nav="planlar"><div class="wrap">
+  <a class="back-link" href="/planlar">← Bütün mənzillər</a>
+  <div class="bp-hero"><div class="bp-img"><img src="/assets/img1.webp" alt="LUX Residence kompleksi" loading="lazy"><svg viewBox="0 0 100 100" preserveAspectRatio="none" id="bpSvg"></svg></div>
+   <div class="bp-info"><span class="eyebrow-d">LUX Residence</span><h1 id="bpTitle">Bina</h1><p id="bpLead"></p><div class="bp-stats" id="bpStats"></div><div class="bp-btns" id="bpBtns"></div></div></div>
+  <h2 class="bp-h2" id="bpAptH">Mənzil planları</h2><div class="apt-grid" id="bpApts"></div>
+  <h2 class="bp-h2">Digər binalar</h2><div class="bp-others" id="bpOthers"></div>
+</div></div>
+<div class="view" id="v-suallar" data-nav="suallar"><div class="wrap">
+  <div class="page-hero"><span class="eyebrow-d">Suallar</span><h1>Tez-tez verilən suallar</h1><p class="faq-lead">LUX Residence, mənzillər, ödəniş və infrastruktur barədə ən çox soruşulanlar.</p></div>
+  <div class="faq" id="faqList"></div>
+  <div class="faq-cta"><b>Sualınızın cavabını tapmadınız?</b><span>Satış ofisimiz kömək etməyə hazırdır.</span><a class="btn btn-primary" href="tel:+994508090088">+994 50 809 00 88</a><a class="btn faq-b2" href="/elaqe">Müraciət göndər</a></div>
+</div></div>
 <div class="drawer" id="drawer"><button class="x" id="drawerX">&times;</button><div class="eyebrow-d">LUX RESIDENCE</div><h2 id="dName">Bina</h2><div class="dr-meta" id="dMeta"></div><div id="drawerBody"></div><a class="cta" id="drawerAll" href="/planlar" data-bina="">Bu binada bütün mənzillər →</a></div><footer><svg class="foot-mark" viewBox="0 0 120 120" fill="currentColor" aria-hidden="true"><path d="M20 16 h22 v66 h34 v22 h-56 z"/><path d="M100 104 h-22 v-66 h-34 v-22 h56 z"/></svg><div class="foot-grid">
   <div class="foot-brand"><img src="/assets/brand/logo-site-white.svg" alt="LUX RESIDENCE"><p>Şəhərin imkanlarından uzaqlaşmadan, yaşıllıqların əhatəsində rahat və huzurlu yaşam.</p></div>
-  <div class="foot-col"><h4>Səhifələr</h4><a href="/">Ana Səhifə</a><a href="/haqqimizda">Haqqımızda</a><a href="/infrastruktur">İnfrastruktur</a><a href="/xeberler">Xəbərlər</a><a href="/planlar">Planlar</a><a href="/elaqe">Əlaqə</a></div>
-  <div class="foot-col"><h4>Mənzillər</h4><a href="/planlar">Bütün mənzillər</a><a href="/elaqe">Qeyri yaşayış</a></div>
+  <div class="foot-col"><h4>Səhifələr</h4><a href="/">Ana Səhifə</a><a href="/haqqimizda">Haqqımızda</a><a href="/infrastruktur">İnfrastruktur</a><a href="/xeberler">Xəbərlər</a><a href="/planlar">Planlar</a><a href="/suallar">Tez-tez verilən suallar</a><a href="/elaqe">Əlaqə</a></div>
+  <div class="foot-col"><h4>Binalar</h4><a href="/bina-1">Bina 1</a><a href="/bina-3">Bina 3</a><a href="/bina-4">Bina 4</a><a href="/bina-5">Bina 5</a><a href="/bina-6">Bina 6</a><a href="/bina-10">Bina 10</a><a href="/bina-11">Bina 11</a><a href="/planlar">Bütün mənzillər</a></div>
   <div class="foot-col"><h4>Əlaqə</h4><a href="tel:+994508090088">+994 50 809 00 88</a><a href="tel:+994507000088">+994 50 700 00 88</a><a href="mailto:luxresidence.az@gmail.com">luxresidence.az@gmail.com</a></div>
 </div>
 <div class="foot-bottom"><span>© 2026 LUX Residence · luxresidence.az</span><div class="socials"><a id="soc-instagram" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg></a><a id="soc-facebook" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 3h-3a4 4 0 0 0-4 4v3H5v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a><a id="soc-youtube" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 8a3 3 0 0 0-2.1-2.1C19 5.4 12 5.4 12 5.4s-7 0-8.9.5A3 3 0 0 0 1 8a31 31 0 0 0 0 8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5A3 3 0 0 0 23 16a31 31 0 0 0 0-8zM10 15.5v-7l6 3.5z"/></svg></a><a id="soc-whatsapp" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20z"/></svg></a><a id="soc-telegram" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 2.6 11.7c-.9.4-.9 1.6.1 1.9l4.7 1.5 1.8 5.6c.2.7 1.1.9 1.6.3l2.6-2.6 4.8 3.5c.6.4 1.5.1 1.7-.6l3.3-15.6c.2-.9-.7-1.7-1.6-1.3z"/></svg></a><a id="soc-linkedin" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9V21h-4z"/></svg></a></div></div></footer><script>
@@ -990,6 +1033,7 @@ var _SEOV={
  secim:['İnteraktiv seçim — binanı və mərtəbəni seçin | LUX Residence','Binanı və mərtəbəni interaktiv seçin, satışda olan mənzilləri dərhal görün. LUX Residence, Yasamal, Bakı.'],
  xeberler:['Bloq — yeni tikili, ipoteka və mənzil seçimi məsləhətləri | LUX Residence','Mənzil alarkən bilməli olduğunuz hər şey: kupça, ipoteka, müqavilə, tikinti keyfiyyəti və mənzil seçimi barədə faydalı yazılar.'],
  elaqe:['Əlaqə — satış ofisi, ünvan və telefon | LUX Residence','LUX Residence satış ofisi ilə əlaqə: +994 50 809 00 88. Ünvan: Yasamal rayonu, Elmlər Akademiyası metrosu yaxınlığı, Bakı.'],
+ suallar:['Tez-tez verilən suallar — ödəniş, təhvil, parkinq | LUX Residence','LUX Residence haqqında ən çox verilən suallar: daxili kredit, yaşayışa hazır təhvil, parkinq, təhlükəsizlik, infrastruktur və mənzilə baxış.'],
  muqayise:['Müqayisə | LUX Residence',null,1],sevimliler:['Sevimlilər | LUX Residence',null,1]
 };
 function _link(rel){var l=document.querySelector('link[rel="'+rel+'"]');if(!l){l=document.createElement('link');l.rel=rel;document.head.appendChild(l);}return l;}
@@ -1038,10 +1082,10 @@ function renderFav(){var b=document.getElementById('favBody2');if(!b)return;var 
 var dcb=document.getElementById('detCallBtn');if(dcb)dcb.addEventListener('click',()=>document.getElementById('callModal').classList.add('open'));
 function ps(p){return p.map(a=>a[0]+','+a[1]).join(' ');}
 const drawer=document.getElementById('drawer');try{(function(){var els=[drawer].concat([].slice.call(document.querySelectorAll('.modal-bg')));function upd(){document.documentElement.classList.toggle('no-scroll',els.some(function(x){return x.classList.contains('open');}));}var mo=new MutationObserver(upd);els.forEach(function(x){mo.observe(x,{attributes:true,attributeFilter:['class']});});})();}catch(e){}
-function openBuilding(b){document.getElementById('dName').textContent=b.name;var list=VAPT().filter(a=>inB(a,b.name));var meta=document.getElementById('dMeta'),body=document.getElementById('drawerBody'),all=document.getElementById('drawerAll');if(list.length){var av=list.filter(a=>a.status==='available').length;meta.textContent=list.length+' mənzil'+(av&&!HIDEST?' · '+av+' mövcud':'');var _sorted=list.slice().sort(function(x,y){return (parseFloat(x.area)||0)-(parseFloat(y.area)||0);});body.innerHTML=_sorted.map(function(a){var st=STL[a.status];return '<a class="dr-apt" href="/apt/'+a.id+'"><div class="dr-plan">'+(a.plan?'<img src="'+a.plan+'" alt="plan">':PLANSVG)+'</div>'+'<div class="dr-apt-b"><b>'+a.rooms+' otaqlı · '+a.area+' m²</b>'+(HIDEFL?'':'<span>Mərtəbə '+flOf(a,b.name)+'</span>')+'<span class="dr-badge" style="background:'+(st[1]==='glass'?'#e8f5ec':st[1])+';color:'+(st[1]==='glass'||st[0]==='Mövcud'?'#2f7a44':'#fff')+'">'+st[0]+'</span></div></a>';}).join('');all.style.display='';all.setAttribute('data-bina',b.name);}else{meta.textContent='Mənzillər tezliklə əlavə olunacaq';body.innerHTML='<div class="dr-empty">Bu binanın mərtəbələri, mənzil planları, sahələri və statusu tezliklə buraya əlavə olunacaq.</div>';all.style.display='none';}drawer.classList.add('open');}
+function openBuilding(b){document.getElementById('dName').textContent=b.name;var list=VAPT().filter(a=>inB(a,b.name));var meta=document.getElementById('dMeta'),body=document.getElementById('drawerBody'),all=document.getElementById('drawerAll');if(list.length){var av=list.filter(a=>a.status==='available').length;meta.textContent=list.length+' mənzil'+(av&&!HIDEST?' · '+av+' mövcud':'');var _sorted=list.slice().sort(function(x,y){return (parseFloat(x.area)||0)-(parseFloat(y.area)||0);});body.innerHTML=_sorted.map(function(a){var st=STL[a.status];return '<a class="dr-apt" href="/apt/'+a.id+'"><div class="dr-plan">'+(a.plan?'<img src="'+a.plan+'" alt="plan">':PLANSVG)+'</div>'+'<div class="dr-apt-b"><b>'+a.rooms+' otaqlı · '+a.area+' m²</b>'+(HIDEFL?'':'<span>Mərtəbə '+flOf(a,b.name)+'</span>')+'<span class="dr-badge" style="background:'+(st[1]==='glass'?'#e8f5ec':st[1])+';color:'+(st[1]==='glass'||st[0]==='Mövcud'?'#2f7a44':'#fff')+'">'+st[0]+'</span></div></a>';}).join('');all.style.display='';all.setAttribute('data-bina',b.name);all.setAttribute('href','/bina-'+String(b.name).replace(/\D/g,''));}else{meta.textContent='Mənzillər tezliklə əlavə olunacaq';body.innerHTML='<div class="dr-empty">Bu binanın mərtəbələri, mənzil planları, sahələri və statusu tezliklə buraya əlavə olunacaq.</div>';all.style.display='none';}drawer.classList.add('open');}
 document.querySelectorAll('.hots').forEach(function(g){var hero=g.closest('.hero');BUILDINGS.forEach(function(b){var e=document.createElementNS('http://www.w3.org/2000/svg','polygon');e.setAttribute('points',ps(b.points));e.setAttribute('class','hot');e.addEventListener('click',function(){openBuilding(b);});g.appendChild(e);if(hero){var cx=b.points.reduce(function(s,p){return s+p[0];},0)/b.points.length,cy=b.points.reduce(function(s,p){return s+p[1];},0)/b.points.length;var mk=document.createElement('div');mk.className='bmark';mk.style.left=cx+'%';mk.style.top=cy+'%';mk.innerHTML='<span class="bmark-dot">'+b.name.replace(/\D/g,'')+'</span><span class="bmark-label">'+b.name+'</span>';mk.addEventListener('click',function(){openBuilding(b);});hero.appendChild(mk);}});});
 document.getElementById('drawerX').addEventListener('click',()=>drawer.classList.remove('open'));
-document.getElementById('drawerAll').addEventListener('click',function(e){e.preventDefault();F.bina=this.getAttribute('data-bina')||null;renderCat();drawer.classList.remove('open');_go('planlar');});
+document.getElementById('drawerAll').addEventListener('click',function(e){e.preventDefault();var n=String(this.getAttribute('data-bina')||'').replace(/\D/g,'');drawer.classList.remove('open');if(n)_go('bina-'+n);else _go('planlar');});
 document.addEventListener('click',function(e){if(e.target.closest('.bchip')){F.bina=null;renderCat();}});
 const badges=document.querySelectorAll('.dn-badge');setInterval(()=>{const t=(performance.now()/1000)%16;const s=(t>=6&&t<15.4)?'Gecə':'Gündüz';badges.forEach(b=>b.textContent=s);},500);
 (function(){const s=document.getElementById('aboutSlider');if(!s)return;const sl=[...s.querySelectorAll('.slide')],dots=document.getElementById('aboutDots');let cur=0;sl.forEach((_,i)=>{const b=document.createElement('button');if(i===0)b.className='on';b.addEventListener('click',()=>go(i));dots.appendChild(b);});function go(i){cur=i;sl.forEach((x,j)=>x.classList.toggle('on',j===i));[...dots.children].forEach((d,j)=>d.classList.toggle('on',j===i));}setInterval(()=>go((cur+1)%sl.length),5000);})();
@@ -1050,6 +1094,35 @@ const menu=document.getElementById('menu');
 function closeAll(){['favModal','cmpModal','aptModal','callModal'].forEach(id=>{const m=document.getElementById(id);if(m)m.classList.remove('open');});drawer.classList.remove('open');menu.classList.remove('open');}
 function showView(v,nav){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id==='v-'+v));document.querySelectorAll('[data-nav]').forEach(a=>{if(a.tagName==='A')a.classList.toggle('active',a.dataset.nav===nav);});window.scrollTo(0,0);}
 function _cleanPath(){var seg=location.pathname.replace(/^\/+|\/+$/g,'');return seg;}
+
+/* ===== Bina səhifələri ===== */
+var BLEAD={1:'Bina 1 kompleksin geniş planlı 3 və 4 otaqlı mənzilləri ilə seçilən binasıdır.',3:'Bina 3, 4, 5 və 6 eyni layihə üzrə tikilib — mənzil planları bu binalarda ortaqdır.',4:'Bina 3, 4, 5 və 6 eyni layihə üzrə tikilib — mənzil planları bu binalarda ortaqdır.',5:'Bina 3, 4, 5 və 6 eyni layihə üzrə tikilib — mənzil planları bu binalarda ortaqdır.',6:'Bina 3, 4, 5 və 6 eyni layihə üzrə tikilib — mənzil planları bu binalarda ortaqdır.',9:'Bina 9, 10 və 11 eyni layihə üzrə tikilib.',10:'Bina 9, 10 və 11 eyni layihə üzrə tikilib.',11:'Bina 9, 10 və 11 eyni layihə üzrə tikilib.'};
+function _bSales(n){var S=window._SALES||{};var out=null;Object.keys(S).forEach(function(k){var nums=k.replace(/Bina/gi,'').split(/[^0-9]+/).filter(Boolean);if(nums.indexOf(String(n))>=0&&(!out||k.replace(/\D/g,'')===String(n)))out=S[k];});return out;}
+function fillBina(n){var name='Bina '+n;var apts=VAPT().filter(function(a){return inB(a,name);}).sort(function(x,y){return (x.rooms-y.rooms)||((parseFloat(x.area)||0)-(parseFloat(y.area)||0));});
+ document.getElementById('bpTitle').textContent=name;
+ document.getElementById('bpLead').textContent=(BLEAD[n]||'')+' LUX Residence — Yasamal rayonu, Elmlər Akademiyası metrosu yaxınlığında yaşayışa hazır mənzillər.';
+ var sb=_bSales(n),fl=0,cnt=0;if(sb&&sb.rows){Object.keys(sb.rows).forEach(function(f){var fn=+f;if(fn>fl)fl=fn;(sb.rows[f]||[]).forEach(function(u){if(u.st!=='other')cnt++;});});}
+ var rooms=[];apts.forEach(function(a){var r=a.rooms>=4?'4+':String(a.rooms);if(rooms.indexOf(r)<0)rooms.push(r);});
+ var st=[];if(fl)st.push(['Mərtəbə',fl]);if(cnt)st.push(['Mənzil',cnt]);if(apts.length)st.push(['Plan tipi',apts.length]);if(rooms.length)st.push(['Otaq',rooms.join(', ')]);
+ document.getElementById('bpStats').innerHTML=st.map(function(x){return '<div><b>'+x[1]+'</b><span>'+x[0]+'</span></div>';}).join('');
+ var btn='';if(n>=3&&n<=8)btn+='<a class="btn btn-primary" href="/3d?bina='+encodeURIComponent(name)+'">3D-də bax</a><a class="btn bp-b2" href="/secim">İnteraktiv seçim</a>';
+ btn+='<a class="btn bp-b2" href="tel:+994508090088">Zəng edin</a>';document.getElementById('bpBtns').innerHTML=btn;
+ document.getElementById('bpAptH').textContent=apts.length?(name+' — mənzil planları'):name;
+ document.getElementById('bpApts').innerHTML=apts.length?apts.map(card).join(''):'<p class="bp-empty">Bu binada hazırda satışda mənzil yoxdur. Digər binalara baxın və ya satış ofisi ilə əlaqə saxlayın.</p>';
+ var B=(typeof BUILDINGS!=='undefined'?BUILDINGS:[]);var svg=document.getElementById('bpSvg');
+ if(svg)svg.innerHTML=B.map(function(b){var on=b.name===name;return '<polygon points="'+b.points.map(function(p){return p.join(',');}).join(' ')+'" class="'+(on?'on':'')+'"/>';}).join('');
+ var have={};VAPT().forEach(function(a){String(a.bina||'').replace(/Bina/gi,'').split(/[^0-9]+/).filter(Boolean).forEach(function(k){have[k]=1;});});
+ document.getElementById('bpOthers').innerHTML=Object.keys(have).map(Number).sort(function(a,b){return a-b;}).filter(function(k){return k!==n;}).map(function(k){return '<a href="/bina-'+k+'">Bina '+k+'</a>';}).join('');
+ if(typeof _seoSet==='function'){_seoSet(name+' — '+(apts.length?'1–4 otaqlı mənzillər, planlar':'yaşayış binası')+' | LUX Residence','LUX Residence '+name+': '+(rooms.length?rooms.join(', ')+' otaqlı mənzillər, ':'')+'3D planlar və eksplikasiya. Yasamal, Elmlər Akademiyası metrosu yaxınlığı. Yaşayışa hazır təhvil.','/bina-'+n,!apts.length);}
+ if(!window._SALES&&!fillBina._w){fillBina._w=1;var k=0,t=setInterval(function(){if(window._SALES||++k>40){clearInterval(t);fillBina._w=0;if(/^\/bina-\d+/.test(location.pathname))fillBina(n);}},250);}
+}
+/* ===== FAQ ===== */
+var FAQ=null;
+function renderFaq(){var box=document.getElementById('faqList');if(!box)return;
+ function draw(){box.innerHTML=FAQ.map(function(f,i){return '<details class="faq-i"'+(i===0?' open':'')+'><summary>'+esc(f.q)+'</summary><p>'+esc(f.a)+'</p></details>';}).join('');
+  var old=document.getElementById('ldFaq');if(old)old.remove();var sc=document.createElement('script');sc.type='application/ld+json';sc.id='ldFaq';sc.textContent=JSON.stringify({'@context':'https://schema.org','@type':'FAQPage',mainEntity:FAQ.map(function(f){return {'@type':'Question',name:f.q,acceptedAnswer:{'@type':'Answer',text:f.a}};})});document.head.appendChild(sc);}
+ if(FAQ)return draw();box.innerHTML='<p class="muted">Yüklənir…</p>';fetch('/assets/faq.json').then(function(r){return r.json();}).then(function(d){FAQ=d;draw();}).catch(function(){box.innerHTML='';});}
+
 function route(){
   var p;
   if(location.hash&&location.hash.length>1){p=location.hash.slice(1);}
@@ -1057,6 +1130,8 @@ function route(){
   closeAll();if(typeof _seoReset==='function')_seoReset();
   if(p.indexOf('apt-')===0||p.indexOf('apt/')===0){var id=+p.replace('apt-','').replace('apt/','');const a=APARTMENTS.find(x=>x.id==id&&!x.hidden);if(a){fillApt(a);showView('apt','planlar');_seoApt(a);return;}p='planlar';}
   else if(p.indexOf('xeber-')===0||p.indexOf('xeber/')===0){var _k=p.replace('xeber-','').replace('xeber/','');const n=NEWS.find(x=>(x.slug&&x.slug===_k)||String(x.id)===_k);if(n){fillXeber(n);showView('xeber','xeberler');return;}p='ana';}
+  if(/^bina-\d+$/.test(p)){fillBina(+p.slice(5));showView('bina','planlar');return;}
+  if(p==='suallar')renderFaq();
   if(!document.getElementById('v-'+p))p='ana';if(p==='secim'&&window._initTower)setTimeout(window._initTower,60);if(p==='muqayise')renderCmp();if(p==='sevimliler')renderFav();showView(p,p);if(typeof _seoView==='function')_seoView(p);
 }
 // Daxili linkləri path-ə çevir (pushState), hash-ı da dəstəklə
@@ -1071,7 +1146,7 @@ document.addEventListener('click',function(e){
   e.preventDefault();_go(h.slice(1));
 });
 // Real path linkləri (/planlar, /apt/113...) — səhifəni yeniləmədən SPA daxilində aç
-var _SPA=/^\/(|ana|planlar|secim|haqqimizda|infrastruktur|xeberler|elaqe|muqayise|sevimliler|apt\/[^\/]+|xeber\/[^\/]+)\/?$/;
+var _SPA=/^\/(|ana|planlar|secim|haqqimizda|infrastruktur|xeberler|elaqe|suallar|muqayise|sevimliler|bina-\d+|apt\/[^\/]+|xeber\/[^\/]+)\/?$/;
 document.addEventListener('click',function(e){
   if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
   var a=e.target.closest('a[href^="/"]');if(!a||a.target==='_blank'||a.hasAttribute('download'))return;
