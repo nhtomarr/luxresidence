@@ -693,6 +693,7 @@ footer{position:relative;overflow:hidden;background:var(--espresso);color:rgba(2
 .sh-g a,.sh-g button{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ink);background:none;border:none;cursor:pointer;font-family:inherit;padding:6px 0;text-align:center;}
 .sh-g i{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-style:normal;font-weight:800;font-size:19px;}
 body.hidefl .sec-filt{display:none!important;}
+body.hidest .apt-badge,body.hidest .dr-badge,body.hidest .fg-status,body.hidest .sp-dot,body.hidest .sec-filt{display:none!important;}
 </style>
 <div id="maintScreen" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#2a1b12,#4a2a18);color:#f5ece1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;font-family:-apple-system,'Inter',system-ui,sans-serif">
   <div style="font-family:Georgia,serif;font-size:clamp(28px,6vw,52px);color:#e8c9a0;letter-spacing:.04em;margin-bottom:10px">LUX Residence</div>
@@ -782,7 +783,7 @@ body.hidefl .sec-filt{display:none!important;}
     <aside class="filter"><h3>Filtr</h3>
       <div class="fgroup"><label>Otaq sayı</label><div class="chips2" id="fRooms"><button data-r="1">1</button><button data-r="2">2</button><button data-r="3">3</button><button data-r="4">4+</button></div></div>
       <div class="fgroup"><label>Sahə: <span id="fAreaLbl">40–250 m²</span></label><div class="frow"><input type="range" id="fAreaMin" min="40" max="250" step="5" value="40"><input type="range" id="fAreaMax" min="40" max="250" step="5" value="250"></div></div>
-      <div class="fgroup"><label>Status</label><select id="fStatus"><option value="all">Hamısı</option><option value="available">Mövcud</option><option value="sold">Satılıb</option></select></div>
+      <div class="fgroup fg-status"><label>Status</label><select id="fStatus"><option value="all">Hamısı</option><option value="available">Mövcud</option><option value="sold">Satılıb</option></select></div>
       <button class="btn-reset" id="fReset">Sıfırla</button>
     </aside>
     <div><div class="cat-count"><span id="catCount"></span><span id="binaChip"></span></div><div class="apt-grid" id="cat-cards"></div></div>
@@ -892,6 +893,8 @@ const HEART=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-w
 let SHOWP=false;try{SHOWP=localStorage.getItem('lux_showprices')==='1';}catch(e){}
 var HIDEFL=false;try{HIDEFL=localStorage.getItem('lux_hidefloors')==='1';}catch(e){}
 if(HIDEFL)document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('hidefl');});if(HIDEFL&&document.body)document.body.classList.add('hidefl');
+var HIDEST=false;try{HIDEST=localStorage.getItem('lux_hidestatus')==='1';}catch(e){}
+if(HIDEST){document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('hidest');});if(document.body)document.body.classList.add('hidest');}
 let FAV=new Set(),CMP=new Set();try{FAV=new Set(JSON.parse(localStorage.getItem('lux_fav')||'[]'));}catch(e){}try{CMP=new Set(JSON.parse(localStorage.getItem('lux_cmp')||'[]'));}catch(e){}
 function saveFC(){try{localStorage.setItem('lux_fav',JSON.stringify([...FAV]));localStorage.setItem('lux_cmp',JSON.stringify([...CMP]));}catch(e){}}
 function priceLabel(a){return SHOWP?(fmt(a.price)+' <span>AZN/m²</span>'):'<span style="font-size:15px;color:var(--muted);font-weight:600;font-family:var(--sans);">Sorğu ilə</span>';}
@@ -923,7 +926,7 @@ function openApt(a){const total=a.area*a.price,initial=total*0.3,monthly=(total-
 function updCounts(){var ids=new Set(APARTMENTS.map(function(a){return a.id;}));var chg=false;[...FAV].forEach(function(id){if(!ids.has(id)){FAV.delete(id);chg=true;}});[...CMP].forEach(function(id){if(!ids.has(id)){CMP.delete(id);chg=true;}});if(chg)saveFC();var f=document.getElementById('favCount'),c=document.getElementById('cmpCount');if(f){f.textContent=FAV.size;f.style.display=FAV.size?'flex':'none';}if(c){c.textContent=CMP.size;c.style.display=CMP.size?'flex':'none';}}
 function rerenderCards(){document.getElementById('featured-cards').innerHTML=VAPT().filter(a=>a.status==='available').slice(0,4).map(card).join('');renderCat();if(typeof updCounts==='function')updCounts();if(document.getElementById('favModal').classList.contains('open'))openFav();if(document.getElementById('cmpModal').classList.contains('open'))openCmp();}
 function openFav(){const list=VAPT().filter(a=>FAV.has(a.id));document.getElementById('favBody').innerHTML=list.length?('<div class="apt-grid">'+list.map(card).join('')+'</div>'):'<p style="color:var(--muted);text-align:center;padding:30px;">Hələ favorit mənzil yoxdur. Kartdakı ♥ ilə əlavə edin.</p>';document.getElementById('favModal').classList.add('open');}
-function openCmp(){const list=VAPT().filter(a=>CMP.has(a.id));let html;if(!list.length){html='<p style="color:var(--muted);text-align:center;padding:30px;">Müqayisə üçün mənzil seçilməyib.</p>';}else{const rows=[['Otaq',a=>a.rooms+' otaqlı'],['Sahə',a=>a.area+' m²'],['Bina',a=>a.bina]].concat(HIDEFL?[]:[['Mərtəbə',a=>flTxt(a,'<br>')]]).concat([['Qiymət',a=>SHOWP?fmt(a.price)+' AZN/m²':'Sorğu ilə'],['Status',a=>STL[a.status][0]]]);html='<div style="overflow-x:auto;"><table class="cmp-table"><tr><th></th>'+list.map(a=>'<th>'+a.rooms+' otaqlı</th>').join('')+'</tr>'+rows.map(r=>'<tr><td class="rl">'+r[0]+'</td>'+list.map(a=>'<td>'+r[1](a)+'</td>').join('')+'</tr>').join('')+'</table></div>';}document.getElementById('cmpBody').innerHTML=html;document.getElementById('cmpModal').classList.add('open');}
+function openCmp(){const list=VAPT().filter(a=>CMP.has(a.id));let html;if(!list.length){html='<p style="color:var(--muted);text-align:center;padding:30px;">Müqayisə üçün mənzil seçilməyib.</p>';}else{const rows=[['Otaq',a=>a.rooms+' otaqlı'],['Sahə',a=>a.area+' m²'],['Bina',a=>a.bina]].concat(HIDEFL?[]:[['Mərtəbə',a=>flTxt(a,'<br>')]]).concat([['Qiymət',a=>SHOWP?fmt(a.price)+' AZN/m²':'Sorğu ilə']]).concat(HIDEST?[]:[['Status',a=>STL[a.status][0]]]);html='<div style="overflow-x:auto;"><table class="cmp-table"><tr><th></th>'+list.map(a=>'<th>'+a.rooms+' otaqlı</th>').join('')+'</tr>'+rows.map(r=>'<tr><td class="rl">'+r[0]+'</td>'+list.map(a=>'<td>'+r[1](a)+'</td>').join('')+'</tr>').join('')+'</table></div>';}document.getElementById('cmpBody').innerHTML=html;document.getElementById('cmpModal').classList.add('open');}
 document.addEventListener('click',e=>{
   const act=e.target.closest('.cact');
   if(act){if(!act.dataset.act)return;e.stopPropagation();const id=+act.dataset.id,t=act.dataset.act;if(t==='share'){shareApt(id);return;}const S=(t==='fav')?FAV:CMP;S.has(id)?S.delete(id):S.add(id);saveFC();updCounts();rerenderCards();renderCmp();renderFav();return;}
@@ -1009,7 +1012,7 @@ function renderCmp(){var b=document.getElementById('cmpBody2');if(!b)return;var 
  // əgər heç bir mənzil yoxdursa, 2 boş slot; varsa dolu + 1 boş (maks 3)
  var nEmpty=(list.length<MAXC)?1:0;var total=list.length+nEmpty;if(total<2)total=2;
  var money=a=>a.area*a.price;
- var rows=[['Yaşayış kompleksi',a=>'LUX Residence'],['Otaq sayı / Sahəsi',a=>a.rooms+' / '+a.area+' m²'],['Bina',a=>a.bina]].concat(HIDEFL?[]:[['Mərtəbə',a=>flTxt(a,'<br>')]]).concat([['Status',a=>STL[a.status][0]]].concat(SHOWP?[['Qiymət',a=>fmt(money(a))+' AZN']]:[]));
+ var rows=[['Yaşayış kompleksi',a=>'LUX Residence'],['Otaq sayı / Sahəsi',a=>a.rooms+' / '+a.area+' m²'],['Bina',a=>a.bina]].concat(HIDEFL?[]:[['Mərtəbə',a=>flTxt(a,'<br>')]]).concat((HIDEST?[]:[['Status',a=>STL[a.status][0]]]).concat(SHOWP?[['Qiymət',a=>fmt(money(a))+' AZN']]:[]));
  if(window.innerWidth<=760){
   if(!list.length){b.innerHTML='<div class="cmpm-empty"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0zM8 21h8"/></svg><p>Mənzilləri yan-yana müqayisə edin</p><span>Ən çox 3 mənzil seçə bilərsiniz</span><button class="btn btn-primary" onclick="openCmpPicker()">Mənzil əlavə et</button></div>';return;}
   var n=list.length+(list.length<MAXC?1:0);var gc='repeat('+n+',minmax(0,1fr))';
@@ -1040,7 +1043,7 @@ function renderFav(){var b=document.getElementById('favBody2');if(!b)return;var 
 var dcb=document.getElementById('detCallBtn');if(dcb)dcb.addEventListener('click',()=>document.getElementById('callModal').classList.add('open'));
 function ps(p){return p.map(a=>a[0]+','+a[1]).join(' ');}
 const drawer=document.getElementById('drawer');try{(function(){var els=[drawer].concat([].slice.call(document.querySelectorAll('.modal-bg')));function upd(){document.documentElement.classList.toggle('no-scroll',els.some(function(x){return x.classList.contains('open');}));}var mo=new MutationObserver(upd);els.forEach(function(x){mo.observe(x,{attributes:true,attributeFilter:['class']});});})();}catch(e){}
-function openBuilding(b){document.getElementById('dName').textContent=b.name;var list=VAPT().filter(a=>inB(a,b.name));var meta=document.getElementById('dMeta'),body=document.getElementById('drawerBody'),all=document.getElementById('drawerAll');if(list.length){var av=list.filter(a=>a.status==='available').length;meta.textContent=list.length+' mənzil'+(av?' · '+av+' mövcud':'');var _sorted=list.slice().sort(function(x,y){return (parseFloat(x.area)||0)-(parseFloat(y.area)||0);});body.innerHTML=_sorted.map(function(a){var st=STL[a.status];return '<a class="dr-apt" href="#apt-'+a.id+'"><div class="dr-plan">'+(a.plan?'<img src="'+a.plan+'" alt="plan">':PLANSVG)+'</div>'+'<div class="dr-apt-b"><b>'+a.rooms+' otaqlı · '+a.area+' m²</b>'+(HIDEFL?'':'<span>Mərtəbə '+flOf(a,b.name)+'</span>')+'<span class="dr-badge" style="background:'+(st[1]==='glass'?'#e8f5ec':st[1])+';color:'+(st[1]==='glass'||st[0]==='Mövcud'?'#2f7a44':'#fff')+'">'+st[0]+'</span></div></a>';}).join('');all.style.display='';all.setAttribute('data-bina',b.name);}else{meta.textContent='Mənzillər tezliklə əlavə olunacaq';body.innerHTML='<div class="dr-empty">Bu binanın mərtəbələri, mənzil planları, sahələri və statusu tezliklə buraya əlavə olunacaq.</div>';all.style.display='none';}drawer.classList.add('open');}
+function openBuilding(b){document.getElementById('dName').textContent=b.name;var list=VAPT().filter(a=>inB(a,b.name));var meta=document.getElementById('dMeta'),body=document.getElementById('drawerBody'),all=document.getElementById('drawerAll');if(list.length){var av=list.filter(a=>a.status==='available').length;meta.textContent=list.length+' mənzil'+(av&&!HIDEST?' · '+av+' mövcud':'');var _sorted=list.slice().sort(function(x,y){return (parseFloat(x.area)||0)-(parseFloat(y.area)||0);});body.innerHTML=_sorted.map(function(a){var st=STL[a.status];return '<a class="dr-apt" href="#apt-'+a.id+'"><div class="dr-plan">'+(a.plan?'<img src="'+a.plan+'" alt="plan">':PLANSVG)+'</div>'+'<div class="dr-apt-b"><b>'+a.rooms+' otaqlı · '+a.area+' m²</b>'+(HIDEFL?'':'<span>Mərtəbə '+flOf(a,b.name)+'</span>')+'<span class="dr-badge" style="background:'+(st[1]==='glass'?'#e8f5ec':st[1])+';color:'+(st[1]==='glass'||st[0]==='Mövcud'?'#2f7a44':'#fff')+'">'+st[0]+'</span></div></a>';}).join('');all.style.display='';all.setAttribute('data-bina',b.name);}else{meta.textContent='Mənzillər tezliklə əlavə olunacaq';body.innerHTML='<div class="dr-empty">Bu binanın mərtəbələri, mənzil planları, sahələri və statusu tezliklə buraya əlavə olunacaq.</div>';all.style.display='none';}drawer.classList.add('open');}
 document.querySelectorAll('.hots').forEach(function(g){var hero=g.closest('.hero');BUILDINGS.forEach(function(b){var e=document.createElementNS('http://www.w3.org/2000/svg','polygon');e.setAttribute('points',ps(b.points));e.setAttribute('class','hot');e.addEventListener('click',function(){openBuilding(b);});g.appendChild(e);if(hero){var cx=b.points.reduce(function(s,p){return s+p[0];},0)/b.points.length,cy=b.points.reduce(function(s,p){return s+p[1];},0)/b.points.length;var mk=document.createElement('div');mk.className='bmark';mk.style.left=cx+'%';mk.style.top=cy+'%';mk.innerHTML='<span class="bmark-dot">'+b.name.replace(/\D/g,'')+'</span><span class="bmark-label">'+b.name+'</span>';mk.addEventListener('click',function(){openBuilding(b);});hero.appendChild(mk);}});});
 document.getElementById('drawerX').addEventListener('click',()=>drawer.classList.remove('open'));
 document.getElementById('drawerAll').addEventListener('click',function(e){e.preventDefault();F.bina=this.getAttribute('data-bina')||null;renderCat();drawer.classList.remove('open');_go('planlar');});
@@ -1092,7 +1095,7 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
       rows.forEach(function(row){
         if(row.key==="lux_sales"){try{window._SALES=_sanitizeSales(row.value);localStorage.setItem("lux_sales_pub",JSON.stringify(window._SALES));}catch(e){}return;}
         if(row.key==="lux_maintenance"){var mv=String(row.value);try{localStorage.setItem("lux_maintenance",mv);}catch(e){}var m=document.getElementById("maintScreen");if(m){if(mv==="1"){m.classList.add("on");document.body.style.overflow="hidden";}else{m.classList.remove("on");document.body.style.overflow="";}}return;}
-        var stored=(row.key==="lux_showprices"||row.key==="lux_hidefloors")?String(row.value):JSON.stringify(row.value);
+        var stored=(row.key==="lux_showprices"||row.key==="lux_hidefloors"||row.key==="lux_hidestatus")?String(row.value):JSON.stringify(row.value);
         var h=0;for(var i=0;i<stored.length;i+=7){h=(h*31+stored.charCodeAt(i))|0;}sig+=row.key+':'+stored.length+':'+h+';';
         if(localStorage.getItem(row.key)!==stored){try{localStorage.setItem(row.key,stored);changed=true;}catch(e){}}
       });
@@ -1197,7 +1200,7 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
    var pts=f.points.map(function(p){return (p[0]*10)+','+(p[1]*5.63);}).join(' ');
    var units=floorUnits(CURBINA,f.fl);
    var hasMatch=units.some(function(u){return curFilter==='all'||u.st===curFilter;});
-   var cls=(!HIDEFL&&curFilter!=='all'&&!hasMatch)?'dim':'';
+   var cls=(!HIDEFL&&!HIDEST&&curFilter!=='all'&&!hasMatch)?'dim':'';
    h+='<polygon points="'+pts+'" class="'+cls+'" data-floor="'+f.fl+'"></polygon>';
   });
   svg.innerHTML=h;
@@ -1205,7 +1208,7 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
  }
  function buildStrip(){
   var box=document.getElementById('floorStrip');if(!box)return;var h='';
-  for(var fl=FLOOR_TOP;fl>=FLOOR_BOT;fl--){var u=floorUnits(CURBINA,fl);var av=u.some(function(x){return x.st==='available';});var ok=curFilter==='all'||u.some(function(x){return x.st===curFilter;});if(HIDEFL){ok=true;av=false;}
+  for(var fl=FLOOR_TOP;fl>=FLOOR_BOT;fl--){var u=floorUnits(CURBINA,fl);var av=u.some(function(x){return x.st==='available';});var ok=curFilter==='all'||u.some(function(x){return x.st===curFilter;});if(HIDEFL||HIDEST){ok=true;av=false;}
    h+='<button class="fs-b'+(ok?'':' dim')+'" data-floor="'+fl+'">'+fl+(av?'<i></i>':'')+'</button>';}
   box.innerHTML=h;
  }
@@ -1241,7 +1244,7 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
   else if(!units.length){h+='<div class="sp-empty">Bu mərtəbədə uyğun mənzil yoxdur.</div>';}
   else{units.forEach(function(u){
    h+='<div class="sp-apt" onclick="_secApt('+u.area+')"><span class="sp-dot" style="background:'+statusColor(u.st)+'"></span>'
-    +'<div class="sp-info"><b>'+(u.room||'—')+' otaqlı · '+(u.area||'—')+' m²</b><span class="sp-st">№'+(u.n||'')+' · '+statusLabel(u.st)+'</span></div><span class="sp-arrow">→</span></div>';
+    +'<div class="sp-info"><b>'+(u.room||'—')+' otaqlı · '+(u.area||'—')+' m²</b><span class="sp-st">№'+(u.n||'')+(HIDEST?'':' · '+statusLabel(u.st))+'</span></div><span class="sp-arrow">→</span></div>';
   });}
   body.innerHTML=h;
   var _sp=document.getElementById('secPanel');_sp.classList.add('open');

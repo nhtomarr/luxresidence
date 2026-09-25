@@ -410,6 +410,13 @@ h1,h2,h3,h4{margin:0}
         </div>
 
         <div class="panel">
+          <h3>Satış statuslarının görünüşü</h3>
+          <div class="d">Aktiv olduqda saytda "Mövcud / Satışda / Satılıb" statusları gizlədilir: kataloq nişanları, status filtri, bina paneli, müqayisə, Seçim və 3D rəngləri.</div>
+          <div class="row"><div class="lbl"><b>Statusları gizlət</b><span>Müştəri hansı mənzilin satıldığını görmür</span></div>
+            <label class="switch"><input type="checkbox" id="swStatus"><span class="slider"></span></label></div>
+        </div>
+
+        <div class="panel">
           <h3>Saytı gizlət (baxım rejimi)</h3>
           <div class="d">Aktiv olduqda ziyarətçilər sayt əvəzinə "Sayt baxımdadır" səhifəsini görür. Admin panel işləməyə davam edir.</div>
           <div class="row"><div class="lbl"><b>Saytı gizlət</b><span>Baxım/yeniləmə zamanı</span></div>
@@ -548,8 +555,8 @@ var sb=(window.supabase&&window.supabase.createClient)?window.supabase.createCli
 var OFFLINE=false;
 function set(k,v){localStorage.setItem(k,JSON.stringify(v));sbSet(k,v);}
 function sbSet(k,v){if(OFFLINE||!sb)return;try{sb.from("lux_kv").upsert({key:k,value:v,updated_at:new Date().toISOString()}).then(function(r){if(r.error)console.warn("Supabase:",r.error.message);});}catch(e){}}
-function pullAll(){if(!sb)return Promise.resolve();return sb.from("lux_kv").select("key,value").then(function(res){if(res.error)throw res.error;(res.data||[]).forEach(function(row){var stored=(row.key==="lux_showprices"||row.key==="lux_hidefloors"||row.key==="lux_maintenance")?String(row.value):JSON.stringify(row.value);localStorage.setItem(row.key,stored);});APT=get("lux_apartments",DEF_APT);NEWS=get("lux_news",DEF_NEWS);BINA=get("lux_buildings",DEF_BINA);CONTACT=get("lux_contact",DEF_CONTACT);PART=get("lux_partners",[]);CFG=get("lux_cfg",DEF_CFG);COMM=get("lux_commercial",{});GAR=get("lux_garage",{});SALES=get("lux_sales",{});if(!SALES||Object.keys(SALES).length<3||!_hasR(SALES)){SALES=JSON.parse(JSON.stringify(DEFAULT_SALES));try{localStorage.setItem("lux_sales",JSON.stringify(SALES));}catch(e){}}}).catch(function(e){console.warn("pullAll",e&&e.message);});}
-function pushAll(){if(OFFLINE||!sb){toast("Əvvəlcə email/parolla giriş edin");return;}["lux_apartments","lux_news","lux_buildings","lux_contact","lux_partners","lux_content","lux_cfg","lux_sales","lux_commercial","lux_garage"].forEach(function(k){var v=get(k,null);if(v!=null)sbSet(k,v);});sbSet("lux_showprices",localStorage.getItem("lux_showprices")||"0");sbSet("lux_hidefloors",localStorage.getItem("lux_hidefloors")||"0");sbSet("lux_maintenance",localStorage.getItem("lux_maintenance")||"0");toast("Bütün məlumat Supabase-ə yükləndi ✓");}
+function pullAll(){if(!sb)return Promise.resolve();return sb.from("lux_kv").select("key,value").then(function(res){if(res.error)throw res.error;(res.data||[]).forEach(function(row){var stored=(row.key==="lux_showprices"||row.key==="lux_hidefloors"||row.key==="lux_hidestatus"||row.key==="lux_maintenance")?String(row.value):JSON.stringify(row.value);localStorage.setItem(row.key,stored);});APT=get("lux_apartments",DEF_APT);NEWS=get("lux_news",DEF_NEWS);BINA=get("lux_buildings",DEF_BINA);CONTACT=get("lux_contact",DEF_CONTACT);PART=get("lux_partners",[]);CFG=get("lux_cfg",DEF_CFG);COMM=get("lux_commercial",{});GAR=get("lux_garage",{});SALES=get("lux_sales",{});if(!SALES||Object.keys(SALES).length<3||!_hasR(SALES)){SALES=JSON.parse(JSON.stringify(DEFAULT_SALES));try{localStorage.setItem("lux_sales",JSON.stringify(SALES));}catch(e){}}}).catch(function(e){console.warn("pullAll",e&&e.message);});}
+function pushAll(){if(OFFLINE||!sb){toast("Əvvəlcə email/parolla giriş edin");return;}["lux_apartments","lux_news","lux_buildings","lux_contact","lux_partners","lux_content","lux_cfg","lux_sales","lux_commercial","lux_garage"].forEach(function(k){var v=get(k,null);if(v!=null)sbSet(k,v);});sbSet("lux_showprices",localStorage.getItem("lux_showprices")||"0");sbSet("lux_hidefloors",localStorage.getItem("lux_hidefloors")||"0");sbSet("lux_hidestatus",localStorage.getItem("lux_hidestatus")||"0");sbSet("lux_maintenance",localStorage.getItem("lux_maintenance")||"0");toast("Bütün məlumat Supabase-ə yükləndi ✓");}
 let APT=get('lux_apartments',DEF_APT);
 let NEWS=get('lux_news',DEF_NEWS);
 let BINA=get('lux_buildings',DEF_BINA);
@@ -682,9 +689,10 @@ function delNews(id){if(!confirm('Bu xəbəri silmək istəyirsiniz?'))return;NE
 
 /* settings */
 function fillSettings(){
-  document.getElementById('swPrice').checked=(localStorage.getItem('lux_showprices')==='1');var _sf=document.getElementById('swFloors');if(_sf)_sf.checked=(localStorage.getItem('lux_hidefloors')==='1');var _sm=document.getElementById('swMaint');if(_sm){_sm.checked=(localStorage.getItem('lux_maintenance')==='1');_sm.addEventListener('change',function(){var v=this.checked?'1':'0';localStorage.setItem('lux_maintenance',v);sbSet('lux_maintenance',v);toast(this.checked?'Sayt gizlədildi (baxım rejimi)':'Sayt yenidən aktivdir');});}
+  document.getElementById('swPrice').checked=(localStorage.getItem('lux_showprices')==='1');var _sf=document.getElementById('swFloors');if(_sf)_sf.checked=(localStorage.getItem('lux_hidefloors')==='1');var _ss=document.getElementById('swStatus');if(_ss)_ss.checked=(localStorage.getItem('lux_hidestatus')==='1');var _sm=document.getElementById('swMaint');if(_sm){_sm.checked=(localStorage.getItem('lux_maintenance')==='1');_sm.addEventListener('change',function(){var v=this.checked?'1':'0';localStorage.setItem('lux_maintenance',v);sbSet('lux_maintenance',v);toast(this.checked?'Sayt gizlədildi (baxım rejimi)':'Sayt yenidən aktivdir');});}
   cPhone1.value=CONTACT.phone1;cPhone2.value=CONTACT.phone2;cEmail.value=CONTACT.email;cAddr.value=CONTACT.addr;var _s=(get('lux_content',{}).social)||{};['instagram','facebook','youtube','whatsapp','telegram','linkedin'].forEach(function(k){var e=document.getElementById('soc_'+k);if(e)e.value=_s[k]||'';});
 }
+(function(){var _ss=document.getElementById('swStatus');if(_ss)_ss.addEventListener('change',function(){var v=this.checked?'1':'0';localStorage.setItem('lux_hidestatus',v);sbSet('lux_hidestatus',v);toast(this.checked?'Statuslar saytda gizlədildi':'Statuslar saytda göstərilir');});})();
 (function(){var _sf=document.getElementById('swFloors');if(_sf)_sf.addEventListener('change',function(){var v=this.checked?'1':'0';localStorage.setItem('lux_hidefloors',v);sbSet('lux_hidefloors',v);toast(this.checked?'Mərtəbələr saytda gizlədildi':'Mərtəbələr saytda göstərilir');});})();
 document.getElementById('swPrice').addEventListener('change',function(){var sp=this.checked?'1':'0';localStorage.setItem('lux_showprices',sp);sbSet('lux_showprices',sp);toast(this.checked?'Qiymətlər göstərilir':'Qiymətlər gizlədildi');});
 function saveSocial(){var C=get('lux_content',{});function sv(id){var e=document.getElementById(id);return e?e.value.trim():'';}C.social={instagram:sv('soc_instagram'),facebook:sv('soc_facebook'),youtube:sv('soc_youtube'),whatsapp:sv('soc_whatsapp'),telegram:sv('soc_telegram'),linkedin:sv('soc_linkedin')};set('lux_content',C);toast('Sosial şəbəkələr yadda saxlanıldı ✓');}
