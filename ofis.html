@@ -80,6 +80,11 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
 .days{display:flex;gap:4px;flex-wrap:wrap}.days label{display:flex;align-items:center;gap:3px;font-size:13px;border:1px solid var(--line);border-radius:8px;padding:5px 8px}
 @media(max-width:760px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g2{grid-template-columns:1fr}.kanban{display:block}.kanban .col{display:none}.kanban .col.on{display:block}.mtabs{display:flex}.clock{font-size:38px}.hide-m{display:none}}
 .acct{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:6px 0 12px;background:#f8fafc}.acct h4{font-size:14px;margin-bottom:4px}
+.qopt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:8px;cursor:pointer}.qopt input{margin-top:4px}.qopt b{display:block}.qopt span{font-size:13px;color:var(--mut)}
+#printSheet{display:none}
+@media print{body>*{display:none!important}#printSheet{display:block!important}#printSheet .ps-in{display:flex;flex-direction:column;align-items:center;text-align:center;padding:14mm 10mm;font-family:var(--sans);color:#0f172a}
+.ps-t{font-size:44px;font-weight:800;letter-spacing:.06em}.ps-s{font-size:22px;color:#475569;margin:6px 0 22px}#psQr img,#psQr canvas{width:120mm!important;height:120mm!important}
+.ps-l{text-align:left;font-size:18px;margin:24px auto 0;line-height:1.8}.ps-f{margin-top:26px;color:#64748b;font-size:14px}@page{size:A4;margin:10mm}}
 </style>
 </head>
 <body>
@@ -137,12 +142,17 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
     <div class="grid g2" style="margin-top:12px"><div class="field"><label>İcazəli radius (metr)</label><input id="cRad" type="number"></div><div class="field"><label>Gecikməyə güzəşt (dəqiqə)</label><input id="cGrace" type="number"></div></div>
     <label class="row small" style="margin-bottom:12px"><input type="checkbox" id="cGeo"> Yer yoxlaması məcburidir</label>
     <button class="btn" onclick="saveCfg()">Yadda saxla</button></div>
-   <div class="card"><h3>QR ekranı</h3><p class="muted small">Ofisin girişindəki planşet və ya monitorda açın. Kod hər dəqiqə yenilənir, işçilər telefonun kamerası ilə skan edir.</p><button class="btn" onclick="openQR()">QR ekranını aç</button></div>
+   <div class="card"><h3>QR kod</h3>
+    <label class="qopt"><input type="radio" name="qmode" value="static"> <div><b>Çap olunan sabit QR</b><span>Bir dəfə çap edib divara vurulur. Qoruma telefonun ofisdə olmasının yoxlanması ilə olur (yer yoxlaması avtomatik məcburi olur).</span></div></label>
+    <label class="qopt"><input type="radio" name="qmode" value="dynamic"> <div><b>Ekranda dəyişən QR</b><span>Girişdəki planşetdə açıq qalır, kod hər dəqiqə dəyişir. Ən təhlükəsiz variant.</span></div></label>
+    <div class="row" style="margin-top:12px"><button class="btn" onclick="saveCfg()">Yadda saxla</button><button class="btn ghost" id="qPrintBtn" onclick="printQR()">🖨 Çap üçün QR</button><button class="btn ghost" id="qScreenBtn" onclick="openQR()">QR ekranını aç</button></div>
+    <p class="muted small" style="margin-top:12px">Çap olunmuş QR itibsə və ya kənara yayılıbsa: <a href="#" onclick="rotateQR();return false" style="color:var(--bad);font-weight:600">QR-ı yenilə</a> — köhnə QR dərhal işləməz olur, yenisini çap edin.</p></div>
   </section>
  </main>
 </div>
 
 <div class="qrwrap" id="qrWrap"><h1>Gəliş / Gediş</h1><div id="qrBox"></div><p>Telefonun kamerası ilə skan edin · kod <span id="qrLeft">60</span> san sonra yenilənir</p><button class="btn ghost" style="background:rgba(255,255,255,.12);color:#fff" onclick="closeQR()">Bağla</button></div>
+<div id="printSheet"></div>
 <div class="modal" id="modal"><div class="mbox" id="mbox"></div></div>
 <div class="toast" id="toast"></div>
 
@@ -357,10 +367,21 @@ function showCreds(name,em,pw){var link=location.origin+'/ofis';var txt=name+', 
 function delEmp(id){if(!confirm('İşçi kartı və onun davamiyyət tarixçəsi silinsin? (İşdən çıxıbsa, "Aktiv" işarəsini söndürmək daha yaxşıdır)'))return;run(sb.from('office_employees').delete().eq('id',id)).then(function(){EMPS=EMPS.filter(function(x){return x.id!==id;});closeModal();renderStaff();}).catch(err);}
 
 /* ---------- AYARLAR / QR ---------- */
-function renderSet(){var c=CFG||{};$('cLat').value=c.lat||'';$('cLng').value=c.lng||'';$('cRad').value=c.radius_m||150;$('cGrace').value=c.grace_min||10;$('cGeo').checked=c.require_geo!==false;}
+function renderSet(){var c=CFG||{};document.querySelectorAll('input[name=qmode]').forEach(function(r){r.checked=(r.value==='static')===!!c.static_qr;});$('cLat').value=c.lat||'';$('cLng').value=c.lng||'';$('cRad').value=c.radius_m||150;$('cGrace').value=c.grace_min||10;$('cGeo').checked=c.require_geo!==false;}
 function useHere(){if(!navigator.geolocation)return toast('Brauzer yeri dəstəkləmir');toast('Yer alınır…');navigator.geolocation.getCurrentPosition(function(p){$('cLat').value=p.coords.latitude.toFixed(6);$('cLng').value=p.coords.longitude.toFixed(6);toast('Dəqiqlik: ±'+Math.round(p.coords.accuracy)+' m. "Yadda saxla" basın.');},function(){toast('Yer icazəsi verilmədi');},{enableHighAccuracy:true,timeout:15000});}
-function saveCfg(){var b={lat:parseFloat($('cLat').value)||null,lng:parseFloat($('cLng').value)||null,radius_m:+$('cRad').value||150,grace_min:+$('cGrace').value||0,require_geo:$('cGeo').checked,updated_at:new Date().toISOString()};
+function saveCfg(){var qm=(document.querySelector('input[name=qmode]:checked')||{}).value;var b={lat:parseFloat($('cLat').value)||null,lng:parseFloat($('cLng').value)||null,radius_m:+$('cRad').value||150,grace_min:+$('cGrace').value||0,require_geo:$('cGeo').checked,static_qr:qm==='static',updated_at:new Date().toISOString()};
+ if(b.static_qr&&(b.lat==null||b.lng==null))return toast('Sabit QR üçün əvvəlcə ofisin yerini təyin edin');
  run(sb.from('office_config').update(b).eq('id',1).select().single()).then(function(c){CFG=c;toast('Ayarlar saxlanıldı');}).catch(err);}
+
+function printQR(){if(!CFG||!CFG.static_qr)return toast('Əvvəlcə "Çap olunan sabit QR" seçib Yadda saxla basın');
+ sb.rpc('office_qr_static').then(function(r){if(r.error)throw r.error;var url=location.origin+'/ofis?c='+r.data;
+  var sh=$('printSheet');sh.innerHTML='<div class="ps-in"><div class="ps-t">GƏLİŞ · GEDİŞ</div><div class="ps-s">Telefonun kamerası ilə skan edin</div><div id="psQr"></div><ol class="ps-l"><li>Kameranı QR koda tutun və linkə toxunun</li><li>Hesabınızla daxil olun (ilk dəfə)</li><li>Kamera və yer icazəsi verin</li></ol><div class="ps-f">Baş Ofis · İdarəetmə sistemi</div></div>';
+  new QRCode($('psQr'),{text:url,width:520,height:520,correctLevel:QRCode.CorrectLevel.H});
+  modal('<div class="mhead"><h3>Çap üçün QR</h3><button class="x" onclick="closeModal()">×</button></div><p class="muted small">A4 vərəqə çap edin və girişə, göz səviyyəsində vurun.</p><div id="pvQr" style="display:flex;justify-content:center;margin:12px 0"></div><div class="row"><button class="btn" onclick="window.print()">🖨 Çap et</button><button class="btn ghost" onclick="dlQR()">PNG yüklə</button></div>');
+  new QRCode($('pvQr'),{text:url,width:240,height:240,correctLevel:QRCode.CorrectLevel.H});
+ }).catch(err);}
+function dlQR(){var c=document.querySelector('#psQr canvas');if(!c)return;var a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='ofis-qr.png';a.click();}
+function rotateQR(){if(!confirm('QR yenilənsin? Köhnə çap olunmuş QR dərhal işləməz olacaq və yenisini çap etməli olacaqsınız.'))return;sb.rpc('office_qr_rotate').then(function(r){if(r.error)throw r.error;toast('QR yeniləndi. Yenisini çap edin.');}).catch(err);}
 var _qrT=null,_qrTick=null;
 function openQR(){$('qrWrap').classList.add('on');var box=$('qrBox'),qr=null;function draw(){sb.rpc('office_qr_token').then(function(r){if(r.error)throw r.error;var url=location.origin+'/ofis?c='+r.data;box.innerHTML='';qr=new QRCode(box,{text:url,width:300,height:300,correctLevel:QRCode.CorrectLevel.M});}).catch(err);}
  draw();clearInterval(_qrT);clearInterval(_qrTick);var left=60-new Date().getSeconds();$('qrLeft').textContent=left;
