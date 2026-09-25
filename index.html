@@ -782,7 +782,7 @@ body.hidest .apt-badge,body.hidest .dr-badge,body.hidest .fg-status,body.hidest 
   <section class="sec"><div class="wrap"><div class="catalog">
     <aside class="filter"><h3>Filtr</h3>
       <div class="fgroup"><label>Otaq sayı</label><div class="chips2" id="fRooms"><button data-r="1">1</button><button data-r="2">2</button><button data-r="3">3</button><button data-r="4">4+</button></div></div>
-      <div class="fgroup"><label>Sahə: <span id="fAreaLbl">40–250 m²</span></label><div class="frow"><input type="range" id="fAreaMin" min="40" max="250" step="5" value="40"><input type="range" id="fAreaMax" min="40" max="250" step="5" value="250"></div></div>
+      <div class="fgroup"><label>Sahə: <span id="fAreaLbl">70–250 m²</span></label><div class="frow"><input type="range" id="fAreaMin" min="70" max="250" step="5" value="70"><input type="range" id="fAreaMax" min="70" max="250" step="5" value="250"></div></div>
       <div class="fgroup fg-status"><label>Status</label><select id="fStatus"><option value="all">Hamısı</option><option value="available">Mövcud</option><option value="sold">Satılıb</option></select></div>
       <button class="btn-reset" id="fReset">Sıfırla</button>
     </aside>
@@ -913,14 +913,14 @@ function shareApt(id){var a=APARTMENTS.find(function(x){return x.id==id;});if(!a
   if(navigator.clipboard)navigator.clipboard.writeText(url).then(ok,function(){prompt('Linki kopyalayın:',url);});else prompt('Linki kopyalayın:',url);};}
 function card(a){const[l,c]=STL[a.status];const f=FAV.has(a.id)?" on":"",cm=CMP.has(a.id)?" on":"";return `<div class="apt-card" data-id="${a.id}" style="cursor:pointer;"><div class="apt-thumb"><span class="apt-badge ${c}">${l}</span><div class="card-actions"><button class="cact${f}" data-act="fav" data-id="${a.id}">${HEART}</button><button class="cact${cm}" data-act="cmp" data-id="${a.id}">${SCALE}</button><button class="cact" data-act="share" data-id="${a.id}" title="Paylaş" aria-label="Paylaş">${SHAREI}</button></div>${a.plan?('<img class="apt-planimg" src="'+a.plan+'" alt="'+a.rooms+' otaqlı mənzil planı, '+a.area+' m²" loading="lazy">'):PLAN}</div><div class="apt-b"><div class="spec">${a.rooms} otaqlı · ${a.area} m²</div><div class="loc">${PIN}<span class="locl">${locTxt(a,'<br>')}</span></div><div class="p">${priceLabel(a)}</div><div class="abtn">Ətraflı →</div></div></div>`;}
 document.getElementById('featured-cards').innerHTML=VAPT().filter(a=>a.status==='available').slice(0,4).map(card).join('');
-const F={rooms:new Set(),min:40,max:250,status:'all',bina:null};
+const F={rooms:new Set(),min:70,max:250,status:'all',bina:null};
 function renderCat(){const list=VAPT().filter(a=>{if(F.rooms.size){const r=a.rooms>=4?4:a.rooms;if(!F.rooms.has(r))return false;}if(a.area<F.min||a.area>F.max)return false;if(F.status!=='all'&&a.status!==F.status)return false;if(F.bina&&!inB(a,F.bina))return false;return true;});document.getElementById('cat-cards').innerHTML=list.length?list.map(card).join(''):'<p style="color:var(--muted);grid-column:1/-1;">Uyğun mənzil tapılmadı.</p>';document.getElementById('catCount').textContent=list.length+' mənzil';}
 document.querySelectorAll('#fRooms button').forEach(b=>b.addEventListener('click',()=>{const r=+b.dataset.r;b.classList.toggle('on');F.rooms.has(r)?F.rooms.delete(r):F.rooms.add(r);renderCat();}));
 const amin=document.getElementById('fAreaMin'),amax=document.getElementById('fAreaMax'),albl=document.getElementById('fAreaLbl');
 function ac(){let lo=+amin.value,hi=+amax.value;if(lo>hi){[lo,hi]=[hi,lo];amin.value=lo;amax.value=hi;}F.min=lo;F.max=hi;albl.textContent=lo+'–'+hi+' m²';renderCat();}
 amin.addEventListener('input',ac);amax.addEventListener('input',ac);
 document.getElementById('fStatus').addEventListener('change',e=>{F.status=e.target.value;renderCat();});
-document.getElementById('fReset').addEventListener('click',()=>{F.rooms.clear();F.min=40;F.max=250;F.status='all';F.bina=null;amin.value=40;amax.value=250;albl.textContent='40–250 m²';document.querySelectorAll('#fRooms button').forEach(b=>b.classList.remove('on'));document.getElementById('fStatus').value='all';renderCat();});
+document.getElementById('fReset').addEventListener('click',()=>{F.rooms.clear();F.min=70;F.max=250;F.status='all';F.bina=null;amin.value=70;amax.value=250;albl.textContent='70–250 m²';document.querySelectorAll('#fRooms button').forEach(b=>b.classList.remove('on'));document.getElementById('fStatus').value='all';renderCat();});
 renderCat();
 function openApt(a){const total=a.area*a.price,initial=total*0.3,monthly=(total-initial)/36;const[l,c]=STL[a.status];const bd=document.getElementById('adBadge');bd.className='apt-badge '+c;bd.textContent=l;document.getElementById('adTitle').textContent=a.rooms+' otaqlı · '+a.area+' m²';document.getElementById('adLoc').innerHTML=locTxt(a,'<br>');if(SHOWP){document.getElementById('adPrice').textContent=fmt(total)+' AZN – dan';document.getElementById('adMonthly').textContent=fmt(Math.round(monthly))+' AZN';document.getElementById('adInitial').textContent=fmt(Math.round(initial))+' AZN';}else{document.getElementById('adPrice').textContent='Qiymət — sorğu ilə';document.getElementById('adMonthly').textContent='—';document.getElementById('adInitial').textContent='—';}document.getElementById('aptModal').classList.add('open');}
 function updCounts(){var ids=new Set(APARTMENTS.map(function(a){return a.id;}));var chg=false;[...FAV].forEach(function(id){if(!ids.has(id)){FAV.delete(id);chg=true;}});[...CMP].forEach(function(id){if(!ids.has(id)){CMP.delete(id);chg=true;}});if(chg)saveFC();var f=document.getElementById('favCount'),c=document.getElementById('cmpCount');if(f){f.textContent=FAV.size;f.style.display=FAV.size?'flex':'none';}if(c){c.textContent=CMP.size;c.style.display=CMP.size?'flex':'none';}}
@@ -1240,11 +1240,11 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
   if(curFilter!=='all')units=units.filter(function(u){return u.st===curFilter;});
   var body=document.getElementById('secPanelBody');
   var h='<div class="sp-fl">Mərtəbə '+floor+'</div><div class="sp-bina">'+CURBINA+'</div>';
-  if(HIDEFL){h+='<div class="sp-empty" style="line-height:1.6">Bu mərtəbədəki mənzillər barədə ətraflı məlumat üçün satış ofisi ilə əlaqə saxlayın.</div><a class="btn btn-primary" style="display:flex;margin-top:14px" href="tel:+994508090088">Zəng edin</a><a class="btn" style="display:flex;margin-top:8px;background:#f0e6da;color:var(--ink)" href="#planlar">'+CURBINA+' mənzillərinə bax</a>';}
-  else if(!units.length){h+='<div class="sp-empty">Bu mərtəbədə uyğun mənzil yoxdur.</div>';}
+  var _noSt=HIDEFL||HIDEST;
+  if(!units.length){h+='<div class="sp-empty">Bu mərtəbədə uyğun mənzil yoxdur.</div>';}
   else{units.forEach(function(u){
-   h+='<div class="sp-apt" onclick="_secApt('+u.area+')"><span class="sp-dot" style="background:'+statusColor(u.st)+'"></span>'
-    +'<div class="sp-info"><b>'+(u.room||'—')+' otaqlı · '+(u.area||'—')+' m²</b><span class="sp-st">№'+(u.n||'')+(HIDEST?'':' · '+statusLabel(u.st))+'</span></div><span class="sp-arrow">→</span></div>';
+   h+='<div class="sp-apt" onclick="_secApt('+u.area+')">'+(_noSt?'':'<span class="sp-dot" style="background:'+statusColor(u.st)+'"></span>')
+    +'<div class="sp-info"><b>'+(u.room||'—')+' otaqlı · '+(u.area||'—')+' m²</b><span class="sp-st">№'+(u.n||'')+(_noSt?'':' · '+statusLabel(u.st))+'</span></div><span class="sp-arrow">→</span></div>';
   });}
   body.innerHTML=h;
   var _sp=document.getElementById('secPanel');_sp.classList.add('open');
