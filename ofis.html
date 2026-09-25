@@ -254,7 +254,7 @@ function run(q){return q.then(function(r){if(r.error)throw r.error;return r.data
 /* ---------- start ---------- */
 luxAuth({perms:['ofis','ofis_admin','ofis_owner'],title:'Baş Ofis',sub:'İşçi hesabınızla daxil olun',logo:false,noAdminLink:true,accent:'#2563eb',bg:'linear-gradient(135deg,#e2e8f0,#f8fafc)',onReady:function(client,me){sb=client;ME=me;OWNER=(me.perms||[]).indexOf('ofis_owner')>=0;MGR=me.is_admin||OWNER||(me.perms||[]).indexOf('ofis_admin')>=0;start();}});
 function start(){$('app').style.display='';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
- $('meBox').innerHTML='<b>'+esc(ME.full_name||ME.email)+'</b>'+(OWNER?'Sahibkar':MGR?'HR / Rəhbər':'İşçi');
+ $('meBox').innerHTML='<b>'+esc(ME.full_name||ME.email)+'</b>'+(ME.is_admin?'Sistem admini':OWNER?'Sahibkar':MGR?'HR rəhbəri':'İşçi');
  $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href='/ofis';});};
  var tabs;
  if(OWNER)tabs=[['boss','Nəzarət'],['plans','Aylıq planlar'],['tasks','Tapşırıqlar'],['team','Davamiyyət'],['leave','Sorğular'],['news','Elanlar']];
@@ -264,7 +264,7 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
  $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};
  $('dDay').value=today();$('mMonth').value=today().slice(0,7);$('dDay').onchange=renderDay;$('mMonth').onchange=renderMonth;$('tkFilter').onchange=renderKanban;
  setInterval(tick,1000);tick();
- loadAll().then(function(){if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':(OWNER?'boss':'today'));if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
+ loadAll().then(function(){if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':((OWNER||(ME.is_admin&&!EMP))?'boss':'today'));if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
 }
 function show(v){document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
  if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss')renderBoss();if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();window.scrollTo(0,0);}
