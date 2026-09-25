@@ -45,3 +45,7 @@
   Service-Worker-Allowed: /
 /ofis.webmanifest
   Content-Type: application/manifest+json
+/ig.html
+  X-Robots-Tag: noindex, follow
+/ig
+  X-Robots-Tag: noindex, follow
