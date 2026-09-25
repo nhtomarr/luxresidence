@@ -124,6 +124,25 @@ a.btn{text-decoration:none}
 .brow{display:grid;grid-template-columns:1.3fr 1.2fr 1fr 1fr;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:10px;cursor:pointer}
 .brow:hover{border-color:var(--acc)}.bn b{display:block;font-size:18px}.bn span{color:var(--mut);font-size:14px}.brow .pill{font-size:14px;padding:5px 11px}
 @media(max-width:760px){.bgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.btile b{font-size:36px}.brow{grid-template-columns:1fr 1fr}.bossh{font-size:22px}}
+
+/* sahibkar rejimi: böyük şrift, menyu yoxdur, yalnız baxış */
+body.owner .tabs{display:none}
+body.owner main{font-size:18px;max-width:900px}
+body.owner #v-boss .bossh{font-size:30px}
+body.owner #v-boss > .row button{display:none}
+body.owner .bgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+body.owner .btile{padding:24px;position:relative}.btile em{position:absolute;right:18px;bottom:14px;font-style:normal;color:var(--acc);font-size:15px;font-weight:600;display:none}
+body.owner .btile em{display:block}body.owner .btile span{font-size:18px}
+.orow{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:10px;cursor:pointer}
+.orow:active{background:#f8fafc}.on{flex:1}.on b{display:block;font-size:19px}.on span{color:var(--mut);font-size:15px}.ogo{font-size:28px;color:var(--mut)}
+.grade{font-weight:800;border-radius:12px;padding:8px 12px;font-size:15px;min-width:64px;text-align:center}
+.g-ok{background:#dcfce7;color:#166534}.g-warn{background:#fef3c7;color:#92400e}.g-bad{background:#fee2e2;color:#991b1b}
+.grade.big{font-size:20px;padding:12px 16px;margin:8px 0 12px;text-align:left}
+.ownh{font-size:22px}.ownh4{font-size:17px;margin:16px 0 8px}
+.olines p{font-size:18px;line-height:1.5;margin:8px 0}.opi{font-size:17px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.oli{padding:12px 0;border-bottom:1px solid var(--line)}.oli b{display:block;font-size:18px}.oli span{color:var(--mut);font-size:16px}
+body.owner .mbox{font-size:17px}
+.olines b,#ownTg p b{display:inline!important;font-size:inherit!important}
 </style>
 </head>
 <body>
@@ -179,7 +198,7 @@ a.btn{text-decoration:none}
   <section class="view" id="v-boss"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2 class="bossh" style="margin:0">Ofisdə vəziyyət</h2><span class="muted" id="bDate"></span></div>
    <div class="bgrid" id="bKpi"></div>
    <div class="row" style="justify-content:space-between;margin:22px 0 10px"><h2 class="bossh" style="margin:0">İşçilər</h2><button class="btn ghost" onclick="monthReport()">🖨 Aylıq hesabat</button></div>
-   <p class="muted" style="margin-bottom:10px">Ətraflı məlumat üçün işçinin adına toxunun.</p><div id="bList"></div></section>
+   <p class="muted" style="margin-bottom:10px">Ətraflı məlumat üçün işçinin adına toxunun.</p><div id="bList"></div><div id="ownTg"></div></section>
   <!-- AYLIQ PLAN -->
   <section class="view" id="v-plans"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0" id="plH">Aylıq iş planı</h2><input type="month" id="plM" class="btn ghost sm"></div>
    <div class="grid g4" id="plKpi" style="margin-bottom:14px"></div><div id="plBody"></div></section>
@@ -257,9 +276,9 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
  $('meBox').innerHTML='<b>'+esc(ME.full_name||ME.email)+'</b>'+(ME.is_admin?'Sistem admini':OWNER?'Sahibkar':MGR?'HR rəhbəri':'İşçi');
  $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href='/ofis';});};
  var tabs;
- if(OWNER)tabs=[['boss','Nəzarət'],['plans','Aylıq planlar'],['tasks','Tapşırıqlar'],['team','Davamiyyət'],['leave','Sorğular'],['news','Elanlar']];
+ if(OWNER)tabs=[['boss','Nəzarət']];
  else{tabs=[['today','Bu gün']];if(MGR)tabs.push(['boss','Nəzarət'],['panel','Panel']);tabs.push(['plans',MGR?'Aylıq planlar':'Aylıq plan'],['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['news','Elanlar'],['cal','Təqvim']);if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}}
- document.body.classList.toggle('is-mgr',MGR);
+ document.body.classList.toggle('is-mgr',MGR);document.body.classList.toggle('owner',OWNER);
  $('tabs').innerHTML=tabs.map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');
  $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};
  $('dDay').value=today();$('mMonth').value=today().slice(0,7);$('dDay').onchange=renderDay;$('mMonth').onchange=renderMonth;$('tkFilter').onchange=renderKanban;
@@ -267,7 +286,7 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
  loadAll().then(function(){if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':((OWNER||(ME.is_admin&&!EMP))?'boss':'today'));if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
 }
 function show(v){document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
- if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss')renderBoss();if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();window.scrollTo(0,0);}
+ if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss'){if(OWNER)renderOwner();else renderBoss();}if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();window.scrollTo(0,0);}
 function tick(){var n=new Date();$('tClock').textContent=n.toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit',second:'2-digit'});$('tDate').textContent=n.toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});}
 function loadAll(){return Promise.all([
   run(sb.from('office_employees').select('*').order('full_name')),run(sb.from('office_departments').select('*').order('sort').order('id')),run(sb.from('office_positions').select('*').order('sort').order('id')),
@@ -566,6 +585,52 @@ function renderBoss(){var d=today(),m=d.slice(0,7);$('bDate').textContent=new Da
 function clearDemo(){if(!confirm('Bütün demo işçilər və onlara aid məlumatlar silinsin? Real məlumatlara toxunulmayacaq.'))return;
  sb.rpc('office_demo_clear').then(function(r){if(r.error)throw r.error;toast((r.data||0)+' demo işçi silindi');return loadAll();}).then(function(){renderSet();}).catch(err);}
 function demoTag(e){return e&&e.demo?' <span class="pill p-mut" style="font-size:10px">demo</span>':'';}
+
+
+/* ---------- SAHİBKAR: çox sadə, yalnız baxış ---------- */
+var OWN={};
+function grade(r,pp,over){var pts=0;var att=r.plan?(r.came+r.leave)/r.plan:1;if(att>=0.95)pts+=2;else if(att>=0.85)pts+=1;
+ if(r.lateN<=1)pts+=2;else if(r.lateN<=4)pts+=1;if(pp===null)pts+=1;else if(pp>=70)pts+=2;else if(pp>=40)pts+=1;if(!over)pts+=2;else if(over<=1)pts+=1;
+ return pts>=7?['Yaxşı','g-ok']:pts>=4?['Orta','g-warn']:['Zəif','g-bad'];}
+function renderOwner(){var d=today(),m=d.slice(0,7);
+ $('bDate').textContent=new Date().toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});
+ document.querySelectorAll('#v-boss .bossh')[0].textContent='Salam, '+String(ME.full_name||'').split(' ')[0]+' 👋';
+ Promise.all([run(sb.from('office_attendance').select('*').eq('day',d)),loadPlans(m)]).then(function(r){var att=r[0];
+  monthRows(function(R){var act=EMPS.filter(function(e){return e.active;});
+   var work=act.filter(function(e){return (e.workdays||[]).indexOf(isoDow(d))>=0&&!isHol(d)&&!leaveOn(e.id,d);});
+   var came=att.filter(function(a){return a.check_in;}),late=came.filter(function(a){return a.late_min>0;}),absent=work.filter(function(e){return !came.some(function(a){return a.employee_id===e.id;});}),onLv=act.filter(function(e){return leaveOn(e.id,d);});
+   var rows=act.map(function(e){var rr=R.find(function(x){return x.e.id===e.id;})||{plan:0,came:0,leave:0,lateN:0,lateM:0,absent:0};var p=PLANS.find(function(x){return x.employee_id===e.id;});var pp=p&&p.status==='approved'?planPct(p):null;
+    var over=TASKS.filter(function(t){return t.assignee_id===e.id&&t.status!=='done'&&t.due&&t.due<d;});var a=att.find(function(x){return x.employee_id===e.id;});return {e:e,r:rr,p:p,pp:pp,over:over,a:a,g:grade(rr,pp,over.length)};});
+   OWN={late:late,absent:absent,onLv:onLv,rows:rows};
+   var appr=rows.filter(function(x){return x.pp!==null;}),avg=appr.length?Math.round(appr.reduce(function(s2,x){return s2+x.pp;},0)/appr.length):0,overAll=rows.reduce(function(s2,x){return s2+x.over.length;},0);
+   function tile(v,l,c,k){return '<div class="btile '+c+'" onclick="ownList(\''+k+'\')"><b>'+v+'</b><span>'+l+'</span><em>bax ›</em></div>';}
+   $('bKpi').innerHTML=tile(came.length+' / '+work.length,'nəfər bu gün işdədir','ok','came')+tile(late.length,'nəfər bu gün gecikib',late.length?'warn':'ok','late')+tile(absent.length,'nəfər bu gün gəlməyib',absent.length?'bad':'ok','absent')+
+    tile(avg+'%','bu ayın planları yerinə yetirilib',avg>=70?'ok':avg>=40?'warn':'bad','plans')+tile(overAll,'iş vaxtında görülməyib',overAll?'bad':'ok','over')+tile(onLv.length,'nəfər məzuniyyətdə / icazəli','ok','leave');
+   rows.sort(function(a,b){var o={'g-bad':0,'g-warn':1,'g-ok':2};return o[a.g[1]]-o[b.g[1]];});
+   $('bList').innerHTML=rows.map(function(x){var e=x.e;var today_=leaveOn(e.id,d)?'bu gün icazəlidir':x.a&&x.a.check_in?(x.a.late_min?'bu gün '+x.a.late_min+' dəq gecikib':'bu gün vaxtında gəlib'):(work.indexOf(e)>=0?'bu gün gəlməyib':'bu gün istirahətdir');
+    return '<div class="orow" onclick="ownCard('+e.id+')"><span class="grade '+x.g[1]+'">'+x.g[0]+'</span><div class="on"><b>'+esc(e.full_name)+demoTag(e)+'</b><span>'+esc((posOf(e)||{}).title||'')+' · '+today_+'</span></div><span class="ogo">›</span></div>';}).join('')||'<div class="card empty">İşçi yoxdur</div>';
+  ownTg();});}).catch(err);}
+function ownTg(){var c=$('ownTg');if(!c)return;Promise.all([tgBot(),sb.rpc('office_tg_code')]).then(function(r){var bot=r[0],d=(r[1]&&r[1].data)||{};if(!bot){c.innerHTML='';return;}
+ c.innerHTML=d.connected?'<div class="card" style="margin-top:16px">📲 Hər iş günü səhər saat 09:30-da bu məlumatlar Telegram-a da gəlir.</div>':'<div class="card" style="margin-top:16px"><b>📲 Hər səhər qısa xülasə Telegram-a gəlsin?</b><p class="muted" style="margin:6px 0 12px">Düyməyə basın, Telegram açılanda <b>START</b> basın.</p><a class="btn" style="font-size:17px;padding:14px 20px" target="_blank" rel="noopener" href="https://t.me/'+encodeURIComponent(bot)+'?start='+esc(d.code)+'">Telegram-a qoş</a></div>';}).catch(function(){});}
+function ownList(k){var t={came:'Bu gün işdə olanlar',late:'Bu gün gecikənlər',absent:'Bu gün gəlməyənlər',plans:'Bu ayın planları',over:'Vaxtında görülməyən işlər',leave:'Məzuniyyətdə / icazəli'}[k];var h='';
+ if(k==='came')h=OWN.rows.filter(function(x){return x.a&&x.a.check_in;}).map(function(x){return li(x.e.full_name,'gəlib: '+hm(x.a.check_in)+(x.a.late_min?' ('+x.a.late_min+' dəq gec)':''));}).join('');
+ if(k==='late')h=OWN.late.map(function(a){return li(empName(a.employee_id),hm(a.check_in)+' — '+a.late_min+' dəqiqə gec');}).join('');
+ if(k==='absent')h=OWN.absent.map(function(e){return li(e.full_name,'xəbərsiz gəlməyib');}).join('');
+ if(k==='leave')h=OWN.onLv.map(function(e){var l=leaveOn(e.id,today());return li(e.full_name,LT[l.type]+' · '+l.date_to.slice(8)+'.'+l.date_to.slice(5,7)+'-dək');}).join('');
+ if(k==='plans')h=OWN.rows.map(function(x){return li(x.e.full_name,x.pp!==null?x.pp+'% edilib':(x.p?PST[x.p.status][0]:'plan verməyib'),x.pp);}).join('');
+ if(k==='over')h=OWN.rows.filter(function(x){return x.over.length;}).map(function(x){return x.over.map(function(t){return li(x.e.full_name,t.title+' — son tarix '+t.due.slice(8)+'.'+t.due.slice(5,7));}).join('');}).join('');
+ modal('<div class="mhead"><h3 class="ownh">'+t+'</h3><button class="x" onclick="closeModal()">×</button></div><div class="olist">'+(h||'<p class="empty">Heç kim yoxdur 👍</p>')+'</div>');}
+function li(n,s2,pp){return '<div class="oli"><b>'+esc(n)+'</b><span>'+esc(s2)+'</span>'+(pp!==undefined&&pp!==null?bar(pp):'')+'</div>';}
+function ownCard(eid){var x=OWN.rows.find(function(y){return y.e.id===eid;});if(!x)return;var r=x.r;
+ var lines=['📅 Bu ay <b>'+r.came+'</b> gün işə gəlib'+(r.plan?' ('+r.plan+' iş günündən)':'')+'.',
+  r.leave?'🌴 <b>'+r.leave+'</b> gün icazəli olub.':'',
+  r.absent?'❌ <b>'+r.absent+'</b> gün xəbərsiz gəlməyib.':'✅ Xəbərsiz gəlmədiyi gün yoxdur.',
+  r.lateN?'⏰ <b>'+r.lateN+'</b> dəfə gecikib (cəmi '+hmin(r.lateM)+').':'✅ Bu ay gecikməyib.',
+  x.pp!==null?'🗒 Aylıq planının <b>'+x.pp+'%</b>-ni edib.':(x.p?'🗒 Aylıq planı: '+PST[x.p.status][0]+'.':'🗒 Bu ay üçün plan verməyib.'),
+  x.over.length?'⚠️ <b>'+x.over.length+'</b> işi vaxtında görülməyib.':'✅ Vaxtı keçmiş işi yoxdur.'].filter(Boolean);
+ var plan=x.p&&x.p.items&&x.p.items.length?'<h4 class="ownh4">Bu ayın planı</h4>'+x.p.items.map(function(i){return '<div class="opi">'+(i.done?'✅':'⬜')+' '+esc(i.t)+'</div>';}).join(''):'';
+ var over=x.over.length?'<h4 class="ownh4">Vaxtında görülməyən işlər</h4>'+x.over.map(function(t){return '<div class="opi">⚠️ '+esc(t.title)+' <span class="muted">(son tarix '+t.due.slice(8)+'.'+t.due.slice(5,7)+')</span></div>';}).join(''):'';
+ modal('<div class="mhead"><div><h3 class="ownh">'+esc(x.e.full_name)+'</h3><div class="muted">'+esc((posOf(x.e)||{}).title||'')+'</div></div><button class="x" onclick="closeModal()">×</button></div><div class="grade big '+x.g[1]+'">Ümumi qiymət: '+x.g[0]+'</div><div class="olines">'+lines.map(function(l){return '<p>'+l+'</p>';}).join('')+'</div>'+plan+over);}
 
 /* ---------- TELEGRAM ---------- */
 var TGBOT=null;
