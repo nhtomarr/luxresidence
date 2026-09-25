@@ -1439,7 +1439,7 @@ document.getElementById('pin').focus();
     <div class="field"><label>Ad, soyad</label><input id="uName" placeholder="Məs: Aysel Məmmədova"></div>
     <div class="field"><label>Email (giriş adı)</label><input id="uEmail" type="email" placeholder="ad@luxresidence.az" autocomplete="off"></div>
     <div class="field"><label id="uPwLbl">Parol</label><div class="upw"><input id="uPw" type="text" autocomplete="off" placeholder="Ən azı 8 simvol"><button type="button" class="btn ghost" onclick="genPw()">Yarat</button></div></div>
-    <div class="field"><label>Hazır rol</label><select id="uTpl" onchange="applyTpl(this.value)"><option value="">— seçin —</option><option value="contract">Müqavilə meneceri</option><option value="salesm">Satış meneceri</option><option value="content">Kontent meneceri</option><option value="admin">Tam admin</option></select></div>
+    <div class="field"><label>Hazır rol</label><select id="uTpl" onchange="applyTpl(this.value)"><option value="">— seçin —</option><option value="contract">Müqavilə meneceri</option><option value="salesm">Satış meneceri</option><option value="content">Kontent meneceri</option><option value="ofis">Ofis işçisi</option><option value="ofisadm">Ofis rəhbəri</option><option value="admin">Tam admin</option></select></div>
   </div>
   <label class="uadm"><input type="checkbox" id="uAdmin" onchange="syncAdm()"> <b>Tam admin</b> — bütün bölmələr, istifadəçilərin idarəsi daxil</label>
   <div class="uperms" id="uPerms"></div>
@@ -1454,7 +1454,7 @@ var ME=null;
 var PERM_LIST=[['apartments','Mənzillər və binalar','Kataloqa mənzil əlavə etmək, redaktə, gizlətmək'],['sales','Satış lövhəsi','Satış statusları, qiymətlər, alıcılar; Panel statistikası'],['contracts','Müqavilələr','Müqavilə yaratmaq və bütün arxivi görmək'],['leads','Sorğular','Saytdan gələn müraciətlər'],['news','Xəbərlər / bloq','Yazı əlavə etmək və redaktə'],['partners','Tərəfdaşlar','Loqolar'],['content','Sayt mətnləri','Kontent bölməsi'],['calc','Kalkulyator','Kalkulyatora giriş və onun ayarları'],['settings','Sayt ayarları','Qiymət, mərtəbə, status göstərmə, baxım rejimi, əlaqə'],['ofis','Ofis — işçi','Baş ofis tətbiqi: gəliş-gediş (QR), öz tapşırıqları'],['ofis_admin','Ofis — rəhbər','Rəhbər paneli, bütün tapşırıqlar, davamiyyət, tabel, ştat, ayarlar']];
 var PERM_NAME={};PERM_LIST.forEach(function(p){PERM_NAME[p[0]]=p[1];});
 var SEC_PERM={panel:'sales',leads:'leads',apt:'apartments',bina:'apartments',news:'news',part:'partners',content:'content',sales:'sales',calc:'calc',mugavile:'contracts',mlist:'contracts',set:'settings',users:'__admin'};
-var TPL={contract:['contracts','sales'],salesm:['sales','leads','calc','apartments'],content:['news','partners','content','apartments']};
+var TPL={contract:['contracts','sales'],salesm:['sales','leads','calc','apartments'],content:['news','partners','content','apartments'],ofis:['ofis'],ofisadm:['ofis','ofis_admin']};
 function can(p){if(!ME||!ME.active)return false;if(ME.is_admin)return true;if(p==='__admin')return false;return (ME.perms||[]).indexOf(p)>=0;}
 function loadMe(){return sb.auth.getUser().then(function(r){var u=r&&r.data&&r.data.user;if(!u)throw new Error('Sessiya bitib, yenidən daxil olun');return sb.from('lux_profiles').select('*').eq('user_id',u.id).maybeSingle();}).then(function(r){if(r.error)throw r.error;if(!r.data)throw new Error('Bu hesaba panel icazəsi verilməyib');if(!r.data.active)throw new Error('Hesabınız dondurulub. Adminə müraciət edin.');ME=r.data;return ME;});}
 function applyPerms(){if(!ME)return;var first=null;
