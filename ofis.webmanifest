@@ -1,0 +1,28 @@
+{
+ "name": "Baş Ofis",
+ "short_name": "Ofis",
+ "start_url": "/ofis",
+ "scope": "/ofis",
+ "display": "standalone",
+ "background_color": "#0f172a",
+ "theme_color": "#0f172a",
+ "lang": "az",
+ "icons": [
+  {
+   "src": "/assets/ofis/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "/assets/ofis/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "/assets/ofis/icon-maskable.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

@@ -5,6 +5,7 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="/ofis.webmanifest"><link rel="icon" href="/assets/ofis/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/assets/ofis/apple-touch.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Ofis"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Baş Ofis — İdarəetmə</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -89,7 +90,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
 </head>
 <body>
 <div id="app" style="display:none">
- <header class="top"><div class="brand">Baş Ofis<small>İdarəetmə sistemi</small></div><div class="me" id="meBox"></div><button class="out" id="outBtn">Çıxış</button></header>
+ <header class="top"><div class="brand">Baş Ofis<small>İdarəetmə sistemi</small></div><button class="out" id="instBtn" style="display:none">⬇ Quraşdır</button><div class="me" id="meBox"></div><button class="out" id="outBtn">Çıxış</button></header>
  <nav class="tabs" id="tabs"></nav>
  <main>
   <!-- BU GÜN -->
@@ -393,6 +394,15 @@ function closeQR(){$('qrWrap').classList.remove('on');clearInterval(_qrTick);if(
 function modal(h){$('mbox').innerHTML=h;$('modal').classList.add('on');}
 function closeModal(){if(typeof stopCam==='function')stopCam();$('modal').classList.remove('on');$('mbox').innerHTML='';}
 $('modal').addEventListener('click',function(e){if(e.target===$('modal'))closeModal();});
+
+/* ---------- PWA ---------- */
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/ofis-sw.js',{scope:'/'}).catch(function(){});
+var _bip=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();_bip=e;var b=$('instBtn');if(b)b.style.display='';});
+function isStandalone(){return window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;}
+document.addEventListener('DOMContentLoaded',function(){var b=$('instBtn');if(!b)return;
+ if(!isStandalone()&&/iphone|ipad|ipod/i.test(navigator.userAgent))b.style.display='';
+ b.onclick=function(){if(_bip){_bip.prompt();_bip.userChoice.then(function(){_bip=null;b.style.display='none';});}
+  else modal('<div class="mhead"><h3>Telefona quraşdır</h3><button class="x" onclick="closeModal()">×</button></div><p><b>iPhone (Safari):</b> aşağıdakı <b>Paylaş</b> düyməsi (□↑) → <b>“Ana ekrana əlavə et”</b> → <b>Əlavə et</b>.</p><p style="margin-top:10px"><b>Android (Chrome):</b> sağ yuxarıdakı ⋮ menyu → <b>“Tətbiqi quraşdır”</b>.</p>');};});
 </script>
 </body>
 </html>

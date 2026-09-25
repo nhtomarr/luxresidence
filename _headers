@@ -40,3 +40,8 @@
   Cache-Control: public, max-age=604800
 /assets/*.zip
   Cache-Control: public, max-age=604800
+/ofis-sw.js
+  Cache-Control: no-cache
+  Service-Worker-Allowed: /
+/ofis.webmanifest
+  Content-Type: application/manifest+json
