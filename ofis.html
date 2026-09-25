@@ -110,6 +110,20 @@ body:not(.is-mgr) .mgr-only{display:none!important}
 .evt{width:52px;font-weight:800;font-size:15px;line-height:1.2}
 .lead.breach{border-left:4px solid var(--bad)}
 a.btn{text-decoration:none}
+
+.pbar{height:8px;background:#e2e8f0;border-radius:8px;overflow:hidden;margin:6px 0}.pbar i{display:block;height:100%}
+.pli{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--line);font-size:15px}.pli input[type=checkbox]{width:20px;height:20px;margin-top:2px;accent-color:var(--ok)}.pli button{border:none;background:none;color:var(--mut);font-size:20px}.pln{color:var(--mut);font-weight:700;min-width:22px}
+.plin{flex:1;border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:200px}.plnote{width:100%;border:none;border-bottom:1px solid var(--line);font-size:13px;padding:4px 0;margin-top:4px;background:none}
+.note{background:#fef3c7;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:14px}
+/* sahibkar ekranı: böyük və sadə */
+.bossh{font-size:26px}
+.bgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:12px}
+.btile{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px 20px;cursor:pointer;transition:.15s}.btile:hover{border-color:var(--acc)}
+.btile b{display:block;font-size:44px;font-weight:800;line-height:1.05}.btile span{font-size:17px;color:var(--mut)}
+.btile.ok b{color:var(--ok)}.btile.warn b{color:var(--warn)}.btile.bad b{color:var(--bad)}
+.brow{display:grid;grid-template-columns:1.3fr 1.2fr 1fr 1fr;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:10px;cursor:pointer}
+.brow:hover{border-color:var(--acc)}.bn b{display:block;font-size:18px}.bn span{color:var(--mut);font-size:14px}.brow .pill{font-size:14px;padding:5px 11px}
+@media(max-width:760px){.bgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.btile b{font-size:36px}.brow{grid-template-columns:1fr 1fr}.bossh{font-size:22px}}
 </style>
 </head>
 <body>
@@ -161,6 +175,14 @@ a.btn{text-decoration:none}
    <div class="card"><div class="row" style="justify-content:space-between"><h3 id="lvListH">Mənim sorğularım</h3>
     <select id="lvF" class="btn ghost sm" style="display:none"><option value="all">Hamısı</option><option value="pending">Gözləyir</option><option value="approved">Təsdiqlənib</option><option value="rejected">Rədd edilib</option></select></div><div class="tbl" id="lvList"></div></div>
   </section>
+  <!-- NƏZARƏT (sahibkar) -->
+  <section class="view" id="v-boss"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2 class="bossh" style="margin:0">Ofisdə vəziyyət</h2><span class="muted" id="bDate"></span></div>
+   <div class="bgrid" id="bKpi"></div>
+   <div class="row" style="justify-content:space-between;margin:22px 0 10px"><h2 class="bossh" style="margin:0">İşçilər</h2><button class="btn ghost" onclick="monthReport()">🖨 Aylıq hesabat</button></div>
+   <p class="muted" style="margin-bottom:10px">Ətraflı məlumat üçün işçinin adına toxunun.</p><div id="bList"></div></section>
+  <!-- AYLIQ PLAN -->
+  <section class="view" id="v-plans"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0" id="plH">Aylıq iş planı</h2><input type="month" id="plM" class="btn ghost sm"></div>
+   <div class="grid g4" id="plKpi" style="margin-bottom:14px"></div><div id="plBody"></div></section>
   <!-- MÜRACİƏTLƏR (sayt) -->
   <section class="view" id="v-leads"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">Saytdan müraciətlər</h2><select id="ldF" class="btn ghost sm"><option value="open">Cavabsız</option><option value="mine">Mənimkilər</option><option value="all">Hamısı</option></select></div>
    <div class="grid g4" id="ldKpi" style="margin-bottom:14px"></div><div id="ldList"></div><div class="card mgr-only"><h3>Menecerlər üzrə (bu ay)</h3><div class="tbl" id="ldMgr"></div></div></section>
@@ -211,7 +233,7 @@ a.btn{text-decoration:none}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-var sb=null,ME=null,MGR=false,EMP=null,EMPS=[],DEPTS=[],POS=[],TASKS=[],PROFS=[],CFG=null,KB='new',LEAVES=[],HOL=[];
+var OWNER=false,sb=null,ME=null,MGR=false,EMP=null,EMPS=[],DEPTS=[],POS=[],TASKS=[],PROFS=[],CFG=null,KB='new',LEAVES=[],HOL=[];
 var LT={mezuniyyet:'Məzuniyyət',xestelik:'Xəstəlik',ezamiyyet:'Ezamiyyət',uzaqdan:'Uzaqdan iş',icaze:'Saatlıq icazə',odenissiz:'Ödənişsiz məzuniyyət'};
 var TZ='Asia/Baku';
 var ST={new:'Yeni',doing:'İcrada',review:'Yoxlamada',done:'Bitdi'},PR={urgent:'Təcili',high:'Yüksək',normal:'Normal',low:'Aşağı'};
@@ -229,20 +251,22 @@ function err(e){toast((e&&e.message)||'Xəta baş verdi');console.warn(e);}
 function run(q){return q.then(function(r){if(r.error)throw r.error;return r.data;});}
 
 /* ---------- start ---------- */
-luxAuth({perms:['ofis','ofis_admin'],title:'Baş Ofis',sub:'İşçi hesabınızla daxil olun',logo:false,noAdminLink:true,accent:'#2563eb',bg:'linear-gradient(135deg,#e2e8f0,#f8fafc)',onReady:function(client,me){sb=client;ME=me;MGR=me.is_admin||(me.perms||[]).indexOf('ofis_admin')>=0;start();}});
+luxAuth({perms:['ofis','ofis_admin','ofis_owner'],title:'Baş Ofis',sub:'İşçi hesabınızla daxil olun',logo:false,noAdminLink:true,accent:'#2563eb',bg:'linear-gradient(135deg,#e2e8f0,#f8fafc)',onReady:function(client,me){sb=client;ME=me;OWNER=(me.perms||[]).indexOf('ofis_owner')>=0;MGR=me.is_admin||OWNER||(me.perms||[]).indexOf('ofis_admin')>=0;start();}});
 function start(){$('app').style.display='';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
- $('meBox').innerHTML='<b>'+esc(ME.full_name||ME.email)+'</b>'+(MGR?'Rəhbər':'İşçi');
+ $('meBox').innerHTML='<b>'+esc(ME.full_name||ME.email)+'</b>'+(OWNER?'Sahibkar':MGR?'HR / Rəhbər':'İşçi');
  $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href='/ofis';});};
- var tabs=[['today','Bu gün']];if(MGR)tabs.push(['panel','Panel']);tabs.push(['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['news','Elanlar'],['cal','Təqvim']);if(MGR){tabs.push(['team','Davamiyyət'],['staff','Ştat'],['set','Ayarlar']);}
+ var tabs;
+ if(OWNER)tabs=[['boss','Nəzarət'],['plans','Aylıq planlar'],['tasks','Tapşırıqlar'],['team','Davamiyyət'],['leave','Sorğular'],['news','Elanlar']];
+ else{tabs=[['today','Bu gün']];if(MGR)tabs.push(['boss','Nəzarət'],['panel','Panel']);tabs.push(['plans',MGR?'Aylıq planlar':'Aylıq plan'],['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['news','Elanlar'],['cal','Təqvim']);if(MGR){tabs.push(['team','Davamiyyət'],['staff','Ştat'],['set','Ayarlar']);}}
  document.body.classList.toggle('is-mgr',MGR);
  $('tabs').innerHTML=tabs.map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');
  $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};
  $('dDay').value=today();$('mMonth').value=today().slice(0,7);$('dDay').onchange=renderDay;$('mMonth').onchange=renderMonth;$('tkFilter').onchange=renderKanban;
  setInterval(tick,1000);tick();
- loadAll().then(function(){if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':'today');if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
+ loadAll().then(function(){if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':(OWNER?'boss':'today'));if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
 }
 function show(v){document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
- if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();window.scrollTo(0,0);}
+ if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss')renderBoss();if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();window.scrollTo(0,0);}
 function tick(){var n=new Date();$('tClock').textContent=n.toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit',second:'2-digit'});$('tDate').textContent=n.toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});}
 function loadAll(){return Promise.all([
   run(sb.from('office_employees').select('*').order('full_name')),run(sb.from('office_departments').select('*').order('sort').order('id')),run(sb.from('office_positions').select('*').order('sort').order('id')),
@@ -407,13 +431,14 @@ function drawCharts(){var d=today(),from=addDays(d,-13);
    mkChart('chDept',{type:'bar',data:{labels:lab,datasets:[{label:'Gecikmə (dəq)',data:val,backgroundColor:'#ef4444',borderRadius:6}]},options:{indexAxis:'y',maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}}});});
  }).catch(function(){});}
 function perfCard(eid){var e=EMPS.find(function(x){return x.id===eid;});var m=today().slice(0,7);
- monthRows(function(R){var r=R.find(function(x){return x.e.id===eid;})||{plan:0,came:0,leave:0,absent:0,lateN:0,lateM:0,earlyM:0,work:0};
+ loadPlans(m).then(function(){monthRows(function(R){var r=R.find(function(x){return x.e.id===eid;})||{plan:0,came:0,leave:0,absent:0,lateN:0,lateM:0,earlyM:0,work:0};
   var t=TASKS.filter(function(x){return x.assignee_id===eid;}),done=t.filter(function(x){return x.status==='done';}),onT=done.filter(function(x){return !x.due||String(x.done_at||'').slice(0,10)<=x.due;}),open=t.filter(function(x){return x.status!=='done';}),over=open.filter(function(x){return x.due&&x.due<today();});
-  var att=r.plan?Math.round((r.came+r.leave)/r.plan*100):100,ont=done.length?Math.round(onT.length/done.length*100):100;var score=Math.round(att*0.4+ont*0.4+(r.lateN?Math.max(0,100-r.lateN*10):100)*0.2);
+  var att=r.plan?Math.round((r.came+r.leave)/r.plan*100):100,ont=done.length?Math.round(onT.length/done.length*100):100;var pl=(PLANS||[]).find(function(x){return x.employee_id===eid&&x.month===m&&x.status==='approved';});var plp=pl?planPct(pl):null;var pun=r.lateN?Math.max(0,100-r.lateN*10):100;var score=plp===null?Math.round(att*0.4+ont*0.4+pun*0.2):Math.round(att*0.3+ont*0.25+plp*0.3+pun*0.15);
   modal('<div class="mhead"><h3>'+esc(e.full_name)+'</h3><button class="x" onclick="closeModal()">×</button></div><p class="muted small">'+esc((posOf(e)||{}).title||'')+' · '+m+'</p>'+
    '<div class="score"><b>'+score+'</b><span>ümumi bal / 100</span></div>'+
-   '<div class="grid g2" style="margin-top:12px">'+kpi(att+'%','davamiyyət ('+(r.came+r.leave)+'/'+r.plan+' gün)',att>=95?'ok':att>=85?'warn':'bad')+kpi(ont+'%','tapşırıq vaxtında ('+onT.length+'/'+done.length+')',ont>=90?'ok':ont>=70?'warn':'bad')+kpi(r.lateN,'gecikmə · '+hmin(r.lateM),r.lateN?'warn':'ok')+kpi(Math.round(r.work/60)+' s','işlənib (bu ay)')+kpi(open.length,'açıq tapşırıq')+kpi(over.length,'vaxtı keçmiş',over.length?'bad':'ok')+'</div>'+
-   '<p class="muted small" style="margin-top:10px">Bal: davamiyyət 40% + tapşırıqların vaxtında icrası 40% + dəqiqlik (gecikmə) 20%.</p>');});}
+   '<div class="grid g2" style="margin-top:12px">'+kpi(att+'%','davamiyyət ('+(r.came+r.leave)+'/'+r.plan+' gün)',att>=95?'ok':att>=85?'warn':'bad')+kpi(ont+'%','tapşırıq vaxtında ('+onT.length+'/'+done.length+')',ont>=90?'ok':ont>=70?'warn':'bad')+(plp!==null?kpi(plp+'%','aylıq plan icrası ('+pl.items.filter(function(x){return x.done;}).length+'/'+pl.items.length+')',plp>=80?'ok':plp>=40?'warn':'bad'):'')+kpi(r.lateN,'gecikmə · '+hmin(r.lateM),r.lateN?'warn':'ok')+kpi(Math.round(r.work/60)+' s','işlənib (bu ay)')+kpi(open.length,'açıq tapşırıq')+kpi(over.length,'vaxtı keçmiş',over.length?'bad':'ok')+'</div>'+
+   '<p class="muted small" style="margin-top:10px">'+(plp===null?'Bal: davamiyyət 40% + tapşırıqların vaxtında icrası 40% + dəqiqlik 20%.':'Bal: davamiyyət 30% + aylıq plan 30% + tapşırıqlar 25% + dəqiqlik 15%.')+'</p>');});});}
+
 function monthReport(){var m=today().slice(0,7);monthRows(function(R){var t=TASKS;var d=today();
  var h='<div class="rp"><h1>Aylıq hesabat · '+m+'</h1><p class="rpm">Hazırlandı: '+new Date().toLocaleString('az-AZ',{timeZone:TZ})+'</p>'+
   '<div class="rpk"><div><b>'+EMPS.filter(function(e){return e.active;}).length+'</b>işçi</div><div><b>'+R.reduce(function(s2,r){return s2+r.lateN;},0)+'</b>gecikmə</div><div><b>'+R.reduce(function(s2,r){return s2+r.absent;},0)+'</b>gəlməmə günü</div><div><b>'+t.filter(function(x){return x.done_at&&String(x.done_at).slice(0,7)===m;}).length+'</b>bitmiş tapşırıq</div><div><b>'+t.filter(function(x){return x.status!=='done'&&x.due&&x.due<d;}).length+'</b>vaxtı keçmiş</div></div>'+
@@ -480,6 +505,61 @@ function renderLeads(){run(sb.from('lux_leads').select('*').order('created_at',{
  }).catch(err);}
 function leadDone(id){run(sb.from('lux_leads').update({status:'cavablandı'}).eq('id',id)).then(function(){toast('Qeyd olundu');renderLeads();}).catch(err);}
 function leadAssign(id,eid){run(sb.from('lux_leads').update({assigned_to:+eid||null,assigned_at:new Date().toISOString(),sla_alerted:false}).eq('id',id)).then(function(){toast('Təyin olundu');if(eid)notify('lead_reassigned',{id:id});renderLeads();}).catch(err);}
+
+
+/* ---------- AYLIQ PLAN ---------- */
+var PLANS=[],PLI=[];
+function nextMonth(m){var y=+m.slice(0,4),mo=+m.slice(5,7)+1;if(mo>12){mo=1;y++;}return y+'-'+String(mo).padStart(2,'0');}
+function planPct(p){var it=(p&&p.items)||[];if(!it.length)return 0;return Math.round(it.filter(function(x){return x.done;}).length/it.length*100);}
+var PST={draft:['qaralama','p-mut'],submitted:['təsdiq gözləyir','p-warn'],approved:['təsdiqlənib','p-ok'],returned:['düzəlişə qaytarılıb','p-bad']};
+function loadPlans(m){return run(sb.from('office_plans').select('*').eq('month',m)).then(function(r){PLANS=r||[];return PLANS;});}
+function bar(p){return '<div class="pbar"><i style="width:'+p+'%;background:'+(p>=80?'var(--ok)':p>=40?'var(--warn)':'var(--bad)')+'"></i></div>';}
+function renderPlans(){var mi=$('plM');if(!mi.value)mi.value=today().slice(0,7);mi.onchange=renderPlans;var m=mi.value;
+ $('plH').textContent=MGR?'Aylıq iş planları':'Mənim aylıq planım';
+ loadPlans(m).then(function(){if(MGR)return renderPlansMgr(m);renderPlanMine(m);}).catch(err);}
+function renderPlanMine(m){$('plKpi').innerHTML='';if(!EMP){$('plBody').innerHTML='<div class="card empty">Hesabınız işçi kartına bağlanmayıb.</div>';return;}
+ var p=PLANS.find(function(x){return x.employee_id===EMP.id;});PLI=JSON.parse(JSON.stringify((p&&p.items)||[]));
+ var st=p?p.status:'none',edit=!p||st==='draft'||st==='returned'||st==='submitted';
+ var h='<div class="card">'+(p?'<div class="row" style="justify-content:space-between"><span class="pill '+PST[st][1]+'">'+PST[st][0]+'</span>'+(st==='approved'?'<b>'+planPct(p)+'% icra</b>':'')+'</div>':'<p class="muted">Bu ay görəcəyiniz işlərin siyahısını yazın və rəhbərə göndərin.</p>')+
+  (p&&p.mgr_note?'<div class="note">💬 Rəhbərin qeydi: '+esc(p.mgr_note)+'</div>':'')+(st==='approved'?bar(planPct(p)):'')+'<div id="plItems" style="margin-top:10px"></div>'+
+  (edit?'<div class="row" style="margin-top:8px"><input id="plNew" class="plin" placeholder="Yeni iş, məs: 20 müştəri ilə görüş" onkeydown="if(event.key===\'Enter\'){event.preventDefault();plAdd();}"><button class="btn ghost sm" onclick="plAdd()">+ Əlavə et</button></div><div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn ghost" onclick="savePlan(\''+m+'\',\'draft\')">Qaralama saxla</button><button class="btn" onclick="savePlan(\''+m+'\',\'submitted\')">Rəhbərə göndər</button></div>'
+   :'<div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn" onclick="savePlan(\''+m+'\',\'approved\')">Yadda saxla</button></div>')+'</div>';
+ if(m===today().slice(0,7)&&+today().slice(8)>=20)h+='<div class="card"><b>Növbəti ay</b><p class="muted small">'+nextMonth(m)+' ayının planını əvvəlcədən hazırlaya bilərsiniz.</p><button class="btn ghost sm" onclick="$(\'plM\').value=\''+nextMonth(m)+'\';renderPlans()">'+nextMonth(m)+' planını yaz →</button></div>';
+ $('plBody').innerHTML=h;drawPlanItems(edit,st==='approved');}
+function drawPlanItems(edit,prog){var b=$('plItems');if(!b)return;b.innerHTML=PLI.length?PLI.map(function(x,i){return '<div class="pli">'+(prog?'<input type="checkbox"'+(x.done?' checked':'')+' onchange="PLI['+i+'].done=this.checked;drawPlanItems(false,true)">':'<span class="pln">'+(i+1)+'.</span>')+'<div style="flex:1"><div'+(x.done?' style="text-decoration:line-through;color:var(--mut)"':'')+'>'+esc(x.t)+'</div>'+(prog?'<input class="plnote" placeholder="qeyd (istəyə bağlı)" value="'+esc(x.note||'')+'" onchange="PLI['+i+'].note=this.value">':'')+'</div>'+(edit?'<button onclick="PLI.splice('+i+',1);drawPlanItems(true,false)">×</button>':'')+'</div>';}).join(''):'<div class="muted small">Hələ bənd yoxdur</div>';}
+function plAdd(){var v=$('plNew').value.trim();if(!v)return;PLI.push({t:v,done:false,note:''});$('plNew').value='';drawPlanItems(true,false);$('plNew').focus();}
+function savePlan(m,st,eid){eid=eid||(EMP&&EMP.id);if(!PLI.length&&st!=='draft')return toast('Ən azı bir bənd yazın');
+ var ex=PLANS.find(function(x){return x.employee_id===eid;});var b={items:PLI};if(!ex||ex.status!=='approved'||MGR)b.status=st;
+ var q=ex?sb.from('office_plans').update(b).eq('id',ex.id).select().single():sb.from('office_plans').insert(Object.assign(b,{employee_id:eid,month:m})).select().single();
+ run(q).then(function(p){toast(st==='submitted'?'Rəhbərə göndərildi':'Yadda saxlanıldı');if(st==='submitted'&&(!ex||ex.status!=='submitted'))notify('plan_submitted',{id:p.id});closeModal();renderPlans();}).catch(err);}
+function renderPlansMgr(m){var act=EMPS.filter(function(e){return e.active;});var by={};PLANS.forEach(function(p){by[p.employee_id]=p;});
+ var sub=act.filter(function(e){var p=by[e.id];return p&&(p.status==='submitted'||p.status==='approved');}).length,appr=PLANS.filter(function(p){return p.status==='approved';}),avg=appr.length?Math.round(appr.reduce(function(s2,p){return s2+planPct(p);},0)/appr.length):0;
+ $('plKpi').innerHTML=kpi(sub+' / '+act.length,'plan verib','ok')+kpi(PLANS.filter(function(p){return p.status==='submitted';}).length,'təsdiq gözləyir','warn')+kpi(act.length-sub,'plan verməyib',act.length-sub?'bad':'ok')+kpi(avg+'%','orta icra');
+ $('plBody').innerHTML='<div class="card tbl"><table><tr><th>İşçi</th><th>Status</th><th>Bənd</th><th>İcra</th><th></th></tr>'+act.map(function(e){var p=by[e.id];var st=p?p.status:null;
+   return '<tr><td><b>'+esc(e.full_name)+'</b><div class="muted small">'+esc((posOf(e)||{}).title||'')+'</div></td><td>'+(st?'<span class="pill '+PST[st][1]+'">'+PST[st][0]+'</span>':'<span class="pill p-bad">verməyib</span>')+'</td><td>'+(p?(p.items||[]).length:'—')+'</td><td style="min-width:120px">'+(st==='approved'?bar(planPct(p))+'<span class="small">'+planPct(p)+'%</span>':'—')+'</td><td>'+(p?'<button class="btn '+(st==='submitted'?'':'ghost ')+'sm" onclick="openPlan('+e.id+',\''+m+'\')">'+(st==='submitted'?'Bax və təsdiqlə':'Bax')+'</button>':'<button class="btn ghost sm" onclick="openPlan('+e.id+',\''+m+'\')">Yaz</button>')+'</td></tr>';}).join('')+'</table></div>';}
+function openPlan(eid,m){var p=PLANS.find(function(x){return x.employee_id===eid;});PLI=JSON.parse(JSON.stringify((p&&p.items)||[]));var st=p?p.status:'none';
+ modal('<div class="mhead"><h3>'+esc(empName(eid))+' · '+m+'</h3><button class="x" onclick="closeModal()">×</button></div>'+(p?'<span class="pill '+PST[st][1]+'">'+PST[st][0]+'</span>':'')+(st==='approved'?bar(planPct(p)):'')+
+  '<div id="plItems" style="margin-top:10px"></div><div class="row" style="margin-top:8px"><input id="plNew" class="plin" placeholder="Bənd əlavə et"><button class="btn ghost sm" onclick="plAdd()">+</button></div>'+
+  '<div class="field" style="margin-top:12px"><label>Rəhbərin qeydi</label><input id="plNote" value="'+esc(p&&p.mgr_note||'')+'" placeholder="məs: 3-cü bəndi dəqiqləşdirin"></div>'+
+  '<div class="row" style="justify-content:flex-end">'+(p?'<button class="btn red" onclick="decidePlan('+eid+',\''+m+'\',\'returned\')">↩ Düzəlişə qaytar</button>':'')+'<button class="btn" onclick="decidePlan('+eid+',\''+m+'\',\'approved\')">✓ Təsdiqlə'+(st==='approved'?' / yadda saxla':'')+'</button></div>');
+ drawPlanItems(true,st==='approved');}
+function decidePlan(eid,m,st){var p=PLANS.find(function(x){return x.employee_id===eid;});if(!PLI.length)return toast('Planda bənd yoxdur');
+ var b={items:PLI,status:st,mgr_note:$('plNote').value.trim()};if(st==='approved'&&(!p||p.status!=='approved')){b.approved_by=ME.user_id;b.approved_at=new Date().toISOString();}
+ run(p?sb.from('office_plans').update(b).eq('id',p.id).select().single():sb.from('office_plans').insert(Object.assign(b,{employee_id:eid,month:m})).select().single()).then(function(np){closeModal();toast(st==='approved'?'Təsdiqləndi':'Qaytarıldı');if(!p||p.status!==st)notify('plan_decided',{id:np.id});renderPlans();}).catch(err);}
+/* ---------- NƏZARƏT (sahibkar üçün sadə ekran) ---------- */
+function renderBoss(){var d=today(),m=d.slice(0,7);$('bDate').textContent=new Date().toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});
+ Promise.all([run(sb.from('office_attendance').select('*').eq('day',d)),loadPlans(m),run(sb.from('office_attendance').select('employee_id,late_min').gte('day',m+'-01').lte('day',d)),run(sb.from('lux_leads').select('id,status')).catch(function(){return [];})]).then(function(r){var att=r[0],ma=r[2],leads=r[3]||[];
+  var act=EMPS.filter(function(e){return e.active;});var work=act.filter(function(e){return (e.workdays||[]).indexOf(isoDow(d))>=0&&!isHol(d)&&!leaveOn(e.id,d);});
+  var came=att.filter(function(a){return a.check_in;}),late=came.filter(function(a){return a.late_min>0;}),absent=work.filter(function(e){return !came.some(function(a){return a.employee_id===e.id;});});
+  var appr=PLANS.filter(function(p){return p.status==='approved';}),avg=appr.length?Math.round(appr.reduce(function(s2,p){return s2+planPct(p);},0)/appr.length):0;
+  var over=TASKS.filter(function(t){return t.status!=='done'&&t.due&&t.due<d;}).length,openL=leads.filter(function(l){return l.status==='yeni';}).length;
+  function tile(v,l,c,go){return '<div class="btile '+(c||'')+'"'+(go?' onclick="show(\''+go+'\')"':'')+'><b>'+v+'</b><span>'+l+'</span></div>';}
+  $('bKpi').innerHTML=tile(came.length+' / '+work.length,'bu gün işdədir','ok','team')+tile(late.length,'gecikib',late.length?'warn':'ok','team')+tile(absent.length,'gəlməyib',absent.length?'bad':'ok','team')+tile(avg+'%','aylıq plan icrası',avg>=70?'ok':avg>=40?'warn':'bad','plans')+tile(over,'vaxtı keçmiş tapşırıq',over?'bad':'ok','tasks')+(leads.length?tile(openL,'cavabsız müraciət',openL?'warn':'ok'):'');
+  $('bList').innerHTML=act.map(function(e){var a=att.find(function(x){return x.employee_id===e.id;});var lv=leaveOn(e.id,d);var p=PLANS.find(function(x){return x.employee_id===e.id;});var ln=ma.filter(function(x){return x.employee_id===e.id&&x.late_min>0;}).length;
+   var stt=lv?'<span class="pill p-acc">'+LT[lv.type]+'</span>':a&&a.check_in?(a.late_min?'<span class="pill p-warn">'+hm(a.check_in)+' · '+a.late_min+' dəq gec</span>':'<span class="pill p-ok">'+hm(a.check_in)+' · vaxtında</span>'):(work.indexOf(e)>=0?'<span class="pill p-bad">gəlməyib</span>':'<span class="pill p-mut">istirahət</span>');
+   var pp=p&&p.status==='approved'?planPct(p):null;
+   return '<div class="brow" onclick="perfCard('+e.id+')"><div class="bn"><b>'+esc(e.full_name)+'</b><span>'+esc((posOf(e)||{}).title||'')+'</span></div><div class="bs">'+stt+'</div><div class="bp">'+(pp===null?'<span class="muted small">'+(p?PST[p.status][0]:'plan yoxdur')+'</span>':bar(pp)+'<span class="small">plan '+pp+'%</span>')+'</div><div class="bl">'+(ln?'<span class="pill p-warn">bu ay '+ln+' gecikmə</span>':'<span class="pill p-ok">gecikmə yoxdur</span>')+'</div></div>';}).join('')||'<div class="card empty">Ştatda işçi yoxdur</div>';
+ }).catch(err);}
 
 /* ---------- TELEGRAM ---------- */
 var TGBOT=null;
@@ -589,7 +669,7 @@ function openEmp(id){var e=id?EMPS.find(function(x){return x.id===id;}):{full_na
   '<div class="field"><label>İş günləri</label><div class="days" id="eD">'+WD.map(function(w,i){return '<label><input type="checkbox" value="'+(i+1)+'"'+((e.workdays||[]).indexOf(i+1)>=0?' checked':'')+'>'+w+'</label>';}).join('')+'</div></div>'+
   '<label class="row small" style="margin-bottom:8px"><input type="checkbox" id="eShift"'+(e.schedule?' checked':'')+' onchange="$(\'shBox\').style.display=this.checked?\'\':\'none\'"> Növbəli qrafik (günlərə görə fərqli saatlar)</label><div id="shBox" class="shbox" style="'+(e.schedule?'':'display:none')+'">'+WD.map(function(w,i){var d=(e.schedule||{})[String(i+1)];return '<div class="shr"><b>'+w+'</b><input type="time" id="sh'+(i+1)+'a" value="'+(d?d[0]:'')+'"><span>–</span><input type="time" id="sh'+(i+1)+'b" value="'+(d?d[1]:'')+'"></div>';}).join('')+'<p class="muted small">Boş gün = həmin gün ümumi saatlar (yuxarıda) tətbiq olunur.</p></div>'+
   (e.user_id?'<div class="acct"><h4>Giriş hesabı</h4><p class="small">Bağlıdır: <b>'+esc(profEmail(e.user_id))+'</b></p><div class="field"><label>Yeni parol (dəyişmək lazımdırsa)</label><div class="row"><input id="eNewPw" style="flex:1" placeholder="boş qalsa dəyişmir"><button type="button" class="btn ghost sm" onclick="$(\'eNewPw\').value=genPw()">Yarat</button></div></div><label class="row small"><input type="checkbox" id="eUnlink"> Hesabı bu kartdan ayır</label></div>'
-   :'<div class="acct"><h4>Giriş hesabı</h4><p class="muted small">İşçi sistemə bu email və parolla daxil olacaq.</p><div class="grid g2"><div class="field"><label>Email (giriş adı)</label><input id="eAccEmail" type="email" autocomplete="off" placeholder="ad@sirket.az" value="'+esc(e.email||'')+'"></div><div class="field"><label>Parol</label><div class="row"><input id="eAccPw" style="flex:1" autocomplete="off" value="'+genPw()+'"><button type="button" class="btn ghost sm" onclick="$(\'eAccPw\').value=genPw()">Yarat</button></div></div></div>'+(ME.is_admin?'<label class="row small" style="margin-bottom:8px"><input type="checkbox" id="eAccMgr"> Rəhbər səlahiyyəti (Panel, Davamiyyət, Ştat, Ayarlar)</label>':'')+
+   :'<div class="acct"><h4>Giriş hesabı</h4><p class="muted small">İşçi sistemə bu email və parolla daxil olacaq.</p><div class="grid g2"><div class="field"><label>Email (giriş adı)</label><input id="eAccEmail" type="email" autocomplete="off" placeholder="ad@sirket.az" value="'+esc(e.email||'')+'"></div><div class="field"><label>Parol</label><div class="row"><input id="eAccPw" style="flex:1" autocomplete="off" value="'+genPw()+'"><button type="button" class="btn ghost sm" onclick="$(\'eAccPw\').value=genPw()">Yarat</button></div></div></div>'+'<div class="field"><label>Rolu</label><select id="eAccRole"><option value="ofis">İşçi</option><option value="ofis_admin">HR rəhbəri (idarə edir)</option>'+(ME.is_admin?'<option value="ofis_owner">Sahibkar (hər şeyi görür)</option>':'')+'</select></div>'+
     (accs.length?'<div class="field"><label>və ya mövcud hesabı bağla</label><select id="eU"><option value="">— yeni hesab yarat —</option>'+accs.map(function(p){return '<option value="'+p.user_id+'">'+esc((p.full_name?p.full_name+' · ':'')+p.email)+'</option>';}).join('')+'</select></div>':'')+
     '<label class="row small"><input type="checkbox" id="eNoAcc"> Hesab yaratma (yalnız ştatda göstər)</label></div>')+
 '<label class="row small" style="margin-bottom:6px"><input type="checkbox" id="eLr"'+(e.lead_rotation?' checked':'')+'> Saytdan gələn müraciətləri növbə ilə bu işçiyə də payla (satış meneceri)</label>'+
@@ -607,7 +687,7 @@ function saveEmp(id){var old=id?EMPS.find(function(x){return x.id===id;}):null;
  else{var link=$('eU')&&$('eU').value;var skip=$('eNoAcc')&&$('eNoAcc').checked;
   if(link){b.user_id=link;}
   else if(!skip){var em=($('eAccEmail').value||'').trim().toLowerCase(),pw=($('eAccPw').value||'').trim();if(!em||pw.length<8)return toast('Hesab üçün email və ən az 8 simvolluq parol yazın (və ya "Hesab yaratma"nı seçin)');
-   var perms=['ofis'];if($('eAccMgr')&&$('eAccMgr').checked)perms.push('ofis_admin');
+   var role=($('eAccRole')||{}).value||'ofis';var perms=role==='ofis'?['ofis']:['ofis',role];
    chain=fnCall({action:'create',email:em,password:pw,full_name:b.full_name,perms:perms}).then(function(d){b.user_id=d.user.user_id;creds={email:em,pw:pw};PROFS.push({user_id:d.user.user_id,email:em,full_name:b.full_name,perms:perms,active:true});});}}
  toast('Saxlanılır…');
  chain.then(function(){return run(id?sb.from('office_employees').update(b).eq('id',id).select().single():sb.from('office_employees').insert(b).select().single());})
