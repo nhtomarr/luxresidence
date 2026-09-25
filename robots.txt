@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /assets/muqavile-sablon.docx
+Disallow: /assets/blog-seed.json
+
+Sitemap: https://luxresidence.az/sitemap.xml

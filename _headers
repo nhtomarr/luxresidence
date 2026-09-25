@@ -1,0 +1,20 @@
+/admin.html
+  X-Robots-Tag: noindex, nofollow
+/admin
+  X-Robots-Tag: noindex, nofollow
+/satis.html
+  X-Robots-Tag: noindex, nofollow
+/satis
+  X-Robots-Tag: noindex, nofollow
+/kalkulyator.html
+  X-Robots-Tag: noindex, nofollow
+/kalkulyator
+  X-Robots-Tag: noindex, nofollow
+/assets/muqavile-sablon.docx
+  X-Robots-Tag: noindex, nofollow
+/assets/blog-seed.json
+  X-Robots-Tag: noindex
+/sitemap.xml
+  Content-Type: application/xml; charset=utf-8
+/assets/*
+  Cache-Control: public, max-age=604800
