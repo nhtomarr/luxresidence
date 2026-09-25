@@ -202,12 +202,28 @@ function renderToday(){$('noEmp').style.display=EMP?'none':'';
   $('tMonth').innerHTML=d.length?('<div class="tbl"><table><tr><th>Gün</th><th>Gəliş</th><th>Çıxış</th><th>Qeyd</th></tr>'+rows.slice().reverse().map(function(r){return '<tr><td>'+r.day.slice(8)+'.'+r.day.slice(5,7)+'</td><td>'+hm(r.check_in)+'</td><td>'+hm(r.check_out)+'</td><td>'+(r.late_min?'<span class="pill p-warn">'+r.late_min+' dəq gec</span>':'')+(r.early_min?' <span class="pill p-mut">'+r.early_min+' dəq tez</span>':'')+'</td></tr>';}).join('')+'</table></div>'):'Bu ay hələ qeyd yoxdur.';
  }).catch(err);}
 var _scanKind='in';
-function scan(kind){_scanKind=kind;var has=('BarcodeDetector' in window)&&navigator.mediaDevices;
- modal('<div class="mhead"><h3>'+(kind==='in'?'Gəliş':'Çıxış')+' — QR skan</h3><button class="x" onclick="closeModal()">×</button></div>'+
-  (has?'<video id="cam" playsinline style="width:100%;border-radius:14px;background:#000;aspect-ratio:1;object-fit:cover"></video><p class="muted small" style="margin-top:8px">Kameranı ofisdəki QR koda tutun.</p>':'<p>Telefonun <b>Kamera</b> tətbiqini açın və ofisdəki QR kodu skan edin — açılan link qeydi avtomatik edəcək.</p>'));
- if(has){var det=new BarcodeDetector({formats:['qr_code']});navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(function(st){var v=$('cam');v.srcObject=st;v.play();scan._st=st;
-  (function loop(){if(!$('cam'))return st.getTracks().forEach(function(t){t.stop();});det.detect(v).then(function(c){if(c&&c[0]){var m=String(c[0].rawValue).match(/[?&]c=([0-9a-f]{16})/)||String(c[0].rawValue).match(/^([0-9a-f]{16})$/);if(m){st.getTracks().forEach(function(t){t.stop();});closeModal();doCheck(kind,m[1]);return;}}requestAnimationFrame(loop);}).catch(function(){setTimeout(loop,300);});})();
- }).catch(function(){$('mbox').insertAdjacentHTML('beforeend','<p class="small" style="color:var(--bad)">Kameraya icazə verilmədi. Telefonun Kamera tətbiqi ilə skan edin.</p>');});}}
+function loadJsQR(){return new Promise(function(res,rej){if(window.jsQR)return res();var sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';sc.onload=function(){res();};sc.onerror=function(){rej(new Error('QR oxuyucu yüklənmədi'));};document.head.appendChild(sc);});}
+function stopCam(){if(scan._st){scan._st.getTracks().forEach(function(t){t.stop();});scan._st=null;}scan._on=false;}
+function scan(kind){_scanKind=kind;
+ modal('<div class="mhead"><h3>'+(kind==='in'?'Gəliş':'Çıxış')+' — QR skan</h3><button class="x" onclick="stopCam();closeModal()">×</button></div>'+
+  '<div style="position:relative"><video id="cam" playsinline muted autoplay style="width:100%;border-radius:14px;background:#000;aspect-ratio:1;object-fit:cover"></video><div style="position:absolute;inset:18%;border:3px solid rgba(255,255,255,.85);border-radius:16px;pointer-events:none"></div></div>'+
+  '<p class="muted small" id="camMsg" style="margin-top:8px">Kamera açılır… İcazə soruşulsa, <b>“İcazə ver”</b> basın.</p>');
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$('camMsg').innerHTML='Bu brauzer kameranı dəstəkləmir. Telefonun <b>Kamera</b> tətbiqi ilə ofisdəki QR-ı skan edin.';return;}
+ var useBD=('BarcodeDetector' in window);var det=null;try{if(useBD)det=new BarcodeDetector({formats:['qr_code']});}catch(e){useBD=false;}
+ var ready=useBD?Promise.resolve():loadJsQR();
+ Promise.all([ready,navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:1280}},audio:false})]).then(function(r){
+  var st=r[1],v=$('cam');if(!v){st.getTracks().forEach(function(t){t.stop();});return;}scan._st=st;scan._on=true;v.srcObject=st;var pp=v.play();if(pp&&pp.catch)pp.catch(function(){});
+  $('camMsg').textContent='Kameranı ofisdəki QR koda tutun.';
+  var cv=document.createElement('canvas'),cx=cv.getContext('2d',{willReadFrequently:true});
+  function found(raw){var m=String(raw).match(/[?&]c=([0-9a-f]{16})/)||String(raw).match(/^([0-9a-f]{16})$/);if(!m){$('camMsg').textContent='Bu QR sistemə aid deyil. Ofisdəki QR-ı skan edin.';return false;}stopCam();closeModal();doCheck(kind,m[1]);return true;}
+  (function loop(){if(!scan._on||!$('cam'))return stopCam();
+   if(v.readyState<2)return setTimeout(loop,150);
+   if(useBD){det.detect(v).then(function(c){if(c&&c[0]&&found(c[0].rawValue))return;setTimeout(loop,120);}).catch(function(){setTimeout(loop,250);});return;}
+   var w=v.videoWidth,h=v.videoHeight,sz=Math.min(w,h,900),sx=(w-sz)/2,sy=(h-sz)/2;cv.width=sz;cv.height=sz;cx.drawImage(v,sx,sy,sz,sz,0,0,sz,sz);
+   var img=cx.getImageData(0,0,sz,sz),code=window.jsQR(img.data,sz,sz,{inversionAttempts:'dontInvert'});
+   if(code&&found(code.data))return;setTimeout(loop,120);})();
+ }).catch(function(e){var n=(e&&e.name)||'';$('camMsg').innerHTML=(n==='NotAllowedError'||n==='SecurityError')?'<b style="color:var(--bad)">Kameraya icazə verilmədi.</b> Telefonun ayarlarında bu sayt üçün kameranı aktiv edin (iPhone: Ayarlar → Safari → Kamera → İcazə ver), sonra yenidən cəhd edin. Və ya telefonun <b>Kamera</b> tətbiqi ilə skan edin.':(n==='NotFoundError'?'Kamera tapılmadı.':'Kamera açılmadı: '+esc((e&&e.message)||n)+'. Telefonun Kamera tətbiqi ilə skan edin.');});}
+
 function autoCheck(token){history.replaceState(null,'','/ofis');if(!EMP){toast('Hesabınız işçi kartına bağlanmayıb');return;}
  run(sb.from('office_attendance').select('*').eq('employee_id',EMP.id).eq('day',today()).maybeSingle()).then(function(r){var kind=(!r||!r.check_in)?'in':(!r.check_out?'out':null);
   if(!kind){toast('Bu gün gəliş və çıxış artıq qeyd olunub');return;}
@@ -354,7 +370,7 @@ function closeQR(){$('qrWrap').classList.remove('on');clearInterval(_qrTick);if(
 
 /* ---------- modal ---------- */
 function modal(h){$('mbox').innerHTML=h;$('modal').classList.add('on');}
-function closeModal(){$('modal').classList.remove('on');$('mbox').innerHTML='';}
+function closeModal(){if(typeof stopCam==='function')stopCam();$('modal').classList.remove('on');$('mbox').innerHTML='';}
 $('modal').addEventListener('click',function(e){if(e.target===$('modal'))closeModal();});
 </script>
 </body>
