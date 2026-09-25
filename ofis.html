@@ -143,6 +143,7 @@ body.owner .btile em{display:block}body.owner .btile span{font-size:18px}
 .oli{padding:12px 0;border-bottom:1px solid var(--line)}.oli b{display:block;font-size:18px}.oli span{color:var(--mut);font-size:16px}
 body.owner .mbox{font-size:17px}
 .olines b,#ownTg p b{display:inline!important;font-size:inherit!important}
+.pvbar{background:#fef3c7;color:#92400e;text-align:center;padding:8px 12px;font-weight:600;font-size:14px}
 </style>
 </head>
 <body>
@@ -253,7 +254,7 @@ body.owner .mbox{font-size:17px}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-var OWNER=false,sb=null,ME=null,MGR=false,EMP=null,EMPS=[],DEPTS=[],POS=[],TASKS=[],PROFS=[],CFG=null,KB='new',LEAVES=[],HOL=[];
+var PREVIEW=false,OWNER=false,sb=null,ME=null,MGR=false,EMP=null,EMPS=[],DEPTS=[],POS=[],TASKS=[],PROFS=[],CFG=null,KB='new',LEAVES=[],HOL=[];
 var LT={mezuniyyet:'Məzuniyyət',xestelik:'Xəstəlik',ezamiyyet:'Ezamiyyət',uzaqdan:'Uzaqdan iş',icaze:'Saatlıq icazə',odenissiz:'Ödənişsiz məzuniyyət'};
 var TZ='Asia/Baku';
 var ST={new:'Yeni',doing:'İcrada',review:'Yoxlamada',done:'Bitdi'},PR={urgent:'Təcili',high:'Yüksək',normal:'Normal',low:'Aşağı'};
@@ -271,10 +272,12 @@ function err(e){toast((e&&e.message)||'Xəta baş verdi');console.warn(e);}
 function run(q){return q.then(function(r){if(r.error)throw r.error;return r.data;});}
 
 /* ---------- start ---------- */
-luxAuth({perms:['ofis','ofis_admin','ofis_owner'],title:'Baş Ofis',sub:'İşçi hesabınızla daxil olun',logo:false,noAdminLink:true,accent:'#2563eb',bg:'linear-gradient(135deg,#e2e8f0,#f8fafc)',onReady:function(client,me){sb=client;ME=me;OWNER=(me.perms||[]).indexOf('ofis_owner')>=0;MGR=me.is_admin||OWNER||(me.perms||[]).indexOf('ofis_admin')>=0;start();}});
+luxAuth({perms:['ofis','ofis_admin','ofis_owner'],title:'Baş Ofis',sub:'İşçi hesabınızla daxil olun',logo:false,noAdminLink:true,accent:'#2563eb',bg:'linear-gradient(135deg,#e2e8f0,#f8fafc)',onReady:function(client,me){sb=client;ME=me;OWNER=(me.perms||[]).indexOf('ofis_owner')>=0;PREVIEW=!!(me.is_admin&&new URLSearchParams(location.search).get('baxis')==='sahibkar');if(PREVIEW)OWNER=true;MGR=me.is_admin||OWNER||(me.perms||[]).indexOf('ofis_admin')>=0;start();}});
 function start(){$('app').style.display='';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
  $('meBox').innerHTML='<b>'+esc(ME.full_name||ME.email)+'</b>'+(ME.is_admin?'Sistem admini':OWNER?'Sahibkar':MGR?'HR rəhbəri':'İşçi');
  $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href='/ofis';});};
+ if(ME.is_admin){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';pv.onclick=function(){location.href=PREVIEW?'/ofis':'/ofis?baxis=sahibkar';};$('outBtn').parentNode.insertBefore(pv,$('outBtn'));}
+ if(PREVIEW){var bn=document.createElement('div');bn.className='pvbar';bn.innerHTML='👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.';document.body.insertBefore(bn,$('app'));}
  var tabs;
  if(OWNER)tabs=[['boss','Nəzarət']];
  else{tabs=[['today','Bu gün']];if(MGR)tabs.push(['boss','Nəzarət'],['panel','Panel']);tabs.push(['plans',MGR?'Aylıq planlar':'Aylıq plan'],['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['news','Elanlar'],['cal','Təqvim']);if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}}
