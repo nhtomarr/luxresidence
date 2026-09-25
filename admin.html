@@ -220,6 +220,10 @@ h1,h2,h3,h4{margin:0}
 .btags i.on{transform:translate(-50%,-50%) scale(1.3);background:#e0763f}
 .bnote{font-size:12px;color:var(--muted);margin-top:8px}
 @media(max-width:900px){.bwrap{grid-template-columns:1fr}.bprev{position:static;order:-1}}
+
+.nav a.navlink{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:none;color:#d9c6b6;
+  padding:12px 14px;border-radius:11px;font-size:14.5px;font-weight:500;transition:.15s;text-decoration:none;}
+.nav a.navlink svg{width:19px;height:19px;flex:0 0 19px}.nav a.navlink:hover{background:rgba(255,255,255,.06);color:#fff}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
@@ -259,6 +263,7 @@ h1,h2,h3,h4{margin:0}
       <button data-s="mugavile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>Müqavilə</button>
       <button data-s="mlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h11l5 5v11H4z"/><path d="M9 12h6M9 16h6M9 8h3"/></svg>Müqavilələr</button>
       <button data-s="set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Qiymət & Tənzimləmə</button>
+      <a class="navlink" href="/brand.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2a10 10 0 0 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.4A5.6 5.6 0 0 0 22 9.8C22 5.5 17.5 2 12 2z"/></svg>Brend portalı ↗</a>
     </nav>
     <button class="logout" id="logout">Çıxış</button>
   </aside>
@@ -596,7 +601,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','
 function pinOK(v){return v===(localStorage.getItem('lux_pin')||'ferid245');}
 document.getElementById('loginBtn').addEventListener('click',doLogin);
 document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-function enterApp(){document.getElementById('login').style.display='none';document.getElementById('app').hidden=false;boot();}
+function enterApp(){try{sessionStorage.setItem('lux_admin_ok','1');}catch(e){}document.getElementById('login').style.display='none';document.getElementById('app').hidden=false;boot();}
 function doLogin(){var email=(document.getElementById('email').value||'').trim();var pass=(document.getElementById('pin').value||'').trim();var errEl=document.getElementById('loginErr');errEl.textContent='';
  var lp=(localStorage.getItem('lux_pin')||'ferid245');
  if(email&&sb){errEl.textContent='Yoxlanılır…';sb.auth.signInWithPassword({email:email,password:pass}).then(function(res){

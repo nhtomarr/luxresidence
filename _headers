@@ -6,6 +6,12 @@
   X-Robots-Tag: noindex, nofollow
 /satis
   X-Robots-Tag: noindex, nofollow
+/brand.html
+  X-Robots-Tag: noindex, nofollow
+/brand
+  X-Robots-Tag: noindex, nofollow
+/assets/brand/*
+  X-Robots-Tag: noindex
 /kalkulyator.html
   X-Robots-Tag: noindex, nofollow
 /kalkulyator
