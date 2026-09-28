@@ -290,6 +290,7 @@ body.owner .otbl .small,body.owner .otbl .muted.small{font-size:14px}
   <!-- AYARLAR -->
   <section class="view" id="v-set">
    <h2>Ayarlar</h2>
+   <div class="card"><h3>📱 Mobil tətbiq bildirişləri (Firebase)</h3><div id="fcmSet"></div></div>
    <div class="card"><h3>Telegram bildirişləri</h3><div id="tgSet"></div></div>
    <div class="card"><h3>Ofisin yeri</h3><p class="muted small">Gəliş-gediş yalnız bu nöqtəyə yaxın olanda qəbul edilir.</p>
     <div class="grid g2"><div class="field"><label>Enlik (lat)</label><input id="cLat" inputmode="decimal"></div><div class="field"><label>Uzunluq (lng)</label><input id="cLng" inputmode="decimal"></div></div>
@@ -805,6 +806,14 @@ function renderPushCards(){var boxes=[$('pushCard'),$('ownPush')].filter(Boolean
   else h='<div class="pushcta"><span>🔔</span><div><b>Bildirişləri aktiv et</b><small>'+(st==='ios-install'?'iPhone-da əvvəlcə tətbiqi ana ekrana əlavə edin.':'Yeni tapşırıq, xatırlatma və sorğu nəticələri telefonun bildiriş panelinə düşsün.')+'</small></div><button class="btn" onclick="enablePush()">'+(st==='ios-install'?'Necə?':'Aktiv et')+'</button></div>';
   boxes.forEach(function(b){b.innerHTML=h;});});}
 
+
+/* ---------- Firebase (mobil tətbiq) ayarı ---------- */
+function renderFcmSet(){var c=$('fcmSet');if(!c)return;sb.rpc('office_fcm_project').then(function(r){var pj=r&&r.data;
+ c.innerHTML=(pj?'<p>✅ Qoşulub: <b>'+esc(pj)+'</b>. Android tətbiqində “Bildirişləri aktiv et” işləyir.</p><details style="margin-top:8px"><summary class="small muted" style="cursor:pointer">Faylı dəyiş</summary>':'<p class="muted small">Firebase layihəsindəki <b>Service account</b> açar faylını (JSON) seçin: Project settings → Service accounts → Generate new private key. Fayl yalnız serverdə saxlanılır.</p>')+
+  '<div class="row" style="margin-top:8px"><label class="btn ghost sm" style="cursor:pointer">📄 JSON faylı seç<input type="file" accept=".json,application/json" hidden onchange="fcmFile(this.files[0])"></label><span class="muted small" id="fcmName"></span></div>'+(pj?'</details>':'');}).catch(function(){});}
+function fcmFile(f){if(!f)return;var rd=new FileReader();rd.onload=function(){var j;try{j=JSON.parse(rd.result);}catch(e){toast('Fayl JSON deyil');return;}
+ $('fcmName').textContent=f.name;sb.rpc('office_set_fcm',{sa:j}).then(function(r){if(r.error)throw r.error;toast('Firebase qoşuldu: '+r.data);_fcmOn=null;renderFcmSet();}).catch(err);};rd.readAsText(f);}
+
 /* ---------- TELEGRAM ---------- */
 var TGBOT=null;
 function notify(action,payload){try{sb.functions.invoke('office-telegram',{body:Object.assign({action:action},payload||{})}).catch(function(){});}catch(e){}}
@@ -944,7 +953,7 @@ function showCreds(name,em,pw){var link=location.origin+'/ofis';var txt=name+', 
 function delEmp(id){if(!confirm('İşçi kartı və onun davamiyyət tarixçəsi silinsin? (İşdən çıxıbsa, "Aktiv" işarəsini söndürmək daha yaxşıdır)'))return;run(sb.from('office_employees').delete().eq('id',id)).then(function(){EMPS=EMPS.filter(function(x){return x.id!==id;});closeModal();renderStaff();}).catch(err);}
 
 /* ---------- AYARLAR / QR ---------- */
-function renderSet(){var c=CFG||{};renderHol();renderTgSet();document.querySelectorAll('input[name=qmode]').forEach(function(r){r.checked=(r.value==='static')===!!c.static_qr;});$('cLat').value=c.lat||'';$('cLng').value=c.lng||'';$('cRad').value=c.radius_m||150;$('cGrace').value=c.grace_min||10;$('cGeo').checked=c.require_geo!==false;}
+function renderSet(){var c=CFG||{};renderFcmSet();renderHol();renderTgSet();document.querySelectorAll('input[name=qmode]').forEach(function(r){r.checked=(r.value==='static')===!!c.static_qr;});$('cLat').value=c.lat||'';$('cLng').value=c.lng||'';$('cRad').value=c.radius_m||150;$('cGrace').value=c.grace_min||10;$('cGeo').checked=c.require_geo!==false;}
 function useHere(){if(!navigator.geolocation)return toast('Brauzer yeri dəstəkləmir');toast('Yer alınır…');navigator.geolocation.getCurrentPosition(function(p){$('cLat').value=p.coords.latitude.toFixed(6);$('cLng').value=p.coords.longitude.toFixed(6);toast('Dəqiqlik: ±'+Math.round(p.coords.accuracy)+' m. "Yadda saxla" basın.');},function(){toast('Yer icazəsi verilmədi');},{enableHighAccuracy:true,timeout:15000});}
 function saveCfg(){var qm=(document.querySelector('input[name=qmode]:checked')||{}).value;var b={lat:parseFloat($('cLat').value)||null,lng:parseFloat($('cLng').value)||null,radius_m:+$('cRad').value||150,grace_min:+$('cGrace').value||0,require_geo:$('cGeo').checked,static_qr:qm==='static',updated_at:new Date().toISOString()};
  if(b.static_qr&&(b.lat==null||b.lng==null))return toast('Sabit QR üçün əvvəlcə ofisin yerini təyin edin');
