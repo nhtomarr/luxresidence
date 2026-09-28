@@ -160,6 +160,7 @@ function today(){return new Intl.DateTimeFormat('en-CA',{timeZone:TZ}).format(ne
 function curM(){return today().slice(0,7);}
 function az(n){n=Number(n)||0;return n.toLocaleString('az-AZ',{minimumFractionDigits:2,maximumFractionDigits:2})+' ₼';}
 function dmy(d){return d?String(d).slice(8,10)+'.'+String(d).slice(5,7)+'.'+String(d).slice(0,4):'';}
+function mEnd(m){var y=+m.slice(0,4),mo=+m.slice(5,7);return m+'-'+String(new Date(Date.UTC(y,mo,0)).getUTCDate()).padStart(2,'0');}
 function mname(m){var n=['Yanvar','Fevral','Mart','Aprel','May','İyun','İyul','Avqust','Sentyabr','Oktyabr','Noyabr','Dekabr'];return n[+m.slice(5,7)-1]+' '+m.slice(0,4);}
 function modal(h,wide){$('mbox').innerHTML=h;$('mbox').classList.toggle('wide',!!wide);$('modal').classList.add('on');}
 function closeModal(){$('modal').classList.remove('on');$('mbox').innerHTML='';}
@@ -196,7 +197,7 @@ function debtClass(u){if(!u.billing||['bos','satisda','fond'].indexOf(u.status)>
 
 /* ---------- Panel ---------- */
 function renderDash(){var m=$('dM').value||curM();$('dM').value=m;$('dM').onchange=renderDash;
- Promise.all([run(sb.from('km_charges').select('unit_id,amount').eq('period',m)),run(sb.from('km_payments').select('unit_id,amount').gte('paid_at',m+'-01').lte('paid_at',m+'-31')),run(sb.from('km_requests').select('*').in('status',['new','accepted','in_progress']).order('created_at',{ascending:false}))]).then(function(r){
+ Promise.all([run(sb.from('km_charges').select('unit_id,amount').eq('period',m)),run(sb.from('km_payments').select('unit_id,amount').gte('paid_at',m+'-01').lte('paid_at',mEnd(m))),run(sb.from('km_requests').select('*').in('status',['new','accepted','in_progress']).order('created_at',{ascending:false}))]).then(function(r){
   var ch=r[0],py=r[1],rq=r[2];var sum=function(a){return a.reduce(function(s,x){return s+Number(x.amount);},0);};
   var totDebt=0,debtors=0;UNITS.forEach(function(u){var b=uBal(u.id);if(b>0.009){totDebt+=b;debtors++;}});
   var chS=sum(ch),pyS=sum(py),rate=chS?Math.round(pyS/chS*100):0;
