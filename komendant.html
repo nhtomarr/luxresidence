@@ -201,7 +201,7 @@ function renderDash(){var m=$('dM').value||curM();$('dM').value=m;$('dM').onchan
   var ch=r[0],py=r[1],rq=r[2];var sum=function(a){return a.reduce(function(s,x){return s+Number(x.amount);},0);};
   var totDebt=0,debtors=0;UNITS.forEach(function(u){var b=uBal(u.id);if(b>0.009){totDebt+=b;debtors++;}});
   var chS=sum(ch),pyS=sum(py),rate=chS?Math.round(pyS/chS*100):0;
-  $('dKpi').innerHTML=kpi(az(chS),'hesablanıb · '+mname(m),'acc')+kpi(az(pyS),'yığılıb · '+mname(m),'ok',chS?'yığım: '+rate+'%':'')+kpi(az(totDebt),'ümumi borc','bad',debtors+' borclu obyekt')+kpi(rq.length,'açıq müraciət',rq.some(function(x){return x.priority==='urgent';})?'bad':'warn',rq.filter(function(x){return x.priority==='urgent';}).length+' təcili');
+  $('dKpi').innerHTML=kpi(az(chS),'hesablanıb · '+mname(m),'acc')+kpi(az(pyS),'yığılıb · '+mname(m),'ok',chS?'yığım: '+rate+'% (bu ayın ödənişləri)':'')+kpi(az(totDebt),'ümumi borc — bütün aylar üzrə','bad',debtors+' borclu obyekt · bu ay ödənilməyən: '+az(Math.max(0,chS-pyS)))+kpi(rq.length,'açıq müraciət',rq.some(function(x){return x.priority==='urgent';})?'bad':'warn',rq.filter(function(x){return x.priority==='urgent';}).length+' təcili');
   var rows=binas().map(function(b){var us=UNITS.filter(function(u){return u.bina===b;}),ids={};us.forEach(function(u){ids[u.id]=1;});var c=sum(ch.filter(function(x){return ids[x.unit_id];})),p=sum(py.filter(function(x){return ids[x.unit_id];}));var d=0,dn=0;us.forEach(function(u){var bb=uBal(u.id);if(bb>0.009){d+=bb;dn++;}});
    return {b:b,n:us.length,live:us.filter(function(u){return u.status==='yasayir';}).length,bill:us.filter(function(u){return u.billing&&monthlyOf(u)>0;}).length,c:c,p:p,r:c?Math.round(p/c*100):0,d:d,dn:dn};});
   dashRows=rows;
