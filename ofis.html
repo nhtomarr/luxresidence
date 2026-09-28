@@ -190,6 +190,21 @@ body.owner .otbl .small,body.owner .otbl .muted.small{font-size:14px}
 .pushcta{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff}.pushcta small,.pushok small{display:block;font-size:13px;opacity:.9;margin-top:2px}
 .pushcta span,.pushok span{font-size:28px}.pushcta div,.pushok div{flex:1}.pushcta .btn{background:#fff;color:#1e3a8a}
 .pushcta.warn{background:#fef3c7;color:#92400e}.pushok{background:#ecfdf5;border:1px solid #bbf7d0;color:#166534}
+
+.iosSheet{position:fixed;inset:0;z-index:300;background:rgba(15,23,42,.55);display:none;align-items:flex-end;justify-content:center}
+.iosSheet.on{display:flex}
+.ios-in{position:relative;background:#fff;width:min(520px,100%);border-radius:24px 24px 0 0;padding:22px 20px calc(96px + env(safe-area-inset-bottom,0px));box-shadow:0 -20px 50px -20px rgba(0,0,0,.4)}
+.ios-in .x{position:absolute;right:14px;top:14px}
+.ios-h{display:flex;align-items:center;gap:12px;margin-bottom:14px}.ios-h img{width:52px;height:52px;border-radius:14px}.ios-h b{font-size:18px;display:block}.ios-h small{color:var(--mut);font-size:13px}
+.ios-steps{list-style:none;margin:0 0 16px;display:grid;gap:10px}
+.ios-steps li{display:flex;gap:12px;align-items:center;background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:15px;line-height:1.4}
+.ios-steps i{font-style:normal;flex:none;width:28px;height:28px;border-radius:50%;background:var(--acc);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+.shr{width:22px;height:22px;vertical-align:-5px;color:var(--acc);margin-left:2px}.plus{color:var(--acc)}
+.ios-arrow{position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);font-size:40px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4);animation:iosBounce 1.2s ease-in-out infinite}
+.ios-arrow.top{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));bottom:auto;left:auto;right:18px;transform:none}
+.iosSheet.on .ios-arrow{color:#2563eb;text-shadow:none}
+@keyframes iosBounce{0%,100%{translate:0 0}50%{translate:0 8px}}
+.iosSheet .ios-steps b{display:inline!important;font-size:inherit!important;color:var(--ink)}.iosSheet .ios-steps span{color:var(--ink)!important;font-size:15px!important}.iosSheet .ios-h b{display:block}.iosSheet .ios-h small{display:block}
 </style>
 </head>
 <body>
@@ -296,6 +311,17 @@ body.owner .otbl .small,body.owner .otbl .muted.small{font-size:14px}
 
 <div class="qrwrap" id="qrWrap"><h1>Gəliş / Gediş</h1><div id="qrBox"></div><p>Telefonun kamerası ilə skan edin · kod <span id="qrLeft">60</span> san sonra yenilənir</p><button class="btn ghost" style="background:rgba(255,255,255,.12);color:#fff" onclick="closeQR()">Bağla</button></div>
 <div id="printSheet"></div>
+<div id="iosSheet" class="iosSheet"><div class="ios-in">
+ <button class="x" onclick="iosSheetClose(3)" aria-label="Bağla">×</button>
+ <div class="ios-h"><img src="/assets/ofis/icon-192.png" alt=""><div><b>Ofis tətbiqini quraşdırın</b><small>Bildirişlər və tam ekran üçün — 10 saniyə</small></div></div>
+ <ol class="ios-steps">
+  <li><i>1</i><span id="iosStep1">Aşağıdakı <b>Paylaş</b> düyməsinə basın <svg viewBox="0 0 24 24" class="shr"><path d="M12 3v12M7 8l5-5 5 5M5 12v8h14v-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></li>
+  <li><i>2</i><span>Siyahını aşağı sürüşdürüb <b>“Ana ekrana əlavə et”</b> seçin <b class="plus">⊞</b></span></li>
+  <li><i>3</i><span>Sağ yuxarıda <b>“Əlavə et”</b> basın</span></li>
+  <li><i>4</i><span>Ana ekrandakı <b>Ofis</b> ikonundan açın və <b>“Bildirişləri aktiv et”</b></span></li>
+ </ol>
+ <button class="btn" style="width:100%" onclick="iosSheetClose(3)">Başa düşdüm</button>
+</div><div class="ios-arrow" id="iosArrow">⬇</div></div>
 <div id="repSheet"></div>
 <div class="modal" id="modal"><div class="mbox" id="mbox"></div></div>
 <div class="toast" id="toast"></div>
@@ -334,7 +360,7 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
  $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};
  $('dDay').value=today();$('mMonth').value=today().slice(0,7);$('dDay').onchange=renderDay;$('mMonth').onchange=renderMonth;$('tkFilter').onchange=renderKanban;
  setInterval(tick,1000);tick();
- loadAll().then(function(){if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':((OWNER||(ME.is_admin&&!EMP))?'boss':'today'));if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
+ loadAll().then(function(){setTimeout(function(){iosSheetShow(false);},2500);if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':((OWNER||(ME.is_admin&&!EMP))?'boss':'today'));if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
 }
 function show(v){document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
  if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss'){if(OWNER)renderOwner();else renderBoss();}if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();window.scrollTo(0,0);}
@@ -734,6 +760,16 @@ function ownGivenCard(){var l=TASKS.filter(function(t){return t.from_owner;}).so
   return '<div class="ogt"><div><b>'+esc(t.title)+'</b><div class="muted small">'+esc(empName(t.assignee_id))+(t.due?' · son tarix '+t.due.slice(8)+'.'+t.due.slice(5,7):'')+'</div></div>'+st+'</div>';}).join(''):'<p class="muted">Hələ tapşırıq verməmisiniz. “+ Yeni” ilə istənilən işçiyə tapşırıq verə bilərsiniz.</p>')+'</div>';}
 
 
+
+/* ---------- iPhone: ana ekrana əlavə etmə bələdçisi ---------- */
+function iosSheetClose(days){$('iosSheet').classList.remove('on');try{localStorage.setItem('iosSheetUntil',String(Date.now()+(days||3)*864e5));}catch(e){}}
+function iosSheetShow(force){if(!isIOS()||isStandalone())return;var until=0;try{until=+localStorage.getItem('iosSheetUntil')||0;}catch(e){}if(!force&&Date.now()<until)return;
+ var ua=navigator.userAgent,chrome=/CriOS|FxiOS|EdgiOS/.test(ua),ipad=/iPad/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+ var st=$('iosStep1'),ar=$('iosArrow');
+ if(chrome){st.innerHTML='Ünvan zolağının sağındakı <b>Paylaş</b> düyməsinə basın <svg viewBox="0 0 24 24" class="shr"><path d="M12 3v12M7 8l5-5 5 5M5 12v8h14v-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';ar.className='ios-arrow top';ar.textContent='⬆';}
+ else if(ipad){st.innerHTML='Yuxarıda, sağda <b>Paylaş</b> düyməsinə basın <svg viewBox="0 0 24 24" class="shr"><path d="M12 3v12M7 8l5-5 5 5M5 12v8h14v-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';ar.className='ios-arrow top';ar.textContent='⬆';}
+ $('iosSheet').classList.add('on');}
+
 /* ---------- TELEFON BİLDİRİŞLƏRİ (Web Push) ---------- */
 function b64u(s){var p='='.repeat((4-s.length%4)%4),b=(s+p).replace(/-/g,'+').replace(/_/g,'/'),r=atob(b),o=new Uint8Array(r.length);for(var i=0;i<r.length;i++)o[i]=r.charCodeAt(i);return o;}
 function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);}
@@ -747,7 +783,7 @@ function enablePush(){if(isIOS()&&!isStandalone()){pushHelpIOS();return;}
    return reg.pushManager.getSubscription().then(function(old){return old||reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(key)});});})
   .then(function(sub){var j=sub.toJSON();return sb.from('office_push_subs').upsert({user_id:ME.user_id,endpoint:j.endpoint,p256dh:j.keys.p256dh,auth:j.keys.auth,ua:navigator.userAgent.slice(0,200)},{onConflict:'endpoint'}).then(function(r){if(r.error)throw r.error;});})
   .then(function(){toast('Bildirişlər aktivdir ✅');notify('push_test',{});renderPushCards();});}).catch(err);}
-function pushHelpIOS(){modal('<div class="mhead"><h3>iPhone-da bildirişlər</h3><button class="x" onclick="closeModal()">×</button></div><p style="font-size:16px;line-height:1.6">iPhone bildirişləri yalnız tətbiq <b>ana ekrana əlavə olunanda</b> göndərir:</p><ol style="margin:12px 0 0 20px;line-height:1.9;font-size:16px"><li>Safari-də aşağıdakı <b>Paylaş</b> düyməsinə (□↑) bas</li><li><b>“Ana ekrana əlavə et”</b> → <b>Əlavə et</b></li><li>Ana ekrandakı <b>Ofis</b> ikonundan aç və daxil ol</li><li><b>“Bildirişləri aktiv et”</b> düyməsinə bas → <b>İcazə ver</b></li></ol>');}
+function pushHelpIOS(){if($('iosSheet')){iosSheetShow(true);return;}modal('<div class="mhead"><h3>iPhone-da bildirişlər</h3><button class="x" onclick="closeModal()">×</button></div><p style="font-size:16px;line-height:1.6">iPhone bildirişləri yalnız tətbiq <b>ana ekrana əlavə olunanda</b> göndərir:</p><ol style="margin:12px 0 0 20px;line-height:1.9;font-size:16px"><li>Safari-də aşağıdakı <b>Paylaş</b> düyməsinə (□↑) bas</li><li><b>“Ana ekrana əlavə et”</b> → <b>Əlavə et</b></li><li>Ana ekrandakı <b>Ofis</b> ikonundan aç və daxil ol</li><li><b>“Bildirişləri aktiv et”</b> düyməsinə bas → <b>İcazə ver</b></li></ol>');}
 function renderPushCards(){var boxes=[$('pushCard'),$('ownPush')].filter(Boolean);if(!boxes.length)return;
  pushState().then(function(st){var h;
   if(st==='on')h='<div class="pushok"><span>🔔</span><div><b>Telefon bildirişləri aktivdir</b><small>Tapşırıq və xatırlatmalar bu cihazın bildiriş panelinə düşür.</small></div><button class="btn ghost sm" onclick="notify(\'push_test\',{});toast(\'Test göndərildi\')">Test</button></div>';
@@ -929,6 +965,7 @@ function isStandalone(){return window.matchMedia('(display-mode: standalone)').m
 document.addEventListener('DOMContentLoaded',function(){var b=$('instBtn');if(!b)return;
  if(!isStandalone()&&/iphone|ipad|ipod/i.test(navigator.userAgent))b.style.display='';
  b.onclick=function(){if(_bip){_bip.prompt();_bip.userChoice.then(function(){_bip=null;b.style.display='none';});}
+  else if(isIOS()){iosSheetShow(true);}
   else modal('<div class="mhead"><h3>Telefona quraşdır</h3><button class="x" onclick="closeModal()">×</button></div><p><b>iPhone (Safari):</b> aşağıdakı <b>Paylaş</b> düyməsi (□↑) → <b>“Ana ekrana əlavə et”</b> → <b>Əlavə et</b>.</p><p style="margin-top:10px"><b>Android (Chrome):</b> sağ yuxarıdakı ⋮ menyu → <b>“Tətbiqi quraşdır”</b>.</p>');};});
 </script>
 </body>
