@@ -761,9 +761,19 @@ function ownGivenCard(){var l=TASKS.filter(function(t){return t.from_owner;}).so
 
 
 
+
+/* ---------- MOBİL TƏTBİQ (Capacitor) ---------- */
+function isNative(){try{return !!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());}catch(e){return false;}}
+function nativePush(){return isNative()&&window.Capacitor.Plugins&&window.Capacitor.Plugins.PushNotifications;}
+var _fcmOn=null;function fcmOn(){return _fcmOn!==null?Promise.resolve(_fcmOn):sb.rpc('office_fcm_on').then(function(r){_fcmOn=!!(r&&r.data);return _fcmOn;}).catch(function(){return false;});}
+function nativePushInit(){var P=nativePush();if(!P||nativePushInit._d)return;nativePushInit._d=1;
+ P.addListener('registration',function(t){sb.from('office_push_subs').upsert({user_id:ME.user_id,endpoint:'fcm:'+t.value,p256dh:'fcm',auth:'fcm',ua:'android-app'},{onConflict:'endpoint'}).then(function(){renderPushCards();});});
+ P.addListener('registrationError',function(){toast('Bildiriş qeydiyyatı alınmadı');});
+ P.addListener('pushNotificationActionPerformed',function(a){try{var u=a.notification.data&&a.notification.data.url;if(u&&u.indexOf('/ofis')>=0)location.href=u;}catch(e){}});}
+
 /* ---------- iPhone: ana ekrana əlavə etmə bələdçisi ---------- */
 function iosSheetClose(days){$('iosSheet').classList.remove('on');try{localStorage.setItem('iosSheetUntil',String(Date.now()+(days||3)*864e5));}catch(e){}}
-function iosSheetShow(force){if(!isIOS()||isStandalone())return;var until=0;try{until=+localStorage.getItem('iosSheetUntil')||0;}catch(e){}if(!force&&Date.now()<until)return;
+function iosSheetShow(force){if(isNative()||!isIOS()||isStandalone())return;var until=0;try{until=+localStorage.getItem('iosSheetUntil')||0;}catch(e){}if(!force&&Date.now()<until)return;
  var ua=navigator.userAgent,chrome=/CriOS|FxiOS|EdgiOS/.test(ua),ipad=/iPad/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
  var st=$('iosStep1'),ar=$('iosArrow');
  if(chrome){st.innerHTML='Ünvan zolağının sağındakı <b>Paylaş</b> düyməsinə basın <svg viewBox="0 0 24 24" class="shr"><path d="M12 3v12M7 8l5-5 5 5M5 12v8h14v-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';ar.className='ios-arrow top';ar.textContent='⬆';}
@@ -774,9 +784,11 @@ function iosSheetShow(force){if(!isIOS()||isStandalone())return;var until=0;try{
 function b64u(s){var p='='.repeat((4-s.length%4)%4),b=(s+p).replace(/-/g,'+').replace(/_/g,'/'),r=atob(b),o=new Uint8Array(r.length);for(var i=0;i<r.length;i++)o[i]=r.charCodeAt(i);return o;}
 function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);}
 function pushSupported(){return 'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;}
-function pushState(){if(!pushSupported())return Promise.resolve(isIOS()&&!isStandalone()?'ios-install':'unsupported');if(Notification.permission==='denied')return Promise.resolve('denied');
+function pushState(){if(isNative()){if(!nativePush())return Promise.resolve('unsupported');return fcmOn().then(function(on){if(!on)return 'native-soon';var P=nativePush();nativePushInit();return P.checkPermissions().then(function(r){if(r.receive==='denied')return 'denied';return sb.from('office_push_subs').select('id').eq('user_id',ME.user_id).like('endpoint','fcm:%').then(function(q){return (r.receive==='granted'&&q.data&&q.data.length)?'on':'off';});});});}
+ if(!pushSupported())return Promise.resolve(isIOS()&&!isStandalone()?'ios-install':'unsupported');if(Notification.permission==='denied')return Promise.resolve('denied');
  return navigator.serviceWorker.ready.then(function(r){return r.pushManager.getSubscription();}).then(function(sub){return sub&&Notification.permission==='granted'?'on':'off';}).catch(function(){return 'off';});}
-function enablePush(){if(isIOS()&&!isStandalone()){pushHelpIOS();return;}
+function enablePush(){if(isNative()){var P=nativePush();if(!P)return;nativePushInit();P.requestPermissions().then(function(r){if(r.receive!=='granted'){toast('Bildiriş icazəsi verilmədi');renderPushCards();return;}return P.register().then(function(){toast('Bildirişlər aktivdir ✅');setTimeout(function(){notify('push_test',{});renderPushCards();},1500);});}).catch(err);return;}
+ if(isIOS()&&!isStandalone()){pushHelpIOS();return;}
  if(!pushSupported()){toast('Bu brauzer bildirişləri dəstəkləmir');return;}
  Notification.requestPermission().then(function(p){if(p!=='granted'){toast('Bildiriş icazəsi verilmədi');renderPushCards();return;}
   return Promise.all([navigator.serviceWorker.ready,sb.rpc('office_push_key')]).then(function(r){var reg=r[0],key=r[1]&&r[1].data;if(!key)throw new Error('Açar alınmadı');
@@ -788,6 +800,7 @@ function renderPushCards(){var boxes=[$('pushCard'),$('ownPush')].filter(Boolean
  pushState().then(function(st){var h;
   if(st==='on')h='<div class="pushok"><span>🔔</span><div><b>Telefon bildirişləri aktivdir</b><small>Tapşırıq və xatırlatmalar bu cihazın bildiriş panelinə düşür.</small></div><button class="btn ghost sm" onclick="notify(\'push_test\',{});toast(\'Test göndərildi\')">Test</button></div>';
   else if(st==='denied')h='<div class="pushcta warn"><span>🔕</span><div><b>Bildirişlər bloklanıb</b><small>Brauzerin/telefonun ayarlarında bu sayt üçün bildirişlərə icazə verin, sonra səhifəni yeniləyin.</small></div></div>';
+  else if(st==='native-soon')h='<div class="pushcta warn"><span>🔔</span><div><b>Bildirişlər tezliklə</b><small>Tətbiq üçün bildiriş xidməti qoşulur. Hazır olanda burada “Aktiv et” düyməsi görünəcək.</small></div></div>';
   else if(st==='unsupported')h='<div class="pushcta warn"><span>🔕</span><div><b>Bu brauzer bildirişləri dəstəkləmir</b><small>Chrome, Edge və ya Safari (iOS 16.4+) istifadə edin.</small></div></div>';
   else h='<div class="pushcta"><span>🔔</span><div><b>Bildirişləri aktiv et</b><small>'+(st==='ios-install'?'iPhone-da əvvəlcə tətbiqi ana ekrana əlavə edin.':'Yeni tapşırıq, xatırlatma və sorğu nəticələri telefonun bildiriş panelinə düşsün.')+'</small></div><button class="btn" onclick="enablePush()">'+(st==='ios-install'?'Necə?':'Aktiv et')+'</button></div>';
   boxes.forEach(function(b){b.innerHTML=h;});});}
@@ -963,7 +976,7 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('/ofis-sw.js',{
 var _bip=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();_bip=e;var b=$('instBtn');if(b)b.style.display='';});
 function isStandalone(){return window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;}
 document.addEventListener('DOMContentLoaded',function(){var b=$('instBtn');if(!b)return;
- if(!isStandalone()&&/iphone|ipad|ipod/i.test(navigator.userAgent))b.style.display='';
+ if(!isNative()&&!isStandalone()&&/iphone|ipad|ipod/i.test(navigator.userAgent))b.style.display='';
  b.onclick=function(){if(_bip){_bip.prompt();_bip.userChoice.then(function(){_bip=null;b.style.display='none';});}
   else if(isIOS()){iosSheetShow(true);}
   else modal('<div class="mhead"><h3>Telefona quraşdır</h3><button class="x" onclick="closeModal()">×</button></div><p><b>iPhone (Safari):</b> aşağıdakı <b>Paylaş</b> düyməsi (□↑) → <b>“Ana ekrana əlavə et”</b> → <b>Əlavə et</b>.</p><p style="margin-top:10px"><b>Android (Chrome):</b> sağ yuxarıdakı ⋮ menyu → <b>“Tətbiqi quraşdır”</b>.</p>');};});
