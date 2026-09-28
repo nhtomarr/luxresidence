@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#251712">
+<title>LUX Residence — Komendantlıq</title>
+<link rel="manifest" href="/komendant.webmanifest">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Komendant">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<script src="/assets/lux-auth.js?v=km1"></script>
+<style>
+:root{--bg:#f7f2ec;--card:#fff;--ink:#2a1d14;--mut:#8b7a6b;--line:#eadfd3;--acc:#ba4d2c;--acc2:#9a3c20;--esp:#251712;--ok:#15803d;--warn:#b45309;--bad:#b91c1c;--soft:#f3e7dc;
+--sans:'Inter',-apple-system,system-ui,sans-serif;--serif:'Playfair Display',Georgia,serif;box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}a{color:inherit}
+.top{position:sticky;top:0;z-index:30;background:var(--esp);color:#fff;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px;display:flex;align-items:center;gap:12px}
+.top .brand{font-family:var(--serif);font-weight:700;font-size:19px}.top .brand small{display:block;font-family:var(--sans);font-weight:500;font-size:11px;color:#d8c3b0;letter-spacing:.08em;text-transform:uppercase}
+.top .me{margin-left:auto;text-align:right;font-size:13px;color:#e7d8ca}.top .me b{display:block;color:#fff}
+.top .out{border:1px solid #5a4032;background:none;color:#fff;border-radius:10px;padding:7px 11px;font-size:13px}
+.tabs{display:flex;gap:4px;background:#fff;border-bottom:1px solid var(--line);padding:8px 12px;overflow-x:auto;scrollbar-width:none;position:sticky;top:calc(56px + env(safe-area-inset-top,0px));z-index:20}
+.tabs::-webkit-scrollbar{display:none}.tabs button{flex:none;border:none;background:none;border-radius:10px;padding:9px 14px;font-weight:600;color:var(--mut);white-space:nowrap}.tabs button.on{background:var(--soft);color:var(--acc)}
+main{max-width:1240px;margin:0 auto;padding:18px 14px calc(80px + env(safe-area-inset-bottom,0px))}
+.view{display:none}.view.on{display:block}
+h2{font-family:var(--serif);font-size:26px;margin-bottom:12px}h3{font-size:16px;font-weight:700;margin-bottom:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.sp{justify-content:space-between}
+.grid{display:grid;gap:12px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.btn{border:none;border-radius:12px;padding:11px 16px;font-weight:700;background:var(--acc);color:#fff;display:inline-flex;align-items:center;gap:8px;justify-content:center;text-decoration:none;min-height:42px}
+.btn:hover{background:var(--acc2)}.btn.ghost{background:#f3ebe3;color:var(--ink)}.btn.ghost:hover{background:#eadfd3}.btn.red{background:#fee2e2;color:var(--bad)}.btn.green{background:var(--ok)}.btn.sm{padding:7px 11px;font-size:13px;min-height:34px;border-radius:10px}
+.muted{color:var(--mut)}.small{font-size:13px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}.kpi b{display:block;font-size:26px;font-weight:800;line-height:1.15}.kpi span{color:var(--mut);font-size:13px}.kpi small{display:block;color:var(--mut);font-size:12px;margin-top:4px}
+.kpi.ok b{color:var(--ok)}.kpi.warn b{color:var(--warn)}.kpi.bad b{color:var(--bad)}.kpi.acc b{color:var(--acc)}
+.pill{display:inline-block;font-size:12px;font-weight:700;border-radius:99px;padding:3px 9px;white-space:nowrap}
+.p-ok{background:#dcfce7;color:#166534}.p-warn{background:#fef3c7;color:#92400e}.p-bad{background:#fee2e2;color:#991b1b}.p-mut{background:#f1ece6;color:#6b5a4d}.p-acc{background:#fbe6dd;color:var(--acc2)}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}th{font-size:12px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.tbl{overflow-x:auto}tr.click{cursor:pointer}tr.click:hover td{background:#fbf7f3}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}.field label{font-size:13px;color:var(--mut);font-weight:600}
+.field input,.field select,.field textarea,.inp{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;width:100%}
+.field textarea{min-height:80px;resize:vertical}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chips label{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:9px;padding:5px 9px;font-size:13px;cursor:pointer}
+.chips input{accent-color:var(--acc)}
+.modal{position:fixed;inset:0;background:rgba(37,23,18,.55);z-index:100;display:none;align-items:flex-end;justify-content:center}.modal.on{display:flex}
+.mbox{background:#fff;width:min(680px,100%);max-height:92vh;overflow-y:auto;border-radius:20px 20px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px))}.mbox.wide{width:min(1000px,100%)}
+@media(min-width:700px){.modal{align-items:center}.mbox{border-radius:20px}}
+.mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}.mhead h3{margin:0;font-size:19px}
+.x{width:40px;height:40px;border-radius:50%;border:none;background:#f3ebe3;font-size:20px;flex:none}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--esp);color:#fff;border-radius:99px;padding:11px 18px;font-weight:600;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:200;max-width:92vw;text-align:center}.toast.on{opacity:1}
+.empty{color:var(--mut);padding:18px;text-align:center}
+/* bina xəritəsi */
+.bsel{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.bsel button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 14px;font-weight:700}.bsel button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.bmap{display:flex;flex-direction:column;gap:4px;overflow-x:auto}.flr{display:flex;gap:4px;align-items:stretch}.flr>b{width:34px;flex:none;font-size:12px;color:var(--mut);display:flex;align-items:center;justify-content:center}
+.u{min-width:74px;flex:1;border-radius:9px;padding:6px 6px;font-size:12px;line-height:1.25;cursor:pointer;border:1px solid transparent;text-align:center}
+.u b{display:block;font-size:12px}.u span{font-size:11px;opacity:.85}
+.u.c0{background:#f1ece6;color:#8b7a6b}.u.c1{background:#dcfce7;color:#166534}.u.c2{background:#fef3c7;color:#92400e}.u.c3{background:#fee2e2;color:#991b1b}.u.c4{background:#e0e7ff;color:#3730a3}.u.qy{border-style:dashed;border-color:#b8a28f}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--mut);margin:10px 0}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-2px}
+/* sakin */
+.bal{border-radius:22px;padding:22px;color:#fff;background:linear-gradient(135deg,#251712,#6b2e1a 55%,#ba4d2c)}.bal small{opacity:.85}.bal b{display:block;font-size:40px;font-weight:800;line-height:1.1;margin:6px 0}
+.bal.okb{background:linear-gradient(135deg,#14532d,#15803d)}
+.rq{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px;background:#fff}
+.stars button{border:none;background:none;font-size:26px;color:#d6c7b8}.stars button.on{color:#f59e0b}
+.qrbox{display:flex;justify-content:center;padding:14px;background:#fff;border-radius:16px;border:1px solid var(--line)}
+.rcpt{font-family:var(--sans)}#printArea{display:none}
+@media print{body.printing>*:not(#printArea){display:none!important}body.printing #printArea{display:block!important;padding:10mm}body.printing{background:#fff}
+ .pr h1{font-family:var(--serif);font-size:22px}.pr table{width:100%;border-collapse:collapse}.pr td,.pr th{border:1px solid #bbb;padding:6px 8px;font-size:12px}@page{size:A4;margin:12mm}}
+.pushcta{display:flex;align-items:center;gap:12px;border-radius:16px;padding:14px 16px;margin-bottom:14px;background:linear-gradient(135deg,#6b2e1a,#ba4d2c);color:#fff}.pushcta div{flex:1}.pushcta small{display:block;opacity:.9}.pushcta .btn{background:#fff;color:var(--acc2)}
+@media(max-width:760px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3,.g2{grid-template-columns:1fr}.hide-m{display:none}.bal b{font-size:34px}}
+</style>
+</head>
+<body>
+<div id="app" style="display:none">
+ <header class="top"><div class="brand">LUX Residence<small>Komendantlıq</small></div><div class="me" id="meBox"></div><button class="out" id="outBtn">Çıxış</button></header>
+ <nav class="tabs" id="tabs"></nav>
+ <main>
+  <!-- ================= STAFF ================= -->
+  <section class="view" id="v-dash">
+   <div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Ümumi vəziyyət</h2><div class="row"><input type="month" id="dM" class="inp" style="width:auto"></div></div>
+   <div class="grid g4" id="dKpi" style="margin-bottom:14px"></div>
+   <div class="card"><div class="row sp"><h3>Binalar üzrə</h3><button class="btn ghost sm" onclick="exportBinas()">Excel</button></div><div class="tbl" id="dBinas"></div></div>
+   <div class="grid g2"><div class="card"><h3>Açıq müraciətlər</h3><div id="dReq"></div></div><div class="card"><h3>Ən çox borcu olanlar</h3><div id="dTop"></div></div></div>
+  </section>
+  <section class="view" id="v-units">
+   <div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Mənzillər</h2><div class="row"><input id="uSearch" class="inp" placeholder="Axtar: mənzil №, sahib, telefon, maşın" style="min-width:260px"></div></div>
+   <div class="bsel" id="uBina"></div>
+   <div class="legend"><span><i style="background:#dcfce7"></i>borc yoxdur</span><span><i style="background:#fef3c7"></i>borc 1 aydan az</span><span><i style="background:#fee2e2"></i>borc 1 aydan çox</span><span><i style="background:#e0e7ff"></i>avans</span><span><i style="background:#f1ece6"></i>hesablanmır / boş</span><span><i style="border:1px dashed #b8a28f"></i>qeyri-yaşayış</span></div>
+   <div class="card"><div class="bmap" id="uMap"></div></div>
+   <div class="card tbl" id="uList" style="display:none"></div>
+  </section>
+  <section class="view" id="v-pay">
+   <div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Ödənişlər</h2></div>
+   <div class="bsel" id="paySub"></div>
+   <div id="payBody"></div>
+  </section>
+  <section class="view" id="v-req">
+   <div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Müraciətlər</h2><div class="row"><select id="rF" class="inp" style="width:auto"><option value="open">Açıq</option><option value="all">Hamısı</option><option value="done">Həll olunmuş</option></select><select id="rB" class="inp" style="width:auto"></select></div></div>
+   <div class="grid g4" id="rKpi" style="margin-bottom:14px"></div><div id="rList"></div>
+  </section>
+  <section class="view" id="v-ann">
+   <div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Elanlar</h2><button class="btn staff-only" onclick="openAnn()">+ Elan</button></div><div id="aList"></div>
+  </section>
+  <section class="view" id="v-guard">
+   <h2>Mühafizə · qonaq keçidi</h2>
+   <div class="card"><div class="row"><input id="gCode" class="inp" placeholder="Qonaq kodu (məs: a1b2c3d4e5)" style="flex:1;min-width:200px;font-size:18px;letter-spacing:.08em"><button class="btn" onclick="guardCheck(false)">Yoxla</button><button class="btn ghost" onclick="guardScan()">📷 QR skan</button></div><div id="gRes" style="margin-top:14px"></div></div>
+   <div class="card"><h3>Bu günün keçidləri</h3><div class="tbl" id="gToday"></div></div>
+  </section>
+  <section class="view" id="v-set">
+   <h2>Ayarlar</h2>
+   <div class="card"><h3>Ödəniş qaydaları</h3>
+    <div class="grid g3"><div class="field"><label>Son ödəniş günü (ayın)</label><input id="sDue" type="number" min="1" max="28"></div><div class="field"><label>Gecikmə cəriməsi (%)</label><input id="sPen" type="number" step="0.1" min="0"></div><div class="field"><label>Komendantlıq telefonu</label><input id="sPh"></div></div>
+    <div class="field"><label>Qurumun adı (qəbzdə)</label><input id="sCo"></div>
+    <div class="field"><label>Ödəniş rekvizitləri (sakinlər görür)</label><textarea id="sBank" placeholder="Bank: ...&#10;Hesab: AZ00...&#10;VÖEN: ...&#10;Təyinat: Bina, mənzil №"></textarea></div>
+    <button class="btn" onclick="saveCfg()">Yadda saxla</button></div>
+   <div class="card"><h3>Mənzil bazası</h3><p class="muted small">Satış lövhəsindəki bina və mənzilləri yenidən idxal edir. Yeni mənzillər əlavə olunur, mövcudların sahə və otaq sayı yenilənir; sahib, telefon və ödəniş məlumatlarına toxunulmur.</p><button class="btn ghost" onclick="importUnits()">Satış lövhəsindən yenilə</button></div>
+  </section>
+  <!-- ================= SAKİN ================= -->
+  <section class="view" id="v-home">
+   <div id="rsPush"></div><div id="rsUnitSel"></div>
+   <div id="rsBal"></div>
+   <div class="grid g2" style="margin-top:14px"><div class="card"><h3>Son hesablamalar</h3><div id="rsCh"></div></div><div class="card"><h3>Son ödənişlər</h3><div id="rsPy"></div></div></div>
+   <div class="card"><h3>Elanlar</h3><div id="rsAnn"></div></div>
+  </section>
+  <section class="view" id="v-rpay"><h2>Ödəniş tarixçəsi</h2><div class="card" id="rsHow"></div><div class="card tbl" id="rsStmt"></div></section>
+  <section class="view" id="v-rreq"><div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Müraciətlərim</h2><button class="btn" onclick="openReq()">+ Yeni müraciət</button></div><div id="rsReq"></div></section>
+  <section class="view" id="v-rguest"><div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Qonaq keçidi</h2><button class="btn" onclick="openGuest()">+ Qonaq</button></div><p class="muted small" style="margin-bottom:12px">Qonağınız üçün birdəfəlik keçid kodu yaradın və WhatsApp-da göndərin. Mühafizə girişdə kodu yoxlayacaq.</p><div id="rsGuest"></div></section>
+  <section class="view" id="v-rinfo"><h2>Əlaqə</h2><div class="card" id="rsInfo"></div></section>
+ </main>
+</div>
+<div class="modal" id="modal"><div class="mbox" id="mbox"></div></div>
+<div class="toast" id="toast"></div>
+<div id="printArea"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+var sb=null,ME=null,STAFF=false,CASH=false,RES=false,TZ='Asia/Baku';
+var UNITS=[],BAL={},TAR=[],CFG={},MYUNITS=[],CUR_UNIT=null,BINA_F=0;
+var RST={new:['Yeni','p-warn'],accepted:['Qəbul edildi','p-acc'],in_progress:['İcra olunur','p-acc'],done:['Həll olundu','p-ok'],rejected:['Rədd edildi','p-mut']};
+var RCAT={santexnika:'🚰 Santexnika',elektrik:'💡 Elektrik',lift:'🛗 Lift',temizlik:'🧹 Təmizlik',tehlukesizlik:'🛡 Təhlükəsizlik',parkinq:'🅿️ Parkinq',diger:'📌 Digər'};
+var USTAT={bos:'Boş',satisda:'Satışda',satilib:'Satılıb',yasayir:'Yaşayır',icare:'İcarədə',investor:'İnvestor',fond:'Fond'};
+var PM={nagd:'Nağd',kart:'Kart',kocurme:'Köçürmə',onlayn:'Onlayn'};
+function $(i){return document.getElementById(i);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function toast(t){var e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on');},3200);}
+function err(e){toast((e&&e.message)||'Xəta baş verdi');console.warn(e);}
+function run(q){return q.then(function(r){if(r.error)throw r.error;return r.data;});}
+function today(){return new Intl.DateTimeFormat('en-CA',{timeZone:TZ}).format(new Date());}
+function curM(){return today().slice(0,7);}
+function az(n){n=Number(n)||0;return n.toLocaleString('az-AZ',{minimumFractionDigits:2,maximumFractionDigits:2})+' ₼';}
+function dmy(d){return d?String(d).slice(8,10)+'.'+String(d).slice(5,7)+'.'+String(d).slice(0,4):'';}
+function mname(m){var n=['Yanvar','Fevral','Mart','Aprel','May','İyun','İyul','Avqust','Sentyabr','Oktyabr','Noyabr','Dekabr'];return n[+m.slice(5,7)-1]+' '+m.slice(0,4);}
+function modal(h,wide){$('mbox').innerHTML=h;$('mbox').classList.toggle('wide',!!wide);$('modal').classList.add('on');}
+function closeModal(){$('modal').classList.remove('on');$('mbox').innerHTML='';}
+$('modal').addEventListener('click',function(e){if(e.target===$('modal'))closeModal();});
+function unitLabel(u){return 'Bina '+u.bina+' · '+(u.kind==='qeyri'?'obyekt ':'')+u.number;}
+function binas(){var s={};UNITS.forEach(function(u){s[u.bina]=1;});return Object.keys(s).map(Number).sort(function(a,b){return a-b;});}
+function kpi(v,l,c,sub){return '<div class="kpi '+(c||'')+'"><b>'+v+'</b><span>'+l+'</span>'+(sub?'<small>'+sub+'</small>':'')+'</div>';}
+function xlsx(rows,name){function go(){var ws=XLSX.utils.aoa_to_sheet(rows);var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Hesabat');XLSX.writeFile(wb,name);}
+ if(window.XLSX)return go();var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=go;document.head.appendChild(s);}
+function kmNotify(action,payload){try{sb.functions.invoke('km-notify',{body:Object.assign({action:action},payload||{})}).catch(function(){});}catch(e){}}
+function printHtml(h){$('printArea').innerHTML=h;document.body.classList.add('printing');setTimeout(function(){window.print();setTimeout(function(){document.body.classList.remove('printing');},500);},250);}
+
+/* ---------- start ---------- */
+luxAuth({perms:['komendant','komendant_kassa','sakin'],title:'Komendantlıq',sub:'Sakin və ya komendantlıq hesabınızla daxil olun',noAdminLink:true,accent:'#ba4d2c',onReady:function(c,me){sb=c;ME=me;var p=me.perms||[];CASH=me.is_admin||p.indexOf('komendant_kassa')>=0;STAFF=CASH||p.indexOf('komendant')>=0;RES=!STAFF&&p.indexOf('sakin')>=0;start();}});
+function start(){$('app').style.display='';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
+ $('meBox').innerHTML='<b>'+esc(ME.full_name||ME.email)+'</b>'+(ME.is_admin?'Admin':CASH?'Komendant · kassa':STAFF?'Komendant':'Sakin');
+ $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href='/komendant';});};
+ var tabs=STAFF?[['dash','Panel'],['units','Mənzillər'],['pay','Ödənişlər'],['req','Müraciətlər'],['ann','Elanlar'],['guard','Mühafizə'],['set','Ayarlar']]:[['home','Evim'],['rpay','Ödənişlər'],['rreq','Müraciətlər'],['rguest','Qonaq'],['rinfo','Əlaqə']];
+ $('tabs').innerHTML=tabs.map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');
+ $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};
+ if('serviceWorker' in navigator)navigator.serviceWorker.register('/ofis-sw.js',{scope:'/'}).catch(function(){});
+ run(sb.from('km_config').select('*').eq('id',1).maybeSingle()).then(function(c){CFG=c||{};}).catch(function(){}).then(function(){
+  if(STAFF)return loadStaff().then(function(){show('dash');});
+  return loadRes().then(function(){show('home');});});}
+function show(v){document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
+ ({dash:renderDash,units:renderUnits,pay:renderPay,req:renderReq,ann:renderAnn,guard:renderGuard,set:renderSet,home:renderHome,rpay:renderRPay,rreq:renderRReq,rguest:renderRGuest,rinfo:renderRInfo}[v]||function(){})();window.scrollTo(0,0);}
+
+/* ================= STAFF: məlumat ================= */
+function loadStaff(){return Promise.all([fetchAll('km_units','*'),fetchAll('km_unit_balance','unit_id,balance,charged,paid,last_paid'),run(sb.from('km_tariffs').select('*').order('sort'))]).then(function(r){UNITS=r[0];BAL={};r[1].forEach(function(b){BAL[b.unit_id]=b;});TAR=r[2]||[];}).catch(err);}
+function fetchAll(t,cols){var out=[],page=0;function next(){return run(sb.from(t).select(cols).range(page*1000,page*1000+999)).then(function(d){out=out.concat(d);if(d.length===1000){page++;return next();}return out;});}return next();}
+function uBal(id){return Number((BAL[id]||{}).balance||0);}
+function monthlyOf(u){var s=0;TAR.forEach(function(t){if(!t.active||t.kinds.indexOf(u.kind)<0||t.statuses.indexOf(u.status)<0||(t.binas&&t.binas.length&&t.binas.indexOf(u.bina)<0))return;s+=(t.calc==='per_m2'?Number(u.area||0)*t.amount:Number(t.amount));});return s*(1-(Number(u.discount_pct)||0)/100);}
+function debtClass(u){if(!u.billing||['bos','satisda','fond'].indexOf(u.status)>=0&&!uBal(u.id))return 'c0';var b=uBal(u.id),m=monthlyOf(u);if(b<-0.009)return 'c4';if(b<=0.009)return 'c1';if(m>0&&b>m+0.01)return 'c3';return 'c2';}
+
+/* ---------- Panel ---------- */
+function renderDash(){var m=$('dM').value||curM();$('dM').value=m;$('dM').onchange=renderDash;
+ Promise.all([run(sb.from('km_charges').select('unit_id,amount').eq('period',m)),run(sb.from('km_payments').select('unit_id,amount').gte('paid_at',m+'-01').lte('paid_at',m+'-31')),run(sb.from('km_requests').select('*').in('status',['new','accepted','in_progress']).order('created_at',{ascending:false}))]).then(function(r){
+  var ch=r[0],py=r[1],rq=r[2];var sum=function(a){return a.reduce(function(s,x){return s+Number(x.amount);},0);};
+  var totDebt=0,debtors=0;UNITS.forEach(function(u){var b=uBal(u.id);if(b>0.009){totDebt+=b;debtors++;}});
+  var chS=sum(ch),pyS=sum(py),rate=chS?Math.round(pyS/chS*100):0;
+  $('dKpi').innerHTML=kpi(az(chS),'hesablanıb · '+mname(m),'acc')+kpi(az(pyS),'yığılıb · '+mname(m),'ok',chS?'yığım: '+rate+'%':'')+kpi(az(totDebt),'ümumi borc','bad',debtors+' borclu obyekt')+kpi(rq.length,'açıq müraciət',rq.some(function(x){return x.priority==='urgent';})?'bad':'warn',rq.filter(function(x){return x.priority==='urgent';}).length+' təcili');
+  var rows=binas().map(function(b){var us=UNITS.filter(function(u){return u.bina===b;}),ids={};us.forEach(function(u){ids[u.id]=1;});var c=sum(ch.filter(function(x){return ids[x.unit_id];})),p=sum(py.filter(function(x){return ids[x.unit_id];}));var d=0,dn=0;us.forEach(function(u){var bb=uBal(u.id);if(bb>0.009){d+=bb;dn++;}});
+   return {b:b,n:us.length,live:us.filter(function(u){return u.status==='yasayir';}).length,bill:us.filter(function(u){return u.billing&&monthlyOf(u)>0;}).length,c:c,p:p,r:c?Math.round(p/c*100):0,d:d,dn:dn};});
+  dashRows=rows;
+  $('dBinas').innerHTML='<table><tr><th>Bina</th><th class="n">Obyekt</th><th class="n hide-m">Yaşayır</th><th class="n hide-m">Hesablanır</th><th class="n">Hesablanıb</th><th class="n">Yığılıb</th><th>Yığım</th><th class="n">Borc</th><th class="n hide-m">Borclu</th></tr>'+rows.map(function(x){return '<tr class="click" onclick="BINA_F='+x.b+';show(\'units\')"><td><b>Bina '+x.b+'</b></td><td class="n">'+x.n+'</td><td class="n hide-m">'+x.live+'</td><td class="n hide-m">'+x.bill+'</td><td class="n">'+az(x.c)+'</td><td class="n">'+az(x.p)+'</td><td style="min-width:110px"><div style="height:8px;background:#f1ece6;border-radius:8px;overflow:hidden"><i style="display:block;height:100%;width:'+Math.min(100,x.r)+'%;background:'+(x.r>=80?'#15803d':x.r>=50?'#d97706':'#b91c1c')+'"></i></div><span class="small">'+x.r+'%</span></td><td class="n" style="color:'+(x.d>0?'var(--bad)':'inherit')+'">'+az(x.d)+'</td><td class="n hide-m">'+x.dn+'</td></tr>';}).join('')+'</table>';
+  $('dReq').innerHTML=rq.slice(0,8).map(function(q){var u=UNITS.find(function(x){return x.id===q.unit_id;});return '<div class="row sp" style="padding:7px 0;border-bottom:1px solid var(--line)"><div><b>'+esc(q.title)+'</b><div class="muted small">'+(u?unitLabel(u):'')+' · '+(RCAT[q.category]||'')+'</div></div><span class="pill '+(q.priority==='urgent'?'p-bad':RST[q.status][1])+'">'+(q.priority==='urgent'?'təcili':RST[q.status][0])+'</span></div>';}).join('')||'<div class="empty">Açıq müraciət yoxdur 👍</div>';
+  var top=UNITS.filter(function(u){return uBal(u.id)>0.009;}).sort(function(a,b){return uBal(b.id)-uBal(a.id);}).slice(0,8);
+  $('dTop').innerHTML=top.map(function(u){return '<div class="row sp click" style="padding:7px 0;border-bottom:1px solid var(--line);cursor:pointer" onclick="openUnit('+u.id+')"><div><b>'+unitLabel(u)+'</b><div class="muted small">'+esc(u.owner_name||'sahib qeyd olunmayıb')+'</div></div><b style="color:var(--bad)">'+az(uBal(u.id))+'</b></div>';}).join('')||'<div class="empty">Borc yoxdur</div>';
+ }).catch(err);}
+var dashRows=[];
+function exportBinas(){xlsx([['Bina','Obyekt','Yaşayır','Hesablanır','Hesablanıb','Yığılıb','Yığım %','Borc','Borclu']].concat(dashRows.map(function(x){return ['Bina '+x.b,x.n,x.live,x.bill,+x.c.toFixed(2),+x.p.toFixed(2),x.r,+x.d.toFixed(2),x.dn];})),'binalar-'+($('dM').value||curM())+'.xlsx');}
+
+/* ---------- Mənzillər (bina xəritəsi) ---------- */
+function renderUnits(){var bs=binas();if(!BINA_F)BINA_F=bs[0];
+ $('uBina').innerHTML=bs.map(function(b){return '<button class="'+(b===BINA_F?'on':'')+'" onclick="BINA_F='+b+';renderUnits()">Bina '+b+'</button>';}).join('');
+ var q=($('uSearch').value||'').trim().toLowerCase();$('uSearch').oninput=renderUnits;
+ if(q){var res=UNITS.filter(function(u){return (u.number+' '+u.owner_name+' '+u.owner_phone+' '+u.tenant_name+' '+u.tenant_phone+' '+u.car_plates+' bina '+u.bina).toLowerCase().indexOf(q)>=0;}).slice(0,100);
+  $('uMap').parentNode.style.display='none';$('uList').style.display='';
+  $('uList').innerHTML=res.length?'<table><tr><th>Obyekt</th><th>Sahib</th><th class="hide-m">Telefon</th><th>Status</th><th class="n">Balans</th></tr>'+res.map(function(u){var b=uBal(u.id);return '<tr class="click" onclick="openUnit('+u.id+')"><td><b>'+unitLabel(u)+'</b></td><td>'+esc(u.owner_name||'—')+'</td><td class="hide-m">'+esc(u.owner_phone)+'</td><td><span class="pill p-mut">'+USTAT[u.status]+'</span></td><td class="n" style="color:'+(b>0?'var(--bad)':'var(--ok)')+'">'+az(b)+'</td></tr>';}).join('')+'</table>':'<div class="empty">Tapılmadı</div>';return;}
+ $('uMap').parentNode.style.display='';$('uList').style.display='none';
+ var us=UNITS.filter(function(u){return u.bina===BINA_F;});var fl={};us.forEach(function(u){(fl[u.floor]=fl[u.floor]||[]).push(u);});
+ $('uMap').innerHTML=Object.keys(fl).map(Number).sort(function(a,b){return b-a;}).map(function(f){return '<div class="flr"><b>'+f+'</b>'+fl[f].sort(function(a,b){return a.pos-b.pos;}).map(function(u){var b=uBal(u.id);return '<div class="u '+debtClass(u)+(u.kind==='qeyri'?' qy':'')+'" onclick="openUnit('+u.id+')" title="'+esc(unitLabel(u))+'"><b>'+esc(u.number)+'</b><span>'+(u.area?u.area+' m²':'—')+'</span><br><span>'+(Math.abs(b)>0.009?(b>0?'-':'+')+Math.abs(b).toFixed(0)+'₼':USTAT[u.status])+'</span></div>';}).join('')+'</div>';}).join('')||'<div class="empty">Bu binada obyekt yoxdur</div>';}
+function openUnit(id){var u=UNITS.find(function(x){return x.id===id;});if(!u)return;
+ Promise.all([run(sb.from('km_charges').select('*').eq('unit_id',id).order('period',{ascending:false}).order('id',{ascending:false})),run(sb.from('km_payments').select('*').eq('unit_id',id).order('paid_at',{ascending:false})),run(sb.from('km_residents').select('*').eq('unit_id',id))]).then(function(r){var ch=r[0],py=r[1],rs=r[2];var b=uBal(id);
+  modal('<div class="mhead"><div><h3>'+unitLabel(u)+'</h3><div class="muted small">'+(u.floor)+'-cü mərtəbə · '+(u.area||'—')+' m²'+(u.rooms?' · '+u.rooms+' otaq':'')+' · aylıq: '+az(monthlyOf(u))+'</div></div><button class="x" onclick="closeModal()">×</button></div>'+
+   '<div class="grid g3" style="margin-bottom:12px">'+kpi(az(b),b>0.009?'borc':b<-0.009?'avans':'borc yoxdur',b>0.009?'bad':'ok')+kpi(az((BAL[id]||{}).charged||0),'cəmi hesablanıb')+kpi(az((BAL[id]||{}).paid||0),'cəmi ödənilib','ok',(BAL[id]||{}).last_paid?'son: '+dmy(BAL[id].last_paid):'')+'</div>'+
+   '<div class="row" style="margin-bottom:14px">'+(CASH?'<button class="btn green" onclick="openPayment('+id+')">💵 Ödəniş qəbul et</button><button class="btn ghost" onclick="openOneCharge('+id+')">+ Hesab / güzəşt</button>':'')+'<button class="btn ghost" onclick="printStatement('+id+')">🖨 Hesab çıxarışı</button>'+(b>0.009&&CASH?'<button class="btn ghost" onclick="kmNotify(\'debt_reminder\',{units:['+id+']});toast(\'Xatırlatma göndərildi\')">🔔 Borc xatırlatması</button>':'')+'</div>'+
+   '<div class="grid g2"><div><h3>Məlumat</h3>'+
+    '<div class="grid g2"><div class="field"><label>Mənzil №</label><input id="eNum" value="'+esc(u.number)+'"></div><div class="field"><label>Status</label><select id="eSt">'+Object.keys(USTAT).map(function(k){return '<option value="'+k+'"'+(u.status===k?' selected':'')+'>'+USTAT[k]+'</option>';}).join('')+'</select></div>'+
+    '<div class="field"><label>Sahib</label><input id="eOn" value="'+esc(u.owner_name)+'"></div><div class="field"><label>Sahibin telefonu</label><input id="eOp" value="'+esc(u.owner_phone)+'"></div>'+
+    '<div class="field"><label>Kirayəçi</label><input id="eTn" value="'+esc(u.tenant_name)+'"></div><div class="field"><label>Kirayəçinin telefonu</label><input id="eTp" value="'+esc(u.tenant_phone)+'"></div>'+
+    '<div class="field"><label>Maşın nömrələri</label><input id="eCar" value="'+esc(u.car_plates)+'" placeholder="10-AB-123"></div><div class="field"><label>Parkinq yeri</label><input id="ePark" value="'+esc(u.parking_spot)+'"></div>'+
+    '<div class="field"><label>Sahə (m²)</label><input id="eArea" type="number" step="0.01" value="'+(u.area||'')+'"></div><div class="field"><label>Fərdi güzəşt (%)</label><input id="eDisc" type="number" step="1" min="0" max="100" value="'+(u.discount_pct||0)+'"></div></div>'+
+    '<label class="row small" style="margin-bottom:8px"><input type="checkbox" id="eBill"'+(u.billing?' checked':'')+'> Servis haqqı hesablansın</label><div class="field"><label>Qeyd</label><input id="eNote" value="'+esc(u.note)+'"></div>'+
+    '<button class="btn" onclick="saveUnit('+id+')">Yadda saxla</button>'+
+    '<h3 style="margin-top:18px">Sakin hesabları</h3>'+(rs.length?rs.map(function(x){return '<div class="row sp" style="padding:6px 0"><span><b>'+esc(x.full_name||'—')+'</b> <span class="pill p-mut">'+({sahib:'sahib',kiraye:'kirayəçi',aile:'ailə üzvü'}[x.role])+'</span><br><span class="muted small">'+esc(x.phone)+'</span></span><button class="btn ghost sm" onclick="unlinkRes('+x.id+','+id+')">Ayır</button></div>';}).join(''):'<p class="muted small">Hələ sakin hesabı yoxdur.</p>')+
+    '<button class="btn ghost sm" style="margin-top:6px" onclick="openResident('+id+')">+ Sakin hesabı yarat</button></div>'+
+   '<div><h3>Hesablamalar</h3><div class="tbl" style="max-height:260px;overflow-y:auto"><table>'+(ch.map(function(c){return '<tr><td>'+c.period+'</td><td>'+esc(c.title)+(c.kind!=='monthly'?' <span class="pill p-mut">'+({onetime:'birdəfəlik',penalty:'cərimə',discount:'güzəşt'}[c.kind])+'</span>':'')+'</td><td class="n">'+az(c.amount)+'</td>'+(CASH?'<td><button class="btn ghost sm" onclick="delCharge('+c.id+','+id+')">×</button></td>':'')+'</tr>';}).join('')||'<tr><td class="muted">Hesablama yoxdur</td></tr>')+'</table></div>'+
+   '<h3 style="margin-top:14px">Ödənişlər</h3><div class="tbl" style="max-height:260px;overflow-y:auto"><table>'+(py.map(function(p){return '<tr><td>'+dmy(p.paid_at)+'</td><td>№'+p.receipt_no+' · '+PM[p.method]+(p.payer?'<div class="muted small">'+esc(p.payer)+'</div>':'')+'</td><td class="n" style="color:var(--ok)">'+az(p.amount)+'</td><td><button class="btn ghost sm" onclick="printReceipt('+p.id+')">🖨</button>'+(CASH?' <button class="btn ghost sm" onclick="delPayment('+p.id+','+id+')">×</button>':'')+'</td></tr>';}).join('')||'<tr><td class="muted">Ödəniş yoxdur</td></tr>')+'</table></div></div></div>',true);}).catch(err);}
+function saveUnit(id){var b={number:$('eNum').value.trim(),status:$('eSt').value,owner_name:$('eOn').value.trim(),owner_phone:$('eOp').value.trim(),tenant_name:$('eTn').value.trim(),tenant_phone:$('eTp').value.trim(),car_plates:$('eCar').value.trim(),parking_spot:$('ePark').value.trim(),area:parseFloat($('eArea').value)||0,discount_pct:parseFloat($('eDisc').value)||0,billing:$('eBill').checked,note:$('eNote').value.trim()};
+ run(sb.from('km_units').update(b).eq('id',id).select().single()).then(function(u){var i=UNITS.findIndex(function(x){return x.id===id;});UNITS[i]=u;toast('Yadda saxlanıldı');renderUnits();}).catch(err);}
+function refreshBal(){return fetchAll('km_unit_balance','unit_id,balance,charged,paid,last_paid').then(function(d){BAL={};d.forEach(function(b){BAL[b.unit_id]=b;});});}
+
+/* ---------- Ödəniş qəbulu ---------- */
+function openPayment(id){var u=UNITS.find(function(x){return x.id===id;});var b=uBal(id);
+ modal('<div class="mhead"><h3>💵 Ödəniş · '+unitLabel(u)+'</h3><button class="x" onclick="closeModal()">×</button></div><p class="muted" style="margin-bottom:10px">Cari borc: <b style="color:'+(b>0?'var(--bad)':'var(--ok)')+'">'+az(b)+'</b></p>'+
+  '<div class="grid g2"><div class="field"><label>Məbləğ (₼)</label><input id="pA" type="number" step="0.01" min="0.01" value="'+(b>0?b.toFixed(2):'')+'" style="font-size:20px;font-weight:700"></div><div class="field"><label>Tarix</label><input id="pD" type="date" value="'+today()+'"></div>'+
+  '<div class="field"><label>Ödəniş üsulu</label><select id="pM">'+Object.keys(PM).map(function(k){return '<option value="'+k+'">'+PM[k]+'</option>';}).join('')+'</select></div><div class="field"><label>Ödəyən</label><input id="pP" value="'+esc(u.owner_name||'')+'"></div></div>'+
+  '<div class="field"><label>Qeyd</label><input id="pN" placeholder="məs: sentyabr–oktyabr"></div>'+
+  '<div class="row"><button class="btn green" style="flex:1" onclick="savePayment('+id+')">Qəbul et və qəbz çap et</button></div>');}
+function savePayment(id){var a=parseFloat($('pA').value);if(!(a>0))return toast('Məbləğ yazın');
+ run(sb.from('km_payments').insert({unit_id:id,amount:a,paid_at:$('pD').value||today(),method:$('pM').value,payer:$('pP').value.trim(),note:$('pN').value.trim()}).select().single()).then(function(p){closeModal();toast('Ödəniş qəbul edildi · qəbz №'+p.receipt_no);kmNotify('payment',{id:p.id});return refreshBal().then(function(){printReceipt(p.id);renderUnits();});}).catch(err);}
+function delPayment(pid,uid){if(!confirm('Ödəniş silinsin? Bu, kassa hesabatını dəyişəcək.'))return;run(sb.from('km_payments').delete().eq('id',pid)).then(refreshBal).then(function(){openUnit(uid);}).catch(err);}
+function delCharge(cid,uid){if(!confirm('Hesablama silinsin?'))return;run(sb.from('km_charges').delete().eq('id',cid)).then(refreshBal).then(function(){openUnit(uid);}).catch(err);}
+function openOneCharge(id){modal('<div class="mhead"><h3>Əlavə hesab və ya güzəşt</h3><button class="x" onclick="closeModal()">×</button></div><div class="field"><label>Növ</label><select id="oK"><option value="onetime">Birdəfəlik hesab (+)</option><option value="discount">Güzəşt / geri qaytarma (−)</option></select></div><div class="field"><label>Adı</label><input id="oT" placeholder="məs: Domofon quraşdırılması"></div><div class="grid g2"><div class="field"><label>Məbləğ (₼)</label><input id="oA" type="number" step="0.01"></div><div class="field"><label>Ay</label><input id="oP" type="month" value="'+curM()+'"></div></div><button class="btn" onclick="saveOneCharge('+id+')">Əlavə et</button>');}
+function saveOneCharge(id){var k=$('oK').value,a=Math.abs(parseFloat($('oA').value)||0);if(!a||!$('oT').value.trim())return toast('Ad və məbləğ yazın');
+ run(sb.from('km_charges').insert({unit_id:id,period:$('oP').value||curM(),title:$('oT').value.trim(),amount:k==='discount'?-a:a,due_date:today(),kind:k})).then(refreshBal).then(function(){closeModal();openUnit(id);}).catch(err);}
+
+/* ---------- qəbz və çıxarış ---------- */
+function printReceipt(pid){run(sb.from('km_payments').select('*').eq('id',pid).single()).then(function(p){var u=UNITS.find(function(x){return x.id===p.unit_id;})||MYUNITS.find(function(x){return x.id===p.unit_id;})||{};
+ var h='<div class="pr rcpt" style="max-width:520px;border:1px solid #bbb;padding:18px"><h1>'+esc(CFG.company||'LUX Residence Komendantlığı')+'</h1><p style="font-size:13px;color:#555">Ödəniş qəbzi № '+p.receipt_no+' · '+dmy(p.paid_at)+'</p><table style="margin-top:12px"><tr><th>Obyekt</th><td>'+(u.bina?unitLabel(u):'')+'</td></tr><tr><th>Ödəyən</th><td>'+esc(p.payer||u.owner_name||'')+'</td></tr><tr><th>Məbləğ</th><td><b>'+az(p.amount)+'</b></td></tr><tr><th>Üsul</th><td>'+PM[p.method]+'</td></tr><tr><th>Qeyd</th><td>'+esc(p.note||'')+'</td></tr></table><p style="margin-top:26px;font-size:12px">Kassir: ____________________ &nbsp;&nbsp; Möhür</p></div>';
+ printHtml(h);}).catch(err);}
+function printStatement(id){var u=UNITS.find(function(x){return x.id===id;})||MYUNITS.find(function(x){return x.id===id;});
+ Promise.all([run(sb.from('km_charges').select('*').eq('unit_id',id).order('period')),run(sb.from('km_payments').select('*').eq('unit_id',id).order('paid_at'))]).then(function(r){var rows=[];r[0].forEach(function(c){rows.push({d:c.period+'-01',t:c.title+' ('+c.period+')',ch:Number(c.amount),py:0});});r[1].forEach(function(p){rows.push({d:p.paid_at,t:'Ödəniş №'+p.receipt_no+' ('+PM[p.method]+')',ch:0,py:Number(p.amount)});});
+  rows.sort(function(a,b){return a.d<b.d?-1:1;});var bal=0;
+  printHtml('<div class="pr"><h1>'+esc(CFG.company||'LUX Residence Komendantlığı')+'</h1><p>Hesab çıxarışı · '+unitLabel(u)+' · '+(u.area||'')+' m² · '+esc(u.owner_name||'')+' · tarix: '+dmy(today())+'</p><table style="margin-top:10px"><tr><th>Tarix</th><th>Təsvir</th><th>Hesablanıb</th><th>Ödənilib</th><th>Qalıq</th></tr>'+rows.map(function(x){bal+=x.ch-x.py;return '<tr><td>'+dmy(x.d)+'</td><td>'+esc(x.t)+'</td><td>'+(x.ch?az(x.ch):'')+'</td><td>'+(x.py?az(x.py):'')+'</td><td>'+az(bal)+'</td></tr>';}).join('')+'</table><p style="margin-top:12px"><b>Yekun qalıq: '+az(bal)+'</b></p></div>');}).catch(err);}
+
+/* ---------- Ödənişlər bölməsi ---------- */
+var PSUB='gen';
+function renderPay(){var subs=[['gen','Aylıq hesablama'],['debt','Borclular'],['cash','Kassa jurnalı'],['tar','Tariflər'],['bulk','Toplu hesab']];
+ $('paySub').innerHTML=subs.map(function(s){return '<button class="'+(PSUB===s[0]?'on':'')+'" onclick="PSUB=\''+s[0]+'\';renderPay()">'+s[1]+'</button>';}).join('');
+ ({gen:payGen,debt:payDebt,cash:payCash,tar:payTar,bulk:payBulk})[PSUB]();}
+function payGen(){var m=curM();
+ run(sb.from('km_charges').select('period,amount,kind')).then(function(ch){if(PSUB!=='gen')return;var per={};ch.forEach(function(c){var p=per[c.period]=per[c.period]||{m:0,o:0,n:0};if(c.kind==='monthly'){p.m+=Number(c.amount);p.n++;}else p.o+=Number(c.amount);});
+  var act=TAR.filter(function(t){return t.active;});var est=0,cnt=0;UNITS.forEach(function(u){if(!u.billing)return;var s=monthlyOf(u);if(s>0){est+=s;cnt++;}});
+  $('payBody').innerHTML='<div class="card"><h3>Ay üzrə hesablama</h3><p class="muted small" style="margin-bottom:10px">Aktiv tariflərə görə hər obyekt üçün aylıq servis haqqı yaradılır. Eyni ay üçün təkrar basmaq ikiqat hesablamır, yalnız çatışmayanları əlavə edir.</p>'+
+   (act.length?'<p style="margin-bottom:10px">Aktiv tarif: <b>'+act.length+'</b> · hesablanacaq obyekt: <b>'+cnt+'</b> · təxmini aylıq cəm: <b>'+az(est)+'</b></p>':'<p class="pill p-warn" style="margin-bottom:10px">Aktiv tarif yoxdur — əvvəlcə “Tariflər” bölməsində tarif aktiv edin</p>')+
+   (CASH?'<div class="row"><input type="month" id="gM" class="inp" style="width:auto" value="'+m+'"><button class="btn" onclick="doGen()">Hesabla</button><button class="btn ghost" onclick="doPenalty()">Gecikmə cəriməsi tətbiq et'+(CFG.penalty_pct?' ('+CFG.penalty_pct+'%)':'')+'</button></div>':'<p class="muted small">Hesablama üçün kassa səlahiyyəti lazımdır.</p>')+'</div>'+
+   '<div class="card tbl"><h3>Aylar üzrə</h3><table><tr><th>Ay</th><th class="n">Aylıq hesablama</th><th class="n">Obyekt</th><th class="n">Əlavə / güzəşt / cərimə</th></tr>'+Object.keys(per).sort().reverse().map(function(k){return '<tr><td><b>'+mname(k)+'</b></td><td class="n">'+az(per[k].m)+'</td><td class="n">'+per[k].n+'</td><td class="n">'+az(per[k].o)+'</td></tr>';}).join('')+'</table>'+(Object.keys(per).length?'':'<div class="empty">Hələ hesablama aparılmayıb</div>')+'</div>';}).catch(err);}
+function doGen(){var m=$('gM').value;if(!m)return;if(!confirm(mname(m)+' üçün servis haqqı hesablansın?'))return;
+ sb.rpc('km_generate',{p_period:m}).then(function(r){if(r.error)throw r.error;toast(r.data.count+' hesab yaradıldı · '+az(r.data.total));return refreshBal();}).then(payGen).catch(err);}
+function doPenalty(){var m=$('gM').value||curM();if(!confirm('Son ödəniş tarixi keçmiş bütün borclara '+(CFG.penalty_pct||0)+'% cərimə əlavə olunsun ('+mname(m)+')?'))return;
+ sb.rpc('km_apply_penalty',{p_period:m}).then(function(r){if(r.error)throw r.error;toast(r.data.count+' obyektə cərimə · '+az(r.data.total));return refreshBal();}).then(payGen).catch(err);}
+var DEBT_F={b:0,min:0,over:0};
+function payDebt(){var bs=binas();
+ var list=UNITS.filter(function(u){var b=uBal(u.id);if(b<=Math.max(0.009,DEBT_F.min))return false;if(DEBT_F.b&&u.bina!==DEBT_F.b)return false;if(DEBT_F.over){var m=monthlyOf(u);if(!(m>0&&b/m>=DEBT_F.over))return false;}return true;}).sort(function(a,b){return uBal(b.id)-uBal(a.id);});
+ var tot=list.reduce(function(s,u){return s+uBal(u.id);},0);
+ $('payBody').innerHTML='<div class="card"><div class="row"><select id="dfB" class="inp" style="width:auto"><option value="0">Bütün binalar</option>'+bs.map(function(b){return '<option value="'+b+'"'+(DEBT_F.b===b?' selected':'')+'>Bina '+b+'</option>';}).join('')+'</select>'+
+  '<select id="dfO" class="inp" style="width:auto"><option value="0">İstənilən müddət</option><option value="1"'+(DEBT_F.over===1?' selected':'')+'>1 aydan çox</option><option value="3"'+(DEBT_F.over===3?' selected':'')+'>3 aydan çox</option><option value="6"'+(DEBT_F.over===6?' selected':'')+'>6 aydan çox</option></select>'+
+  '<input id="dfM" type="number" class="inp" style="width:140px" placeholder="min. borc ₼" value="'+(DEBT_F.min||'')+'"><span style="flex:1"></span>'+(CASH?'<button class="btn ghost sm" onclick="remindDebtors()">🔔 Hamısına xatırlatma</button>':'')+'<button class="btn ghost sm" onclick="exportDebt()">Excel</button></div></div>'+
+  '<div class="grid g3" style="margin-bottom:14px">'+kpi(list.length,'borclu obyekt','bad')+kpi(az(tot),'cəmi borc','bad')+kpi(list.length?az(tot/list.length):'—','orta borc')+'</div>'+
+  '<div class="card tbl"><table><tr><th>Obyekt</th><th>Sahib</th><th class="hide-m">Telefon</th><th class="n">Borc</th><th class="n hide-m">≈ ay</th><th class="hide-m">Son ödəniş</th><th></th></tr>'+list.slice(0,300).map(function(u){var b=uBal(u.id),m=monthlyOf(u);return '<tr><td class="click" onclick="openUnit('+u.id+')"><b>'+unitLabel(u)+'</b></td><td>'+esc(u.owner_name||'—')+'</td><td class="hide-m">'+(u.owner_phone?'<a href="tel:'+esc(u.owner_phone)+'">'+esc(u.owner_phone)+'</a>':'')+'</td><td class="n" style="color:var(--bad);font-weight:700">'+az(b)+'</td><td class="n hide-m">'+(m>0?(b/m).toFixed(1):'—')+'</td><td class="hide-m">'+dmy((BAL[u.id]||{}).last_paid)+'</td><td>'+(CASH?'<button class="btn green sm" onclick="openPayment('+u.id+')">Ödəniş</button>':'')+'</td></tr>';}).join('')+'</table>'+(list.length?'':'<div class="empty">Borclu yoxdur 👍</div>')+'</div>';
+ $('dfB').onchange=function(){DEBT_F.b=+this.value;payDebt();};$('dfO').onchange=function(){DEBT_F.over=+this.value;payDebt();};$('dfM').onchange=function(){DEBT_F.min=+this.value||0;payDebt();};payDebt._list=list;}
+function remindDebtors(){var l=payDebt._list||[];if(!l.length)return;if(!confirm(l.length+' borclu obyektin sakinlərinə xatırlatma göndərilsin?'))return;
+ sb.functions.invoke('km-notify',{body:{action:'debt_reminder',units:l.map(function(u){return u.id;})}}).then(function(r){toast('Göndərildi: '+((r.data&&r.data.sent)||0)+' telefon');});}
+function exportDebt(){var l=payDebt._list||[];xlsx([['Bina','Obyekt','Sahib','Telefon','Borc','Aylıq','≈ ay','Son ödəniş']].concat(l.map(function(u){var b=uBal(u.id),m=monthlyOf(u);return [u.bina,u.number,u.owner_name,u.owner_phone,+b.toFixed(2),+m.toFixed(2),m>0?+(b/m).toFixed(1):'',dmy((BAL[u.id]||{}).last_paid)];})),'borclular-'+today()+'.xlsx');}
+var CASH_R={f:today().slice(0,8)+'01',t:today()};
+function payCash(){run(sb.from('km_payments').select('*').gte('paid_at',CASH_R.f).lte('paid_at',CASH_R.t).order('paid_at',{ascending:false}).order('receipt_no',{ascending:false})).then(function(p){if(PSUB!=='cash')return;
+  var by={};p.forEach(function(x){by[x.method]=(by[x.method]||0)+Number(x.amount);});var tot=p.reduce(function(s,x){return s+Number(x.amount);},0);
+  $('payBody').innerHTML='<div class="card"><div class="row"><input type="date" id="cF" class="inp" style="width:auto" value="'+CASH_R.f+'"><span>—</span><input type="date" id="cT" class="inp" style="width:auto" value="'+CASH_R.t+'"><span style="flex:1"></span><button class="btn ghost sm" onclick="exportCash()">Excel</button></div></div>'+
+   '<div class="grid g4" style="margin-bottom:14px">'+kpi(az(tot),'cəmi yığılıb','ok',p.length+' ödəniş')+kpi(az(by.nagd||0),'nağd')+kpi(az(by.kart||0),'kart')+kpi(az((by.kocurme||0)+(by.onlayn||0)),'köçürmə / onlayn')+'</div>'+
+   '<div class="card tbl"><table><tr><th>Tarix</th><th>Qəbz</th><th>Obyekt</th><th class="hide-m">Ödəyən</th><th>Üsul</th><th class="n">Məbləğ</th><th></th></tr>'+p.map(function(x){var u=UNITS.find(function(y){return y.id===x.unit_id;})||{};return '<tr><td>'+dmy(x.paid_at)+'</td><td>№'+x.receipt_no+'</td><td class="click" onclick="openUnit('+x.unit_id+')">'+(u.bina?unitLabel(u):'')+'</td><td class="hide-m">'+esc(x.payer)+'</td><td>'+PM[x.method]+'</td><td class="n">'+az(x.amount)+'</td><td><button class="btn ghost sm" onclick="printReceipt('+x.id+')">🖨</button></td></tr>';}).join('')+'</table>'+(p.length?'':'<div class="empty">Bu dövrdə ödəniş yoxdur</div>')+'</div>';
+  payCash._p=p;$('cF').onchange=function(){CASH_R.f=this.value;payCash();};$('cT').onchange=function(){CASH_R.t=this.value;payCash();};}).catch(err);}
+function exportCash(){var p=payCash._p||[];xlsx([['Tarix','Qəbz №','Bina','Obyekt','Ödəyən','Üsul','Məbləğ','Qeyd']].concat(p.map(function(x){var u=UNITS.find(function(y){return y.id===x.unit_id;})||{};return [dmy(x.paid_at),x.receipt_no,u.bina,u.number,x.payer,PM[x.method],+Number(x.amount).toFixed(2),x.note];})),'kassa-'+CASH_R.f+'_'+CASH_R.t+'.xlsx');}
+function payTar(){$('payBody').innerHTML='<div class="card"><div class="row sp"><div><h3 style="margin:0">Tariflər</h3><p class="muted small">Hər tarif seçilmiş binalara, obyekt növlərinə və statuslara aylıq tətbiq olunur. Binalara görə fərqli tariflər yaratmaq olar.</p></div>'+(CASH?'<button class="btn" onclick="openTariff()">+ Tarif</button>':'')+'</div></div>'+
+ '<div class="card tbl"><table><tr><th>Ad</th><th>Hesablama</th><th class="n">Məbləğ</th><th>Binalar</th><th class="hide-m">Növ</th><th class="n">Obyekt</th><th class="n">Aylıq cəm</th><th>Status</th><th></th></tr>'+TAR.map(function(t){var us=UNITS.filter(function(u){return u.billing&&t.kinds.indexOf(u.kind)>=0&&t.statuses.indexOf(u.status)>=0&&(!t.binas||!t.binas.length||t.binas.indexOf(u.bina)>=0)&&(t.calc!=='per_m2'||u.area>0);});var s=us.reduce(function(a,u){return a+(t.calc==='per_m2'?u.area*t.amount:Number(t.amount));},0);
+  return '<tr><td><b>'+esc(t.name)+'</b></td><td>'+(t.calc==='per_m2'?'m² başına':'sabit')+'</td><td class="n">'+az(t.amount)+(t.calc==='per_m2'?'/m²':'')+'</td><td>'+(t.binas&&t.binas.length?t.binas.join(', '):'hamısı')+'</td><td class="hide-m">'+t.kinds.map(function(k){return k==='qeyri'?'qeyri-yaşayış':'mənzil';}).join(', ')+'</td><td class="n">'+us.length+'</td><td class="n">'+az(s)+'</td><td>'+(t.active?'<span class="pill p-ok">aktiv</span>':'<span class="pill p-mut">passiv</span>')+'</td><td>'+(CASH?'<button class="btn ghost sm" onclick="openTariff('+t.id+')">✎</button>':'')+'</td></tr>';}).join('')+'</table></div>';}
+function openTariff(id){var t=id?TAR.find(function(x){return x.id===id;}):{name:'',calc:'per_m2',amount:0,kinds:['menzil'],binas:null,statuses:['satilib','yasayir','icare','investor'],active:true};
+ modal('<div class="mhead"><h3>'+(id?'Tarif':'Yeni tarif')+'</h3><button class="x" onclick="closeModal()">×</button></div><div class="field"><label>Adı</label><input id="tN" value="'+esc(t.name)+'" placeholder="məs: Servis haqqı"></div>'+
+  '<div class="grid g2"><div class="field"><label>Hesablama</label><select id="tC"><option value="per_m2"'+(t.calc==='per_m2'?' selected':'')+'>m² başına</option><option value="fixed"'+(t.calc==='fixed'?' selected':'')+'>Sabit (obyekt başına)</option></select></div><div class="field"><label>Məbləğ (₼)</label><input id="tA" type="number" step="0.01" value="'+t.amount+'"></div></div>'+
+  '<div class="field"><label>Binalar (heç biri seçilməsə — hamısı)</label><div class="chips" id="tB">'+binas().map(function(b){return '<label><input type="checkbox" value="'+b+'"'+(t.binas&&t.binas.indexOf(b)>=0?' checked':'')+'>Bina '+b+'</label>';}).join('')+'</div></div>'+
+  '<div class="field"><label>Obyekt növü</label><div class="chips" id="tK"><label><input type="checkbox" value="menzil"'+(t.kinds.indexOf('menzil')>=0?' checked':'')+'>Mənzil</label><label><input type="checkbox" value="qeyri"'+(t.kinds.indexOf('qeyri')>=0?' checked':'')+'>Qeyri-yaşayış</label></div></div>'+
+  '<div class="field"><label>Hansı statuslara</label><div class="chips" id="tS">'+['satilib','yasayir','icare','investor','fond','bos'].map(function(k){return '<label><input type="checkbox" value="'+k+'"'+(t.statuses.indexOf(k)>=0?' checked':'')+'>'+USTAT[k]+'</label>';}).join('')+'</div></div>'+
+  '<label class="row small" style="margin-bottom:12px"><input type="checkbox" id="tAc"'+(t.active?' checked':'')+'> Aktiv</label><div class="row">'+(id?'<button class="btn red" onclick="delTariff('+id+')">Sil</button>':'')+'<span style="flex:1"></span><button class="btn" onclick="saveTariff('+(id||0)+')">Yadda saxla</button></div>');}
+function chk(id){return [].slice.call(document.querySelectorAll('#'+id+' input:checked')).map(function(x){return x.value;});}
+function saveTariff(id){var bs=chk('tB').map(Number);var b={name:$('tN').value.trim(),calc:$('tC').value,amount:parseFloat($('tA').value)||0,binas:bs.length?bs:null,kinds:chk('tK'),statuses:chk('tS'),active:$('tAc').checked};
+ if(!b.name||!b.kinds.length||!b.statuses.length)return toast('Ad, növ və status seçin');
+ run(id?sb.from('km_tariffs').update(b).eq('id',id).select().single():sb.from('km_tariffs').insert(b).select().single()).then(function(t){var i=TAR.findIndex(function(x){return x.id===t.id;});if(i>=0)TAR[i]=t;else TAR.push(t);closeModal();payTar();toast('Tarif saxlanıldı');}).catch(err);}
+function delTariff(id){if(!confirm('Tarif silinsin? Keçmiş hesablamalar qalır.'))return;run(sb.from('km_tariffs').delete().eq('id',id)).then(function(){TAR=TAR.filter(function(x){return x.id!==id;});closeModal();payTar();}).catch(err);}
+function payBulk(){$('payBody').innerHTML='<div class="card"><h3>Toplu birdəfəlik hesab</h3><p class="muted small" style="margin-bottom:10px">Seçilmiş binaların bütün uyğun obyektlərinə birdəfəlik hesab yazır (məs: təmir fondu, fasad təmiri, domofon).</p>'+
+ '<div class="field"><label>Adı</label><input id="bT" placeholder="məs: Təmir fondu 2026"></div><div class="grid g3"><div class="field"><label>Hesablama</label><select id="bC"><option value="fixed">Sabit (obyekt başına)</option><option value="per_m2">m² başına</option></select></div><div class="field"><label>Məbləğ (₼)</label><input id="bA" type="number" step="0.01"></div><div class="field"><label>Ay</label><input id="bP" type="month" value="'+curM()+'"></div></div>'+
+ '<div class="field"><label>Binalar</label><div class="chips" id="bB">'+binas().map(function(b){return '<label><input type="checkbox" value="'+b+'" checked>Bina '+b+'</label>';}).join('')+'</div></div>'+
+ '<div class="field"><label>Statuslar</label><div class="chips" id="bS">'+['satilib','yasayir','icare','investor'].map(function(k){return '<label><input type="checkbox" value="'+k+'" checked>'+USTAT[k]+'</label>';}).join('')+'</div></div>'+
+ (CASH?'<button class="btn" onclick="doBulk()">Hesab yaz</button>':'<p class="muted small">Kassa səlahiyyəti lazımdır.</p>')+'</div>';}
+function doBulk(){var t=$('bT').value.trim(),a=parseFloat($('bA').value)||0,c=$('bC').value,bs=chk('bB').map(Number),ss=chk('bS'),p=$('bP').value||curM();if(!t||!a||!bs.length)return toast('Ad, məbləğ və bina seçin');
+ var us=UNITS.filter(function(u){return u.billing&&u.kind==='menzil'&&bs.indexOf(u.bina)>=0&&ss.indexOf(u.status)>=0&&(c!=='per_m2'||u.area>0);});
+ if(!confirm(us.length+' obyektə “'+t+'” yazılsın? Cəmi: '+az(us.reduce(function(s,u){return s+(c==='per_m2'?u.area*a:a);},0))))return;
+ var rows=us.map(function(u){return {unit_id:u.id,period:p,title:t,amount:Math.round((c==='per_m2'?u.area*a:a)*100)/100,due_date:today(),kind:'onetime'};});
+ var chunks=[];for(var i=0;i<rows.length;i+=500)chunks.push(rows.slice(i,i+500));
+ chunks.reduce(function(pr,ch){return pr.then(function(){return run(sb.from('km_charges').insert(ch));});},Promise.resolve()).then(refreshBal).then(function(){toast(rows.length+' hesab yazıldı');}).catch(err);}
+
+/* ---------- Sakin hesabı yarat ---------- */
+function genPw(){var c='abcdefghjkmnpqrstuvwxyz23456789',p='',a=new Uint32Array(8);crypto.getRandomValues(a);for(var i=0;i<8;i++)p+=c[a[i]%c.length];return p;}
+function openResident(uid){var u=UNITS.find(function(x){return x.id===uid;});
+ modal('<div class="mhead"><h3>Sakin hesabı · '+unitLabel(u)+'</h3><button class="x" onclick="closeModal()">×</button></div><div class="grid g2"><div class="field"><label>Ad, soyad</label><input id="rN" value="'+esc(u.owner_name||'')+'"></div><div class="field"><label>Telefon</label><input id="rP" value="'+esc(u.owner_phone||'')+'" placeholder="050 123 45 67"></div>'+
+  '<div class="field"><label>Rolu</label><select id="rR"><option value="sahib">Sahib</option><option value="kiraye">Kirayəçi</option><option value="aile">Ailə üzvü</option></select></div><div class="field"><label>Email (giriş adı)</label><input id="rE" placeholder="boş qalsa telefonla yaradılacaq"></div></div>'+
+  '<div class="field"><label>Parol</label><div class="row"><input id="rW" class="inp" style="flex:1" value="'+genPw()+'"><button class="btn ghost sm" onclick="$(\'rW\').value=genPw()">Yarat</button></div></div><button class="btn" onclick="saveResident('+uid+')">Hesab yarat</button>');}
+function saveResident(uid){var n=$('rN').value.trim(),ph=$('rP').value.trim(),em=($('rE').value.trim()||'').toLowerCase(),pw=$('rW').value.trim();var digits=ph.replace(/\D/g,'');
+ if(!em){if(digits.length<9)return toast('Email və ya telefon yazın');em=digits.slice(-9)+'@sakin.luxresidence.az';}if(pw.length<6)return toast('Parol ən az 6 simvol');
+ sb.functions.invoke('lux-admin',{body:{action:'create',email:em,password:pw,full_name:n,perms:['sakin']}}).then(function(r){if(r.error){var c=r.error.context;return (c&&c.json?c.json():Promise.resolve({})).then(function(j){throw new Error(j.error||r.error.message);});}if(r.data&&r.data.error)throw new Error(r.data.error);
+  return run(sb.from('km_residents').insert({user_id:r.data.user.user_id,unit_id:uid,role:$('rR').value,full_name:n,phone:ph}));}).then(function(){var u=UNITS.find(function(x){return x.id===uid;});
+  var txt=n+', LUX Residence sakin kabinetinə giriş:\n'+location.origin+'/komendant\nGiriş: '+em+'\nParol: '+pw;
+  modal('<div class="mhead"><h3>Giriş məlumatları</h3><button class="x" onclick="closeModal()">×</button></div><p class="muted small">'+unitLabel(u)+' · sakinə ötürün</p><div class="card" style="background:#fbf7f3;margin:10px 0"><div class="small muted">Ünvan</div><b>'+location.origin+'/komendant</b><div class="small muted" style="margin-top:8px">Giriş</div><b>'+esc(em)+'</b><div class="small muted" style="margin-top:8px">Parol</div><b style="font-size:20px">'+esc(pw)+'</b></div><div class="row"><a class="btn" target="_blank" rel="noopener" href="https://wa.me/'+(digits.length>=9?'994'+digits.slice(-9):'')+'?text='+encodeURIComponent(txt)+'">WhatsApp-da göndər</a><button class="btn ghost" onclick="navigator.clipboard&&navigator.clipboard.writeText('+JSON.stringify(txt).replace(/"/g,'&quot;')+');toast(\'Kopyalandı\')">Kopyala</button></div>');}).catch(err);}
+function unlinkRes(rid,uid){if(!confirm('Sakin bu obyektdən ayrılsın? Hesab qalır, amma bu mənzilin məlumatlarını görməyəcək.'))return;run(sb.from('km_residents').delete().eq('id',rid)).then(function(){openUnit(uid);}).catch(err);}
+
+/* ---------- Müraciətlər (staff) ---------- */
+function renderReq(){var bs=binas();if(!$('rB').options.length)$('rB').innerHTML='<option value="0">Bütün binalar</option>'+bs.map(function(b){return '<option value="'+b+'">Bina '+b+'</option>';}).join('');
+ $('rF').onchange=renderReq;$('rB').onchange=renderReq;var f=$('rF').value,fb=+$('rB').value;
+ run(sb.from('km_requests').select('*').order('created_at',{ascending:false}).limit(400)).then(function(all){var list=all.filter(function(q){var u=UNITS.find(function(x){return x.id===q.unit_id;});if(fb&&(!u||u.bina!==fb))return false;if(f==='open')return ['new','accepted','in_progress'].indexOf(q.status)>=0;if(f==='done')return q.status==='done';return true;});
+  var open=all.filter(function(q){return ['new','accepted','in_progress'].indexOf(q.status)>=0;}),done=all.filter(function(q){return q.status==='done'&&q.done_at;});var avgH=done.length?Math.round(done.reduce(function(s,q){return s+(new Date(q.done_at)-new Date(q.created_at))/36e5;},0)/done.length):0;var rated=done.filter(function(q){return q.rating;});
+  $('rKpi').innerHTML=kpi(open.length,'açıq','warn')+kpi(open.filter(function(q){return q.priority==='urgent';}).length,'təcili','bad')+kpi(avgH?avgH+' saat':'—','orta həll müddəti')+kpi(rated.length?(rated.reduce(function(s,q){return s+q.rating;},0)/rated.length).toFixed(1)+' ⭐':'—','sakin qiyməti','ok');
+  $('rList').innerHTML=list.map(function(q){var u=UNITS.find(function(x){return x.id===q.unit_id;});return '<div class="rq"><div class="row sp"><div><b>'+esc(q.title)+'</b> '+(q.priority==='urgent'?'<span class="pill p-bad">təcili</span>':'')+'<div class="muted small">'+(u?unitLabel(u):'')+' · '+(RCAT[q.category]||'')+' · '+new Date(q.created_at).toLocaleString('az-AZ',{timeZone:TZ})+'</div></div><div class="row"><span class="pill '+RST[q.status][1]+'">'+RST[q.status][0]+'</span><button class="btn ghost sm" onclick="openReqStaff('+q.id+')">Aç</button></div></div>'+(q.description?'<p class="small" style="margin-top:6px">'+esc(q.description)+'</p>':'')+(q.assignee?'<div class="small muted" style="margin-top:4px">👷 '+esc(q.assignee)+'</div>':'')+(q.rating?'<div class="small">'+'⭐'.repeat(q.rating)+'</div>':'')+'</div>';}).join('')||'<div class="card empty">Müraciət yoxdur</div>';
+  renderReq._all=all;}).catch(err);}
+function openReqStaff(id){var q=(renderReq._all||[]).find(function(x){return x.id===id;});var u=UNITS.find(function(x){return x.id===q.unit_id;})||{};
+ modal('<div class="mhead"><h3>'+esc(q.title)+'</h3><button class="x" onclick="closeModal()">×</button></div><p class="muted small">'+(u.bina?unitLabel(u):'')+' · '+(RCAT[q.category]||'')+' · '+esc(u.owner_phone||'')+'</p><p style="margin:10px 0;white-space:pre-line">'+esc(q.description)+'</p><div id="rqPh" class="row" style="margin-bottom:10px"></div>'+
+  '<div class="grid g2"><div class="field"><label>Status</label><select id="qS">'+Object.keys(RST).map(function(k){return '<option value="'+k+'"'+(q.status===k?' selected':'')+'>'+RST[k][0]+'</option>';}).join('')+'</select></div><div class="field"><label>İcraçı (usta)</label><input id="qA" value="'+esc(q.assignee||'')+'" placeholder="məs: Elçin (santexnik)"></div></div>'+
+  '<div class="field"><label>Sakinə qeyd</label><input id="qN" value="'+esc(q.staff_note||'')+'" placeholder="məs: usta saat 15:00-da gələcək"></div><button class="btn" onclick="saveReqStaff('+id+')">Yadda saxla və sakinə bildir</button>');
+ (q.photos||[]).forEach(function(p){sb.storage.from('komendant').createSignedUrl(p,600).then(function(r){if(r.data)$('rqPh').insertAdjacentHTML('beforeend','<a href="'+r.data.signedUrl+'" target="_blank"><img src="'+r.data.signedUrl+'" style="width:110px;height:110px;object-fit:cover;border-radius:12px"></a>');});});}
+function saveReqStaff(id){run(sb.from('km_requests').update({status:$('qS').value,assignee:$('qA').value.trim(),staff_note:$('qN').value.trim()}).eq('id',id)).then(function(){closeModal();toast('Yadda saxlanıldı');kmNotify('request_update',{id:id});renderReq();}).catch(err);}
+
+/* ---------- Elanlar ---------- */
+function renderAnn(){run(sb.from('km_announcements').select('*').order('created_at',{ascending:false}).limit(60)).then(function(a){$('aList').innerHTML=a.map(function(x){return '<div class="card"><div class="row sp"><h3 style="margin:0">📢 '+esc(x.title)+'</h3>'+(STAFF?'<button class="btn ghost sm" onclick="delAnn('+x.id+')">×</button>':'')+'</div><div class="muted small">'+new Date(x.created_at).toLocaleString('az-AZ',{timeZone:TZ})+' · '+(x.binas&&x.binas.length?'Bina '+x.binas.join(', '):'bütün binalar')+'</div><p style="white-space:pre-line;margin-top:8px">'+esc(x.body)+'</p></div>';}).join('')||'<div class="card empty">Elan yoxdur</div>';}).catch(err);}
+function openAnn(){modal('<div class="mhead"><h3>Yeni elan</h3><button class="x" onclick="closeModal()">×</button></div><div class="field"><label>Başlıq</label><input id="nT" placeholder="məs: Sabah su kəsiləcək"></div><div class="field"><label>Mətn</label><textarea id="nB" placeholder="məs: 10:00–14:00 arası Bina 5-də su təchizatı dayandırılacaq."></textarea></div><div class="field"><label>Binalar (heç biri seçilməsə — hamısı)</label><div class="chips" id="nBs">'+binas().map(function(b){return '<label><input type="checkbox" value="'+b+'">Bina '+b+'</label>';}).join('')+'</div></div><button class="btn" onclick="saveAnn()">Paylaş və sakinlərə bildir</button>');}
+function saveAnn(){var bs=chk('nBs').map(Number),t=$('nT').value.trim();if(!t)return toast('Başlıq yazın');run(sb.from('km_announcements').insert({title:t,body:$('nB').value.trim(),binas:bs.length?bs:null}).select().single()).then(function(a){closeModal();toast('Paylaşıldı');kmNotify('announcement',{id:a.id});renderAnn();}).catch(err);}
+function delAnn(id){if(!confirm('Elan silinsin?'))return;run(sb.from('km_announcements').delete().eq('id',id)).then(renderAnn).catch(err);}
+
+/* ---------- Mühafizə ---------- */
+function renderGuard(){run(sb.from('km_guest_passes').select('*').eq('valid_date',today()).order('created_at',{ascending:false})).then(function(g){$('gToday').innerHTML=g.length?'<table><tr><th>Qonaq</th><th>Maşın</th><th>Obyekt</th><th>Status</th></tr>'+g.map(function(x){var u=UNITS.find(function(y){return y.id===x.unit_id;})||{};return '<tr><td><b>'+esc(x.guest_name)+'</b></td><td>'+esc(x.car_plate)+'</td><td>'+(u.bina?unitLabel(u):'')+'</td><td>'+(x.used_at?'<span class="pill p-ok">keçib '+new Date(x.used_at).toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit'})+'</span>':'<span class="pill p-warn">gözlənilir</span>')+'</td></tr>';}).join('')+'</table>':'<div class="empty">Bu gün üçün keçid yoxdur</div>';}).catch(err);}
+function guardCheck(use,code){code=(code||$('gCode').value).trim().toLowerCase();if(!code)return;$('gCode').value=code;
+ sb.rpc('km_guest_check',{p_code:code,p_use:!!use}).then(function(r){if(r.error)throw r.error;var d=r.data;
+  $('gRes').innerHTML='<div style="border-radius:16px;padding:16px;background:'+(d.ok?'#dcfce7':'#fee2e2')+';color:'+(d.ok?'#166534':'#991b1b')+'"><b style="font-size:20px">'+(d.ok?(use?'✅ Buraxıldı':'✅ '+esc(d.msg)):'⛔ '+esc(d.msg))+'</b>'+(d.guest?'<div style="margin-top:6px">Qonaq: <b>'+esc(d.guest)+'</b>'+(d.car?' · 🚗 '+esc(d.car):'')+'<br>'+esc(d.unit||'')+'</div>':'')+(d.ok&&!use?'<button class="btn green" style="margin-top:10px" onclick="guardCheck(true)">Buraxıldı kimi qeyd et</button>':'')+'</div>';if(use)renderGuard();}).catch(err);}
+function guardScan(){if(!navigator.mediaDevices){toast('Kamera yoxdur');return;}modal('<div class="mhead"><h3>QR skan</h3><button class="x" onclick="stopCam();closeModal()">×</button></div><video id="cam" playsinline muted autoplay style="width:100%;border-radius:14px;background:#000;aspect-ratio:1;object-fit:cover"></video>');
+ var ld=window.jsQR?Promise.resolve():new Promise(function(res){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';s.onload=res;document.head.appendChild(s);});
+ Promise.all([ld,navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}}})]).then(function(r){var st=r[1],v=$('cam');guardScan._st=st;v.srcObject=st;v.play();var cv=document.createElement('canvas'),cx=cv.getContext('2d');
+  (function loop(){if(!$('cam'))return stopCam();if(v.readyState<2)return setTimeout(loop,150);var s2=Math.min(v.videoWidth,v.videoHeight);cv.width=s2;cv.height=s2;cx.drawImage(v,(v.videoWidth-s2)/2,(v.videoHeight-s2)/2,s2,s2,0,0,s2,s2);var c=jsQR(cx.getImageData(0,0,s2,s2).data,s2,s2);
+   if(c){var m=String(c.data).match(/[?&]g=([0-9a-f]{10})/)||String(c.data).match(/^([0-9a-f]{10})$/);if(m){stopCam();closeModal();guardCheck(false,m[1]);return;}}setTimeout(loop,150);})();}).catch(function(){toast('Kamera açılmadı');});}
+function stopCam(){if(guardScan._st){guardScan._st.getTracks().forEach(function(t){t.stop();});guardScan._st=null;}}
+
+/* ---------- Ayarlar ---------- */
+function renderSet(){$('sDue').value=CFG.due_day||15;$('sPen').value=CFG.penalty_pct||0;$('sPh').value=CFG.phone||'';$('sCo').value=CFG.company||'';$('sBank').value=CFG.bank_info||'';}
+function saveCfg(){run(sb.from('km_config').update({due_day:+$('sDue').value||15,penalty_pct:+$('sPen').value||0,phone:$('sPh').value.trim(),company:$('sCo').value.trim(),bank_info:$('sBank').value,updated_at:new Date().toISOString()}).eq('id',1).select().single()).then(function(c){CFG=c;toast('Saxlanıldı');}).catch(err);}
+function importUnits(){if(!confirm('Satış lövhəsindən mənzillər yenilənsin?'))return;sb.rpc('km_import_units').then(function(r){if(r.error)throw r.error;toast(r.data+' obyekt yoxlanıldı');return loadStaff();}).catch(err);}
+
+/* ================= SAKİN ================= */
+function loadRes(){return run(sb.from('km_residents').select('unit_id').eq('user_id',ME.user_id)).then(function(r){var ids=r.map(function(x){return x.unit_id;});if(!ids.length){MYUNITS=[];return;}
+ return Promise.all([run(sb.from('km_units').select('*').in('id',ids)),run(sb.from('km_unit_balance').select('*').in('unit_id',ids)),run(sb.from('km_tariffs').select('*'))]).then(function(x){MYUNITS=x[0];BAL={};x[1].forEach(function(b){BAL[b.unit_id]=b;});TAR=x[2]||[];CUR_UNIT=CUR_UNIT||(MYUNITS[0]&&MYUNITS[0].id);});}).catch(err);}
+function cu(){return MYUNITS.find(function(u){return u.id===CUR_UNIT;});}
+function unitSel(){return MYUNITS.length>1?'<div class="bsel">'+MYUNITS.map(function(u){return '<button class="'+(u.id===CUR_UNIT?'on':'')+'" onclick="CUR_UNIT='+u.id+';show(\'home\')">'+unitLabel(u)+'</button>';}).join('')+'</div>':'';}
+function renderHome(){renderResPush();var u=cu();if(!u){$('rsBal').innerHTML='<div class="card empty">Hesabınız hələ mənzilə bağlanmayıb. Komendantlığa müraciət edin.</div>';return;}
+ $('rsUnitSel').innerHTML=unitSel();var b=uBal(u.id),m=monthlyOf(u);
+ $('rsBal').innerHTML='<div class="bal'+(b<=0.009?' okb':'')+'"><small>'+unitLabel(u)+' · '+(u.area||'')+' m²</small><b>'+(b>0.009?az(b):b<-0.009?'+'+az(-b):'0,00 ₼')+'</b><div>'+(b>0.009?'ödəniləcək borc':b<-0.009?'avans (növbəti aylara)':'Borcunuz yoxdur ✅')+'</div><div style="margin-top:10px;font-size:13px;opacity:.9">Aylıq servis haqqı: '+az(m)+' · son ödəniş günü: ayın '+(CFG.due_day||15)+'-i</div>'+(b>0.009?'<button class="btn" style="margin-top:12px;background:#fff;color:var(--acc2)" onclick="show(\'rpay\')">Necə ödəmək olar?</button>':'')+'</div>';
+ Promise.all([run(sb.from('km_charges').select('*').eq('unit_id',u.id).order('period',{ascending:false}).limit(6)),run(sb.from('km_payments').select('*').eq('unit_id',u.id).order('paid_at',{ascending:false}).limit(6)),run(sb.from('km_announcements').select('*').order('created_at',{ascending:false}).limit(5))]).then(function(r){
+  $('rsCh').innerHTML=r[0].map(function(c){return '<div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>'+mname(c.period)+'<br><span class="muted small">'+esc(c.title)+'</span></span><b>'+az(c.amount)+'</b></div>';}).join('')||'<div class="empty">Yoxdur</div>';
+  $('rsPy').innerHTML=r[1].map(function(p){return '<div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>'+dmy(p.paid_at)+'<br><span class="muted small">Qəbz №'+p.receipt_no+' · '+PM[p.method]+'</span></span><b style="color:var(--ok)">'+az(p.amount)+'</b></div>';}).join('')||'<div class="empty">Yoxdur</div>';
+  $('rsAnn').innerHTML=r[2].map(function(a){return '<div style="padding:8px 0;border-bottom:1px solid var(--line)"><b>📢 '+esc(a.title)+'</b><div class="muted small">'+new Date(a.created_at).toLocaleDateString('az-AZ',{timeZone:TZ})+'</div><p class="small" style="white-space:pre-line">'+esc(a.body)+'</p></div>';}).join('')||'<div class="empty">Elan yoxdur</div>';}).catch(err);}
+function renderRPay(){var u=cu();if(!u)return;$('rsHow').innerHTML='<h3>Necə ödəmək olar</h3><p style="white-space:pre-line">'+esc(CFG.bank_info||'Ödəniş üçün komendantlığa müraciət edin.')+'</p><p class="muted small" style="margin-top:8px">Köçürmədə təyinata yazın: <b>Bina '+u.bina+', '+esc(u.number)+'</b></p><button class="btn ghost sm" style="margin-top:8px" onclick="printStatement('+u.id+')">🖨 Hesab çıxarışı</button>';
+ Promise.all([run(sb.from('km_charges').select('*').eq('unit_id',u.id)),run(sb.from('km_payments').select('*').eq('unit_id',u.id))]).then(function(r){var rows=[];r[0].forEach(function(c){rows.push({d:c.period+'-01',t:c.title,m:mname(c.period),v:Number(c.amount),k:'c'});});r[1].forEach(function(p){rows.push({d:p.paid_at,t:'Ödəniş · qəbz №'+p.receipt_no,m:dmy(p.paid_at),v:Number(p.amount),k:'p',id:p.id});});rows.sort(function(a,b){return a.d>b.d?-1:1;});
+  $('rsStmt').innerHTML='<table><tr><th>Tarix</th><th>Təsvir</th><th class="n">Məbləğ</th></tr>'+rows.map(function(x){return '<tr><td>'+x.m+'</td><td>'+esc(x.t)+(x.k==='p'?' <button class="btn ghost sm" onclick="printReceipt('+x.id+')">🖨</button>':'')+'</td><td class="n" style="color:'+(x.k==='p'?'var(--ok)':'inherit')+'">'+(x.k==='p'?'−':'')+az(x.v)+'</td></tr>';}).join('')+'</table>'+(rows.length?'':'<div class="empty">Hələ hesablama yoxdur</div>');}).catch(err);}
+function renderRReq(){var u=cu();if(!u)return;run(sb.from('km_requests').select('*').in('unit_id',MYUNITS.map(function(x){return x.id;})).order('created_at',{ascending:false})).then(function(l){
+ $('rsReq').innerHTML=l.map(function(q){return '<div class="rq"><div class="row sp"><b>'+esc(q.title)+'</b><span class="pill '+RST[q.status][1]+'">'+RST[q.status][0]+'</span></div><div class="muted small">'+(RCAT[q.category]||'')+' · '+new Date(q.created_at).toLocaleString('az-AZ',{timeZone:TZ})+'</div>'+(q.staff_note?'<p class="small" style="margin-top:6px">💬 '+esc(q.staff_note)+'</p>':'')+(q.status==='done'?'<div class="stars" style="margin-top:6px">'+[1,2,3,4,5].map(function(s){return '<button class="'+(q.rating>=s?'on':'')+'" onclick="rateReq('+q.id+','+s+')">★</button>';}).join('')+'</div>':'')+'</div>';}).join('')||'<div class="card empty">Hələ müraciət yoxdur</div>';}).catch(err);}
+function openReq(){modal('<div class="mhead"><h3>Yeni müraciət</h3><button class="x" onclick="closeModal()">×</button></div><div class="field"><label>Mövzu</label><select id="qC">'+Object.keys(RCAT).map(function(k){return '<option value="'+k+'">'+RCAT[k]+'</option>';}).join('')+'</select></div><div class="field"><label>Qısa təsvir</label><input id="qT" placeholder="məs: Mətbəxdə su sızır"></div><div class="field"><label>Ətraflı</label><textarea id="qD"></textarea></div><div class="field"><label>Şəkil (istəyə bağlı)</label><input id="qF" type="file" accept="image/*" multiple></div><label class="row small" style="margin-bottom:12px"><input type="checkbox" id="qU"> 🚨 Təcili (su basması, elektrik, lift qalıb və s.)</label><button class="btn" style="width:100%" onclick="saveReq()">Göndər</button>');}
+function saveReq(){var u=cu(),t=$('qT').value.trim();if(!t)return toast('Təsvir yazın');var files=[].slice.call($('qF').files||[]).slice(0,3);toast('Göndərilir…');
+ Promise.all(files.map(function(f){var p=u.id+'/'+Date.now()+'-'+f.name.replace(/[^\w.\-]+/g,'_');return sb.storage.from('komendant').upload(p,f).then(function(r){if(r.error)throw r.error;return p;});})).then(function(paths){
+  return run(sb.from('km_requests').insert({unit_id:u.id,category:$('qC').value,title:t,description:$('qD').value.trim(),photos:paths,priority:$('qU').checked?'urgent':'normal',created_by:ME.user_id,status:'new'}).select().single());}).then(function(q){closeModal();toast('Müraciət göndərildi');kmNotify('request_new',{id:q.id});renderRReq();}).catch(err);}
+function rateReq(id,s){run(sb.from('km_requests').update({rating:s}).eq('id',id)).then(function(){toast('Təşəkkür edirik!');renderRReq();}).catch(err);}
+function renderRGuest(){var u=cu();if(!u)return;run(sb.from('km_guest_passes').select('*').in('unit_id',MYUNITS.map(function(x){return x.id;})).gte('valid_date',today()).order('valid_date')).then(function(g){
+ $('rsGuest').innerHTML=g.map(function(x){return '<div class="rq row sp"><div><b>'+esc(x.guest_name)+'</b>'+(x.car_plate?' · 🚗 '+esc(x.car_plate):'')+'<div class="muted small">'+dmy(x.valid_date)+' · kod: <b>'+x.code+'</b></div></div><div class="row">'+(x.used_at?'<span class="pill p-ok">keçib</span>':'<button class="btn ghost sm" onclick="showPass('+x.id+')">QR / göndər</button>')+'</div></div>';}).join('')||'<div class="card empty">Aktiv keçid yoxdur</div>';renderRGuest._g=g;}).catch(err);}
+function openGuest(){modal('<div class="mhead"><h3>Qonaq keçidi</h3><button class="x" onclick="closeModal()">×</button></div><div class="field"><label>Qonağın adı</label><input id="gN"></div><div class="grid g2"><div class="field"><label>Maşın nömrəsi (varsa)</label><input id="gC" placeholder="10-AB-123"></div><div class="field"><label>Tarix</label><input id="gD" type="date" value="'+today()+'"></div></div><button class="btn" style="width:100%" onclick="saveGuest()">Keçid yarat</button>');}
+function saveGuest(){var n=$('gN').value.trim();if(!n)return toast('Ad yazın');run(sb.from('km_guest_passes').insert({unit_id:CUR_UNIT,guest_name:n,car_plate:$('gC').value.trim(),valid_date:$('gD').value||today()}).select().single()).then(function(p){(renderRGuest._g=renderRGuest._g||[]).push(p);showPass(p.id,p);renderRGuest();}).catch(err);}
+function showPass(id,p){p=p||(renderRGuest._g||[]).find(function(x){return x.id===id;});var u=cu();var link=location.origin+'/komendant?g='+p.code;var txt='Salam! LUX Residence-ə keçid kodu: '+p.code+' ('+dmy(p.valid_date)+'). Girişdə mühafizəyə göstərin. '+(u?unitLabel(u):'');
+ modal('<div class="mhead"><h3>'+esc(p.guest_name)+' · '+dmy(p.valid_date)+'</h3><button class="x" onclick="closeModal()">×</button></div><div class="qrbox" id="gQr"></div><p style="text-align:center;font-size:24px;font-weight:800;letter-spacing:.12em;margin:12px 0">'+p.code+'</p><a class="btn" style="width:100%" target="_blank" rel="noopener" href="https://wa.me/?text='+encodeURIComponent(txt)+'">WhatsApp-da göndər</a>');
+ try{new QRCode($('gQr'),{text:link,width:220,height:220});}catch(e){}}
+function renderRInfo(){$('rsInfo').innerHTML='<h3>'+esc(CFG.company||'LUX Residence Komendantlığı')+'</h3>'+(CFG.phone?'<a class="btn" href="tel:'+esc(CFG.phone)+'" style="margin:8px 0">📞 '+esc(CFG.phone)+'</a>':'')+'<p class="muted small" style="margin-top:8px">Təcili hallarda (su basması, yanğın təhlükəsi, lift qalması) “Müraciətlər” bölməsindən <b>təcili</b> müraciət göndərin və ya zəng edin.</p><div style="margin-top:12px"><p>🚒 Yanğın: <b>101</b> · 🚓 Polis: <b>102</b> · 🚑 Təcili yardım: <b>103</b> · 🔥 Qaz: <b>104</b></p></div>';}
+
+/* ---------- bildirişlər (sakin) ---------- */
+function b64u(s){var p='='.repeat((4-s.length%4)%4),b=(s+p).replace(/-/g,'+').replace(/_/g,'/'),r=atob(b),o=new Uint8Array(r.length);for(var i=0;i<r.length;i++)o[i]=r.charCodeAt(i);return o;}
+function renderResPush(){var c=$('rsPush');if(!c)return;if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window)){c.innerHTML='';return;}
+ if(Notification.permission==='denied'){c.innerHTML='';return;}
+ navigator.serviceWorker.ready.then(function(r){return r.pushManager.getSubscription();}).then(function(s){if(s&&Notification.permission==='granted'){c.innerHTML='';return;}
+  c.innerHTML='<div class="pushcta"><span style="font-size:26px">🔔</span><div><b>Bildirişləri aktiv et</b><small>Elanlar, müraciət cavabları və ödəniş xatırlatmaları telefonunuza gəlsin.</small></div><button class="btn" onclick="enablePush()">Aktiv et</button></div>';}).catch(function(){});}
+function enablePush(){Notification.requestPermission().then(function(p){if(p!=='granted')return toast('İcazə verilmədi');
+ return Promise.all([navigator.serviceWorker.ready,sb.rpc('office_push_key')]).then(function(r){return r[0].pushManager.getSubscription().then(function(o){return o||r[0].pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(r[1].data)});});})
+ .then(function(s){var j=s.toJSON();return run(sb.from('office_push_subs').upsert({user_id:ME.user_id,endpoint:j.endpoint,p256dh:j.keys.p256dh,auth:j.keys.auth,ua:'komendant'},{onConflict:'endpoint'}));}).then(function(){toast('Bildirişlər aktivdir ✅');kmNotify('test',{});renderResPush();});}).catch(err);}
+/* mühafizə linki ilə açılıbsa (?g=kod) */
+(function(){var g=new URLSearchParams(location.search).get('g');if(g){var t=setInterval(function(){if(STAFF&&UNITS.length){clearInterval(t);show('guard');guardCheck(false,g);}},300);setTimeout(function(){clearInterval(t);},15000);}})();
+</script>
+</body>
+</html>

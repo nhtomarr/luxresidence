@@ -51,3 +51,9 @@
   X-Robots-Tag: noindex, follow
 /mobile/*
   X-Robots-Tag: noindex
+/komendant
+  X-Robots-Tag: noindex, nofollow
+/komendant.html
+  X-Robots-Tag: noindex, nofollow
+/komendant.webmanifest
+  Content-Type: application/manifest+json
