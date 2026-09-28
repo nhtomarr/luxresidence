@@ -49,3 +49,5 @@
   X-Robots-Tag: noindex, follow
 /ig
   X-Robots-Tag: noindex, follow
+/mobile/*
+  X-Robots-Tag: noindex

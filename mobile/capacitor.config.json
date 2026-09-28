@@ -1,0 +1,31 @@
+{
+  "appId": "az.rahmangroup.basofis",
+  "appName": "Baş Ofis",
+  "webDir": "www",
+  "server": {
+    "url": "https://luxresidence.az/ofis",
+    "androidScheme": "https",
+    "allowNavigation": [
+      "luxresidence.az",
+      "*.luxresidence.az",
+      "*.supabase.co",
+      "cdn.jsdelivr.net",
+      "cdnjs.cloudflare.com",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com"
+    ]
+  },
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#0f172a"
+  },
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": [
+        "badge",
+        "sound",
+        "alert"
+      ]
+    }
+  }
+}
