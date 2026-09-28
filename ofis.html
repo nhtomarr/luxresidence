@@ -185,6 +185,11 @@ button,.btn,.btile,.orow,.otbl tr,.ocal span,.oli,.tk,.owntask,.brow{touch-actio
 .mbox{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 @media (hover:none){.btile:hover,.orow:hover,.brow:hover{border-color:var(--line)}.otbl tr[onclick]:hover td{background:none}}
 body.owner .otbl .small,body.owner .otbl .muted.small{font-size:14px}
+
+.pushcta,.pushok{display:flex;align-items:center;gap:14px;border-radius:18px;padding:16px 18px;margin-bottom:14px}
+.pushcta{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff}.pushcta small,.pushok small{display:block;font-size:13px;opacity:.9;margin-top:2px}
+.pushcta span,.pushok span{font-size:28px}.pushcta div,.pushok div{flex:1}.pushcta .btn{background:#fff;color:#1e3a8a}
+.pushcta.warn{background:#fef3c7;color:#92400e}.pushok{background:#ecfdf5;border:1px solid #bbf7d0;color:#166534}
 </style>
 </head>
 <body>
@@ -198,6 +203,7 @@ body.owner .otbl .small,body.owner .otbl .muted.small{font-size:14px}
     <div><div class="muted small" id="tDate"></div><div class="clock" id="tClock">--:--</div><div id="tStatus" class="muted"></div></div>
     <div class="row" id="tBtns"></div></div>
     <div class="stat-line" id="tStats"></div></div>
+   <div id="pushCard"></div>
    <div id="tOwnerTasks"></div>
    <div class="card" id="noEmp" style="display:none"><b>Hesabınız işçi kartına bağlanmayıb.</b><p class="muted small">Gəliş-gediş qeydi üçün rəhbər sizi "İşçilər" bölməsində işçi kartına bağlamalıdır.</p></div>
    <div class="card"><div class="row" style="justify-content:space-between"><h3>Mənim tapşırıqlarım</h3><button class="btn sm" onclick="openTask()">+ Tapşırıq</button></div><div id="tMyTasks"></div></div>
@@ -241,7 +247,7 @@ body.owner .otbl .small,body.owner .otbl .muted.small{font-size:14px}
   <section class="view" id="v-boss"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2 class="bossh" style="margin:0">Ofisdə vəziyyət</h2><span class="muted" id="bDate"></span></div>
    <div class="bgrid" id="bKpi"></div>
    <div class="row" style="justify-content:space-between;margin:22px 0 10px"><h2 class="bossh" style="margin:0">İşçilər</h2><button class="btn ghost" onclick="monthReport()">🖨 Aylıq hesabat</button></div>
-   <p class="muted" style="margin-bottom:10px">Ətraflı məlumat üçün işçinin adına toxunun.</p><div id="bList"></div><div id="ownDash"></div><div id="ownTg"></div></section>
+   <p class="muted" style="margin-bottom:10px">Ətraflı məlumat üçün işçinin adına toxunun.</p><div id="bList"></div><div id="ownDash"></div><div id="ownPush" style="margin-top:16px"></div><div id="ownTg"></div></section>
   <!-- AYLIQ PLAN -->
   <section class="view" id="v-plans"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0" id="plH">Aylıq iş planı</h2><input type="month" id="plM" class="btn ghost sm"></div>
    <div class="grid g4" id="plKpi" style="margin-bottom:14px"></div><div id="plBody"></div></section>
@@ -342,7 +348,7 @@ function loadAll(){return Promise.all([
 
 /* ---------- BU GÜN / check-in ---------- */
 var MYDAY=null;
-function renderToday(){renderOwnerTasksForEmp();$('noEmp').style.display=(EMP||MGR)?'none':'';var ck=document.querySelector('.checkcard');if(ck)ck.style.display=(!EMP&&MGR)?'none':'';renderTgCard();renderHrBoxes();renderTodayAnn();
+function renderToday(){renderOwnerTasksForEmp();renderPushCards();$('noEmp').style.display=(EMP||MGR)?'none':'';var ck=document.querySelector('.checkcard');if(ck)ck.style.display=(!EMP&&MGR)?'none':'';renderTgCard();renderHrBoxes();renderTodayAnn();
  var my=TASKS.filter(function(t){return EMP&&t.assignee_id===EMP.id&&t.status!=='done';});
  $('tMyTasks').innerHTML=my.length?my.map(taskRow).join(''):'<div class="empty">Açıq tapşırığınız yoxdur 🎉</div>';
  if(!EMP){$('tStatus').textContent='';$('tBtns').innerHTML='';$('tStats').innerHTML='';return;}
@@ -433,7 +439,8 @@ function saveTask(id){var b={title:$('fT').value.trim(),description:$('fD').valu
  if(!b.title){toast('Başlıq yazın');return;}
  var q=id?sb.from('office_tasks').update(b).eq('id',id).select().single():sb.from('office_tasks').insert(Object.assign(b,{created_by:ME.user_id})).select().single();
  var prevA=id?(TASKS.find(function(x){return x.id===id;})||{}).assignee_id:null;
- run(q).then(function(t){var i=TASKS.findIndex(function(x){return x.id===t.id;});if(i>=0)TASKS[i]=t;else TASKS.unshift(t);closeModal();toast('Yadda saxlanıldı');refreshCurrent();if(t.assignee_id&&t.assignee_id!==prevA)notify('task_assigned',{id:t.id});}).catch(err);}
+ var prevS=id?(TASKS.find(function(x){return x.id===id;})||{}).status:null;
+ run(q).then(function(t){var i=TASKS.findIndex(function(x){return x.id===t.id;});if(i>=0)TASKS[i]=t;else TASKS.unshift(t);closeModal();toast('Yadda saxlanıldı');refreshCurrent();if(t.assignee_id&&t.assignee_id!==prevA)notify('task_assigned',{id:t.id});if(id&&t.from_owner&&prevS&&t.status!==prevS)notify('task_status',{id:t.id});}).catch(err);}
 function delTask(id){if(!confirm('Tapşırıq silinsin?'))return;run(sb.from('office_tasks').delete().eq('id',id)).then(function(){TASKS=TASKS.filter(function(x){return x.id!==id;});closeModal();refreshCurrent();}).catch(err);}
 function loadCm(id){run(sb.from('office_task_comments').select('*').eq('task_id',id).order('created_at')).then(function(c){$('cmList').innerHTML=c.length?c.map(function(x){return '<div class="cm"><b>'+esc(profName(x.author))+'</b> <span class="muted small">'+new Date(x.created_at).toLocaleString('az-AZ',{timeZone:TZ})+'</span><p>'+esc(x.body)+'</p></div>';}).join(''):'<div class="muted small">Hələ şərh yoxdur</div>';}).catch(err);}
 function addCm(id){var v=$('cmNew').value.trim();if(!v)return;var mentions=EMPS.filter(function(e){return e.active&&v.indexOf('@'+e.full_name.split(' ')[0])>=0;}).map(function(e){return e.id;});
@@ -468,7 +475,7 @@ document.addEventListener('dragend',function(e){var c=e.target.closest&&e.target
 document.addEventListener('dragover',function(e){var col=e.target.closest&&e.target.closest('.col[data-st]');if(col){e.preventDefault();col.classList.add('dropon');}});
 document.addEventListener('dragleave',function(e){var col=e.target.closest&&e.target.closest('.col[data-st]');if(col)col.classList.remove('dropon');});
 document.addEventListener('drop',function(e){var col=e.target.closest&&e.target.closest('.col[data-st]');if(!col)return;e.preventDefault();col.classList.remove('dropon');var id=+e.dataTransfer.getData('text/plain'),st=col.dataset.st;var t=TASKS.find(function(x){return x.id===id;});if(!t||t.status===st)return;
- var old=t.status;t.status=st;renderKanban();run(sb.from('office_tasks').update({status:st}).eq('id',id).select().single()).then(function(nt){var i=TASKS.findIndex(function(x){return x.id===id;});TASKS[i]=nt;renderKanban();toast(ST[st]);}).catch(function(er){t.status=old;renderKanban();err(er);});});
+ var old=t.status;t.status=st;renderKanban();run(sb.from('office_tasks').update({status:st}).eq('id',id).select().single()).then(function(nt){var i=TASKS.findIndex(function(x){return x.id===id;});TASKS[i]=nt;renderKanban();toast(ST[st]);if(nt.from_owner)notify('task_status',{id:nt.id});}).catch(function(er){t.status=old;renderKanban();err(er);});});
 
 
 function renderHol(){var b=$('holList');if(!b)return;var yr=today().slice(0,4);var l=HOL.filter(function(h){return h.day>=yr+'-01-01';});
@@ -674,7 +681,7 @@ function renderOwner(){var d=today(),m=d.slice(0,7);
    var from=addDays(d,-13),labels=[],cm2=[],lt2=[],pl2=[];for(var i=0;i<14;i++){var ds=addDays(from,i);if(isoDow(ds)>5&&!matt.some(function(a){return a.day===ds;}))continue;labels.push(ds.slice(8)+'.'+ds.slice(5,7));var aa=matt.filter(function(a){return a.day===ds&&a.check_in;});cm2.push(aa.length);lt2.push(aa.filter(function(a){return a.late_min>0;}).length);pl2.push(isHol(ds)?0:act.filter(function(e){return (e.workdays||[]).indexOf(isoDow(ds))>=0&&!leaveOn(e.id,ds);}).length);}
    if(from<m+'-01'){}
    mkChart('chOwn',{type:'bar',data:{labels:labels,datasets:[{label:'Gəlib',data:cm2,backgroundColor:'#2563eb',borderRadius:5},{label:'Gecikib',data:lt2,backgroundColor:'#f59e0b',borderRadius:5},{type:'line',label:'Olmalı idi',data:pl2,borderColor:'#94a3b8',borderDash:[4,4],pointRadius:0}]},options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
-   ownTg();
+   ownTg();renderPushCards();
   });}).catch(err);}
 
 function ownTg(){var c=$('ownTg');if(!c)return;Promise.all([tgBot(),sb.rpc('office_tg_code')]).then(function(r){var bot=r[0],d=(r[1]&&r[1].data)||{};if(!bot){c.innerHTML='';return;}
@@ -725,6 +732,29 @@ function ownTaskSave(){var b={title:$('otT').value.trim(),description:$('otD').v
 function ownGivenCard(){var l=TASKS.filter(function(t){return t.from_owner;}).sort(function(a,b){return (a.status==='done')-(b.status==='done')||String(b.created_at).localeCompare(String(a.created_at));}).slice(0,12);
  return '<div class="card"><div class="row" style="justify-content:space-between"><h3>Verdiyim tapşırıqlar</h3><button class="btn sm" onclick="ownTaskModal()">+ Yeni</button></div>'+(l.length?l.map(function(t){var over=t.status!=='done'&&t.due&&t.due<today();var st=t.status==='done'?'<span class="pill p-ok">✅ bitib</span>':over?'<span class="pill p-bad">gecikir</span>':'<span class="pill '+(t.status==='new'?'p-mut':'p-acc')+'">'+ST[t.status]+'</span>';
   return '<div class="ogt"><div><b>'+esc(t.title)+'</b><div class="muted small">'+esc(empName(t.assignee_id))+(t.due?' · son tarix '+t.due.slice(8)+'.'+t.due.slice(5,7):'')+'</div></div>'+st+'</div>';}).join(''):'<p class="muted">Hələ tapşırıq verməmisiniz. “+ Yeni” ilə istənilən işçiyə tapşırıq verə bilərsiniz.</p>')+'</div>';}
+
+
+/* ---------- TELEFON BİLDİRİŞLƏRİ (Web Push) ---------- */
+function b64u(s){var p='='.repeat((4-s.length%4)%4),b=(s+p).replace(/-/g,'+').replace(/_/g,'/'),r=atob(b),o=new Uint8Array(r.length);for(var i=0;i<r.length;i++)o[i]=r.charCodeAt(i);return o;}
+function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);}
+function pushSupported(){return 'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;}
+function pushState(){if(!pushSupported())return Promise.resolve(isIOS()&&!isStandalone()?'ios-install':'unsupported');if(Notification.permission==='denied')return Promise.resolve('denied');
+ return navigator.serviceWorker.ready.then(function(r){return r.pushManager.getSubscription();}).then(function(sub){return sub&&Notification.permission==='granted'?'on':'off';}).catch(function(){return 'off';});}
+function enablePush(){if(isIOS()&&!isStandalone()){pushHelpIOS();return;}
+ if(!pushSupported()){toast('Bu brauzer bildirişləri dəstəkləmir');return;}
+ Notification.requestPermission().then(function(p){if(p!=='granted'){toast('Bildiriş icazəsi verilmədi');renderPushCards();return;}
+  return Promise.all([navigator.serviceWorker.ready,sb.rpc('office_push_key')]).then(function(r){var reg=r[0],key=r[1]&&r[1].data;if(!key)throw new Error('Açar alınmadı');
+   return reg.pushManager.getSubscription().then(function(old){return old||reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(key)});});})
+  .then(function(sub){var j=sub.toJSON();return sb.from('office_push_subs').upsert({user_id:ME.user_id,endpoint:j.endpoint,p256dh:j.keys.p256dh,auth:j.keys.auth,ua:navigator.userAgent.slice(0,200)},{onConflict:'endpoint'}).then(function(r){if(r.error)throw r.error;});})
+  .then(function(){toast('Bildirişlər aktivdir ✅');notify('push_test',{});renderPushCards();});}).catch(err);}
+function pushHelpIOS(){modal('<div class="mhead"><h3>iPhone-da bildirişlər</h3><button class="x" onclick="closeModal()">×</button></div><p style="font-size:16px;line-height:1.6">iPhone bildirişləri yalnız tətbiq <b>ana ekrana əlavə olunanda</b> göndərir:</p><ol style="margin:12px 0 0 20px;line-height:1.9;font-size:16px"><li>Safari-də aşağıdakı <b>Paylaş</b> düyməsinə (□↑) bas</li><li><b>“Ana ekrana əlavə et”</b> → <b>Əlavə et</b></li><li>Ana ekrandakı <b>Ofis</b> ikonundan aç və daxil ol</li><li><b>“Bildirişləri aktiv et”</b> düyməsinə bas → <b>İcazə ver</b></li></ol>');}
+function renderPushCards(){var boxes=[$('pushCard'),$('ownPush')].filter(Boolean);if(!boxes.length)return;
+ pushState().then(function(st){var h;
+  if(st==='on')h='<div class="pushok"><span>🔔</span><div><b>Telefon bildirişləri aktivdir</b><small>Tapşırıq və xatırlatmalar bu cihazın bildiriş panelinə düşür.</small></div><button class="btn ghost sm" onclick="notify(\'push_test\',{});toast(\'Test göndərildi\')">Test</button></div>';
+  else if(st==='denied')h='<div class="pushcta warn"><span>🔕</span><div><b>Bildirişlər bloklanıb</b><small>Brauzerin/telefonun ayarlarında bu sayt üçün bildirişlərə icazə verin, sonra səhifəni yeniləyin.</small></div></div>';
+  else if(st==='unsupported')h='<div class="pushcta warn"><span>🔕</span><div><b>Bu brauzer bildirişləri dəstəkləmir</b><small>Chrome, Edge və ya Safari (iOS 16.4+) istifadə edin.</small></div></div>';
+  else h='<div class="pushcta"><span>🔔</span><div><b>Bildirişləri aktiv et</b><small>'+(st==='ios-install'?'iPhone-da əvvəlcə tətbiqi ana ekrana əlavə edin.':'Yeni tapşırıq, xatırlatma və sorğu nəticələri telefonun bildiriş panelinə düşsün.')+'</small></div><button class="btn" onclick="enablePush()">'+(st==='ios-install'?'Necə?':'Aktiv et')+'</button></div>';
+  boxes.forEach(function(b){b.innerHTML=h;});});}
 
 /* ---------- TELEGRAM ---------- */
 var TGBOT=null;
