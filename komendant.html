@@ -71,6 +71,7 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .pushcta{display:flex;align-items:center;gap:12px;border-radius:16px;padding:14px 16px;margin-bottom:14px;background:linear-gradient(135deg,#6b2e1a,#ba4d2c);color:#fff}.pushcta div{flex:1}.pushcta small{display:block;opacity:.9}.pushcta .btn{background:#fff;color:var(--acc2)}
 @media(max-width:760px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3,.g2{grid-template-columns:1fr}.hide-m{display:none}.bal b{font-size:34px}}
 .kclick{cursor:pointer;transition:.15s}.kclick:hover{border-color:var(--acc);box-shadow:0 8px 20px -14px rgba(186,77,44,.6)}.kclick small{color:var(--acc)}
+.chbox{position:relative;height:280px}@media(max-width:760px){.chbox{height:240px}}
 </style>
 </head>
 <body>
@@ -82,6 +83,7 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
   <section class="view" id="v-dash">
    <div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Ümumi vəziyyət</h2><div class="row"><input type="month" id="dM" class="inp" style="width:auto"></div></div>
    <div class="grid g4" id="dKpi" style="margin-bottom:14px"></div>
+   <div class="grid g2"><div class="card"><h3>Binalar üzrə · hesablanıb və yığılıb (₼)</h3><div class="chbox"><canvas id="chBina"></canvas></div></div><div class="card"><h3>Son 6 ay · hesablanıb, yığılıb, borc (₼)</h3><div class="chbox"><canvas id="chTrend"></canvas></div></div></div>
    <div class="card"><div class="row sp"><h3>Binalar üzrə</h3><button class="btn ghost sm" onclick="exportBinas()">Excel</button></div><div class="tbl" id="dBinas"></div></div>
    <div class="grid g2"><div class="card"><h3>Açıq müraciətlər</h3><div id="dReq"></div></div><div class="card"><h3>Ən çox borcu olanlar</h3><div id="dTop"></div></div></div>
   </section>
@@ -205,7 +207,7 @@ function renderDash(){var m=$('dM').value||curM();$('dM').value=m;$('dM').onchan
   $('dKpi').innerHTML=kpi(az(chS),'hesablanıb · '+mname(m),'acc','bax ›','showMonthCharges(\''+m+'\')')+kpi(az(pyS),'yığılıb · '+mname(m),'ok',chS?'yığım: '+rate+'% (bu ayın ödənişləri) · bax ›':'','showMonthPays(\''+m+'\')')+kpi(az(totDebt),'ümumi borc — bütün aylar üzrə','bad',debtors+' borclu obyekt · bu ay ödənilməyən: '+az(Math.max(0,chS-pyS))+' · bax ›','showDebtDetails()')+kpi(rq.length,'açıq müraciət',rq.some(function(x){return x.priority==='urgent';})?'bad':'warn',rq.filter(function(x){return x.priority==='urgent';}).length+' təcili · bax ›','show(\'req\')');
   var rows=binas().map(function(b){var us=UNITS.filter(function(u){return u.bina===b;}),ids={};us.forEach(function(u){ids[u.id]=1;});var c=sum(ch.filter(function(x){return ids[x.unit_id];})),p=sum(py.filter(function(x){return ids[x.unit_id];}));var d=0,dn=0;us.forEach(function(u){var bb=uBal(u.id);if(bb>0.009){d+=bb;dn++;}});
    return {b:b,n:us.length,live:us.filter(function(u){return u.status==='yasayir';}).length,bill:us.filter(function(u){return u.billing&&monthlyOf(u)>0;}).length,c:c,p:p,r:c?Math.round(p/c*100):0,d:d,dn:dn};});
-  dashRows=rows;
+  dashRows=rows;dashCharts(m,rows);
   $('dBinas').innerHTML='<table><tr><th>Bina</th><th class="n">Obyekt</th><th class="n hide-m">Yaşayır</th><th class="n hide-m">Hesablanır</th><th class="n">Hesablanıb</th><th class="n">Yığılıb</th><th>Yığım</th><th class="n">Borc</th><th class="n hide-m">Borclu</th></tr>'+rows.map(function(x){return '<tr class="click" onclick="BINA_F='+x.b+';show(\'units\')"><td><b>Bina '+x.b+'</b></td><td class="n">'+x.n+'</td><td class="n hide-m">'+x.live+'</td><td class="n hide-m">'+x.bill+'</td><td class="n">'+az(x.c)+'</td><td class="n">'+az(x.p)+'</td><td style="min-width:110px"><div style="height:8px;background:#f1ece6;border-radius:8px;overflow:hidden"><i style="display:block;height:100%;width:'+Math.min(100,x.r)+'%;background:'+(x.r>=80?'#15803d':x.r>=50?'#d97706':'#b91c1c')+'"></i></div><span class="small">'+x.r+'%</span></td><td class="n" style="color:'+(x.d>0?'var(--bad)':'inherit')+';text-decoration:'+(x.d>0?'underline':'none')+'" onclick="event.stopPropagation();'+(x.d>0?'showDebtDetails('+x.b+')':'')+'">'+az(x.d)+'</td><td class="n hide-m">'+x.dn+'</td></tr>';}).join('')+'</table>';
   $('dReq').innerHTML=rq.slice(0,8).map(function(q){var u=UNITS.find(function(x){return x.id===q.unit_id;});return '<div class="row sp" style="padding:7px 0;border-bottom:1px solid var(--line)"><div><b>'+esc(q.title)+'</b><div class="muted small">'+(u?unitLabel(u):'')+' · '+(RCAT[q.category]||'')+'</div></div><span class="pill '+(q.priority==='urgent'?'p-bad':RST[q.status][1])+'">'+(q.priority==='urgent'?'təcili':RST[q.status][0])+'</span></div>';}).join('')||'<div class="empty">Açıq müraciət yoxdur 👍</div>';
   var top=UNITS.filter(function(u){return uBal(u.id)>0.009;}).sort(function(a,b){return uBal(b.id)-uBal(a.id);}).slice(0,8);
@@ -213,6 +215,23 @@ function renderDash(){var m=$('dM').value||curM();$('dM').value=m;$('dM').onchan
  }).catch(err);}
 var dashRows=[];
 function exportBinas(){xlsx([['Bina','Obyekt','Yaşayır','Hesablanır','Hesablanıb','Yığılıb','Yığım %','Borc','Borclu']].concat(dashRows.map(function(x){return ['Bina '+x.b,x.n,x.live,x.bill,+x.c.toFixed(2),+x.p.toFixed(2),x.r,+x.d.toFixed(2),x.dn];})),'binalar-'+($('dM').value||curM())+'.xlsx');}
+
+
+/* ---------- qrafiklər (Chart.js) ---------- */
+var CHARTS={};
+function chartLib(){return window.Chart?Promise.resolve():new Promise(function(res,rej){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';s.onload=res;s.onerror=rej;document.head.appendChild(s);});}
+function azAxis(v){v=Number(v)||0;return Math.abs(v)>=1000?(v/1000).toLocaleString('az-AZ',{maximumFractionDigits:1})+'k ₼':v.toLocaleString('az-AZ')+' ₼';}
+function mkChart(id,cfg){return chartLib().then(function(){var el=$(id);if(!el)return;if(CHARTS[id])CHARTS[id].destroy();
+ cfg.options=Object.assign({maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{family:'Inter'}}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+az(c.parsed.y);}}}},
+  scales:{y:{beginAtZero:true,ticks:{callback:azAxis,font:{family:'Inter'}},grid:{color:'#f0e7de'}},x:{ticks:{font:{family:'Inter'}},grid:{display:false}}}},cfg.options||{});
+ CHARTS[id]=new Chart(el,cfg);});}
+function dashCharts(m,rows){
+ mkChart('chBina',{type:'bar',data:{labels:rows.map(function(x){return 'Bina '+x.b;}),datasets:[{label:'Hesablanıb',data:rows.map(function(x){return +x.c.toFixed(2);}),backgroundColor:'#e8c9b8',borderRadius:6},{label:'Yığılıb',data:rows.map(function(x){return +x.p.toFixed(2);}),backgroundColor:'#15803d',borderRadius:6},{label:'Ümumi borc',data:rows.map(function(x){return +x.d.toFixed(2);}),backgroundColor:'#b91c1c',borderRadius:6}]}});
+ var ms=[];for(var i=5;i>=0;i--){var d=new Date(m+'-15T12:00:00Z');d.setUTCMonth(d.getUTCMonth()-i);ms.push(d.toISOString().slice(0,7));}
+ Promise.all([run(sb.from('km_charges').select('period,amount').gte('period',ms[0]).lte('period',ms[5])),run(sb.from('km_payments').select('paid_at,amount').gte('paid_at',ms[0]+'-01').lte('paid_at',mEnd(ms[5])))]).then(function(r){
+  var c={},p={};r[0].forEach(function(x){c[x.period]=(c[x.period]||0)+Number(x.amount);});r[1].forEach(function(x){var k=String(x.paid_at).slice(0,7);p[k]=(p[k]||0)+Number(x.amount);});
+  var cum=0,debt=ms.map(function(k){cum+=(c[k]||0)-(p[k]||0);return +cum.toFixed(2);});
+  mkChart('chTrend',{type:'bar',data:{labels:ms.map(function(k){return mname(k).split(' ')[0].slice(0,3);}),datasets:[{label:'Hesablanıb',data:ms.map(function(k){return +(c[k]||0).toFixed(2);}),backgroundColor:'#e8c9b8',borderRadius:6,order:2},{label:'Yığılıb',data:ms.map(function(k){return +(p[k]||0).toFixed(2);}),backgroundColor:'#15803d',borderRadius:6,order:2},{type:'line',label:'Yığılmamış (artan cəm)',data:debt,borderColor:'#b91c1c',backgroundColor:'#b91c1c',tension:.3,pointRadius:3,order:1}]}});}).catch(function(){});}
 
 /* ---------- borcun detalları: hansı aydan, kimdə (FIFO: ödənişlər ən köhnə hesablara yazılır) ---------- */
 function debtBreakdown(ids){if(!ids.length)return Promise.resolve({});
@@ -534,8 +553,9 @@ function payPL(){var y=today().slice(0,4);Promise.all([run(sb.from('km_payments'
  var keys=Object.keys(ms).sort();var TI=0,TE=0,TC=0;keys.forEach(function(k){TI+=ms[k].i;TE+=ms[k].e;TC+=ms[k].c;});
  var bin={};binas().forEach(function(b){bin[b]={i:0,e:0};});r[0].forEach(function(p){var u=unitById(p.unit_id);if(u&&bin[u.bina])bin[u.bina].i+=Number(p.amount);});r[1].forEach(function(x){if(x.bina&&bin[x.bina])bin[x.bina].e+=Number(x.amount);});var common=r[1].filter(function(x){return !x.bina;}).reduce(function(s,x){return s+Number(x.amount);},0);
  $('payBody').innerHTML='<div class="grid g4" style="margin-bottom:14px">'+kpi(az(TC),'hesablanıb · '+y,'acc')+kpi(az(TI),'yığılıb (gəlir)','ok')+kpi(az(TE),'xərc','bad')+kpi(az(TI-TE),'balans (kassa)',TI-TE>=0?'ok':'bad')+'</div>'+
-  '<div class="card tbl"><h3>Aylar üzrə</h3><table><tr><th>Ay</th><th class="n">Hesablanıb</th><th class="n">Gəlir</th><th class="n">Xərc</th><th class="n">Nəticə</th><th>Yığım</th></tr>'+keys.map(function(k){var x=ms[k],rt=x.c?Math.round(x.i/x.c*100):0;return '<tr><td><b>'+mname(k)+'</b></td><td class="n">'+az(x.c)+'</td><td class="n" style="color:var(--ok)">'+az(x.i)+'</td><td class="n" style="color:var(--bad)">'+az(x.e)+'</td><td class="n"><b style="color:'+(x.i-x.e>=0?'var(--ok)':'var(--bad)')+'">'+az(x.i-x.e)+'</b></td><td>'+(x.c?rt+'%':'—')+'</td></tr>';}).join('')+'</table></div>'+
-  '<div class="card tbl"><h3>Binalar üzrə · '+y+'</h3><table><tr><th>Bina</th><th class="n">Gəlir</th><th class="n">Birbaşa xərc</th><th class="n">Nəticə</th></tr>'+binas().map(function(b){var x=bin[b];return '<tr><td>Bina '+b+'</td><td class="n">'+az(x.i)+'</td><td class="n">'+az(x.e)+'</td><td class="n">'+az(x.i-x.e)+'</td></tr>';}).join('')+'<tr><td><b>Ümumi xərclər</b> (bütün binalar)</td><td></td><td class="n">'+az(common)+'</td><td></td></tr></table></div>';}).catch(err);}
+  '<div class="card"><h3>Gəlir və xərc · '+y+' (₼)</h3><div class="chbox"><canvas id="chPL"></canvas></div></div><div class="card tbl"><h3>Aylar üzrə</h3><table><tr><th>Ay</th><th class="n">Hesablanıb</th><th class="n">Gəlir</th><th class="n">Xərc</th><th class="n">Nəticə</th><th>Yığım</th></tr>'+keys.map(function(k){var x=ms[k],rt=x.c?Math.round(x.i/x.c*100):0;return '<tr><td><b>'+mname(k)+'</b></td><td class="n">'+az(x.c)+'</td><td class="n" style="color:var(--ok)">'+az(x.i)+'</td><td class="n" style="color:var(--bad)">'+az(x.e)+'</td><td class="n"><b style="color:'+(x.i-x.e>=0?'var(--ok)':'var(--bad)')+'">'+az(x.i-x.e)+'</b></td><td>'+(x.c?rt+'%':'—')+'</td></tr>';}).join('')+'</table></div>'+
+  '<div class="card tbl"><h3>Binalar üzrə · '+y+'</h3><table><tr><th>Bina</th><th class="n">Gəlir</th><th class="n">Birbaşa xərc</th><th class="n">Nəticə</th></tr>'+binas().map(function(b){var x=bin[b];return '<tr><td>Bina '+b+'</td><td class="n">'+az(x.i)+'</td><td class="n">'+az(x.e)+'</td><td class="n">'+az(x.i-x.e)+'</td></tr>';}).join('')+'<tr><td><b>Ümumi xərclər</b> (bütün binalar)</td><td></td><td class="n">'+az(common)+'</td><td></td></tr></table></div>';
+ mkChart('chPL',{type:'bar',data:{labels:keys.map(function(k){return mname(k).split(' ')[0].slice(0,3);}),datasets:[{label:'Gəlir',data:keys.map(function(k){return +ms[k].i.toFixed(2);}),backgroundColor:'#15803d',borderRadius:6,order:2},{label:'Xərc',data:keys.map(function(k){return +ms[k].e.toFixed(2);}),backgroundColor:'#b91c1c',borderRadius:6,order:2},{type:'line',label:'Nəticə',data:keys.map(function(k){return +(ms[k].i-ms[k].e).toFixed(2);}),borderColor:'#ba4d2c',backgroundColor:'#ba4d2c',tension:.3,pointRadius:3,order:1}]},options:{scales:{y:{beginAtZero:false,ticks:{callback:azAxis},grid:{color:'#f0e7de'}},x:{grid:{display:false}}}}});}).catch(err);}
 /* --- İCMA --- */
 var CMM='ann';
 function renderComm(k){if(k)CMM=k;sub('commSub',[['ann','📢 Elanlar'],['poll','🗳 Səsvermə'],['doc','📄 Sənədlər']],CMM,'renderComm');({ann:commAnn,poll:commPoll,doc:commDoc})[CMM]();}
