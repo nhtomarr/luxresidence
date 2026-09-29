@@ -1104,7 +1104,7 @@ function savePos(id,did){var b={title:$('pT').value.trim(),headcount:+$('pH').va
 function delPos(id){if(!confirm('Vəzifə silinsin?'))return;run(sb.from('office_positions').delete().eq('id',id)).then(function(){POS=POS.filter(function(x){return x.id!==id;});closeModal();renderStaff();}).catch(err);}
 function openEmp(id){var e=id?EMPS.find(function(x){return x.id===id;}):{full_name:'',work_start:'09:00',work_end:'18:00',workdays:[1,2,3,4,5],active:true};
  var used=EMPS.filter(function(x){return x.user_id&&x.id!==e.id;}).map(function(x){return x.user_id;});
- var accs=PROFS.filter(function(p){return p.active&&used.indexOf(p.user_id)<0;});
+ var accs=PROFS.filter(function(p){return p.active&&used.indexOf(p.user_id)<0&&(p.perms||[]).indexOf('ofis_owner')<0&&!p.is_admin;});
  modal('<div class="mhead"><h3>'+(id?'İşçi kartı':'Yeni işçi')+'</h3><button class="x" onclick="closeModal()">×</button></div>'+
   '<div class="grid g2"><div class="field"><label>Ad, soyad</label><input id="eN" value="'+esc(e.full_name)+'"></div><div class="field"><label>Vəzifə</label><select id="eP"><option value="">—</option>'+DEPTS.map(function(d){return '<optgroup label="'+esc(d.name)+'">'+POS.filter(function(p){return p.department_id===d.id;}).map(function(p){return '<option value="'+p.id+'"'+(p.id===e.position_id?' selected':'')+'>'+esc(p.title)+'</option>';}).join('')+'</optgroup>';}).join('')+'</select></div>'+
   '<div class="field"><label>Rəhbəri</label><select id="eM">'+empOpts(e.manager_id).replace('— təyin edilməyib —','—')+'</select></div><div class="field"><label>İşə qəbul tarixi</label><input id="eH" type="date" value="'+(e.hire_date||'')+'"></div>'+
