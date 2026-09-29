@@ -1,0 +1,25 @@
+{
+ "name": "LUX Residence",
+ "short_name": "LUX Residence",
+ "description": "LUX Residence — жилой комплекс в Ясамальском районе, у метро Элмляр Академиясы",
+ "start_url": "/ru?utm_source=homescreen",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#f7f2ec",
+ "theme_color": "#f7f2ec",
+ "lang": "ru",
+ "icons": [
+  {
+   "src": "/favicon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/favicon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  }
+ ]
+}
