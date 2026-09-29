@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8"><meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Qiymət Yoxla — təchizat paneli</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧱</text></svg>">
+<meta name="theme-color" content="#efe6df"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Təchizat">
+<style>
+:root{--sf:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','IBM Plex Sans',system-ui,sans-serif;--ink:#1d1611;--muted:#8a7a6f;--line:rgba(255,255,255,.72);--acc:#ba4d2c;--acc2:#9a3c20;--good:#1f7a4a;--bad:#b1381f;--soft:rgba(255,255,255,.55);
+  --gsh:inset 0 1px 1px rgba(255,255,255,.9),0 10px 30px -18px rgba(90,45,25,.28);box-sizing:border-box}
+*,*::before,*::after{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;color:var(--ink);font:16px/1.5 var(--sf);-webkit-font-smoothing:antialiased;letter-spacing:-.01em;background:#efe6df url(/assets/km/bg.jpg) center/cover fixed no-repeat;padding:calc(18px + env(safe-area-inset-top,0px)) 14px calc(30px + env(safe-area-inset-bottom,0px))}
+.wrap{max-width:980px;margin:10px auto 30px;padding:26px 30px 30px;border-radius:40px;background:linear-gradient(160deg,rgba(255,255,255,.52),rgba(255,255,255,.30) 55%,rgba(255,255,255,.40));-webkit-backdrop-filter:blur(34px) saturate(170%);backdrop-filter:blur(34px) saturate(170%);border:1px solid rgba(255,255,255,.75);box-shadow:inset 0 1px 1px rgba(255,255,255,.95),0 50px 120px -50px rgba(90,40,20,.45)}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.top .logo{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:22px;background:radial-gradient(circle at 30% 25%,#f0a283,#ba4d2c 55%,#8a3418);box-shadow:inset 0 1px 2px rgba(255,255,255,.6),0 10px 22px -10px rgba(154,60,32,.8)}
+.top b{display:block;font-size:17px;letter-spacing:-.02em}.top small{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+h1{font-size:clamp(1.7rem,4.6vw,2.4rem);line-height:1.1;margin:0 0 6px;letter-spacing:-.035em;font-weight:700}
+.sub{margin:0;color:#6f6056;max-width:62ch}
+.panel{background:linear-gradient(160deg,rgba(255,255,255,.62),rgba(255,255,255,.34));border:1px solid var(--line);box-shadow:var(--gsh);border-radius:28px;padding:22px;margin-top:20px}
+.fields{display:grid;grid-template-columns:1fr 190px auto;gap:12px;align-items:end}
+@media (max-width:640px){.wrap{padding:20px 16px;border-radius:30px}.fields{grid-template-columns:1fr 1fr}.fields>div:first-child{grid-column:1/-1}}
+label{display:block;font-size:.8rem;font-weight:600;color:#7a6a5f;margin:0 0 6px 4px}
+input{width:100%;font:inherit;font-size:16px;padding:13px 16px;border:1px solid rgba(255,255,255,.9);border-radius:16px;background:rgba(255,255,255,.72);color:var(--ink);box-shadow:inset 0 1px 2px rgba(90,45,25,.06);transition:border-color .2s,box-shadow .2s}
+input:focus{outline:none;border-color:#e0a58c;box-shadow:0 0 0 4px rgba(186,77,44,.14)}
+button.go{font:inherit;font-weight:700;padding:13px 26px;border:0;border-radius:99px;background:linear-gradient(180deg,#c9603c,#ab4424);color:#fff;cursor:pointer;height:50px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 10px 22px -12px rgba(154,60,32,.8);transition:transform .15s,filter .15s}
+button.go:hover{filter:brightness(1.06);transform:translateY(-1px)}button.go:disabled{opacity:.55;transform:none}
+.hint{font-size:.8rem;color:var(--muted);margin:10px 4px 0}
+.status{margin-top:16px;color:var(--muted)}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(186,77,44,.2);border-top-color:var(--acc);border-radius:50%;animation:s 1s linear infinite;vertical-align:-2px;margin-right:8px}
+@keyframes s{to{transform:rotate(360deg)}}
+.recog{margin-top:18px;font-size:.9rem;color:var(--muted)}.recog b{color:var(--ink)}
+.verdict{margin-top:14px;padding:16px 18px;border-radius:20px;font-weight:700;border:1px solid rgba(255,255,255,.8);box-shadow:inset 0 1px 1px #fff}
+.verdict small{display:block;font-weight:500;margin-top:3px;opacity:.85}
+.v-good{background:rgba(214,241,225,.85);color:var(--good)}
+.v-bad{background:rgba(253,226,220,.9);color:var(--bad)}
+.v-mid{background:rgba(255,255,255,.6)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+@media (max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:linear-gradient(160deg,rgba(255,255,255,.7),rgba(255,255,255,.4));border:1px solid var(--line);box-shadow:var(--gsh);border-radius:18px;padding:12px 14px}.stat b{display:block;font-size:1.25rem;letter-spacing:-.02em}.stat span{font-size:.78rem;color:var(--muted)}
+.groups{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{font:inherit;font-size:.85rem;font-weight:600;padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.85);background:rgba(255,255,255,.5);color:#5e4e44;cursor:pointer;box-shadow:inset 0 1px 1px #fff}
+.chip[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:inset 0 1px 1px #fff,0 8px 18px -10px rgba(90,45,25,.5);outline:2px solid rgba(186,77,44,.35)}
+.ruler{position:relative;height:90px;margin:26px 8px 4px}
+.tape{position:absolute;left:0;right:0;top:34px;height:22px;border-radius:99px;background:linear-gradient(90deg,#f6d8c9,#e9a98b 50%,#d9775a);
+  background-image:repeating-linear-gradient(90deg,rgba(90,40,20,.35) 0 1px,transparent 1px 10%),linear-gradient(90deg,#f6d8c9,#e9a98b 50%,#d9775a);box-shadow:inset 0 1px 2px rgba(255,255,255,.6)}
+.band{position:absolute;top:29px;height:32px;border:2px solid var(--ink);border-radius:99px;background:rgba(255,255,255,.25)}
+.tick{position:absolute;top:26px;width:3px;height:38px;margin-left:-1.5px;background:var(--acc2);border-radius:2px;opacity:.75}
+.me{position:absolute;top:0;transform:translateX(-50%);font-size:.78rem;font-weight:700;white-space:nowrap;background:#fff;border-radius:99px;padding:2px 9px;box-shadow:0 6px 14px -8px rgba(90,45,25,.5)}
+.me::after{content:"";display:block;position:absolute;left:50%;margin-left:-7px;bottom:-11px;width:0;height:0;border:7px solid transparent;border-top:9px solid #fff}
+.rl{position:absolute;top:66px;font-size:.78rem;color:var(--muted)}
+.tbl{overflow-x:auto;margin-top:16px;background:rgba(255,255,255,.45);border:1px solid var(--line);border-radius:20px;padding:4px 8px}
+table{width:100%;border-collapse:collapse;font-size:.92rem;min-width:600px}
+th{text-align:left;font-weight:600;color:#9a8a7f;font-size:.78rem;padding:10px;border-bottom:1px solid rgba(255,255,255,.8)}
+td{padding:11px 10px;border-bottom:1px solid rgba(90,45,25,.07);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.p{font-weight:700;white-space:nowrap}tr.best td.p{color:var(--good)}
+.src{font-size:.78rem;color:var(--muted)}
+.desc{font-size:.8rem;color:var(--muted);max-width:44ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+a.act{display:inline-block;padding:7px 13px;border-radius:99px;text-decoration:none;font-size:.84rem;font-weight:600;white-space:nowrap;margin:2px 0}
+a.call{background:linear-gradient(180deg,#c9603c,#ab4424);color:#fff;box-shadow:0 8px 16px -10px rgba(154,60,32,.8)}a.open{color:var(--ink);background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1px 1px #fff}
+.foot{margin:22px 6px 0;font-size:.78rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="logo">🧱</div><div><b>Təchizat</b><small>Qiymət yoxlama paneli</small></div></div>
+  <h1>Təchizatçı düz qiymət deyir?</h1>
+  <p class="sub">Məhsulu istənilən dildə yaz, təchizatçının qiymətini daxil et. Sistem Azərbaycandakı satış saytlarından real qiymətləri yığıb müqayisə edir.</p>
+
+  <section class="panel">
+    <form class="fields" id="f">
+      <div><label for="q">Məhsul</label><input id="q" type="search" autocomplete="off" placeholder="məs. sement, цемент, alçıpan, armatura…" required></div>
+      <div><label for="offer">Təchizatçı qiyməti, ₼</label><input id="offer" type="number" inputmode="decimal" min="0" step="0.01" placeholder="məs. 9.20"></div>
+      <div><button class="go" id="go" type="submit">Axtar</button></div>
+    </form>
+    <div class="hint">Yeni məhsul ilk dəfə axtarılanda saytlar canlı yoxlanılır (10–20 saniyə). Sonrakı axtarışlar anındır, məlumat hər 6 saatdan bir təzələnir.</div>
+    <div id="out"></div>
+  </section>
+  <p class="foot">Mənbələr: Tap.az, Lalafo.az, Qiymetleri.az, İnsaat.az, Tezbazar.az, Maqazin.az, Megamart.az, Omid.az, Boya.az, Kafel.az. “1 ₼” yazılmış elanlar (qiymət razılaşma ilə) nəzərə alınmır.</p>
+</div>
+<script>
+const FN="https://syyybdouqdahsomfkemi.supabase.co/functions/v1/axtar";
+const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5eXliZG91cWRhaHNvbWZrZW1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MDIyNzgsImV4cCI6MjEwNjI3ODI3OH0.QtKUa9k0dx2OLDvrHdVT4B8fPKzaOg410r37HpHXMHE";
+const $=id=>document.getElementById(id);
+const fmt=v=>Number(v).toLocaleString("az-AZ",{minimumFractionDigits:2,maximumFractionDigits:2})+" ₼";
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const q2=(a,q)=>{const i=(a.length-1)*q,lo=Math.floor(i),hi=Math.ceil(i);return a[lo]+(a[hi]-a[lo])*(i-lo)};
+let state={items:[],groups:[],g:0,term:""};
+
+// split prices into magnitude groups (e.g. armatur per kg vs per ton)
+function groupsOf(items){
+  const s=[...items].sort((a,b)=>a.price-b.price);const gs=[];let cur=[];
+  for(const it of s){ if(cur.length&&it.price/cur[cur.length-1].price>2.5){gs.push(cur);cur=[]} cur.push(it) }
+  if(cur.length)gs.push(cur);
+  return gs.filter(g=>g.length>=2).sort((a,b)=>b.length-a.length);
+}
+async function search(e){
+  e&&e.preventDefault();const q=$("q").value.trim();if(q.length<2)return;
+  $("go").disabled=true;$("out").innerHTML=`<p class="status"><span class="spin"></span>Saytlar yoxlanılır…</p>`;
+  try{
+    const r=await fetch(FN,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+KEY,"apikey":KEY},body:JSON.stringify({q})});
+    const d=await r.json(); if(d.error)throw new Error(d.error);
+    state.items=d.items;state.term=d.term;state.groups=groupsOf(d.items);
+    const offer=parseFloat($("offer").value);
+    state.g=0; if(!isNaN(offer)&&state.groups.length>1){ // pick group closest to the supplier price
+      let best=0,bd=1e9;state.groups.forEach((g,i)=>{const m=q2(g.map(x=>+x.price),.5);const dd=Math.abs(Math.log(offer/m));if(dd<bd){bd=dd;best=i}});state.g=best }
+    render(q);
+  }catch(err){$("out").innerHTML=`<p class="status">Xəta baş verdi: ${esc(err.message)}. Bir az sonra yenidən yoxla.</p>`}
+  finally{$("go").disabled=false}
+}
+function render(q){
+  const {groups,term}=state;
+  if(!groups.length){$("out").innerHTML=`<p class="status">“${esc(q)}” üzrə qiymətli elan tapılmadı. Daha ümumi ad yaz (məs. marka yox, məhsul adı).</p>`;return}
+  const g=groups[state.g];const prices=g.map(x=>+x.price).sort((a,b)=>a-b);
+  const mn=prices[0],mx=prices.at(-1),med=q2(prices,.5),p25=q2(prices,.25),p75=q2(prices,.75);
+  const offer=parseFloat($("offer").value);const has=!isNaN(offer)&&offer>0;
+  let v=`<div class="verdict v-mid">Təchizatçının qiymətini yaz — bahadır, yoxsa yox, deyim.</div>`;
+  if(has){const diff=(offer-med)/med*100;
+    if(offer<=p75&&offer>=p25)v=`<div class="verdict v-good">Normal qiymətdir<small>Bazarın orta diapazonundadır: ${fmt(p25)} – ${fmt(p75)}.</small></div>`;
+    else if(offer<p25)v=`<div class="verdict v-good">Bazardan ucuzdur — ortadan ${Math.abs(diff).toFixed(0)}% aşağı<small>Marka, çəki (40/50 kq) və çatdırılma şərtini ayrıca dəqiqləşdir.</small></div>`;
+    else v=`<div class="verdict v-bad">Orta bazar qiymətindən ${diff.toFixed(0)}% bahadır<small>Orta qiymət ${fmt(med)}, ən ucuz ${fmt(mn)}. Hər vahiddə təxminən ${fmt(offer-med)} artıq.</small></div>`}
+  const lo=Math.min(mn,has?offer:mn),hi=Math.max(mx,has?offer:mx),pad=(hi-lo)*.06||1;
+  const X=x=>((x-(lo-pad))/((hi+pad)-(lo-pad))*100).toFixed(2)+"%";
+  const chips=groups.length>1?`<div class="groups">${groups.map((gg,i)=>`<button class="chip" data-g="${i}" aria-pressed="${i===state.g}">${fmt(gg[0].price)} – ${fmt(gg.at(-1).price)} · ${gg.length} elan</button>`).join("")}</div><div class="hint">Qiymətlər fərqli vahiddədir (kq / ton / kisə). Təchizatçının vahidinə uyğun qrupu seç.</div>`:"";
+  const rows=[...g].sort((a,b)=>a.price-b.price).map((it,i)=>{
+    const s=it.sources||{};const days=Math.round((Date.now()-new Date(it.last_seen))/864e5);
+    return `<tr class="${i===0?"best":""}"><td><b>${esc(it.title)}</b><div class="desc">${esc(it.seller)}</div></td>
+      <td class="p">${fmt(it.price)}${it.pack_kg?`<div class="src">${it.pack_kg} kq · ${fmt(it.price/it.pack_kg)}/kq</div>`:""}</td>
+      <td><span class="src">${esc(s.name)}<br>${days===0?"bu gün":days+" gün əvvəl"}</span></td>
+      <td>${it.phone?`<a class="act call" href="tel:${it.phone}">${it.phone.replace(/(\+994)(\d\d)(\d{3})(\d\d)(\d\d)/,"$1 $2 $3 $4 $5")}</a><br>`:""}<a class="act open" href="${esc(it.url)}" target="_blank" rel="noopener">Elana keç</a></td></tr>`}).join("");
+  $("out").innerHTML=`<p class="recog">Axtarış: “${esc(q)}” → <b>${esc(term)}</b> · ${state.items.length} elan tapıldı</p>
+   ${chips}${v}
+   <div class="stats"><div class="stat"><b>${fmt(mn)}</b><span>Ən ucuz</span></div><div class="stat"><b>${fmt(med)}</b><span>Orta bazar</span></div><div class="stat"><b>${fmt(p25)}–${fmt(p75)}</b><span>Normal diapazon</span></div><div class="stat"><b>${fmt(mx)}</b><span>Ən baha</span></div></div>
+   <div class="ruler" role="img" aria-label="Qiymətlərin paylanması"><div class="tape"></div>
+     <div class="band" style="left:${X(p25)};width:calc(${X(p75)} - ${X(p25)})"></div>
+     ${prices.map(p=>`<div class="tick" style="left:${X(p)}"></div>`).join("")}
+     ${has?`<div class="me" style="left:${X(offer)}">Təchizatçı ${fmt(offer)}</div>`:""}
+     <div class="rl" style="left:0">${fmt(lo)}</div><div class="rl" style="right:0">${fmt(hi)}</div></div>
+   <div class="tbl"><table><thead><tr><th>Elan</th><th>Qiymət</th><th>Mənbə</th><th>Əlaqə</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{state.g=+b.dataset.g;render(q)});
+}
+$("f").addEventListener("submit",search);
+$("offer").addEventListener("input",()=>state.groups.length&&render($("q").value.trim()));
+</script>
+</body>
+</html>
