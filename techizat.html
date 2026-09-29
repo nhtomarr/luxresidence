@@ -65,6 +65,15 @@ a.call{background:linear-gradient(180deg,#c9603c,#ab4424);color:#fff;box-shadow:
 .trendc svg{width:100%;height:150px;display:block;margin-top:6px}.trh{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.9rem}.trh span{font-weight:700;color:var(--muted)}.trh .up{color:var(--bad)}.trh .dn{color:var(--good)}
 .trl{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted)}
 .chip b{font-weight:800}
+
+.tabs{display:flex;gap:6px;overflow-x:auto;margin:18px 0 -6px;scrollbar-width:none}.tabs button{font:inherit;font-weight:600;font-size:.9rem;padding:9px 16px;border-radius:99px;border:1px solid rgba(255,255,255,.85);background:rgba(255,255,255,.45);color:#5e4e44;cursor:pointer;white-space:nowrap}
+.tabs button.on{background:#fff;color:var(--ink);box-shadow:inset 0 1px 1px #fff,0 8px 18px -10px rgba(90,45,25,.5)}
+.ph{font-size:1.2rem;margin:0 4px 6px;letter-spacing:-.02em}.ph2{font-size:1rem;margin:22px 4px 8px}
+.f2{grid-template-columns:1fr 1fr}.upl{margin:12px 0 8px}.drop{display:block;border:1.5px dashed rgba(186,77,44,.4);border-radius:16px;padding:16px;text-align:center;cursor:pointer;background:rgba(255,255,255,.5);font-weight:600;color:#7a4a35;margin:0}
+.drop input{display:block;margin:0 auto 6px;font-size:.85rem}
+textarea{width:100%;font:inherit;font-size:15px;padding:12px 14px;border:1px solid rgba(255,255,255,.9);border-radius:16px;background:rgba(255,255,255,.72);resize:vertical}
+.go.wide{width:100%;margin-top:10px}.vchip{cursor:default;font-size:.78rem;padding:4px 10px}.vchip.v-good{background:rgba(214,241,225,.9);color:var(--good)}.vchip.v-bad{background:rgba(253,226,220,.95);color:var(--bad)}.vchip.v-mid{background:rgba(255,255,255,.7)}
+@media(max-width:640px){.f2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -73,7 +82,8 @@ a.call{background:linear-gradient(180deg,#c9603c,#ab4424);color:#fff;box-shadow:
   <h1>Təchizatçı düz qiymət deyir?</h1>
   <p class="sub">Məhsulu istənilən dildə yaz, təchizatçının qiymətini daxil et. Sistem Azərbaycandakı satış saytlarından real qiymətləri yığıb müqayisə edir.</p>
 
-  <section class="panel">
+  <div class="tabs"><button class="on" data-t="axtar" onclick="showTab('axtar')">🔎 Qiymət yoxla</button><button data-t="teklif" onclick="showTab('teklif')">📄 Təklif / smeta</button><button data-t="siyahi" onclick="showTab('siyahi')">📋 Qiymət siyahıları</button><button data-t="menbe" onclick="showTab('menbe')">🩺 Mənbələr</button></div>
+  <section class="panel" data-pane="axtar">
     <form class="fields" id="f">
       <div><label for="q">Məhsul</label><input id="q" type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="məs. sement, mişar daşı, alçıpan, armatura…" required></div>
       <div><label for="offer">Təchizatçı qiyməti, ₼</label><input id="offer" type="number" inputmode="decimal" min="0" step="0.01" placeholder="məs. 9.20"></div>
@@ -81,6 +91,31 @@ a.call{background:linear-gradient(180deg,#c9603c,#ab4424);color:#fff;box-shadow:
     </form>
     <div class="hint">Yeni məhsul ilk dəfə axtarılanda saytlar canlı yoxlanılır (10–20 saniyə). Sonrakı axtarışlar anındır, məlumat hər 6 saatdan bir təzələnir.</div>
     <div id="out"></div>
+  </section>
+  <section class="panel" data-pane="teklif" hidden>
+    <h2 class="ph">Təchizatçı təklifini yoxla</h2>
+    <p class="hint" style="margin:0 4px 12px">Təklifin <b>PDF</b>-i, <b>şəkli</b> (WhatsApp ekran görüntüsü də olar), <b>Excel</b> faylı və ya sadəcə mətni. Sistem hər mövqeni bazarla müqayisə edir. Qiymətsiz siyahı yükləsəniz, <b>smeta</b> hazırlanır: bazar qiyməti ilə cəmi xərc.</p>
+    <div class="fields f2"><div><label>Sənəd adı</label><input id="tkTitle" placeholder="məs. Blok 3 — oktyabr təklifi"></div><div><label>Təchizatçı</label><input id="tkSup" placeholder="məs. X İnşaat MMC"></div></div>
+    <div class="upl"><label class="drop"><input type="file" id="tkFile" accept=".pdf,image/*,.xlsx,.xls,.csv,.txt"><span>📎 Fayl seçin: PDF, şəkil, Excel</span></label></div>
+    <textarea id="tkText" rows="4" placeholder="…və ya mətni bura yapışdırın: məs. &quot;Norm sement 50 kq — 200 kisə × 9,20 AZN&quot;"></textarea>
+    <button class="go wide" id="tkGo" onclick="checkOffer()">Yoxla</button>
+    <div id="tkOut"></div>
+    <h3 class="ph2">Yoxlanmış təkliflər</h3><div id="tkHist"></div>
+  </section>
+  <section class="panel" data-pane="siyahi" hidden>
+    <h2 class="ph">Distribyutor qiymət siyahıları</h2>
+    <p class="hint" style="margin:0 4px 12px">Distribyutordan aldığınız qiymət siyahısını (PDF, şəkil, Excel) yükləyin. Qiymətlər 90 gün ərzində bütün axtarışlarda və təklif yoxlamasında <b>"Siyahı: …"</b> mənbəyi ilə görünəcək.</p>
+    <div class="fields f2"><div><label>Distribyutor</label><input id="slName" placeholder="məs. Knauf Bakı rəsmi distribyutor"></div><div><label>Telefon (istəyə görə)</label><input id="slPhone" placeholder="+994…"></div></div>
+    <div class="upl"><label class="drop"><input type="file" id="slFile" accept=".pdf,image/*,.xlsx,.xls,.csv,.txt"><span>📎 Siyahı faylı</span></label></div>
+    <textarea id="slText" rows="3" placeholder="…və ya mətni yapışdırın"></textarea>
+    <button class="go wide" id="slGo" onclick="uploadList()">Yüklə</button>
+    <div id="slOut"></div>
+    <h3 class="ph2">Yüklənmiş siyahılar</h3><div id="slList"></div>
+  </section>
+  <section class="panel" data-pane="menbe" hidden>
+    <h2 class="ph">Mənbələrin sağlamlığı</h2>
+    <p class="hint" style="margin:0 4px 12px">Hər saytın son yoxlanma vaxtı və nəticəsi. "Nəticə yoxdur" və ya "Yoxlanmır" görünən mənbənin saytı dəyişmiş ola bilər.</p>
+    <div id="mnOut"></div>
   </section>
   <p class="foot">Mənbələr: Tap.az, Lalafo.az, Qiymetleri.az, İnsaat.az, Tezbazar.az, Maqazin.az, Megamart.az, Omid.az, Boya.az, Kafel.az, Tvim.az, Elem.az, Orbi.az, Birmarket.az. “1 ₼” yazılmış elanlar (qiymət razılaşma ilə) nəzərə alınmır.</p>
 </div>
@@ -175,6 +210,58 @@ document.querySelector(".wrap").style.visibility="hidden";
 luxAuth({perm:"techizat",title:"Təchizat — qiymət yoxlama",noAdminLink:true,onReady:function(){document.querySelector(".wrap").style.visibility="";}});
 $("f").addEventListener("submit",search);
 $("offer").addEventListener("input",()=>state.groups.length&&render($("q").value.trim()));
+</script>
+<script>
+/* ---------- Bölmələr: Qiymət yoxla | Təklif yoxla | Siyahılar | Mənbələr ---------- */
+const TF="https://syyybdouqdahsomfkemi.supabase.co/functions/v1/teklif";
+async function tcall(body){const r=await fetch(TF,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+KEY,"apikey":KEY},body:JSON.stringify(body)});const d=await r.json().catch(()=>({error:"Server cavab vermədi"}));if(d.error)throw new Error(d.error);return d;}
+function showTab(t){document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));document.querySelectorAll("[data-pane]").forEach(p=>p.hidden=p.dataset.pane!==t);if(t==="teklif")loadHistory();if(t==="siyahi")loadLists();if(t==="menbe")loadSources();}
+// fayl → {file,media_type} və ya {text} (Excel/CSV mətnə çevrilir)
+async function readFile(f){
+  if(!f)return null;
+  if(/\.(xlsx|xls|csv)$/i.test(f.name)){
+    if(!window.XLSX){await new Promise((ok,no)=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";s.onload=ok;s.onerror=no;document.head.appendChild(s);});}
+    const wb=XLSX.read(await f.arrayBuffer());return {text:wb.SheetNames.map(n=>XLSX.utils.sheet_to_csv(wb.Sheets[n])).join("\n").slice(0,60000)};
+  }
+  if(/\.(txt)$/i.test(f.name))return {text:(await f.text()).slice(0,60000)};
+  if(f.size>9e6)throw new Error("Fayl çox böyükdür (maks. 9 MB)");
+  const b64=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(",")[1]);r.onerror=no;r.readAsDataURL(f);});
+  return {file:b64,media_type:f.type||(/\.pdf$/i.test(f.name)?"application/pdf":"image/jpeg")};
+}
+const VL={ucuz:["Ucuz","v-good"],normal:["Normal","v-good"],biraz:["Biraz baha","v-mid"],baha:["Baha","v-bad"],smeta:["Smeta","v-mid"],az:["Məlumat az","v-mid"]};
+function verdictOf(l){const m=l.market||{};if(!m.med)return l.price?"az":"az";if(!l.price)return "smeta";if(l.price<=m.p25)return "ucuz";const d=(l.price-m.med)/m.med*100;if(d<=10)return "normal";if(l.price<=m.p75)return "biraz";return "baha";}
+function renderOffer(o){
+  let over=0,tOffer=0,tMarket=0;const rows=o.lines.map((l,i)=>{const m=l.market||{},q=l.qty||1,v=verdictOf(l),d=m.med&&l.price?(l.price-m.med)/m.med*100:null;
+    if(l.price)tOffer+=l.price*q;if(m.med)tMarket+=m.med*q;if((v==="baha"||v==="biraz")&&m.med)over+=(l.price-m.med)*q;
+    return `<tr><td><b>${esc(l.name)}</b><div class="src">${l.qty?l.qty+" "+esc(l.unit||""):""}${l.pack?" · "+l.pack+(l.unit==="litr"?" L":" kq"):""} · axtarış: ${esc(m.term||l.search)}</div></td>
+     <td class="p">${l.price?fmt(l.price):"—"}</td><td>${m.med?`<b>${fmt(m.med)}</b><div class="src">${fmt(m.min)} – ${fmt(m.max)} · ${m.n} elan</div>`:'<span class="src">tapılmadı</span>'}</td>
+     <td>${d!=null?`<b style="color:${d>10?"var(--bad)":d<-5?"var(--good)":"inherit"}">${d>0?"+":""}${d.toFixed(0)}%</b>`:"—"}</td><td><span class="chip vchip ${VL[v][1]}">${VL[v][0]}</span>${m.best&&m.best.url&&!/^list:/.test(m.best.url)?`<div><a class="src" href="${esc(m.best.url)}" target="_blank" rel="noopener">ən ucuz: ${esc(m.best.src||"")}</a></div>`:m.best?`<div class="src">ən ucuz: ${esc(m.best.src||"")}</div>`:""}</td></tr>`;}).join("");
+  const isSmeta=!o.lines.some(l=>l.price);
+  $("tkOut").innerHTML=`<div class="verdict ${isSmeta?"v-mid":over>0?"v-bad":"v-good"}">${isSmeta?`Smeta: bazar qiyməti ilə təxmini cəmi <b>${fmt(tMarket)}</b>`:over>0?`Bazardan artıq ödəniş: <b>${fmt(over)}</b>`:"Təklif bazar səviyyəsindədir"}<small>${o.lines.length} mövqe${!isSmeta?` · Təklif cəmi ${fmt(tOffer)} · Bazar ortası ilə ${fmt(tMarket)}`:""}${o.supplier?" · "+esc(o.supplier):""}</small></div>
+   <div class="stats"><div class="stat"><b>${o.lines.filter(l=>verdictOf(l)==="baha").length}</b><span>Baha</span></div><div class="stat"><b>${o.lines.filter(l=>verdictOf(l)==="biraz").length}</b><span>Biraz baha</span></div><div class="stat"><b>${o.lines.filter(l=>["normal","ucuz"].includes(verdictOf(l))).length}</b><span>Normal / ucuz</span></div><div class="stat"><b>${o.lines.filter(l=>verdictOf(l)==="az").length}</b><span>Məlumat az</span></div></div>
+   <div class="tbl"><table><thead><tr><th>Mövqe</th><th>Təklif</th><th>Bazar ortası</th><th>Fərq</th><th>Hökm</th></tr></thead><tbody>${rows}</tbody></table></div>
+   <div class="hint">Hökm: ucuz — bazarın ucuz 25%-i; normal — ortadan ≤10% yuxarı; biraz baha — bazarın yuxarı hissəsi; baha — bazarın 75%-indən bahalı. Vahidə (kisə/ton/m²) diqqət edin.</div>`;
+}
+async function checkOffer(){
+  const f=$("tkFile").files[0],txt=$("tkText").value.trim();if(!f&&!txt)return alert("Fayl seçin və ya mətni yapışdırın");
+  const b=$("tkGo");b.disabled=true;$("tkOut").innerHTML=`<p class="status"><span class="spin"></span>Sənəd oxunur və hər mövqe bazarda yoxlanılır… (30–90 saniyə)</p>`;
+  try{const body=f?await readFile(f):{text:txt};const o=await tcall({action:"check",...body,supplier:$("tkSup").value.trim(),title:$("tkTitle").value.trim()||(f?f.name:"")});renderOffer(o);loadHistory();}
+  catch(e){$("tkOut").innerHTML=`<p class="status">Xəta: ${esc(e.message)}</p>`}finally{b.disabled=false}
+}
+async function loadHistory(){try{const d=await tcall({action:"history"});$("tkHist").innerHTML=d.offers.length?`<div class="tbl"><table><thead><tr><th>Tarix</th><th>Sənəd</th><th>Təchizatçı</th><th>Mövqe</th><th>Artıq</th><th></th></tr></thead><tbody>${d.offers.map(o=>`<tr><td class="src">${new Date(o.created_at).toLocaleString("az-AZ",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}</td><td>${esc(o.title||(o.mode==="smeta"?"Smeta":"Təklif"))}</td><td>${esc(o.supplier||"—")}</td><td>${o.n_lines}</td><td class="p" style="color:${+o.overpay>0?"var(--bad)":"inherit"}">${o.mode==="smeta"?"smeta":fmt(o.overpay||0)}</td><td><a class="act open" href="#" onclick="openOffer(${o.id});return false">Aç</a></td></tr>`).join("")}</tbody></table></div>`:'<p class="hint">Hələ yoxlanmış təklif yoxdur.</p>';}catch(e){}}
+async function openOffer(id){try{const o=await tcall({action:"offer",id});renderOffer(o);scrollTo({top:$("tkOut").offsetTop-20,behavior:"smooth"});}catch(e){alert(e.message)}}
+async function uploadList(){
+  const f=$("slFile").files[0],txt=$("slText").value.trim(),name=$("slName").value.trim();if(!name)return alert("Distribyutorun adını yazın");if(!f&&!txt)return alert("Fayl seçin və ya mətni yapışdırın");
+  const b=$("slGo");b.disabled=true;$("slOut").innerHTML=`<p class="status"><span class="spin"></span>Siyahı oxunur… (20–60 saniyə)</p>`;
+  try{const body=f?await readFile(f):{text:txt};const d=await tcall({action:"list_upload",...body,name,phone:$("slPhone").value.trim()||null});$("slOut").innerHTML=`<div class="verdict v-good">${d.count} məhsul bazaya əlavə olundu<small>${d.sample.map(s=>esc(s.name)+" — "+fmt(s.price)).join(" · ")}</small></div>`;$("slFile").value="";$("slText").value="";loadLists();}
+  catch(e){$("slOut").innerHTML=`<p class="status">Xəta: ${esc(e.message)}</p>`}finally{b.disabled=false}
+}
+async function loadLists(){try{const d=await tcall({action:"lists"});$("slList").innerHTML=d.lists.length?`<div class="tbl"><table><thead><tr><th>Siyahı</th><th>Yüklənib</th><th>Məhsul</th><th></th></tr></thead><tbody>${d.lists.map(l=>`<tr><td><b>${esc(l.name.replace(/^Siyahı: /,""))}</b></td><td class="src">${new Date(l.last_run_at).toLocaleDateString("az-AZ")}</td><td>${esc((l.last_status||"").replace("ok:",""))}</td><td><a class="act open" href="#" onclick="delList(${l.id});return false">Sil</a></td></tr>`).join("")}</tbody></table></div>`:'<p class="hint">Hələ siyahı yüklənməyib.</p>';}catch(e){}}
+async function delList(id){if(!confirm("Siyahı və onun bütün qiymətləri silinsin?"))return;await tcall({action:"list_delete",id});loadLists();}
+async function loadSources(){$("mnOut").innerHTML=`<p class="status"><span class="spin"></span>Yüklənir…</p>`;try{const d=await tcall({action:"sources"});const now=Date.now();
+  $("mnOut").innerHTML=`<div class="tbl"><table><thead><tr><th>Mənbə</th><th>Növ</th><th>Son yoxlama</th><th>Son nəticə</th><th>Elan (14 gün)</th><th>Vəziyyət</th></tr></thead><tbody>${d.sources.map(s=>{const age=s.last_run_at?(now-new Date(s.last_run_at))/36e5:1e9,last=+String(s.last_status||"").replace("ok:","")||0;
+   const st=s.parser==="ai"?["Ehtiyat","v-mid"]:!s.active?["Söndürülüb","v-mid"]:age>48?["Yoxlanmır","v-bad"]:(s.listings===0?["Nəticə yoxdur","v-bad"]:["İşləyir","v-good"]);
+   return `<tr><td><b>${esc(s.name)}</b></td><td class="src">${esc(s.kind||"")}${s.parser==="bee"?" · brauzer":""}</td><td class="src">${s.last_run_at?new Date(s.last_run_at).toLocaleString("az-AZ",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"—"}</td><td>${last}</td><td>${s.listings}</td><td><span class="chip vchip ${st[1]}">${st[0]}</span></td></tr>`}).join("")}</tbody></table></div>`;}catch(e){$("mnOut").innerHTML=`<p class="status">Xəta: ${esc(e.message)}</p>`}}
 </script>
 </body>
 </html>
