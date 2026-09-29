@@ -259,6 +259,7 @@ img.eava{border-radius:50%;display:inline-block;background:#e2e8f0}
 }
 nav.tabs,#tabs{scroll-behavior:smooth}
 @media(max-width:900px){#tabs{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}}
+.pwban{display:flex;align-items:center;gap:14px;cursor:pointer;background:#fef2f2;border-color:#fecaca}.pwban>span{font-size:26px}.pwban div{flex:1}.pwban .go{font-size:24px;color:var(--mut)}.pwban b{display:block}
 </style>
 </head>
 <body>
@@ -268,7 +269,7 @@ nav.tabs,#tabs{scroll-behavior:smooth}
  <main>
   <!-- BU GÜN -->
   <section class="view" id="v-today">
-   <div class="hello-e" id="tHello"></div><div class="qa" id="tQuick"></div>
+   <div class="hello-e" id="tHello"></div><div id="tPw"></div><div class="qa" id="tQuick"></div>
    <div class="card checkcard"><div class="row" style="justify-content:space-between;align-items:flex-start">
     <div><div class="muted small" id="tDate"></div><div class="clock" id="tClock">--:--</div><div id="tStatus" class="muted"></div></div>
     <div class="row" id="tBtns"></div></div>
@@ -450,7 +451,7 @@ function loadAll(){return Promise.all([
 
 /* ---------- BU GÜN / check-in ---------- */
 var MYDAY=null;
-function renderToday(){renderOwnerTasksForEmp();renderHomeExtras();renderPushCards();$('noEmp').style.display=(EMP||MGR)?'none':'';var ck=document.querySelector('.checkcard');if(ck)ck.style.display=(!EMP&&MGR)?'none':'';renderTgCard();renderHrBoxes();renderTodayAnn();
+function renderToday(){renderOwnerTasksForEmp();renderHomeExtras();renderPwBanner();renderPushCards();$('noEmp').style.display=(EMP||MGR)?'none':'';var ck=document.querySelector('.checkcard');if(ck)ck.style.display=(!EMP&&MGR)?'none':'';renderTgCard();renderHrBoxes();renderTodayAnn();
  var my=TASKS.filter(function(t){return EMP&&t.assignee_id===EMP.id&&t.status!=='done'&&!t.from_owner;}).sort(function(a,b){return String(a.due||'9')<String(b.due||'9')?-1:1;});
  $('tMyTasks').innerHTML=my.length?my.map(taskRow).join(''):'<div class="empty">Açıq tapşırığınız yoxdur 🎉</div>';
  if(!EMP){$('tStatus').textContent='';$('tBtns').innerHTML='';$('tStats').innerHTML='';return;}
@@ -985,6 +986,24 @@ function uploadPhoto(f){if(!f||!EMP)return;if(!/^image\//.test(f.type))return to
  img.onerror=function(){toast('Şəkil oxunmadı');};img.src=url;}
 function removePhoto(){if(!confirm('Profil şəkli silinsin?'))return;var old=EMP.photo;sb.rpc('office_set_photo',{p_path:null}).then(function(r){if(r.error)throw r.error;EMP.photo=null;var me=EMPS.find(function(x){return x.id===EMP.id;});if(me)me.photo=null;if(old)sb.storage.from('avatars').remove([old]);renderMe();}).catch(err);}
 
+/* ---------- Şifrəmi dəyiş ---------- */
+function pwCard(){return '<div class="card" id="pwCard"><h3>🔒 Şifrəmi dəyiş</h3>'+(EMP&&!EMP.pw_changed?'<p class="note" style="margin-bottom:12px">Hazırda ilkin (ümumi) şifrə ilə daxil olursunuz. Təhlükəsizlik üçün özünüzə yeni şifrə təyin edin.</p>':'<p class="muted small" style="margin-bottom:12px">Şifrənizi istənilən vaxt dəyişə bilərsiniz.</p>')+
+ '<div class="field"><label>Cari şifrə</label><input id="pwCur" type="password" autocomplete="current-password"></div>'+
+ '<div class="field"><label>Yeni şifrə (ən az 8 simvol)</label><input id="pwNew" type="password" autocomplete="new-password" oninput="pwHint()"></div>'+
+ '<div class="field"><label>Yeni şifrə təkrar</label><input id="pwRep" type="password" autocomplete="new-password" oninput="pwHint()"></div>'+
+ '<div class="row sp"><label class="row small" style="gap:6px"><input type="checkbox" onchange="[\'pwCur\',\'pwNew\',\'pwRep\'].forEach(function(i){$(i).type=this.checked?\'text\':\'password\';},this)"> Şifrəni göstər</label><span class="small" id="pwHint"></span></div>'+
+ '<button class="btn" style="width:100%;margin-top:12px" onclick="changePw()">Şifrəni dəyiş</button></div>';}
+function pwHint(){var n=$('pwNew').value,r=$('pwRep').value,h=$('pwHint');if(!h)return;var sc=(n.length>=8)+(/[A-Z]/.test(n)||/[ƏÖÜÇŞĞİ]/.test(n))+/\d/.test(n)+/[^A-Za-z0-9]/.test(n);
+ h.innerHTML=!n?'':r&&r!==n?'<span style="color:var(--bad)">Təkrar uyğun deyil</span>':n.length<8?'<span style="color:var(--bad)">Çox qısadır</span>':sc>=3?'<span style="color:var(--ok)">Güclü ✓</span>':'<span style="color:var(--warn)">Orta — rəqəm və ya simvol əlavə edin</span>';}
+function changePw(){var c=$('pwCur').value,n=$('pwNew').value,r=$('pwRep').value;
+ if(!c)return toast('Cari şifrəni yazın');if(n.length<8)return toast('Yeni şifrə ən az 8 simvol olmalıdır');if(n!==r)return toast('Yeni şifrə təkrarı uyğun deyil');if(n===c)return toast('Yeni şifrə köhnə ilə eyni ola bilməz');
+ if(/^(\d)\1+$/.test(n)||n==='12345678'||n==='123456789')return toast('Bu şifrə çox sadədir, başqasını seçin');
+ toast('Yoxlanılır…');
+ sb.auth.signInWithPassword({email:ME.email,password:c}).then(function(r1){if(r1.error)throw new Error('Cari şifrə səhvdir');return sb.auth.updateUser({password:n});})
+ .then(function(r2){if(r2.error)throw r2.error;return sb.rpc('office_pw_changed');}).then(function(){if(EMP)EMP.pw_changed=true;['pwCur','pwNew','pwRep'].forEach(function(i){$(i).value='';});toast('Şifrə dəyişdirildi ✅ Növbəti girişdə yeni şifrəni istifadə edin');renderMe();renderPwBanner();})
+ .catch(function(e){toast((e&&e.message)||'Şifrə dəyişdirilmədi');});}
+function renderPwBanner(){var b=$('tPw');if(!b)return;b.innerHTML=EMP&&!EMP.pw_changed?'<div class="card pwban" onclick="show(\'me\');setTimeout(function(){var c=$(\'pwCard\');if(c){c.scrollIntoView({behavior:\'smooth\',block:\'start\'});$(\'pwCur\').focus();}},400)"><span>🔒</span><div><b>Şifrənizi dəyişin</b><div class="small">Hazırda ümumi ilkin şifrə ilə daxil olursunuz. 1 dəqiqəlik işdir.</div></div><b class="go">›</b></div>':'';}
+
 /* ---------- Profilim ---------- */
 function renderMe(){var b=$('meBody');if(!EMP){b.innerHTML='<div class="card empty">Hesabınız işçi kartına bağlanmayıb.</div>';return;}var e=EMP,d=deptOf(e),mg=e.manager_id?EMPS.find(function(x){return x.id===e.manager_id;}):null,yr=+today().slice(0,4),used=leaveUsed(e.id,yr),left=(e.leave_days||21)-used;
  loadKudos().then(function(){var rec=KUDOS.filter(function(k){return k.to_emp===e.id;}).length;
@@ -992,7 +1011,7 @@ function renderMe(){var b=$('meBody');if(!EMP){b.innerHTML='<div class="card emp
   '<div class="grid g4" style="margin-bottom:14px"><div class="kpi"><b>'+left+'</b><span>məzuniyyət günü qalıb ('+yr+')</span></div><div class="kpi"><b>'+used+'</b><span>gün istifadə olunub</span></div><div class="kpi"><b>'+String(e.work_start||'09:00').slice(0,5)+'–'+String(e.work_end||'18:00').slice(0,5)+'</b><span>iş saatım</span></div><div class="kpi"><b id="meLate">…</b><span>bu ay gecikmə</span></div></div>'+
   '<div class="grid g2" style="align-items:start"><div class="card"><div class="row sp"><h3 style="margin:0">Davamiyyətim · '+mLabel(today().slice(0,7))+'</h3><button class="btn ghost sm" onclick="openLeave(\'duzelis\')">Düzəliş istə</button></div><div id="meCal" style="margin-top:12px"></div><p class="muted small" style="margin-top:10px">Çıxışı qeyd etməyi unutmusunuzsa və ya səhv qeyd varsa, “Düzəliş istə” ilə HR-a bildirin.</p></div>'+
   '<div class="card"><h3>Əlaqə məlumatlarım</h3><div class="field"><label>Telefon</label><input id="meP" value="'+esc(e.phone||'')+'"></div><div class="field"><label>Təcili əlaqə şəxsi</label><input id="meE" value="'+esc(e.emergency_contact||'')+'" placeholder="məs: Anam — 050 123 45 67"></div><div class="field"><label>Haqqımda (komanda görür)</label><textarea id="meA" placeholder="məs: Satış üzrə 5 il təcrübə">'+esc(e.about||'')+'</textarea></div><button class="btn" onclick="saveMe()">Yadda saxla</button>'+
-  '<div class="pgrid" style="margin-top:16px">'+(e.email?'<div><span>Giriş (email)</span><b style="font-size:13px">'+esc(e.email)+'</b></div>':'')+(e.birthday?'<div><span>Ad günü</span><b>'+(+e.birthday.slice(8))+' '+AZM[+e.birthday.slice(5,7)-1]+'</b></div>':'')+(e.hire_date?'<div><span>İşə başlama</span><b>'+dmyS(e.hire_date)+'</b></div>':'')+'</div></div></div>';
+  '<div class="pgrid" style="margin-top:16px">'+(e.email?'<div><span>Giriş (email)</span><b style="font-size:13px">'+esc(e.email)+'</b></div>':'')+(e.birthday?'<div><span>Ad günü</span><b>'+(+e.birthday.slice(8))+' '+AZM[+e.birthday.slice(5,7)-1]+'</b></div>':'')+(e.hire_date?'<div><span>İşə başlama</span><b>'+dmyS(e.hire_date)+'</b></div>':'')+'</div></div></div>'+pwCard();
  meCalendar();}).catch(err);}
 function monthEnd(m){var y=+m.slice(0,4),mo=+m.slice(5,7);return m+'-'+String(new Date(Date.UTC(y,mo,0)).getUTCDate()).padStart(2,'0');}
 function dmyS(d){return d?d.slice(8)+'.'+d.slice(5,7)+'.'+d.slice(0,4):'';}
