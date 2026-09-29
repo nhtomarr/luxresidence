@@ -80,6 +80,7 @@ button{font-family:inherit;cursor:pointer}.muted{color:var(--muted)}
 .ucell.glass .ar{color:var(--muted);opacity:1}
 .legend i.gl{background:rgba(255,255,255,.55);border:1.5px solid rgba(186,77,44,.5)}
 .gbar{flex:1;min-width:200px;height:clamp(40px,4.4vw,48px);border-radius:8px;background:#9a9a9a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;letter-spacing:.04em;box-shadow:0 2px 6px -3px rgba(0,0,0,.35)}
+.welcome{position:fixed;left:50%;top:18px;transform:translate(-50%,-30px);opacity:0;z-index:9999;background:#fff;border:1px solid #e8dfd6;border-left:4px solid #ba4d2c;border-radius:14px;padding:14px 20px;box-shadow:0 18px 40px -18px rgba(37,23,18,.45);display:flex;flex-direction:column;gap:2px;transition:.45s cubic-bezier(.2,.8,.2,1);cursor:pointer;max-width:92vw}.welcome.on{opacity:1;transform:translate(-50%,0)}.welcome b{font-size:16px;color:#251712}.welcome span{font-size:13px;color:#7a6a5e}
 </style><script src="/assets/lux-auth.js?v=1790340647"></script>
 </head><body>
 <div id="gate"><div class="gcard"><div class="logo">LUX Residence</div><div class="sub">Satış Lövhəsi</div>
@@ -113,7 +114,11 @@ function tryGate(){if((document.getElementById('gpass').value||'').trim()===gp()
 document.getElementById('gbtn').addEventListener('click',tryGate);
 document.getElementById('gpass').addEventListener('keydown',function(e){if(e.key==='Enter')tryGate();});
 document.getElementById('gate').style.display='none';SALES={};COMM={};GAR={};
-luxAuth({perm:'sales',title:'Satış Lövhəsi',onReady:function(sb,me,tok){enter();_loadSales(tok);}});
+luxAuth({perm:'sales',title:'Satış Lövhəsi',onReady:function(sb,me,tok){enter();_loadSales(tok);greet(me);}});
+function greet(me){var n=String((me&&me.full_name)||'').trim();if(!n||/admin/i.test(n))n='';var h=+new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Baku',hour:'2-digit',hour12:false}).format(new Date());
+ var g=h>=5&&h<12?'Sabahınız xeyir':h<17?'Günortanız xeyir':'Axşamınız xeyir';var t=document.querySelector('#app .top .sub');if(t&&n)t.innerHTML='Satış Lövhəsi · <b>'+n.replace(/[<>&]/g,'')+'</b>';
+ var w=document.createElement('div');w.className='welcome';w.innerHTML='<b>'+g+(n?', '+n.replace(/[<>&]/g,''):'')+'! 👋</b><span>Satış lövhəsinə xoş gəlmisiniz</span>';document.body.appendChild(w);
+ requestAnimationFrame(function(){w.classList.add('on');});setTimeout(function(){w.classList.remove('on');setTimeout(function(){w.remove();},500);},4200);w.onclick=function(){w.classList.remove('on');};}
 function renderTabs(){var keys=Object.keys(SALES);var tb=document.getElementById('binatabs');if(!keys.length){tb.innerHTML='';return;}
  var ord=['Bina 1','Bina 2','Bina 3','Bina 4','Bina 5','Bina 6','Bina 9','Bina 10','Bina 11'];keys.sort(function(a,b){var i=ord.indexOf(a),j=ord.indexOf(b);return (i<0?99:i)-(j<0?99:j);});
  var hasC=Object.keys(COMM||{}).length>0,hasG=Object.keys(GAR||{}).length>0;if(!curB||(keys.indexOf(curB)<0&&!(curB==='__com'&&hasC)&&!(curB==='__gar'&&hasG)))curB=keys[0];
