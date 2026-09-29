@@ -6,6 +6,17 @@ const OFFICE_HOSTS = new Set([OFFICE_PRIMARY]);
 const OFFICE_LIVE = true;
 const OFFICE_MANIFEST = JSON.stringify({ name: 'Baş Ofis', short_name: 'Ofis', start_url: '/', scope: '/', display: 'standalone', background_color: '#081634', theme_color: '#081634', lang: 'az',
   icons: [{ src: '/assets/ofis/icon-192.png?v=2', sizes: '192x192', type: 'image/png' }, { src: '/assets/ofis/icon-512.png?v=2', sizes: '512x512', type: 'image/png' }, { src: '/assets/ofis/icon-maskable.png?v=2', sizes: '512x512', type: 'image/png', purpose: 'maskable' }] });
+async function techizatHost(ctx, url) {
+  const p = url.pathname;
+  if (p === '/' || p === '/index.html' || p === '/techizat' || p === '/techizat.html') {
+    const r = await ctx.env.ASSETS.fetch(new Request(new URL('/techizat', url).toString(), ctx.request));
+    const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow');
+    return new Response(r.body, { status: r.status, headers: h });
+  }
+  if (p === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'Content-Type': 'text/plain' } });
+  if (p.startsWith('/assets/km/')) return ctx.next();
+  return Response.redirect(url.origin + '/', 302);
+}
 async function officeHost(ctx, url) {
   const p = url.pathname;
   const noindex = (r) => { const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); };
@@ -40,6 +51,8 @@ export async function onRequest(ctx) {
   const url = new URL(ctx.request.url);
   // ---- Baş Ofis ayrıca domendə (ofis.pilothayat.az): yalnız ofis sistemi açılır ----
   if (OFFICE_HOSTS.has(url.hostname)) return officeHost(ctx, url);
+  // ---- Təchizat paneli ayrıca domendə (techizat.pilothayat.az) ----
+  if (url.hostname === 'techizat.pilothayat.az') return techizatHost(ctx, url);
   // köhnə ünvan → yeni domen (domen aktiv olandan sonra OFFICE_LIVE=true)
   if (OFFICE_LIVE && (url.pathname === '/ofis' || url.pathname === '/ofis.html')) return Response.redirect('https://' + OFFICE_PRIMARY + '/' + url.search, 301);
   if (url.hostname === 'www.luxresidence.az') { url.hostname = 'luxresidence.az'; return Response.redirect(url.toString(), 301); }
