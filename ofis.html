@@ -351,6 +351,7 @@ nav.tabs,#tabs{scroll-behavior:smooth}
   <!-- AYARLAR -->
   <section class="view" id="v-set">
    <h2>Ayarlar</h2>
+   <div class="card"><h3>🛡 Ehtiyat nüsxələr</h3><div id="bkSet"></div></div>
    <div class="card"><h3>📱 Mobil tətbiq bildirişləri (Firebase)</h3><div id="fcmSet"></div></div>
    <div class="card"><h3>Telegram bildirişləri</h3><div id="tgSet"></div></div>
    <div class="card"><h3>Ofisin yeri</h3><p class="muted small">Gəliş-gediş yalnız bu nöqtəyə yaxın olanda qəbul edilir.</p>
@@ -1057,6 +1058,18 @@ function renderPushCards(){var boxes=[$('pushCard'),$('ownPush')].filter(Boolean
   boxes.forEach(function(b){b.innerHTML=h;});});}
 
 
+
+/* ---------- Ehtiyat nüsxələr ---------- */
+function renderBackups(){var c=$('bkSet');if(!c)return;run(sb.from('office_backup_log').select('*').order('id',{ascending:false}).limit(30)).then(function(l){var okL=l.filter(function(x){return x.ok;}),last=okL[0];
+ c.innerHTML='<p class="muted small">Sistem <b>hər gecə saat 03:00-da</b> bütün məlumatların (işçilər, gəliş-gediş, məzuniyyətlər, planlar, tapşırıqlar, komendantlıq ödənişləri) tam nüsxəsini avtomatik çıxarır. Nüsxələr <b>400 gün</b> saxlanılır.</p>'+
+  (last?'<div class="note" style="margin:10px 0">✅ Son nüsxə: <b>'+new Date(last.created_at).toLocaleString('az-AZ',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})+'</b> · '+Math.round(last.bytes/1024)+' KB · cəmi '+okL.length+' nüsxə</div>':'<div class="note bad" style="margin:10px 0">Hələ nüsxə yoxdur</div>')+
+  (l.length&&!l[0].ok?'<div class="note bad" style="margin-bottom:10px">⚠️ Son cəhd alınmadı: '+esc(l[0].note||'')+'</div>':'')+
+  '<div class="row" style="gap:8px;margin-bottom:10px"><button class="btn sm" onclick="backupNow(this)">İndi nüsxə yarat</button>'+(last?'<button class="btn ghost sm" onclick="dlBackup(\''+esc(last.path)+'\')">⬇ Son nüsxəni yüklə</button>':'')+'</div>'+
+  (okL.length>1?'<details><summary class="small muted" style="cursor:pointer">Bütün nüsxələr</summary>'+okL.map(function(x){return '<div class="row sp small" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>'+new Date(x.created_at).toLocaleString('az-AZ',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+' · '+Math.round(x.bytes/1024)+' KB</span><button class="linkbtn" onclick="dlBackup(\''+esc(x.path)+'\')">yüklə</button></div>';}).join('')+'</details>':'')+
+  '<p class="muted small" style="margin-top:10px">Tövsiyə: ayda bir dəfə son nüsxəni yükləyib kompüterdə və ya Google Drive-da da saxlayın.</p>';}).catch(function(){c.innerHTML='<p class="muted small">Yalnız admin və HR rəhbəri görür.</p>';});}
+function backupNow(b){b.disabled=true;b.textContent='Hazırlanır…';sb.functions.invoke('office-backup',{body:{}}).then(function(r){if(r.error||!(r.data&&r.data.ok))throw new Error((r.data&&r.data.error)||'Alınmadı');toast('Nüsxə yaradıldı ✅');renderBackups();}).catch(function(e){toast(e.message);b.disabled=false;b.textContent='İndi nüsxə yarat';});}
+function dlBackup(path){sb.storage.from('backups').createSignedUrl(path,300,{download:true}).then(function(r){if(r.error||!r.data)throw r.error||new Error('Yüklənmədi');location.href=r.data.signedUrl;}).catch(err);}
+
 /* ---------- Firebase (mobil tətbiq) ayarı ---------- */
 function renderFcmSet(){var c=$('fcmSet');if(!c)return;sb.rpc('office_fcm_project').then(function(r){var pj=r&&r.data;
  c.innerHTML=(pj?'<p>✅ Qoşulub: <b>'+esc(pj)+'</b>. Android tətbiqində “Bildirişləri aktiv et” işləyir.</p><details style="margin-top:8px"><summary class="small muted" style="cursor:pointer">Faylı dəyiş</summary>':'<p class="muted small">Firebase layihəsindəki <b>Service account</b> açar faylını (JSON) seçin: Project settings → Service accounts → Generate new private key. Fayl yalnız serverdə saxlanılır.</p>')+
@@ -1204,7 +1217,7 @@ function showCreds(name,em,pw){var link=location.origin+OFB();var txt=name+', Ba
 function delEmp(id){if(!confirm('İşçi kartı və onun davamiyyət tarixçəsi silinsin? (İşdən çıxıbsa, "Aktiv" işarəsini söndürmək daha yaxşıdır)'))return;run(sb.from('office_employees').delete().eq('id',id)).then(function(){EMPS=EMPS.filter(function(x){return x.id!==id;});closeModal();renderStaff();}).catch(err);}
 
 /* ---------- AYARLAR / QR ---------- */
-function renderSet(){var c=CFG||{};renderFcmSet();renderHol();renderTgSet();document.querySelectorAll('input[name=qmode]').forEach(function(r){r.checked=(r.value==='static')===!!c.static_qr;});$('cLat').value=c.lat||'';$('cLng').value=c.lng||'';$('cRad').value=c.radius_m||150;$('cGrace').value=c.grace_min||10;$('cGeo').checked=c.require_geo!==false;}
+function renderSet(){var c=CFG||{};renderFcmSet();renderBackups();renderHol();renderTgSet();document.querySelectorAll('input[name=qmode]').forEach(function(r){r.checked=(r.value==='static')===!!c.static_qr;});$('cLat').value=c.lat||'';$('cLng').value=c.lng||'';$('cRad').value=c.radius_m||150;$('cGrace').value=c.grace_min||10;$('cGeo').checked=c.require_geo!==false;}
 function useHere(){if(!navigator.geolocation)return toast('Brauzer yeri dəstəkləmir');toast('Yer alınır…');navigator.geolocation.getCurrentPosition(function(p){$('cLat').value=p.coords.latitude.toFixed(6);$('cLng').value=p.coords.longitude.toFixed(6);toast('Dəqiqlik: ±'+Math.round(p.coords.accuracy)+' m. "Yadda saxla" basın.');},function(){toast('Yer icazəsi verilmədi');},{enableHighAccuracy:true,timeout:15000});}
 function saveCfg(){var qm=(document.querySelector('input[name=qmode]:checked')||{}).value;var b={lat:parseFloat($('cLat').value)||null,lng:parseFloat($('cLng').value)||null,radius_m:+$('cRad').value||150,grace_min:+$('cGrace').value||0,require_geo:$('cGeo').checked,static_qr:qm==='static',updated_at:new Date().toISOString()};
  if(b.static_qr&&(b.lat==null||b.lng==null))return toast('Sabit QR üçün əvvəlcə ofisin yerini təyin edin');
