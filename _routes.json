@@ -1,6 +1,8 @@
 {
   "version": 1,
-  "include": ["/*"],
+  "include": [
+    "/*"
+  ],
   "exclude": [
     "/assets/*",
     "/favicon.ico",
@@ -9,9 +11,12 @@
     "/favicon-96.png",
     "/favicon-192.png",
     "/favicon-512.png",
-    "/*.webmanifest",
     "/robots.txt",
     "/mobile/*",
-    "/ofis-sw.js"
+    "/ofis-sw.js",
+    "/site.webmanifest",
+    "/ru.webmanifest",
+    "/satis.webmanifest",
+    "/komendant.webmanifest"
   ]
 }
