@@ -979,8 +979,9 @@ function renderMe(){var b=$('meBody');if(!EMP){b.innerHTML='<div class="card emp
   '<div class="card"><h3>Əlaqə məlumatlarım</h3><div class="field"><label>Telefon</label><input id="meP" value="'+esc(e.phone||'')+'"></div><div class="field"><label>Təcili əlaqə şəxsi</label><input id="meE" value="'+esc(e.emergency_contact||'')+'" placeholder="məs: Anam — 050 123 45 67"></div><div class="field"><label>Haqqımda (komanda görür)</label><textarea id="meA" placeholder="məs: Satış üzrə 5 il təcrübə">'+esc(e.about||'')+'</textarea></div><button class="btn" onclick="saveMe()">Yadda saxla</button>'+
   '<div class="pgrid" style="margin-top:16px">'+(e.email?'<div><span>Giriş (email)</span><b style="font-size:13px">'+esc(e.email)+'</b></div>':'')+(e.birthday?'<div><span>Ad günü</span><b>'+(+e.birthday.slice(8))+' '+AZM[+e.birthday.slice(5,7)-1]+'</b></div>':'')+(e.hire_date?'<div><span>İşə başlama</span><b>'+dmyS(e.hire_date)+'</b></div>':'')+'</div></div></div>';
  meCalendar();}).catch(err);}
+function monthEnd(m){var y=+m.slice(0,4),mo=+m.slice(5,7);return m+'-'+String(new Date(Date.UTC(y,mo,0)).getUTCDate()).padStart(2,'0');}
 function dmyS(d){return d?d.slice(8)+'.'+d.slice(5,7)+'.'+d.slice(0,4):'';}
-function meCalendar(){var m=today().slice(0,7);run(sb.from('office_attendance').select('*').eq('employee_id',EMP.id).gte('day',m+'-01').lte('day',m+'-31')).then(function(rows){
+function meCalendar(){var m=today().slice(0,7);run(sb.from('office_attendance').select('*').eq('employee_id',EMP.id).gte('day',m+'-01').lte('day',monthEnd(m))).then(function(rows){
  var y=+m.slice(0,4),mo=+m.slice(5,7),last=new Date(Date.UTC(y,mo,0)).getUTCDate(),first=isoDow(m+'-01'),d=today(),late=0,h='<div class="ocal">'+['B.e','Ç.a','Çər','C.a','Cüm','Şən','Baz'].map(function(w){return '<i>'+w+'</i>';}).join('');
  for(var k=1;k<first;k++)h+='<span></span>';
  for(var dd=1;dd<=last;dd++){var ds=m+'-'+String(dd).padStart(2,'0'),a=rows.find(function(r){return r.day===ds;}),lv=leaveOn(EMP.id,ds),wk=(EMP.workdays||[]).indexOf(isoDow(ds))>=0&&!isHol(ds),c,tt;
