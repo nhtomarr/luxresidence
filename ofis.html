@@ -268,6 +268,15 @@ nav.tabs,#tabs{scroll-behavior:smooth}
 .bdb{background:linear-gradient(135deg,#f59e0b,#d97706);white-space:nowrap}
 .wtpl{display:flex;flex-direction:column;gap:6px}.wtpl button{text-align:left;border:1px solid var(--line);background:#fffbeb;border-radius:12px;padding:9px 12px;font-size:13px;cursor:pointer}.wtpl button:hover{border-color:#f59e0b}
 .wish{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.wish p{margin:3px 0}.wish b{display:block}
+
+.selfie{position:relative;border-radius:50%;overflow:hidden;width:240px;height:240px;margin:0 auto;background:#0f172a;box-shadow:0 0 0 6px #dbeafe}
+.selfie video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}.selfie b{position:absolute;inset:0;display:grid;place-items:center;font-size:64px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.sfthumb{width:28px;height:28px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-left:6px;cursor:pointer;background:#e2e8f0;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.outbar{display:flex;align-items:center;gap:10px;margin-top:12px}.outbar .btn{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.3)}
+.outc{background:#fff7ed;border-color:#fed7aa;color:#7c2d12;margin-top:12px}.outc b{display:block}
+.okinds{display:grid;grid-template-columns:1fr 1fr;gap:8px}.okinds label{border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.okinds label span{display:flex;flex-direction:column;font-weight:700}.okinds small{font-weight:500;color:var(--mut);font-size:12px}.okinds input:checked+span{color:var(--acc)}
+.okinds input{position:absolute;opacity:0;pointer-events:none}.okinds label{position:relative;transition:.15s}.okinds label:has(input:checked){border-color:var(--acc);background:#eff6ff;box-shadow:0 0 0 3px rgba(37,99,235,.12)}.okinds label span{font-size:14px}
 </style>
 </head>
 <body>
@@ -281,6 +290,7 @@ nav.tabs,#tabs{scroll-behavior:smooth}
    <div class="card checkcard"><div class="row" style="justify-content:space-between;align-items:flex-start">
     <div><div class="muted small" id="tDate"></div><div class="clock" id="tClock">--:--</div><div id="tStatus" class="muted"></div></div>
     <div class="row" id="tBtns"></div></div>
+    <div id="tOut"></div>
     <div class="stat-line" id="tStats"></div></div>
    <div id="pushCard"></div><div id="tMood"></div><div id="tDocsCard"></div>
    <div id="tOwnerTasks"></div>
@@ -365,7 +375,8 @@ nav.tabs,#tabs{scroll-behavior:smooth}
     <div class="grid g2"><div class="field"><label>Enlik (lat)</label><input id="cLat" inputmode="decimal"></div><div class="field"><label>Uzunluq (lng)</label><input id="cLng" inputmode="decimal"></div></div>
     <button class="btn ghost sm" onclick="useHere()">📍 Hazırkı yerimi ofis kimi götür</button>
     <div class="grid g2" style="margin-top:12px"><div class="field"><label>İcazəli radius (metr)</label><input id="cRad" type="number"></div><div class="field"><label>Gecikməyə güzəşt (dəqiqə)</label><input id="cGrace" type="number"></div></div>
-    <label class="row small" style="margin-bottom:12px"><input type="checkbox" id="cGeo"> Yer yoxlaması məcburidir</label>
+    <label class="row small" style="margin-bottom:6px"><input type="checkbox" id="cGeo"> Yer yoxlaması məcburidir</label>
+    <label class="row small" style="margin-bottom:12px"><input type="checkbox" id="cSelfie"> Gəliş-gedişdə selfi ilə təsdiq (başqasının yerinə qeydin qarşısını alır)</label>
     <button class="btn" onclick="saveCfg()">Yadda saxla</button></div>
    <div class="card"><h3>QR kod</h3>
     <label class="qopt"><input type="radio" name="qmode" value="static"> <div><b>Çap olunan sabit QR</b><span>Bir dəfə çap edib divara vurulur. Qoruma telefonun ofisdə olmasının yoxlanması ilə olur (yer yoxlaması avtomatik məcburi olur).</span></div></label>
@@ -469,11 +480,45 @@ function renderToday(){renderOwnerTasksForEmp();renderHomeExtras();renderPwBanne
   var s,btn;if(!MYDAY||!MYDAY.check_in){var hh=dayHours(EMP,today());s='Bu gün hələ gəliş qeyd olunmayıb · iş saatı '+hh[0]+'–'+hh[1];btn='<button class="btn" onclick="scan(\'in\')">📷 Gəlişi qeyd et</button>';}
   else if(!MYDAY.check_out){s='Gəliş: '+hm(MYDAY.check_in)+(MYDAY.late_min?' · '+MYDAY.late_min+' dəq gecikmə':' · vaxtında');btn='<button class="btn" onclick="scan(\'out\')">📷 Çıxışı qeyd et</button>';}
   else{s='Gəliş '+hm(MYDAY.check_in)+' · Çıxış '+hm(MYDAY.check_out)+' · '+hmin(MYDAY.worked_min);btn='';}
-  $('tStatus').textContent=s;$('tBtns').innerHTML=btn;
+  $('tStatus').textContent=s;$('tBtns').innerHTML=btn;loadMyOuting().then(function(){if(MYOUT&&btn)$('tBtns').innerHTML='';renderOutingBox();});
   var d=rows.filter(function(r){return r.check_in;}),late=rows.filter(function(r){return r.late_min>0;});
   $('tStats').innerHTML='<div><b>'+d.length+'</b><span class="muted small">gün işə gəlmisiniz (bu ay)</span></div><div><b>'+late.length+'</b><span class="muted small">dəfə gecikmisiniz</span></div><div><b>'+(late.length?hmin(late.reduce(function(a,r){return a+r.late_min;},0)):'—')+'</b><span class="muted small">gecikmə cəmi</span></div>';
   $('tMonth').innerHTML=d.length?('<div class="tbl"><table><tr><th>Gün</th><th>Gəliş</th><th>Çıxış</th><th>Qeyd</th></tr>'+rows.slice().reverse().map(function(r){return '<tr><td>'+r.day.slice(8)+'.'+r.day.slice(5,7)+'</td><td>'+hm(r.check_in)+'</td><td>'+hm(r.check_out)+'</td><td>'+(r.late_min?'<span class="pill p-warn">'+r.late_min+' dəq gec</span>':'')+(r.early_min?' <span class="pill p-mut">'+r.early_min+' dəq tez</span>':'')+'</td></tr>';}).join('')+'</table></div>'):'Bu ay hələ qeyd yoxdur.';
  }).catch(err);}
+/* ---------- Selfi ilə təsdiq ---------- */
+function selfieCapture(kind){var need=CFG?Promise.resolve(CFG.require_selfie!==false):sb.rpc('office_selfie_required').then(function(r){return !!(r&&r.data);}).catch(function(){return true;});
+ return need.then(function(req){return req?selfieShot(kind):null;});}
+function selfieShot(kind){return new Promise(function(resolve){
+ if(!navigator.mediaDevices||!EMP)return resolve(null);
+ modal('<div class="mhead"><h3>📸 Selfi ilə təsdiq</h3></div><p class="muted small" style="margin-bottom:10px">Qeydin sizə aid olduğunu təsdiqləmək üçün şəkil avtomatik çəkiləcək. Üzünüz kadrda olsun.</p><div class="selfie"><video id="sfV" playsinline muted autoplay></video><b id="sfC">3</b></div><p class="muted small" style="margin-top:8px;text-align:center" id="sfT">Kamera açılır…</p>');
+ var st=null,done=false;function fin(v){if(done)return;done=true;if(st)st.getTracks().forEach(function(t){t.stop();});closeModal();resolve(v);}
+ navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:640}}}).then(function(s){st=s;var v=$('sfV');v.srcObject=s;v.play();$('sfT').textContent='Kameraya baxın';
+  var n=3;var it=setInterval(function(){n--;var c=$('sfC');if(c)c.textContent=n>0?n:'📸';if(n<=0){clearInterval(it);
+   var cv=document.createElement('canvas'),sz=Math.min(v.videoWidth,v.videoHeight)||480;cv.width=cv.height=480;cv.getContext('2d').drawImage(v,(v.videoWidth-sz)/2,(v.videoHeight-sz)/2,sz,sz,0,0,480,480);
+   cv.toBlob(function(bl){var path='selfie/'+EMP.id+'/'+today()+'_'+kind+'_'+Date.now()+'.jpg';
+    sb.storage.from('office').upload(path,bl,{contentType:'image/jpeg'}).then(function(r){if(r.error)throw r.error;return sb.rpc('office_att_photo',{p_kind:kind,p_path:path});}).then(function(){fin(path);}).catch(function(){fin(null);});},'image/jpeg',.8);}},1000);
+ }).catch(function(){toast('Kamera açılmadı — qeyd şəkilsiz saxlanıldı');fin(null);});});}
+/* ---------- İş vaxtı qısa çıxışlar ---------- */
+var MYOUT=null;
+function loadMyOuting(){if(!EMP)return Promise.resolve();return run(sb.from('office_outings').select('*').eq('employee_id',EMP.id).eq('day',today()).order('id')).then(function(r){MYOUTS=r;MYOUT=r.find(function(x){return !x.back_at;})||null;}).catch(function(){MYOUTS=[];MYOUT=null;});}
+var MYOUTS=[];
+function renderOutingBox(){var b=$('tOut');if(!b)return;if(!EMP||!MYDAY||!MYDAY.check_in||MYDAY.check_out){b.innerHTML=MYOUTS.length&&MYDAY&&MYDAY.check_out?'':'';return;}
+ if(MYOUT){var mins=Math.max(0,Math.round((Date.now()-new Date(MYOUT.out_at))/60000));
+  b.innerHTML='<div class="card outc"><div class="row sp"><div><b>🚶 Ofisdən kənardasınız · '+(MYOUT.kind==='is'?'işlə bağlı':'şəxsi')+'</b><div class="small">'+esc(MYOUT.note)+' · '+hm(MYOUT.out_at)+'-dan bəri ('+hmin(mins)+')</div></div></div><div class="row" style="margin-top:10px;gap:8px"><button class="btn" onclick="outingEnd(false)">✅ Ofisə qayıtdım</button>'+(MYOUT.kind==='is'?'<button class="btn ghost" onclick="outingEnd(true)">Bu gün qayıtmayacağam</button>':'')+'</div></div>';return;}
+ var cnt=MYOUTS.length;b.innerHTML='<div class="outbar"><button class="btn ghost sm" onclick="openOuting()">🚶 Qısa çıxış (iş vaxtı)</button>'+(cnt?'<span class="muted small">Bu gün '+cnt+' çıxış</span>':'')+'</div>';}
+function openOuting(){modal('<div class="mhead"><h3>🚶 İş vaxtı çıxış</h3><button class="x" onclick="closeModal()">×</button></div><p class="muted small" style="margin-bottom:10px">Ofisdən müvəqqəti çıxanda qeyd edin — dəftərə yazmağa ehtiyac yoxdur. Qayıdanda “Ofisə qayıtdım” basın.</p>'+
+ '<div class="field"><label>Növ</label><div class="okinds"><label><input type="radio" name="oK" value="is" checked><span>💼 İşlə bağlı<small>görüş, bank, obyekt, sənəd</small></span></label><label><input type="radio" name="oK" value="sexsi"><span>🙋 Şəxsi<small>iş vaxtından çıxılır</small></span></label></div></div>'+
+ '<div class="field"><label>Hara və nə üçün</label><input id="oN" maxlength="200" placeholder="məs: Kapital Bank — ödəniş sənədləri"></div><button class="btn" style="width:100%" id="oBtn" onclick="outingStart()">Çıxışı qeyd et</button>');}
+function geoGet(cb){if(!navigator.geolocation)return cb(null,null);navigator.geolocation.getCurrentPosition(function(p){cb(p.coords.latitude,p.coords.longitude);},function(){cb(null,null);},{enableHighAccuracy:true,timeout:12000,maximumAge:0});}
+function outingStart(){var k=(document.querySelector('input[name=oK]:checked')||{}).value,n=$('oN').value.trim();if(!n)return toast('Hara və nə üçün getdiyinizi yazın');$('oBtn').disabled=true;toast('Yer yoxlanılır…');
+ geoGet(function(la,ln){sb.rpc('office_outing_start',{p_kind:k,p_note:n,p_lat:la,p_lng:ln}).then(function(r){if(r.error)throw r.error;closeModal();toast(r.data.msg);renderToday();}).catch(function(e){var b=$('oBtn');if(b)b.disabled=false;err(e);});});}
+function outingEnd(endDay){if(endDay&&!confirm('Bu gün ofisə qayıtmayacaqsınız? İş gününüz indi bitmiş sayılacaq.'))return;toast('Yer yoxlanılır…');
+ geoGet(function(la,ln){sb.rpc('office_outing_end',{p_lat:la,p_lng:ln,p_end_day:!!endDay}).then(function(r){if(r.error)throw r.error;toast(r.data.msg);renderToday();}).catch(err);});}
+/* HR: günün çıxışları və selfi */
+function selfieThumb(p){return p?'<img class="sfthumb" data-p="'+esc(p)+'" onclick="openSelfie(this.dataset.p)" alt="">':'';}
+function hydrateSelfies(root){var ims=(root||document).querySelectorAll('img.sfthumb:not([src])');[].forEach.call(ims,function(im){sb.storage.from('office').createSignedUrl(im.dataset.p,3600).then(function(r){if(r.data)im.src=r.data.signedUrl;});});}
+function openSelfie(p){sb.storage.from('office').createSignedUrl(p,600).then(function(r){if(r.data)modal('<div class="mhead"><h3>📸 Selfi</h3><button class="x" onclick="closeModal()">×</button></div><img src="'+r.data.signedUrl+'" style="width:100%;border-radius:16px">');});}
+
 var _scanKind='in';
 function loadJsQR(){return new Promise(function(res,rej){if(window.jsQR)return res();var sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';sc.onload=function(){res();};sc.onerror=function(){rej(new Error('QR oxuyucu yüklənmədi'));};document.head.appendChild(sc);});}
 function stopCam(){if(scan._st){scan._st.getTracks().forEach(function(t){t.stop();});scan._st=null;}scan._on=false;}
@@ -502,7 +547,7 @@ function autoCheck(token){history.replaceState(null,'',OFB());if(!EMP){toast('He
   if(!kind){toast('Bu gün gəliş və çıxış artıq qeyd olunub');return;}
   if(kind==='out'&&!confirm('Çıxışı qeyd edək?'))return;doCheck(kind,token);}).catch(err);}
 function doCheck(kind,token){toast('Yer yoxlanılır…');
- function send(lat,lng){sb.rpc('office_check',{p_kind:kind,p_token:token,p_lat:lat,p_lng:lng}).then(function(r){if(r.error)throw r.error;toast((r.data&&r.data.msg)||'Qeyd olundu');renderToday();}).catch(err);}
+ function send(lat,lng){sb.rpc('office_check',{p_kind:kind,p_token:token,p_lat:lat,p_lng:lng}).then(function(r){if(r.error)throw r.error;var msg=(r.data&&r.data.msg)||'Qeyd olundu';return selfieCapture(kind).then(function(){toast(msg);renderToday();});}).catch(err);}
  if(!navigator.geolocation)return send(null,null);
  navigator.geolocation.getCurrentPosition(function(p){send(p.coords.latitude,p.coords.longitude);},function(){send(null,null);},{enableHighAccuracy:true,timeout:12000,maximumAge:0});}
 
@@ -536,7 +581,7 @@ function openTask(id){var t=id?TASKS.find(function(x){return x.id===id;}):null;v
   (!t?'<div class="field"><label>Şablon</label><select id="fTpl" onchange="applyTaskTpl(this.value)"><option value="">— boş —</option>'+TTPL.map(function(x,i){return '<option value="'+i+'">'+esc(x.title)+'</option>';}).join('')+'</select></div>':'')+
   '<div class="field"><label>Başlıq</label><input id="fT" value="'+esc(t?t.title:'')+'"'+(canEdit?'':' disabled')+'></div>'+
   '<div class="field"><label>Təsvir</label><textarea id="fD"'+(canEdit?'':' disabled')+'>'+esc(t?t.description:'')+'</textarea></div>'+
-  '<div class="grid g2"><div class="field"><label>Məsul</label><select id="fA"'+(canEdit?'':' disabled')+'>'+empOpts(t?t.assignee_id:(EMP&&!MGR?EMP.id:null))+'</select></div><div class="field"><label>Son tarix</label><input id="fDue" type="date" value="'+(t&&t.due?t.due:'')+'"'+(canEdit?'':' disabled')+'></div>'+
+  '<div class="grid g2"><div class="field"><label>Məsul</label><select id="fA"'+(canEdit&&MGR?'':' disabled')+'>'+(MGR?empOpts(t?t.assignee_id:null):'<option value="'+(t?t.assignee_id:(EMP&&EMP.id))+'">'+esc(empName(t?t.assignee_id:(EMP&&EMP.id)))+'</option>')+'</select>'+(MGR?'':'<div class="muted small" style="margin-top:4px">Tapşırıq özünüz üçün yaradılır</div>')+'</div><div class="field"><label>Son tarix</label><input id="fDue" type="date" value="'+(t&&t.due?t.due:'')+'"'+(canEdit?'':' disabled')+'></div>'+
   '<div class="field"><label>Prioritet</label><select id="fP"'+(canEdit?'':' disabled')+'>'+Object.keys(PR).map(function(k){return '<option value="'+k+'"'+((t?t.priority:'normal')===k?' selected':'')+'>'+PR[k]+'</option>';}).join('')+'</select></div>'+
   '<div class="field"><label>Status</label><select id="fS">'+Object.keys(ST).map(function(k){return '<option value="'+k+'"'+((t?t.status:'new')===k?' selected':'')+'>'+ST[k]+'</option>';}).join('')+'</select></div>'+
   '<div class="field"><label>Təkrarlanma</label><select id="fR"'+(canEdit?'':' disabled')+'><option value="">Təkrarlanmır</option><option value="daily"'+(t&&t.recur==='daily'?' selected':'')+'>Hər gün</option><option value="weekly"'+(t&&t.recur==='weekly'?' selected':'')+'>Hər həftə</option><option value="monthly"'+(t&&t.recur==='monthly'?' selected':'')+'>Hər ay</option></select></div></div>'+
@@ -1159,11 +1204,12 @@ function decideLeave(id,st){var note=st==='rejected'?(prompt('Rədd səbəbi (is
 function delLeave(id){if(!confirm('Sorğu silinsin?'))return;run(sb.from('office_leaves').delete().eq('id',id)).then(function(){LEAVES=LEAVES.filter(function(x){return x.id!==id;});renderLeave();}).catch(err);}
 
 /* ---------- DAVAMİYYƏT ---------- */
-function renderDay(){var d=$('dDay').value||today();run(sb.from('office_attendance').select('*').eq('day',d)).then(function(att){var act=EMPS.filter(function(e){return e.active;});
+function renderDay(){var d=$('dDay').value||today();Promise.all([run(sb.from('office_attendance').select('*').eq('day',d)),run(sb.from('office_outings').select('*').eq('day',d).order('out_at'))]).then(function(rr){var att=rr[0],outs=rr[1];var act=EMPS.filter(function(e){return e.active;});
  $('dayTbl').innerHTML='<table><tr><th>İşçi</th><th>Gəliş</th><th>Çıxış</th><th>Status</th><th class="hide-m">Məsafə</th><th></th></tr>'+act.map(function(e){var a=att.find(function(x){return x.employee_id===e.id;});var work=(e.workdays||[]).indexOf(isoDow(d))>=0&&!isHol(d);var lv=leaveOn(e.id,d);
   var st=lv&&!(a&&a.check_in)?'<span class="pill p-acc">'+LT[lv.type]+'</span>':a&&a.check_in?(a.late_min?'<span class="pill p-warn">'+a.late_min+' dəq gec</span>':'<span class="pill p-ok">vaxtında</span>')+(a.early_min?' <span class="pill p-mut">'+a.early_min+' dəq tez</span>':''):(work?'<span class="pill p-bad">gəlməyib</span>':'<span class="pill p-mut">'+(isHol(d)?'bayram':'istirahət')+'</span>');
-  return '<tr><td><b>'+esc(e.full_name)+'</b></td><td>'+hm(a&&a.check_in)+'</td><td>'+hm(a&&a.check_out)+'</td><td>'+st+(a&&a.note?'<div class="muted small">'+esc(a.note)+'</div>':'')+'</td><td class="hide-m muted small">'+(a&&a.in_dist!=null?a.in_dist+' m':'')+'</td><td><button class="btn ghost sm" onclick="editAtt('+e.id+',\''+d+'\')">✎</button></td></tr>';}).join('')+'</table>';
- renderDay._att=att;}).catch(err);}
+  var eo=outs.filter(function(o){return o.employee_id===e.id;});var otx=eo.map(function(o){return '<div class="small" style="margin-top:3px">'+(o.kind==='is'?'💼':'🙋')+' '+hm(o.out_at)+'–'+(o.back_at?hm(o.back_at):'<b style="color:var(--warn)">çöldədir</b>')+' · '+esc(o.note)+(o.ended_day?' <span class="pill p-mut">günü çöldə bitirdi</span>':'')+'</div>';}).join('');
+  return '<tr><td><b>'+esc(e.full_name)+'</b></td><td>'+hm(a&&a.check_in)+(a?selfieThumb(a.photo_in):'')+'</td><td>'+hm(a&&a.check_out)+(a?selfieThumb(a.photo_out):'')+'</td><td>'+st+(a&&a.note?'<div class="muted small">'+esc(a.note)+'</div>':'')+otx+'</td><td class="hide-m muted small">'+(a&&a.in_dist!=null?a.in_dist+' m':'')+'</td><td><button class="btn ghost sm" onclick="editAtt('+e.id+',\''+d+'\')">✎</button></td></tr>';}).join('')+'</table>';
+ renderDay._att=att;hydrateSelfies($('dayTbl'));}).catch(err);}
 function editAtt(eid,d){var a=(renderDay._att||[]).find(function(x){return x.employee_id===eid;})||{};function t(ts){return ts?hm(ts):'';}
  modal('<div class="mhead"><h3>'+esc(empName(eid))+' · '+d+'</h3><button class="x" onclick="closeModal()">×</button></div><div class="grid g2"><div class="field"><label>Gəliş</label><input id="eIn" type="time" value="'+t(a.check_in)+'"></div><div class="field"><label>Çıxış</label><input id="eOut" type="time" value="'+t(a.check_out)+'"></div></div><div class="field"><label>Qeyd (məs: icazəli, xəstə, ezamiyyət)</label><input id="eNote" value="'+esc(a.note||'')+'"></div><button class="btn" onclick="saveAtt('+eid+',\''+d+'\')">Yadda saxla</button>');}
 function dayHours(e,d){var s2=e.schedule&&e.schedule[String(isoDow(d))];return s2?s2:[String(e.work_start).slice(0,5),String(e.work_end).slice(0,5)];}
@@ -1244,9 +1290,9 @@ function showCreds(name,em,pw){var link=location.origin+OFB();var txt=name+', Ba
 function delEmp(id){if(!confirm('İşçi kartı və onun davamiyyət tarixçəsi silinsin? (İşdən çıxıbsa, "Aktiv" işarəsini söndürmək daha yaxşıdır)'))return;run(sb.from('office_employees').delete().eq('id',id)).then(function(){EMPS=EMPS.filter(function(x){return x.id!==id;});closeModal();renderStaff();}).catch(err);}
 
 /* ---------- AYARLAR / QR ---------- */
-function renderSet(){var c=CFG||{};renderFcmSet();renderBackups();renderHol();renderTgSet();document.querySelectorAll('input[name=qmode]').forEach(function(r){r.checked=(r.value==='static')===!!c.static_qr;});$('cLat').value=c.lat||'';$('cLng').value=c.lng||'';$('cRad').value=c.radius_m||150;$('cGrace').value=c.grace_min||10;$('cGeo').checked=c.require_geo!==false;}
+function renderSet(){var c=CFG||{};renderFcmSet();renderBackups();renderHol();renderTgSet();document.querySelectorAll('input[name=qmode]').forEach(function(r){r.checked=(r.value==='static')===!!c.static_qr;});$('cLat').value=c.lat||'';$('cLng').value=c.lng||'';$('cRad').value=c.radius_m||150;$('cGrace').value=c.grace_min||10;$('cGeo').checked=c.require_geo!==false;$('cSelfie').checked=c.require_selfie!==false;}
 function useHere(){if(!navigator.geolocation)return toast('Brauzer yeri dəstəkləmir');toast('Yer alınır…');navigator.geolocation.getCurrentPosition(function(p){$('cLat').value=p.coords.latitude.toFixed(6);$('cLng').value=p.coords.longitude.toFixed(6);toast('Dəqiqlik: ±'+Math.round(p.coords.accuracy)+' m. "Yadda saxla" basın.');},function(){toast('Yer icazəsi verilmədi');},{enableHighAccuracy:true,timeout:15000});}
-function saveCfg(){var qm=(document.querySelector('input[name=qmode]:checked')||{}).value;var b={lat:parseFloat($('cLat').value)||null,lng:parseFloat($('cLng').value)||null,radius_m:+$('cRad').value||150,grace_min:+$('cGrace').value||0,require_geo:$('cGeo').checked,static_qr:qm==='static',updated_at:new Date().toISOString()};
+function saveCfg(){var qm=(document.querySelector('input[name=qmode]:checked')||{}).value;var b={lat:parseFloat($('cLat').value)||null,lng:parseFloat($('cLng').value)||null,radius_m:+$('cRad').value||150,grace_min:+$('cGrace').value||0,require_geo:$('cGeo').checked,require_selfie:$('cSelfie').checked,static_qr:qm==='static',updated_at:new Date().toISOString()};
  if(b.static_qr&&(b.lat==null||b.lng==null))return toast('Sabit QR üçün əvvəlcə ofisin yerini təyin edin');
  run(sb.from('office_config').update(b).eq('id',1).select().single()).then(function(c){CFG=c;toast('Ayarlar saxlanıldı');}).catch(err);}
 
