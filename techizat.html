@@ -75,6 +75,7 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px 14px;border:1px sol
 .go.wide{width:100%;margin-top:10px}.vchip{cursor:default;font-size:.78rem;padding:4px 10px}.vchip.v-good{background:rgba(214,241,225,.9);color:var(--good)}.vchip.v-bad{background:rgba(253,226,220,.95);color:var(--bad)}.vchip.v-mid{background:rgba(255,255,255,.7)}
 @media(max-width:640px){.f2{grid-template-columns:1fr}}
 .brands .chip{font-size:.8rem;padding:6px 12px}
+.badge{font-style:normal;margin-left:6px;background:#ba4d2c;color:#fff;border-radius:99px;padding:1px 7px;font-size:.72rem}
 </style>
 </head>
 <body>
@@ -83,7 +84,7 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px 14px;border:1px sol
   <h1>Təchizatçı düz qiymət deyir?</h1>
   <p class="sub">Məhsulu istənilən dildə yaz, təchizatçının qiymətini daxil et. Sistem Azərbaycandakı satış saytlarından real qiymətləri yığıb müqayisə edir.</p>
 
-  <div class="tabs"><button class="on" data-t="axtar" onclick="showTab('axtar')">🔎 Qiymət yoxla</button><button data-t="teklif" onclick="showTab('teklif')">📄 Təklif / smeta</button><button data-t="siyahi" onclick="showTab('siyahi')">📋 Qiymət siyahıları</button><button data-t="bazar" onclick="showTab('bazar')">📈 Bazar</button><button data-t="menbe" onclick="showTab('menbe')">🩺 Mənbələr</button></div>
+  <div class="tabs"><button class="on" data-t="axtar" onclick="showTab('axtar')">🔎 Qiymət yoxla</button><button data-t="teklif" onclick="showTab('teklif')">📄 Təklif / smeta</button><button data-t="siyahi" onclick="showTab('siyahi')">📋 Qiymət siyahıları</button><button data-t="bazar" onclick="showTab('bazar')">📈 Bazar<i id="alBadge" class="badge" hidden></i></button><button data-t="menbe" onclick="showTab('menbe')">🩺 Mənbələr</button></div>
   <section class="panel" data-pane="axtar">
     <form class="fields" id="f">
       <div><label for="q">Məhsul</label><input id="q" type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="məs. sement, mişar daşı, alçıpan, armatura…" required></div>
@@ -118,7 +119,7 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px 14px;border:1px sol
     <p class="hint" style="margin:0 4px 12px">Hər gecə əsas tikinti materiallarının bazar ortası hesablanır. "Səbət" bütün materialların orta dəyişməsidir, yəni tikinti inflyasiyasıdır.</p>
     <div id="mkOut"></div>
     <h3 class="ph2">🔔 Qiymət xəbərdarlıqları</h3>
-    <p class="hint" style="margin:0 4px 10px">Materialın bazar ortası hədəf qiymətə və ya aşağı düşəndə telefonunuza bildiriş gəlir (Baş Ofis tətbiqi vasitəsilə).</p>
+    <p class="hint" style="margin:0 4px 10px">Materialın bazar ortası hədəf qiymətə və ya aşağı düşəndə burada qeyd olunur və paneli açanda yuxarıda <b>"Bazar"</b> düyməsində 🔔 nişanı görünür. Yoxlama hər səhər avtomatik aparılır.</p>
     <div class="fields" style="grid-template-columns:1fr 160px auto"><div><label>Material</label><input id="alTerm" placeholder="məs. sement, laminat, armatur"></div><div><label>Hədəf, ₼</label><input id="alPrice" type="number" step="0.01" min="0" placeholder="8.50"></div><div><button class="go" onclick="alAdd()">Əlavə et</button></div></div>
     <div id="alList" style="margin-top:10px"></div>
     <h3 class="ph2">💰 Qənaət hesabatı</h3>
@@ -240,7 +241,7 @@ $("offer").addEventListener("input",()=>state.groups.length&&render($("q").value
 /* ---------- Bölmələr: Qiymət yoxla | Təklif yoxla | Siyahılar | Mənbələr ---------- */
 const TF="https://syyybdouqdahsomfkemi.supabase.co/functions/v1/teklif";
 async function tcall(body){const r=await fetch(TF,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+KEY,"apikey":KEY},body:JSON.stringify(body)});const d=await r.json().catch(()=>({error:"Server cavab vermədi"}));if(d.error)throw new Error(d.error);return d;}
-function showTab(t){document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));document.querySelectorAll("[data-pane]").forEach(p=>p.hidden=p.dataset.pane!==t);if(t==="teklif")loadHistory();if(t==="siyahi")loadLists();if(t==="menbe")loadSources();if(t==="bazar")loadMarket();}
+function showTab(t){document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));document.querySelectorAll("[data-pane]").forEach(p=>p.hidden=p.dataset.pane!==t);if(t==="teklif")loadHistory();if(t==="siyahi")loadLists();if(t==="menbe")loadSources();if(t==="bazar"){loadMarket();try{localStorage.setItem("tz_alert_seen",Date.now())}catch(e){};const bd=$("alBadge");if(bd)bd.hidden=true;}}
 // fayl → {file,media_type} və ya {text} (Excel/CSV mətnə çevrilir)
 async function readFile(f){
   if(!f)return null;
@@ -315,6 +316,11 @@ async function loadSavings(){try{const s=await rpc("savings_report");const tot=(
    ${(s.suppliers||[]).length?`<h3 class="ph2">Təchizatçılar üzrə</h3><div class="tbl"><table><thead><tr><th>Təchizatçı</th><th>Təklif</th><th>Artıq qiymət</th></tr></thead><tbody>${s.suppliers.map(x=>`<tr><td><b>${esc(x.supplier)}</b></td><td>${x.offers}</td><td class="p" style="color:${+x.over_sum>0?"var(--bad)":"inherit"}">${fmt(x.over_sum)}</td></tr>`).join("")}</tbody></table></div>`:""}
    ${(s.top||[]).length?`<h3 class="ph2">Ən baha mövqelər (90 gün)</h3><div class="tbl"><table><thead><tr><th>Mövqe</th><th>Təchizatçı</th><th>Təklif</th><th>Bazar</th><th>Fərq</th></tr></thead><tbody>${s.top.map(x=>`<tr><td>${esc(x.name)}</td><td class="src">${esc(x.supplier||"—")}</td><td class="p">${fmt(x.price)}</td><td>${fmt(x.med)}</td><td><b style="color:var(--bad)">+${x.diff}%</b></td></tr>`).join("")}</tbody></table></div>`:""}`
    :'<p class="hint">Hələ yoxlanmış təklif yoxdur. "Təklif / smeta" bölməsində təklif yoxladıqca hesabat burada yığılacaq.</p>';}catch(e){}}
+
+// Panel açılanda: son baxışdan sonra hədəfə düşən xəbərdarlıq varsa — nişan
+async function alertBadge(){try{const a=await rpc("alerts_list");let seen=0;try{seen=+localStorage.getItem("tz_alert_seen")||0}catch(e){}
+  const n=a.filter(x=>x.last_hit_at&&new Date(x.last_hit_at)>seen).length;const bd=$("alBadge");if(bd&&n){bd.textContent="🔔 "+n;bd.hidden=false;}}catch(e){}}
+setTimeout(alertBadge,1500);
 </script>
 </body>
 </html>
