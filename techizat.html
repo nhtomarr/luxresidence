@@ -61,6 +61,10 @@ td.p{font-weight:700;white-space:nowrap}tr.best td.p{color:var(--good)}
 a.act{display:inline-block;padding:7px 13px;border-radius:99px;text-decoration:none;font-size:.84rem;font-weight:600;white-space:nowrap;margin:2px 0}
 a.call{background:linear-gradient(180deg,#c9603c,#ab4424);color:#fff;box-shadow:0 8px 16px -10px rgba(154,60,32,.8)}a.open{color:var(--ink);background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1px 1px #fff}
 .foot{margin:22px 6px 0;font-size:.78rem;color:var(--muted)}
+.trendc{margin-top:16px;background:linear-gradient(160deg,rgba(255,255,255,.7),rgba(255,255,255,.4));border:1px solid var(--line);box-shadow:var(--gsh);border-radius:20px;padding:14px 16px}
+.trendc svg{width:100%;height:150px;display:block;margin-top:6px}.trh{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.9rem}.trh span{font-weight:700;color:var(--muted)}.trh .up{color:var(--bad)}.trh .dn{color:var(--good)}
+.trl{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted)}
+.chip b{font-weight:800}
 </style>
 </head>
 <body>
@@ -80,6 +84,7 @@ a.call{background:linear-gradient(180deg,#c9603c,#ab4424);color:#fff;box-shadow:
   </section>
   <p class="foot">Mənbələr: Tap.az, Lalafo.az, Qiymetleri.az, İnsaat.az, Tezbazar.az, Maqazin.az, Megamart.az, Omid.az, Boya.az, Kafel.az. “1 ₼” yazılmış elanlar (qiymət razılaşma ilə) nəzərə alınmır.</p>
 </div>
+<script src="/assets/lux-auth.js?v=1790690641"></script>
 <script>
 const FN="https://syyybdouqdahsomfkemi.supabase.co/functions/v1/axtar";
 const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5eXliZG91cWRhaHNvbWZrZW1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MDIyNzgsImV4cCI6MjEwNjI3ODI3OH0.QtKUa9k0dx2OLDvrHdVT4B8fPKzaOg410r37HpHXMHE";
@@ -90,11 +95,16 @@ const q2=(a,q)=>{const i=(a.length-1)*q,lo=Math.floor(i),hi=Math.ceil(i);return 
 let state={items:[],groups:[],g:0,term:""};
 
 // split prices into magnitude groups (e.g. armatur per kg vs per ton)
-function groupsOf(items){
-  const s=[...items].sort((a,b)=>a.price-b.price);const gs=[];let cur=[];
+const ulabel=it=>!it.unit?null:it.unit==='kq'?(+it.qty)+' kq':it.unit==='litr'?(+it.qty)+' L':it.unit;
+function magGroups(items){const s=[...items].sort((a,b)=>a.price-b.price);const gs=[];let cur=[];
   for(const it of s){ if(cur.length&&it.price/cur[cur.length-1].price>2.5){gs.push(cur);cur=[]} cur.push(it) }
-  if(cur.length)gs.push(cur);
-  return gs.filter(g=>g.length>=2).sort((a,b)=>b.length-a.length);
+  if(cur.length)gs.push(cur);return gs;}
+// əvvəl satış vahidinə görə (50 kq, ton, m², litr...), vahidi yazılmayanlar isə qiymət miqyasına görə qruplaşır
+function groupsOf(items){
+  const by={},rest=[];items.forEach(it=>{const l=ulabel(it);if(l)(by[l]=by[l]||[]).push(it);else rest.push(it);});
+  const gs=[];Object.keys(by).forEach(k=>{if(by[k].length>=2){const g=by[k];g.label=k;g.unit=by[k][0].unit;gs.push(g);}else rest.push(...by[k]);});
+  magGroups(rest).forEach(g=>{if(g.length>=2){g.label=null;g.unit=null;gs.push(g);}});
+  return gs.sort((a,b)=>b.length-a.length);
 }
 async function search(e){
   e&&e.preventDefault();const q=$("q").value.trim();if(q.length<2)return;
@@ -123,11 +133,11 @@ function render(q){
     else v=`<div class="verdict v-bad">Orta bazar qiymətindən ${diff.toFixed(0)}% bahadır<small>Orta qiymət ${fmt(med)}, ən ucuz ${fmt(mn)}. Hər vahiddə təxminən ${fmt(offer-med)} artıq.</small></div>`}
   const lo=Math.min(mn,has?offer:mn),hi=Math.max(mx,has?offer:mx),pad=(hi-lo)*.06||1;
   const X=x=>((x-(lo-pad))/((hi+pad)-(lo-pad))*100).toFixed(2)+"%";
-  const chips=groups.length>1?`<div class="groups">${groups.map((gg,i)=>`<button class="chip" data-g="${i}" aria-pressed="${i===state.g}">${fmt(gg[0].price)} – ${fmt(gg.at(-1).price)} · ${gg.length} elan</button>`).join("")}</div><div class="hint">Qiymətlər fərqli vahiddədir (kq / ton / kisə). Təchizatçının vahidinə uyğun qrupu seç.</div>`:"";
+  const chips=groups.length>1?`<div class="groups">${groups.map((gg,i)=>{const lo=Math.min(...gg.map(x=>+x.price)),hi=Math.max(...gg.map(x=>+x.price));return `<button class="chip" data-g="${i}" aria-pressed="${i===state.g}">${gg.label?`<b>${esc(gg.label)}</b> · `:''}${fmt(lo)} – ${fmt(hi)} · ${gg.length} elan</button>`}).join("")}</div><div class="hint">Qiymətlər fərqli vahiddədir (kisə, ton, m², litr…). Təchizatçının vahidinə uyğun qrupu seç.</div>`:"";
   const rows=[...g].sort((a,b)=>a.price-b.price).map((it,i)=>{
     const s=it.sources||{};const days=Math.round((Date.now()-new Date(it.last_seen))/864e5);
     return `<tr class="${i===0?"best":""}"><td><b>${esc(it.title)}</b><div class="desc">${esc(it.seller)}</div></td>
-      <td class="p">${fmt(it.price)}${it.pack_kg?`<div class="src">${it.pack_kg} kq · ${fmt(it.price/it.pack_kg)}/kq</div>`:""}</td>
+      <td class="p">${fmt(it.price)}${it.unit==='kq'&&it.qty?`<div class="src">${+it.qty} kq · ${fmt(it.price/it.qty)}/kq</div>`:it.unit==='litr'&&it.qty?`<div class="src">${+it.qty} L · ${fmt(it.price/it.qty)}/L</div>`:it.unit?`<div class="src">${esc(it.unit)}</div>`:it.pack_kg?`<div class="src">${it.pack_kg} kq · ${fmt(it.price/it.pack_kg)}/kq</div>`:""}</td>
       <td><span class="src">${esc(s.name)}<br>${days===0?"bu gün":days+" gün əvvəl"}</span></td>
       <td>${it.phone?`<a class="act call" href="tel:${it.phone}">${it.phone.replace(/(\+994)(\d\d)(\d{3})(\d\d)(\d\d)/,"$1 $2 $3 $4 $5")}</a><br>`:""}<a class="act open" href="${esc(it.url)}" target="_blank" rel="noopener">Elana keç</a></td></tr>`}).join("");
   $("out").innerHTML=`<p class="recog">Axtarış: “${esc(q)}” → <b>${esc(term)}</b> · ${state.items.length} elan tapıldı</p>
@@ -138,9 +148,31 @@ function render(q){
      ${prices.map(p=>`<div class="tick" style="left:${X(p)}"></div>`).join("")}
      ${has?`<div class="me" style="left:${X(offer)}">Təchizatçı ${fmt(offer)}</div>`:""}
      <div class="rl" style="left:0">${fmt(lo)}</div><div class="rl" style="right:0">${fmt(hi)}</div></div>
+   <div id="trend"></div>
    <div class="tbl"><table><thead><tr><th>Elan</th><th>Qiymət</th><th>Mənbə</th><th>Əlaqə</th></tr></thead><tbody>${rows}</tbody></table></div>`;
   document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{state.g=+b.dataset.g;render(q)});
+  drawTrend(g);
 }
+// Qiymət dinamikası: gecə yenilənmələrindən gün üzrə orta (median) qiymət
+async function drawTrend(g){const box=$("trend");if(!box)return;
+  try{const r=await fetch("https://syyybdouqdahsomfkemi.supabase.co/rest/v1/rpc/price_trend",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+KEY,"apikey":KEY},body:JSON.stringify({p_term:state.term,p_days:120})});
+   let rows=await r.json();if(!Array.isArray(rows))return;
+   const lo=Math.min(...g.map(x=>+x.price)),hi=Math.max(...g.map(x=>+x.price));
+   rows=rows.filter(x=>g.unit?x.unit===g.unit:(x.unit==='—'&&+x.med>=lo*0.5&&+x.med<=hi*2));
+   const byDay={};rows.forEach(x=>{byDay[x.day]=(byDay[x.day]||[]).concat(+x.med)});
+   const pts=Object.keys(byDay).sort().map(d=>({d,v:byDay[d].reduce((a,b)=>a+b,0)/byDay[d].length}));
+   if(pts.length<2){box.innerHTML=`<div class="trendc"><b>Qiymət dinamikası</b><div class="hint">Tarixçə toplanır — sistem hər gecə ${pts.length?'yenidən ':''}yoxlayır, bir neçə gündən sonra qrafik görünəcək.</div></div>`;return}
+   const W=640,H=150,P=28,vs=pts.map(p=>p.v),mn=Math.min(...vs),mx=Math.max(...vs),rg=(mx-mn)||1;
+   const xy=pts.map((p,i)=>[P+i*(W-2*P)/(pts.length-1),H-P-((p.v-mn)/rg)*(H-2*P)]);
+   const path=xy.map((c,i)=>(i?'L':'M')+c[0].toFixed(1)+' '+c[1].toFixed(1)).join(' ');
+   const ch=(vs.at(-1)-vs[0])/vs[0]*100,days=Math.round((new Date(pts.at(-1).d)-new Date(pts[0].d))/864e5);
+   box.innerHTML=`<div class="trendc"><div class="trh"><b>Qiymət dinamikası${g.label?' · '+esc(g.label):''}</b><span class="${ch>1?'up':ch<-1?'dn':''}">${ch>0?'▲':ch<0?'▼':'●'} ${Math.abs(ch).toFixed(1)}% · ${days} gündə</span></div>
+     <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><path d="${path} L ${xy.at(-1)[0]} ${H-P} L ${xy[0][0]} ${H-P} Z" fill="rgba(186,77,44,.12)"/><path d="${path}" fill="none" stroke="#ba4d2c" stroke-width="2.5" stroke-linejoin="round"/>${xy.map((c,i)=>`<circle cx="${c[0]}" cy="${c[1]}" r="3" fill="#ba4d2c"><title>${pts[i].d}: ${fmt(pts[i].v)}</title></circle>`).join('')}</svg>
+     <div class="trl"><span>${pts[0].d.slice(8)}.${pts[0].d.slice(5,7)} · ${fmt(vs[0])}</span><span>${pts.at(-1).d.slice(8)}.${pts.at(-1).d.slice(5,7)} · ${fmt(vs.at(-1))}</span></div></div>`;
+  }catch(e){}
+}
+document.querySelector(".wrap").style.visibility="hidden";
+luxAuth({perm:"techizat",title:"Təchizat — qiymət yoxlama",noAdminLink:true,onReady:function(){document.querySelector(".wrap").style.visibility="";}});
 $("f").addEventListener("submit",search);
 $("offer").addEventListener("input",()=>state.groups.length&&render($("q").value.trim()));
 </script>
