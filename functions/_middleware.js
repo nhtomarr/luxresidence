@@ -1,6 +1,23 @@
 // 1) www.luxresidence.az → luxresidence.az (301)
 // 2) Əsas SPA səhifələri üçün serverdə düzgün başlıq, təsvir və canonical (Google ilk HTML-də görsün)
 const BASE = 'https://luxresidence.az';
+const OFFICE_PRIMARY = 'ofis.pilothayat.az';
+const OFFICE_HOSTS = new Set([OFFICE_PRIMARY]);
+const OFFICE_LIVE = false;
+const OFFICE_MANIFEST = JSON.stringify({ name: 'Baş Ofis', short_name: 'Ofis', start_url: '/', scope: '/', display: 'standalone', background_color: '#0f172a', theme_color: '#0f172a', lang: 'az',
+  icons: [{ src: '/assets/ofis/icon-192.png', sizes: '192x192', type: 'image/png' }, { src: '/assets/ofis/icon-512.png', sizes: '512x512', type: 'image/png' }, { src: '/assets/ofis/icon-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }] });
+async function officeHost(ctx, url) {
+  const p = url.pathname;
+  const noindex = (r) => { const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); };
+  if (p === '/' || p === '/index.html' || p === '/ofis' || p === '/ofis.html') {
+    const r = await ctx.env.ASSETS.fetch(new Request(new URL('/ofis', url).toString(), ctx.request));
+    return noindex(r);
+  }
+  if (p === '/ofis.webmanifest') return new Response(OFFICE_MANIFEST, { headers: { 'Content-Type': 'application/manifest+json', 'Cache-Control': 'public, max-age=3600' } });
+  if (p === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'Content-Type': 'text/plain' } });
+  if (p === '/ofis-sw.js' || p.startsWith('/assets/ofis/') || p.startsWith('/assets/lux-auth.js') || p.startsWith('/favicon') || p === '/apple-touch-icon.png') return ctx.next();
+  return Response.redirect(url.origin + '/', 302);
+}
 const PAGES = {
   '/planlar': ['Mənzil planları — 1, 2, 3, 4 otaqlı yeni tikili mənzillər | LUX Residence', 'LUX Residence mənzil planları: 1, 2, 3 və 4 otaqlı mənzillər, sahə və mərtəbə üzrə filtr, 3D planlar, 0% daxili kredit.'],
   '/secim': ['İnteraktiv seçim — binanı və mərtəbəni seçin | LUX Residence', 'Binanı və mərtəbəni interaktiv seçin, satışda olan mənzilləri dərhal görün. LUX Residence, Yasamal, Bakı.'],
@@ -18,6 +35,10 @@ class Append { constructor(h) { this.h = h; } element(el) { el.append(this.h, { 
 const LEAD = { 1: 'geniş planlı 3 və 4 otaqlı mənzillər', 3: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 4: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 5: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 6: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 10: '1 və 3 otaqlı mənzillər', 11: '1 və 3 otaqlı mənzillər' };
 export async function onRequest(ctx) {
   const url = new URL(ctx.request.url);
+  // ---- Baş Ofis ayrıca domendə (ofis.pilothayat.az): yalnız ofis sistemi açılır ----
+  if (OFFICE_HOSTS.has(url.hostname)) return officeHost(ctx, url);
+  // köhnə ünvan → yeni domen (domen aktiv olandan sonra OFFICE_LIVE=true)
+  if (OFFICE_LIVE && (url.pathname === '/ofis' || url.pathname === '/ofis.html')) return Response.redirect('https://' + OFFICE_PRIMARY + '/' + url.search, 301);
   if (url.hostname === 'www.luxresidence.az') { url.hostname = 'luxresidence.az'; return Response.redirect(url.toString(), 301); }
   const res = await ctx.next();
   const path = url.pathname.replace(/\/+$/, '') || '/';

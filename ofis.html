@@ -329,6 +329,8 @@ body.owner .otbl .small,body.owner .otbl .muted.small{font-size:14px}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
+function OFB(q){return (location.pathname.indexOf('/ofis')===0?'/ofis':'/')+(q||'');}
+
 var PREVIEW=false,OWNER=false,sb=null,ME=null,MGR=false,EMP=null,EMPS=[],DEPTS=[],POS=[],TASKS=[],PROFS=[],CFG=null,KB='new',LEAVES=[],HOL=[];
 var LT={mezuniyyet:'Məzuniyyət',xestelik:'Xəstəlik',ezamiyyet:'Ezamiyyət',uzaqdan:'Uzaqdan iş',icaze:'Saatlıq icazə',odenissiz:'Ödənişsiz məzuniyyət'};
 var TZ='Asia/Baku';
@@ -350,8 +352,8 @@ function run(q){return q.then(function(r){if(r.error)throw r.error;return r.data
 luxAuth({perms:['ofis','ofis_admin','ofis_owner'],title:'Baş Ofis',sub:'İşçi hesabınızla daxil olun',logo:false,noAdminLink:true,accent:'#2563eb',bg:'linear-gradient(135deg,#e2e8f0,#f8fafc)',onReady:function(client,me){sb=client;ME=me;OWNER=(me.perms||[]).indexOf('ofis_owner')>=0;PREVIEW=!!(me.is_admin&&new URLSearchParams(location.search).get('baxis')==='sahibkar');if(PREVIEW)OWNER=true;MGR=me.is_admin||OWNER||(me.perms||[]).indexOf('ofis_admin')>=0;start();}});
 function start(){$('app').style.display='';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
  $('meBox').innerHTML='<b>'+esc(PREVIEW?'Afiq Rəhmanov':(ME.full_name||ME.email))+'</b>'+(PREVIEW?'Sahibkar':ME.is_admin?'Sistem admini':OWNER?'Sahibkar':MGR?'HR rəhbəri':'İşçi');
- $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href='/ofis';});};
- if(ME.is_admin){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';pv.onclick=function(){location.href=PREVIEW?'/ofis':'/ofis?baxis=sahibkar';};$('outBtn').parentNode.insertBefore(pv,$('outBtn'));}
+ $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href=OFB();});};
+ if(ME.is_admin){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';pv.onclick=function(){location.href=PREVIEW?OFB():OFB('?baxis=sahibkar');};$('outBtn').parentNode.insertBefore(pv,$('outBtn'));}
  if(PREVIEW){var bn=document.createElement('div');bn.className='pvbar';bn.innerHTML='👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.';document.body.insertBefore(bn,$('app'));}
  var tabs;
  if(OWNER)tabs=[['boss','Nəzarət']];
@@ -412,7 +414,7 @@ function scan(kind){_scanKind=kind;
    if(code&&found(code.data))return;setTimeout(loop,120);})();
  }).catch(function(e){var n=(e&&e.name)||'';$('camMsg').innerHTML=(n==='NotAllowedError'||n==='SecurityError')?'<b style="color:var(--bad)">Kameraya icazə verilmədi.</b> Telefonun ayarlarında bu sayt üçün kameranı aktiv edin (iPhone: Ayarlar → Safari → Kamera → İcazə ver), sonra yenidən cəhd edin. Və ya telefonun <b>Kamera</b> tətbiqi ilə skan edin.':(n==='NotFoundError'?'Kamera tapılmadı.':'Kamera açılmadı: '+esc((e&&e.message)||n)+'. Telefonun Kamera tətbiqi ilə skan edin.');});}
 
-function autoCheck(token){history.replaceState(null,'','/ofis');if(!EMP){toast('Hesabınız işçi kartına bağlanmayıb');return;}
+function autoCheck(token){history.replaceState(null,'',OFB());if(!EMP){toast('Hesabınız işçi kartına bağlanmayıb');return;}
  run(sb.from('office_attendance').select('*').eq('employee_id',EMP.id).eq('day',today()).maybeSingle()).then(function(r){var kind=(!r||!r.check_in)?'in':(!r.check_out?'out':null);
   if(!kind){toast('Bu gün gəliş və çıxış artıq qeyd olunub');return;}
   if(kind==='out'&&!confirm('Çıxışı qeyd edək?'))return;doCheck(kind,token);}).catch(err);}
@@ -770,7 +772,7 @@ var _fcmOn=null;function fcmOn(){return _fcmOn!==null?Promise.resolve(_fcmOn):sb
 function nativePushInit(){var P=nativePush();if(!P||nativePushInit._d)return;nativePushInit._d=1;
  P.addListener('registration',function(t){sb.from('office_push_subs').upsert({user_id:ME.user_id,endpoint:'fcm:'+t.value,p256dh:'fcm',auth:'fcm',ua:'android-app'},{onConflict:'endpoint'}).then(function(){renderPushCards();});});
  P.addListener('registrationError',function(){toast('Bildiriş qeydiyyatı alınmadı');});
- P.addListener('pushNotificationActionPerformed',function(a){try{var u=a.notification.data&&a.notification.data.url;if(u&&u.indexOf('/ofis')>=0)location.href=u;}catch(e){}});}
+ P.addListener('pushNotificationActionPerformed',function(a){try{var u=a.notification.data&&a.notification.data.url;if(u&&u.indexOf(OFB())>=0)location.href=u;}catch(e){}});}
 
 /* ---------- iPhone: ana ekrana əlavə etmə bələdçisi ---------- */
 function iosSheetClose(days){$('iosSheet').classList.remove('on');try{localStorage.setItem('iosSheetUntil',String(Date.now()+(days||3)*864e5));}catch(e){}}
@@ -946,7 +948,7 @@ function saveEmp(id){var old=id?EMPS.find(function(x){return x.id===id;}):null;
  chain.then(function(){return run(id?sb.from('office_employees').update(b).eq('id',id).select().single():sb.from('office_employees').insert(b).select().single());})
  .then(function(e){var i=EMPS.findIndex(function(x){return x.id===e.id;});if(i>=0)EMPS[i]=e;else EMPS.push(e);EMP=EMPS.find(function(x){return x.user_id===ME.user_id&&x.active;})||null;closeModal();renderStaff();
   if(creds)showCreds(e.full_name,creds.email,creds.pw);else toast('Yadda saxlanıldı');}).catch(err);}
-function showCreds(name,em,pw){var link=location.origin+'/ofis';var txt=name+', Baş Ofis sisteminə giriş:\n'+link+'\nEmail: '+em+'\nParol: '+pw;
+function showCreds(name,em,pw){var link=location.origin+OFB();var txt=name+', Baş Ofis sisteminə giriş:\n'+link+'\nEmail: '+em+'\nParol: '+pw;
  modal('<div class="mhead"><h3>Giriş məlumatları</h3><button class="x" onclick="closeModal()">×</button></div><p class="muted small">Bunu işçiyə ötürün. Parol bir daha göstərilməyəcək.</p><div class="card" style="background:#f8fafc;margin:10px 0"><div class="small muted">Ünvan</div><b>'+esc(link)+'</b><div class="small muted" style="margin-top:8px">Email</div><b>'+esc(em)+'</b><div class="small muted" style="margin-top:8px">Parol</div><b style="font-size:20px;letter-spacing:.04em">'+esc(pw)+'</b></div><div class="row"><button class="btn" id="cpy">Kopyala</button><a class="btn ghost" target="_blank" rel="noopener" href="https://wa.me/?text='+encodeURIComponent(txt)+'">WhatsApp-da göndər</a></div>');
  $('cpy').onclick=function(){(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){toast('Kopyalandı');},function(){prompt('Kopyalayın:',txt);});};}
 
@@ -960,7 +962,7 @@ function saveCfg(){var qm=(document.querySelector('input[name=qmode]:checked')||
  run(sb.from('office_config').update(b).eq('id',1).select().single()).then(function(c){CFG=c;toast('Ayarlar saxlanıldı');}).catch(err);}
 
 function printQR(){if(!CFG||!CFG.static_qr)return toast('Əvvəlcə "Çap olunan sabit QR" seçib Yadda saxla basın');
- sb.rpc('office_qr_static').then(function(r){if(r.error)throw r.error;var url=location.origin+'/ofis?c='+r.data;
+ sb.rpc('office_qr_static').then(function(r){if(r.error)throw r.error;var url=location.origin+OFB('?c=')+r.data;
   var sh=$('printSheet');sh.innerHTML='<div class="ps-in"><div class="ps-t">GƏLİŞ · GEDİŞ</div><div class="ps-s">Telefonun kamerası ilə skan edin</div><div id="psQr"></div><ol class="ps-l"><li>Kameranı QR koda tutun və linkə toxunun</li><li>Hesabınızla daxil olun (ilk dəfə)</li><li>Kamera və yer icazəsi verin</li></ol><div class="ps-f">Baş Ofis · İdarəetmə sistemi</div></div>';
   new QRCode($('psQr'),{text:url,width:520,height:520,correctLevel:QRCode.CorrectLevel.H});
   modal('<div class="mhead"><h3>Çap üçün QR</h3><button class="x" onclick="closeModal()">×</button></div><p class="muted small">A4 vərəqə çap edin və girişə, göz səviyyəsində vurun.</p><div id="pvQr" style="display:flex;justify-content:center;margin:12px 0"></div><div class="row"><button class="btn" onclick="window.print()">🖨 Çap et</button><button class="btn ghost" onclick="dlQR()">PNG yüklə</button></div>');
@@ -969,7 +971,7 @@ function printQR(){if(!CFG||!CFG.static_qr)return toast('Əvvəlcə "Çap olunan
 function dlQR(){var c=document.querySelector('#psQr canvas');if(!c)return;var a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='ofis-qr.png';a.click();}
 function rotateQR(){if(!confirm('QR yenilənsin? Köhnə çap olunmuş QR dərhal işləməz olacaq və yenisini çap etməli olacaqsınız.'))return;sb.rpc('office_qr_rotate').then(function(r){if(r.error)throw r.error;toast('QR yeniləndi. Yenisini çap edin.');}).catch(err);}
 var _qrT=null,_qrTick=null;
-function openQR(){$('qrWrap').classList.add('on');var box=$('qrBox'),qr=null;function draw(){sb.rpc('office_qr_token').then(function(r){if(r.error)throw r.error;var url=location.origin+'/ofis?c='+r.data;box.innerHTML='';qr=new QRCode(box,{text:url,width:300,height:300,correctLevel:QRCode.CorrectLevel.M});}).catch(err);}
+function openQR(){$('qrWrap').classList.add('on');var box=$('qrBox'),qr=null;function draw(){sb.rpc('office_qr_token').then(function(r){if(r.error)throw r.error;var url=location.origin+OFB('?c=')+r.data;box.innerHTML='';qr=new QRCode(box,{text:url,width:300,height:300,correctLevel:QRCode.CorrectLevel.M});}).catch(err);}
  draw();clearInterval(_qrT);clearInterval(_qrTick);var left=60-new Date().getSeconds();$('qrLeft').textContent=left;
  _qrTick=setInterval(function(){left=60-new Date().getSeconds();$('qrLeft').textContent=left;if(left===60||left===1){setTimeout(draw,1200);}},1000);
  if(document.documentElement.requestFullscreen&&new URLSearchParams(location.search).get('qr'))try{document.documentElement.requestFullscreen();}catch(e){}}
