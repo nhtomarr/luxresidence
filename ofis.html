@@ -296,7 +296,7 @@ nav.tabs,#tabs{scroll-behavior:smooth}
    <div id="pushCard"></div><div id="tMood"></div><div id="tDocsCard"></div>
    <div id="tOwnerTasks"></div>
    <div class="card" id="noEmp" style="display:none"><b>Hesabınız işçi kartına bağlanmayıb.</b><p class="muted small">Gəliş-gediş qeydi üçün rəhbər sizi "İşçilər" bölməsində işçi kartına bağlamalıdır.</p></div>
-   <div class="card"><div class="row" style="justify-content:space-between"><h3>Mənim tapşırıqlarım</h3><button class="btn sm" onclick="openTask()">+ Tapşırıq</button></div><div id="tMyTasks"></div></div>
+   <div class="card"><div class="row" style="justify-content:space-between"><h3>Mənə verilən tapşırıqlar</h3></div><div id="tMyTasks"></div></div>
    <div id="tKudos"></div>
    <div id="tHr"></div>
    <div class="card" id="tAnn" style="display:none"></div>
@@ -322,7 +322,7 @@ nav.tabs,#tabs{scroll-behavior:smooth}
   <!-- TAPŞIRIQLAR -->
   <section class="view" id="v-tasks">
    <div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">Tapşırıqlar</h2>
-    <div class="row"><select id="tkFilter" class="btn ghost sm" style="padding-right:8px"><option value="mine">Mənə aid</option><option value="created">Mənim verdiklərim</option><option value="all">Hamısı</option></select><button class="btn" onclick="openTask()">+ Yeni</button></div></div>
+    <div class="row mgr-only"><select id="tkFilter" class="btn ghost sm" style="padding-right:8px"><option value="all">Hamısı</option><option value="created">Mənim verdiklərim</option><option value="mine">Mənə aid</option></select><button class="btn" onclick="openTask()">+ Yeni</button></div></div>
    <div class="mtabs" id="kbTabs"></div>
    <div class="kanban" id="kanban"></div>
   </section>
@@ -569,7 +569,7 @@ function kpi(v,l,c){return '<div class="kpi '+(c||'')+'"><b>'+v+'</b><span>'+l+'
 
 /* ---------- TAPŞIRIQLAR ---------- */
 function taskRow(t){var over=t.status!=='done'&&t.due&&t.due<today();var cl=t.checklist||[],cd=cl.filter(function(x){return x.done;}).length;return '<div class="tk'+(over?' over':'')+(t.from_owner?' ownt':'')+'" draggable="true" data-id="'+t.id+'" onclick="openTask('+t.id+')">'+(t.from_owner?'<div class="ownbadge">👑 Sahibkardan</div>':'')+'<b>'+esc(t.title)+'</b><div class="meta">'+(cl.length?'<span class="pill '+(cd===cl.length?'p-ok':'p-mut')+'">✓ '+cd+'/'+cl.length+'</span>':'')+((t.files||[]).length?'<span>📎 '+t.files.length+'</span>':'')+(t.recur?'<span title="Təkrarlanan">🔁</span>':'')+'<span class="pill prio-'+t.priority+'">'+PR[t.priority]+'</span><span class="pill p-mut">'+ST[t.status]+'</span>'+(t.assignee_id?'<span>👤 '+esc(empName(t.assignee_id))+'</span>':'')+(t.due?'<span'+(over?' style="color:var(--bad);font-weight:700"':'')+'>📅 '+t.due.slice(8)+'.'+t.due.slice(5,7)+'</span>':'')+'</div></div>';}
-function renderKanban(){var f=$('tkFilter').value;if(!MGR&&f==='all'){}
+function renderKanban(){var f=MGR?$('tkFilter').value:'mine';
  var list=TASKS.filter(function(t){if(f==='mine')return EMP&&t.assignee_id===EMP.id;if(f==='created')return t.created_by===ME.user_id;return true;});
  if(!renderKanban._i){renderKanban._i=1;var fk=['doing','new','review','done'].find(function(k){return list.some(function(t){return t.status===k;});});if(fk)KB=fk;}
  $('kbTabs').innerHTML=Object.keys(ST).map(function(k){var n=list.filter(function(t){return t.status===k;}).length;return '<button data-k="'+k+'" class="'+(KB===k?'on':'')+'">'+ST[k]+' ('+n+')</button>';}).join('');
@@ -577,7 +577,8 @@ function renderKanban(){var f=$('tkFilter').value;if(!MGR&&f==='all'){}
  $('kanban').innerHTML=Object.keys(ST).map(function(k){var l=list.filter(function(t){return t.status===k;});return '<div class="col'+(KB===k?' on':'')+'" data-st="'+k+'"><h4>'+ST[k]+'<span>'+l.length+'</span></h4>'+(l.map(taskRow).join('')||'<div class="empty small">—</div>')+'</div>';}).join('');}
 function empOpts(sel){return '<option value="">— təyin edilməyib —</option>'+EMPS.filter(function(e){return e.active;}).map(function(e){return '<option value="'+e.id+'"'+(e.id===sel?' selected':'')+'>'+esc(e.full_name)+'</option>';}).join('');}
 var CL=[];
-function openTask(id){var t=id?TASKS.find(function(x){return x.id===id;}):null;var canEdit=!t||MGR||t.created_by===ME.user_id;CL=JSON.parse(JSON.stringify((t&&t.checklist)||[]));
+function openTask(id){if(!MGR&&!id){toast('Tapşırığı rəhbər verir. Öz işlərinizi “Aylıq plan”da yazın.');return;}return openTask_(id);}
+function openTask_(id){var t=id?TASKS.find(function(x){return x.id===id;}):null;var canEdit=!t||MGR||t.created_by===ME.user_id;CL=JSON.parse(JSON.stringify((t&&t.checklist)||[]));
  modal('<div class="mhead"><h3>'+(t?'Tapşırıq':'Yeni tapşırıq')+'</h3><button class="x" onclick="closeModal()">×</button></div>'+
   (!t?'<div class="field"><label>Şablon</label><select id="fTpl" onchange="applyTaskTpl(this.value)"><option value="">— boş —</option>'+TTPL.map(function(x,i){return '<option value="'+i+'">'+esc(x.title)+'</option>';}).join('')+'</select></div>':'')+
   '<div class="field"><label>Başlıq</label><input id="fT" value="'+esc(t?t.title:'')+'"'+(canEdit?'':' disabled')+'></div>'+
@@ -965,7 +966,7 @@ function bdaySoon(e){if(!e.birthday)return null;var t=today(),y=+t.slice(0,4),b=
 /* ---------- Bu gün: salamlama, sürətli düymələr, seriya, əhval, sənədlər, təşəkkürlər ---------- */
 function renderHomeExtras(){if(OWNER)return;var nm=String((EMP&&EMP.full_name)||ME.full_name||'').split(' ')[0];
  var h=$('tHello');if(h)h.innerHTML='<div><h2 style="margin:0">'+greetE()+(nm?', '+esc(nm):'')+' 👋</h2><div class="muted small" id="tHsub"></div></div>';
- var q=$('tQuick');if(q)q.innerHTML=[['🌴','Məzuniyyət / icazə','openLeave()'],['✅','Yeni tapşırıq','openTask()'],['🙌','Təşəkkür göndər','openKudos()'],['👥','Komanda','show(\'dir\')'],['📄','Sənədlər','show(\'docs\')']].map(function(x){return '<button class="qa-b" onclick="'+x[2]+'"><span>'+x[0]+'</span>'+x[1]+'</button>';}).join('');
+ var q=$('tQuick');if(q)q.innerHTML=[['🌴','Məzuniyyət / icazə','openLeave()'],['🗒','Aylıq plan','show(\'plans\')'],['🙌','Təşəkkür göndər','openKudos()'],['👥','Komanda','show(\'dir\')'],['📄','Sənədlər','show(\'docs\')']].map(function(x){return '<button class="qa-b" onclick="'+x[2]+'"><span>'+x[0]+'</span>'+x[1]+'</button>';}).join('');
  if(!EMP)return;
  // seriya: ardıcıl vaxtında gəliş
  run(sb.from('office_attendance').select('day,check_in,late_min').eq('employee_id',EMP.id).gte('day',addDays(today(),-60)).order('day',{ascending:false})).then(function(rows){var s=0;for(var i=0;i<rows.length;i++){if(!rows[i].check_in)continue;if(rows[i].late_min>0)break;s++;}
