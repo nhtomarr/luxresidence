@@ -78,3 +78,8 @@
   Cache-Control: public, max-age=86400
 /mobile/*
   X-Robots-Tag: noindex, nofollow
+
+/nezaret
+  X-Robots-Tag: noindex, nofollow
+/nezaret.html
+  X-Robots-Tag: noindex, nofollow
