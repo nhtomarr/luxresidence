@@ -4,8 +4,8 @@ const BASE = 'https://luxresidence.az';
 const OFFICE_PRIMARY = 'ofis.pilothayat.az';
 const OFFICE_HOSTS = new Set([OFFICE_PRIMARY]);
 const OFFICE_LIVE = true;
-const OFFICE_MANIFEST = JSON.stringify({ name: 'Baş Ofis', short_name: 'Ofis', start_url: '/', scope: '/', display: 'standalone', background_color: '#0f172a', theme_color: '#0f172a', lang: 'az',
-  icons: [{ src: '/assets/ofis/icon-192.png', sizes: '192x192', type: 'image/png' }, { src: '/assets/ofis/icon-512.png', sizes: '512x512', type: 'image/png' }, { src: '/assets/ofis/icon-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }] });
+const OFFICE_MANIFEST = JSON.stringify({ name: 'Baş Ofis', short_name: 'Ofis', start_url: '/', scope: '/', display: 'standalone', background_color: '#081634', theme_color: '#081634', lang: 'az',
+  icons: [{ src: '/assets/ofis/icon-192.png?v=2', sizes: '192x192', type: 'image/png' }, { src: '/assets/ofis/icon-512.png?v=2', sizes: '512x512', type: 'image/png' }, { src: '/assets/ofis/icon-maskable.png?v=2', sizes: '512x512', type: 'image/png', purpose: 'maskable' }] });
 async function officeHost(ctx, url) {
   const p = url.pathname;
   const noindex = (r) => { const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); };
@@ -13,6 +13,8 @@ async function officeHost(ctx, url) {
     const r = await ctx.env.ASSETS.fetch(new Request(new URL('/ofis', url).toString(), ctx.request));
     return noindex(r);
   }
+  if (p === '/favicon.ico' || p === '/favicon.svg' || p === '/favicon.png') return Response.redirect(url.origin + '/assets/ofis/favicon-64.png?v=2', 302);
+  if (p === '/apple-touch-icon.png') return ctx.env.ASSETS.fetch(new Request(new URL('/assets/ofis/apple-touch.png', url).toString()));
   if (p === '/ofis.webmanifest') return new Response(OFFICE_MANIFEST, { headers: { 'Content-Type': 'application/manifest+json', 'Cache-Control': 'public, max-age=3600' } });
   if (p === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'Content-Type': 'text/plain' } });
   if (p === '/ofis-sw.js' || p.startsWith('/assets/ofis/') || p.startsWith('/assets/lux-auth.js') || p.startsWith('/favicon') || p === '/apple-touch-icon.png') return ctx.next();
