@@ -216,6 +216,7 @@ body.owner .otbl .small,body.owner .otbl .muted.small{font-size:14px}
 .linkbtn{border:none;background:none;color:var(--acc);font-size:12px;padding:2px 0;cursor:pointer}
 .plinfo b,.note b{display:inline!important;font-size:inherit!important}.plsteps{justify-content:flex-start}.plsteps em{display:block;flex:0 0 24px!important}.linkbtn{font-size:12px!important;font-weight:600;margin-top:2px}
 .plsteps em{position:static!important;margin:0!important}.plsteps span{flex:none}
+.msw button:disabled{opacity:.25;cursor:default;pointer-events:none}
 </style>
 </head>
 <body>
@@ -640,10 +641,13 @@ function planPct(p){var it=(p&&p.items)||[];if(!it.length)return 0;return Math.r
 var PST={draft:['qaralama','p-mut'],submitted:['təsdiq gözləyir','p-warn'],approved:['təsdiqlənib','p-ok'],returned:['düzəlişə qaytarılıb','p-bad']};
 function loadPlans(m){return run(sb.from('office_plans').select('*').eq('month',m)).then(function(r){PLANS=r||[];return PLANS;});}
 function bar(p){return '<div class="pbar"><i style="width:'+p+'%;background:'+(p>=80?'var(--ok)':p>=40?'var(--warn)':'var(--bad)')+'"></i></div>';}
-function renderPlans(){var mi=$('plM');if(!mi.value)mi.value=today().slice(0,7);var m=mi.value;var lb=$('plML');if(lb)lb.textContent=mLabel(m);
+function renderPlans(){var mi=$('plM');var b=plBounds();if(!mi.value||mi.value<b[0]||mi.value>b[1])mi.value=today().slice(0,7);var m=mi.value;plNav();var lb=$('plML');if(lb)lb.textContent=mLabel(m);
  $('plH').textContent=MGR?'Aylıq iş planları':'Mənim aylıq planım';
  loadPlans(m).then(function(){if(MGR)return renderPlansMgr(m);renderPlanMine(m);}).catch(err);}
-function plShift(k){var m=$('plM').value||today().slice(0,7),y=+m.slice(0,4),mo=+m.slice(5,7)+k;if(mo<1){mo=12;y--;}if(mo>12){mo=1;y++;}$('plM').value=y+'-'+String(mo).padStart(2,'0');renderPlans();}
+function mAdd(m,k){var y=+m.slice(0,4),mo=+m.slice(5,7)+k;while(mo<1){mo+=12;y--;}while(mo>12){mo-=12;y++;}return y+'-'+String(mo).padStart(2,'0');}
+function plBounds(){var c=today().slice(0,7);return [mAdd(c,-1),mAdd(c,1)];}
+function plShift(k){var m=$('plM').value||today().slice(0,7),n=mAdd(m,k),b=plBounds();if(n<b[0]||n>b[1])return;$('plM').value=n;renderPlans();}
+function plNav(){var m=$('plM').value,b=plBounds(),bt=document.querySelectorAll('.msw button');if(bt.length<2)return;bt[0].disabled=m<=b[0];bt[1].disabled=m>=b[1];}
 function renderPlanMine(m){$('plKpi').innerHTML='';var lb=$('plML');if(lb)lb.textContent=mLabel(m);if(!EMP){$('plBody').innerHTML='<div class="card empty">Hesabınız işçi kartına bağlanmayıb. HR rəhbərinə müraciət edin.</div>';return;}
  var cur=today().slice(0,7),past=m<cur,p=PLANS.find(function(x){return x.employee_id===EMP.id;});PLI=JSON.parse(JSON.stringify((p&&p.items)||[]));
  var st=p?p.status:'none',edit=!past&&(st==='none'||st==='draft'||st==='returned'||st==='submitted'),prog=st==='approved'&&!past&&m<=cur,h='<div class="card">';
