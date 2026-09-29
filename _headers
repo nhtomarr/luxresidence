@@ -86,3 +86,6 @@
 
 /techizat
   X-Robots-Tag: noindex, nofollow
+
+/browser/*
+  X-Robots-Tag: noindex

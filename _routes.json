@@ -16,6 +16,7 @@
     "/site.webmanifest",
     "/ru.webmanifest",
     "/satis.webmanifest",
-    "/komendant.webmanifest"
+    "/komendant.webmanifest",
+    "/browser/*"
   ]
 }
