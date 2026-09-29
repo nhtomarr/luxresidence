@@ -3,9 +3,11 @@
   "appName": "Baş Ofis",
   "webDir": "www",
   "server": {
-    "url": "https://luxresidence.az/ofis",
+    "url": "https://ofis.pilothayat.az",
     "androidScheme": "https",
     "allowNavigation": [
+      "*.pilothayat.az",
+      "ofis.pilothayat.az",
       "luxresidence.az",
       "*.luxresidence.az",
       "*.supabase.co",

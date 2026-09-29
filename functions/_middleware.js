@@ -3,7 +3,7 @@
 const BASE = 'https://luxresidence.az';
 const OFFICE_PRIMARY = 'ofis.pilothayat.az';
 const OFFICE_HOSTS = new Set([OFFICE_PRIMARY]);
-const OFFICE_LIVE = false;
+const OFFICE_LIVE = true;
 const OFFICE_MANIFEST = JSON.stringify({ name: 'Baş Ofis', short_name: 'Ofis', start_url: '/', scope: '/', display: 'standalone', background_color: '#0f172a', theme_color: '#0f172a', lang: 'az',
   icons: [{ src: '/assets/ofis/icon-192.png', sizes: '192x192', type: 'image/png' }, { src: '/assets/ofis/icon-512.png', sizes: '512x512', type: 'image/png' }, { src: '/assets/ofis/icon-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }] });
 async function officeHost(ctx, url) {
