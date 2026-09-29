@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": [
+    "/assets/*",
+    "/favicon.ico",
+    "/favicon.svg",
+    "/favicon-48.png",
+    "/favicon-96.png",
+    "/favicon-192.png",
+    "/favicon-512.png",
+    "/*.webmanifest",
+    "/robots.txt",
+    "/mobile/*",
+    "/ofis-sw.js"
+  ]
+}
