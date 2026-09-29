@@ -340,6 +340,7 @@ body.simple #tQuick,body.simple #tMood,body.simple #tDocsCard,body.simple #tOwne
   <!-- NƏZARƏT (sahibkar) -->
   <section class="view" id="v-boss"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2 class="bossh" style="margin:0">Ofisdə vəziyyət</h2><span class="muted" id="bDate"></span></div>
    <div class="bgrid" id="bKpi"></div>
+   <div id="bOut"></div>
    <div class="row" style="justify-content:space-between;margin:22px 0 10px"><h2 class="bossh" style="margin:0">İşçilər</h2><button class="btn ghost" onclick="monthReport()">🖨 Aylıq hesabat</button></div>
    <p class="muted" style="margin-bottom:10px">Ətraflı məlumat üçün işçinin adına toxunun.</p><div id="bList"></div><div id="ownDash"></div><div id="ownPush" style="margin-top:16px"></div><div id="ownTg"></div></section>
   <!-- AYLIQ PLAN -->
@@ -840,7 +841,10 @@ function decidePlan(eid,m,st){var p=PLANS.find(function(x){return x.employee_id=
  var b={items:PLI,status:st,mgr_note:$('plNote').value.trim()};if(st==='approved'&&(!p||p.status!=='approved')){b.approved_by=ME.user_id;b.approved_at=new Date().toISOString();}
  run(p?sb.from('office_plans').update(b).eq('id',p.id).select().single():sb.from('office_plans').insert(Object.assign(b,{employee_id:eid,month:m})).select().single()).then(function(np){closeModal();toast(st==='approved'?'Təsdiqləndi':'Qaytarıldı');if(!p||p.status!==st)notify('plan_decided',{id:np.id});renderPlans();}).catch(err);}
 /* ---------- NƏZARƏT (sahibkar üçün sadə ekran) ---------- */
-function renderBoss(){var d=today(),m=d.slice(0,7);$('bDate').textContent=new Date().toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});
+function renderOutingsCard(id,d){var box=$(id);if(!box)return;run(sb.from('office_outings').select('*').eq('day',d).order('out_at')).then(function(os){if(!os.length){box.innerHTML='';return;}
+ box.innerHTML='<div class="card" style="margin-top:14px"><h3 style="margin:0 0 8px">🚶 Bu gün ofisdən çıxışlar</h3>'+os.map(function(o){var e=EMPS.find(function(x){return x.id===o.employee_id;})||{full_name:'—'};return '<div class="row" style="justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid var(--line);flex-wrap:wrap"><div><b>'+esc(e.full_name)+'</b><div class="small muted">'+(o.kind==='is'?'💼 işlə bağlı':'🙋 şəxsi')+' · '+hm(o.out_at)+'–'+(o.back_at?hm(o.back_at):'<b style="color:var(--warn)">çöldədir</b>')+' · '+esc(o.note)+(o.arrive_at?' · 📍 çatıb '+hm(o.arrive_at):'')+'</div></div><button class="btn sm" onclick="openRoute('+o.id+')">🗺 Marşrut</button></div>';}).join('')+'</div>';}).catch(function(){});}
+function renderBoss(){renderOutingsCard('bOut',today());return renderBoss0.apply(this,arguments);}
+function renderBoss0(){var d=today(),m=d.slice(0,7);$('bDate').textContent=new Date().toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});
  Promise.all([run(sb.from('office_attendance').select('*').eq('day',d)),loadPlans(m),run(sb.from('office_attendance').select('employee_id,late_min').gte('day',m+'-01').lte('day',d)),run(sb.from('lux_leads').select('id,status')).catch(function(){return [];})]).then(function(r){var att=r[0],ma=r[2],leads=r[3]||[];
   var act=EMPS.filter(function(e){return e.active;});var work=act.filter(function(e){return (e.workdays||[]).indexOf(isoDow(d))>=0&&!isHol(d)&&!leaveOn(e.id,d);});
   var came=att.filter(function(a){return a.check_in;}),late=came.filter(function(a){return a.late_min>0;}),absent=work.filter(function(e){return !came.some(function(a){return a.employee_id===e.id;});});
@@ -865,7 +869,7 @@ var OWN={};
 function grade(r,pp,over){var pts=0;var att=r.plan?(r.came+r.leave)/r.plan:1;if(att>=0.95)pts+=2;else if(att>=0.85)pts+=1;
  if(r.lateN<=1)pts+=2;else if(r.lateN<=4)pts+=1;if(pp===null)pts+=1;else if(pp>=70)pts+=2;else if(pp>=40)pts+=1;if(!over)pts+=2;else if(over<=1)pts+=1;
  return pts>=7?['Yaxşı','g-ok']:pts>=4?['Orta','g-warn']:['Zəif','g-bad'];}
-function renderOwner(){var d=today(),m=d.slice(0,7);
+function renderOwner(){var d=today(),m=d.slice(0,7);renderOutingsCard('bOut',d);
  $('bDate').textContent=new Date().toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long',year:'numeric'});
  var hs=document.querySelectorAll('#v-boss .bossh');var hr=+new Intl.DateTimeFormat('en-GB',{timeZone:TZ,hour:'2-digit',hour12:false}).format(new Date());var gr=hr>=5&&hr<12?'Sabahınız xeyir':hr>=12&&hr<17?'Günortanız xeyir':'Axşamınız xeyir';var nm=PREVIEW?'Afiq Rəhmanov':(ME.full_name||'Afiq Rəhmanov');hs[0].textContent=gr+', '+nm;var hb=$('ownGiveBtn');if(!hb){hb=document.createElement('button');hb.id='ownGiveBtn';hb.className='btn givebtn';hb.textContent='✍️ Tapşırıq ver';hb.onclick=function(){ownTaskModal();};hs[0].parentNode.insertBefore(hb,hs[0].nextSibling);}if(hs[1])hs[1].parentNode.style.display='none';
  var pm=document.querySelector('#v-boss > p.muted');if(pm)pm.style.display='none';$('bList').innerHTML='';
