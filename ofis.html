@@ -244,6 +244,21 @@ body.owner .otbl .small,body.owner .otbl .muted.small{font-size:14px}
 .meava:hover .eava{filter:brightness(.92)}
 img.eava{border-radius:50%;display:inline-block;background:#e2e8f0}
 .kav{position:relative;flex:none;line-height:0}.kav i{position:absolute;right:-6px;bottom:-6px;font-style:normal;font-size:14px;line-height:1;background:#fff;border-radius:50%;width:24px;height:24px;display:grid;place-items:center;box-shadow:0 2px 8px -2px rgba(15,23,42,.35)}
+
+/* ---- telefon üçün son düzəlişlər ---- */
+@media(max-width:600px){
+ input,select,textarea{font-size:16px!important}           /* iPhone-da fokusda avtomatik böyütmə olmasın */
+ .stat-line{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ .stat-line div b{font-size:22px}
+}
+@media(max-width:420px){
+ header .brand small,.top .brand small,.hdr small{display:none}
+ .kpi b{font-size:22px!important}
+ h2{font-size:22px}
+ .qa-b{padding:12px 6px;font-size:12px}
+}
+nav.tabs,#tabs{scroll-behavior:smooth}
+@media(max-width:900px){#tabs{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}}
 </style>
 </head>
 <body>
@@ -423,7 +438,7 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
  setInterval(tick,1000);tick();
  loadAll().then(function(){setTimeout(function(){iosSheetShow(false);},2500);if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':((OWNER||(ME.is_admin&&!EMP))?'boss':'today'));if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
 }
-function show(v){document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
+function show(v){document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});var ab=document.querySelector('#tabs button.on');if(ab&&ab.scrollIntoView)try{ab.scrollIntoView({block:'nearest',inline:'center'});}catch(e){}
  if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss'){if(OWNER)renderOwner();else renderBoss();}if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();if(v==='dir'){dirFilters();var db=$('dirBar');if(db)db.style.display='';renderDir();}if(v==='docs')renderDocs();if(v==='me')renderMe();window.scrollTo(0,0);}
 function tick(){var n=new Date();$('tClock').textContent=n.toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit',second:'2-digit'});$('tDate').textContent=n.toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});}
 function loadAll(){return Promise.all([
