@@ -509,7 +509,7 @@ function selfieShot(kind){return new Promise(function(resolve){
 var MYOUT=null;
 function loadMyOuting(){if(!EMP)return Promise.resolve();return run(sb.from('office_outings').select('*').eq('employee_id',EMP.id).eq('day',today()).order('id')).then(function(r){MYOUTS=r;MYOUT=r.find(function(x){return !x.back_at;})||null;}).catch(function(){MYOUTS=[];MYOUT=null;});}
 var MYOUTS=[];
-function renderOutingBox(){var b=$('tOut');if(!b)return;if(MYOUT)trkStart();else trkStop();if(!EMP||!MYDAY||!MYDAY.check_in||MYDAY.check_out){b.innerHTML=MYOUTS.length&&MYDAY&&MYDAY.check_out?'':'';return;}
+function renderOutingBox(){var b=$('tOut');if(!b)return;if(MYOUT)trkStart();else trkStop();if(window.__bgSync)window.__bgSync();if(!EMP||!MYDAY||!MYDAY.check_in||MYDAY.check_out){b.innerHTML=MYOUTS.length&&MYDAY&&MYDAY.check_out?'':'';return;}
  if(MYOUT){var mins=Math.max(0,Math.round((Date.now()-new Date(MYOUT.out_at))/60000));
   b.innerHTML='<div class="card outc"><div class="row sp"><div><b>🚶 Ofisdən kənardasınız · '+(MYOUT.kind==='is'?'işlə bağlı':'şəxsi')+'</b><div class="small">'+esc(MYOUT.note)+' · '+hm(MYOUT.out_at)+'-dan bəri ('+hmin(mins)+')</div></div></div><div class="row" style="margin-top:10px;gap:8px">'+(MYOUT.arrive_at?'<span class="pill p-ok">📍 Çatdığınız yer qeyd olunub · '+hm(MYOUT.arrive_at)+'</span>':'<span class="pill p-mut">📍 Yer avtomatik izlənir — çatanda özü qeyd olunacaq</span>')+'<button class="btn" onclick="outingEnd(false)">✅ Ofisə qayıtdım</button>'+(MYOUT.kind==='is'?'<button class="btn ghost" onclick="outingEnd(true)">Bu gün qayıtmayacağam</button>':'')+'</div></div>';return;}
  var cnt=MYOUTS.length;b.innerHTML='<div class="outbar"><button class="btn ghost sm" onclick="openOuting()">🚶 Qısa çıxış (iş vaxtı)</button>'+(cnt?'<span class="muted small">Bu gün '+cnt+' çıxış</span>':'')+'</div>';}
@@ -1363,5 +1363,6 @@ document.addEventListener('DOMContentLoaded',function(){var b=$('instBtn');if(!b
   else if(isIOS()){iosSheetShow(true);}
   else modal('<div class="mhead"><h3>Telefona quraşdır</h3><button class="x" onclick="closeModal()">×</button></div><p><b>iPhone (Safari):</b> aşağıdakı <b>Paylaş</b> düyməsi (□↑) → <b>“Ana ekrana əlavə et”</b> → <b>Əlavə et</b>.</p><p style="margin-top:10px"><b>Android (Chrome):</b> sağ yuxarıdakı ⋮ menyu → <b>“Tətbiqi quraşdır”</b>.</p>');};});
 </script>
+<script src="/bg.js"></script>
 </body>
 </html>
