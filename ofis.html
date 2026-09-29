@@ -747,7 +747,7 @@ var PLANS=[],PLI=[];
 function nextMonth(m){var y=+m.slice(0,4),mo=+m.slice(5,7)+1;if(mo>12){mo=1;y++;}return y+'-'+String(mo).padStart(2,'0');}
 function planPct(p){var it=(p&&p.items)||[];if(!it.length)return 0;return Math.round(it.filter(function(x){return x.done;}).length/it.length*100);}
 var PST={draft:['qaralama','p-mut'],submitted:['təsdiq gözləyir','p-warn'],approved:['təsdiqlənib','p-ok'],returned:['düzəlişə qaytarılıb','p-bad']};
-function loadPlans(m){return run(sb.from('office_plans').select('*').eq('month',m)).then(function(r){PLANS=r||[];return PLANS;});}
+function loadPlans(m){return run(sb.from('office_plans').select('*').eq('month',m)).then(function(r){var ex={};EMPS.forEach(function(e){if(e.plan_required===false)ex[e.id]=1;});PLANS=(r||[]).filter(function(p){return !ex[p.employee_id];});return PLANS;});}
 function bar(p){return '<div class="pbar"><i style="width:'+p+'%;background:'+(p>=80?'var(--ok)':p>=40?'var(--warn)':'var(--bad)')+'"></i></div>';}
 function renderPlans(){var mi=$('plM');var b=plBounds();if(!mi.value||mi.value<b[0]||mi.value>b[1])mi.value=today().slice(0,7);var m=mi.value;plNav();var lb=$('plML');if(lb)lb.textContent=mLabel(m);
  $('plH').textContent=MGR?'Aylıq iş planları':'Mənim aylıq planım';
