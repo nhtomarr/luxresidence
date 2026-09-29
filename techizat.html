@@ -74,6 +74,7 @@ a.call{background:linear-gradient(180deg,#c9603c,#ab4424);color:#fff;box-shadow:
 textarea{width:100%;font:inherit;font-size:15px;padding:12px 14px;border:1px solid rgba(255,255,255,.9);border-radius:16px;background:rgba(255,255,255,.72);resize:vertical}
 .go.wide{width:100%;margin-top:10px}.vchip{cursor:default;font-size:.78rem;padding:4px 10px}.vchip.v-good{background:rgba(214,241,225,.9);color:var(--good)}.vchip.v-bad{background:rgba(253,226,220,.95);color:var(--bad)}.vchip.v-mid{background:rgba(255,255,255,.7)}
 @media(max-width:640px){.f2{grid-template-columns:1fr}}
+.brands .chip{font-size:.8rem;padding:6px 12px}
 </style>
 </head>
 <body>
@@ -147,7 +148,7 @@ async function search(e){
   try{
     const r=await fetch(FN,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+KEY,"apikey":KEY},body:JSON.stringify({q})});
     const d=await r.json(); if(d.error)throw new Error(d.error);
-    state.items=d.items;state.term=d.term;state.groups=groupsOf(d.items);
+    state.items=d.items;state.term=d.term;state.brand=null;state.groups=groupsOf(d.items);
     const offer=parseFloat($("offer").value);
     state.g=0; if(!isNaN(offer)&&state.groups.length>1){ // pick group closest to the supplier price
       let best=0,bd=1e9;state.groups.forEach((g,i)=>{const m=q2(g.map(x=>+x.price),.5);const dd=Math.abs(Math.log(offer/m));if(dd<bd){bd=dd;best=i}});state.g=best }
@@ -158,7 +159,7 @@ async function search(e){
 function render(q){
   const {groups,term}=state;
   if(!groups.length){$("out").innerHTML=`<p class="status">“${esc(q)}” üzrə qiymətli elan tapılmadı. Daha ümumi ad yaz (məs. marka yox, məhsul adı).</p>`;return}
-  const g=groups[state.g];const prices=g.map(x=>+x.price).sort((a,b)=>a-b);
+  const g0=groups[state.g];const g=state.brand&&g0.some(x=>x.brand===state.brand)?Object.assign(g0.filter(x=>x.brand===state.brand),{label:g0.label,unit:g0.unit}):g0;const prices=g.map(x=>+x.price).sort((a,b)=>a-b);
   const mn=prices[0],mx=prices.at(-1),med=q2(prices,.5),p25=q2(prices,.25),p75=q2(prices,.75);
   const offer=parseFloat($("offer").value);const has=!isNaN(offer)&&offer>0;
   let v=`<div class="verdict v-mid">Təchizatçının qiymətini yaz — bahadır, yoxsa yox, deyim.</div>`;
@@ -171,23 +172,36 @@ function render(q){
   const chips=groups.length>1?`<div class="groups">${groups.map((gg,i)=>{const lo=Math.min(...gg.map(x=>+x.price)),hi=Math.max(...gg.map(x=>+x.price));return `<button class="chip" data-g="${i}" aria-pressed="${i===state.g}">${gg.label?`<b>${esc(gg.label)}</b> · `:''}${fmt(lo)} – ${fmt(hi)} · ${gg.length} elan</button>`}).join("")}</div><div class="hint">Qiymətlər fərqli vahiddədir (kisə, ton, m², litr…). Təchizatçının vahidinə uyğun qrupu seç.</div>`:"";
   const rows=[...g].sort((a,b)=>a.price-b.price).map((it,i)=>{
     const s=it.sources||{};const days=Math.round((Date.now()-new Date(it.last_seen))/864e5);
-    return `<tr class="${i===0?"best":""}"><td><b>${esc(it.title)}</b><div class="desc">${esc(it.seller)}</div></td>
+    return `<tr class="${i===0?"best":""}"><td><b>${esc(it.title)}</b>${!badBrand(it.brand)||it.spec?`<div class="src">${!badBrand(it.brand)?esc(it.brand):""}${it.spec?" · "+esc(it.spec):""}</div>`:""}<div class="desc">${esc(it.seller)}</div></td>
       <td class="p">${fmt(it.price)}${it.unit==='kq'&&it.qty?`<div class="src">${+it.qty} kq · ${fmt(it.price/it.qty)}/kq</div>`:it.unit==='litr'&&it.qty?`<div class="src">${+it.qty} L · ${fmt(it.price/it.qty)}/L</div>`:it.unit?`<div class="src">${esc(it.unit)}</div>`:it.pack_kg?`<div class="src">${it.pack_kg} kq · ${fmt(it.price/it.pack_kg)}/kq</div>`:""}</td>
       <td><span class="src">${esc(s.name)}<br>${days===0?"bu gün":days+" gün əvvəl"}</span></td>
       <td>${it.phone?`<a class="act call" href="tel:${it.phone}">${it.phone.replace(/(\+994)(\d\d)(\d{3})(\d\d)(\d\d)/,"$1 $2 $3 $4 $5")}</a><br>`:""}<a class="act open" href="${esc(it.url)}" target="_blank" rel="noopener">Elana keç</a></td></tr>`}).join("");
   $("out").innerHTML=`<p class="recog">Axtarış: “${esc(q)}” → <b>${esc(term)}</b> · ${state.items.length} elan tapıldı</p>
-   ${chips}${v}
+   ${chips}${brandChips(g0)}${v}
    <div class="stats"><div class="stat"><b>${fmt(mn)}</b><span>Ən ucuz</span></div><div class="stat"><b>${fmt(med)}</b><span>Orta bazar</span></div><div class="stat"><b>${fmt(p25)}–${fmt(p75)}</b><span>Normal diapazon</span></div><div class="stat"><b>${fmt(mx)}</b><span>Ən baha</span></div></div>
    <div class="ruler" role="img" aria-label="Qiymətlərin paylanması"><div class="tape"></div>
      <div class="band" style="left:${X(p25)};width:calc(${X(p75)} - ${X(p25)})"></div>
      ${prices.map(p=>`<div class="tick" style="left:${X(p)}"></div>`).join("")}
      ${has?`<div class="me" style="left:${X(offer)}">Təchizatçı ${fmt(offer)}</div>`:""}
      <div class="rl" style="left:0">${fmt(lo)}</div><div class="rl" style="right:0">${fmt(hi)}</div></div>
+   ${sameProducts(g)}
    <div id="trend"></div>
    <div class="tbl"><table><thead><tr><th>Elan</th><th>Qiymət</th><th>Mənbə</th><th>Əlaqə</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-  document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{state.g=+b.dataset.g;render(q)});
+  document.querySelectorAll(".chip[data-g]").forEach(b=>b.onclick=()=>{state.g=+b.dataset.g;state.brand=null;render(q)});
+  document.querySelectorAll(".chip[data-b]").forEach(b=>b.onclick=()=>{state.brand=b.dataset.b||null;render(q)});
   drawTrend(g);
 }
+
+// Brend filtri
+const badBrand=b=>!b||/^(dig[əe]r|other|no brand|—|-)$/i.test(b);
+function brandChips(g){const c={};g.forEach(x=>{if(!badBrand(x.brand))c[x.brand]=(c[x.brand]||0)+1;});const ks=Object.keys(c).sort((a,b)=>c[b]-c[a]).slice(0,10);if(ks.length<2)return "";
+  return `<div class="groups brands"><button class="chip" data-b="" aria-pressed="${!state.brand}">Bütün brendlər</button>${ks.map(k=>`<button class="chip" data-b="${esc(k)}" aria-pressed="${state.brand===k}">${esc(k)} · ${c[k]}</button>`).join("")}</div>`;}
+// Eyni məhsul fərqli mağazalarda (brend + spesifikasiya + vahid)
+function sameProducts(g){const m={};g.forEach(x=>{if(badBrand(x.brand))return;const k=x.brand+"|"+(x.spec||"")+"|"+(ulabel(x)||"");(m[k]=m[k]||[]).push(x);});
+  const rows=Object.entries(m).map(([k,a])=>({k,a,src:new Set(a.map(x=>(x.sources||{}).name)).size})).filter(r=>r.src>=2).sort((a,b)=>b.src-a.src||b.a.length-a.a.length).slice(0,8);
+  if(!rows.length)return "";
+  return `<div class="trendc"><div class="trh"><b>Eyni məhsul — fərqli mağazalarda</b><span>${rows.length} məhsul</span></div><div class="tbl" style="margin-top:8px"><table><thead><tr><th>Məhsul</th><th>Mağaza</th><th>Ən ucuz</th><th>Ən baha</th><th>Fərq</th></tr></thead><tbody>${rows.map(r=>{const ps=r.a.map(x=>+x.price),lo=Math.min(...ps),hi=Math.max(...ps),[b,sp,u]=r.k.split("|"),best=r.a.find(x=>+x.price===lo);
+   return `<tr><td><b>${esc(b)}</b>${sp?" · "+esc(sp):""}${u?` <span class="src">${esc(u)}</span>`:""}</td><td>${r.src}</td><td class="p" style="color:var(--good)">${fmt(lo)}<div class="src">${esc((best.sources||{}).name||"")}</div></td><td class="p">${fmt(hi)}</td><td><b style="color:${hi/lo>1.2?"var(--bad)":"inherit"}">${((hi/lo-1)*100).toFixed(0)}%</b></td></tr>`}).join("")}</tbody></table></div><div class="hint">Eyni brend və göstəricili məhsulun mağazalar arasında qiymət fərqi — təchizatçı ilə danışıqda arqument.</div></div>`;}
 // Qiymət dinamikası: gecə yenilənmələrindən gün üzrə orta (median) qiymət
 async function drawTrend(g){const box=$("trend");if(!box)return;
   try{const r=await fetch("https://syyybdouqdahsomfkemi.supabase.co/rest/v1/rpc/price_trend",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+KEY,"apikey":KEY},body:JSON.stringify({p_term:state.term,p_days:120})});
