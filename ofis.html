@@ -278,6 +278,8 @@ nav.tabs,#tabs{scroll-behavior:smooth}
 .okinds label span{display:flex;flex-direction:column;font-weight:700}.okinds small{font-weight:500;color:var(--mut);font-size:12px}.okinds input:checked+span{color:var(--acc)}
 .okinds input{position:absolute;opacity:0;pointer-events:none}.okinds label{position:relative;transition:.15s}.okinds label:has(input:checked){border-color:var(--acc);background:#eff6ff;box-shadow:0 0 0 3px rgba(37,99,235,.12)}.okinds label span{font-size:14px}
 .outc .btn{background:#ea580c!important;color:#fff!important;border:1px solid #ea580c!important;box-shadow:none!important}.outc .btn.ghost{background:#fff!important;color:#9a3412!important;border:1px solid #fdba74!important}.outc .small{color:#9a3412}
+
+body.simple #tQuick,body.simple #tMood,body.simple #tDocsCard,body.simple #tOwnerTasks,body.simple #tKudos,body.simple #tAnn,body.simple #tgCard,body.simple .mytaskcard{display:none!important}
 </style>
 </head>
 <body>
@@ -296,7 +298,7 @@ nav.tabs,#tabs{scroll-behavior:smooth}
    <div id="pushCard"></div><div id="tMood"></div><div id="tDocsCard"></div>
    <div id="tOwnerTasks"></div>
    <div class="card" id="noEmp" style="display:none"><b>Hesabınız işçi kartına bağlanmayıb.</b><p class="muted small">Gəliş-gediş qeydi üçün rəhbər sizi "İşçilər" bölməsində işçi kartına bağlamalıdır.</p></div>
-   <div class="card"><div class="row" style="justify-content:space-between"><h3>Mənə verilən tapşırıqlar</h3></div><div id="tMyTasks"></div></div>
+   <div class="card mytaskcard"><div class="row" style="justify-content:space-between"><h3>Mənə verilən tapşırıqlar</h3></div><div id="tMyTasks"></div></div>
    <div id="tKudos"></div>
    <div id="tHr"></div>
    <div class="card" id="tAnn" style="display:none"></div>
@@ -426,7 +428,7 @@ function mLabel(m){return AZM[+m.slice(5,7)-1].replace(/^./,function(c){return c
 
 function OFB(q){return (location.pathname.indexOf('/ofis')===0?'/ofis':'/')+(q||'');}
 
-var PREVIEW=false,OWNER=false,sb=null,ME=null,MGR=false,EMP=null,EMPS=[],DEPTS=[],POS=[],TASKS=[],PROFS=[],CFG=null,KB='new',LEAVES=[],HOL=[];
+var SIMPLE=false,PREVIEW=false,OWNER=false,sb=null,ME=null,MGR=false,EMP=null,EMPS=[],DEPTS=[],POS=[],TASKS=[],PROFS=[],CFG=null,KB='new',LEAVES=[],HOL=[];
 var LT={mezuniyyet:'Məzuniyyət',xestelik:'Xəstəlik',ezamiyyet:'Ezamiyyət',uzaqdan:'Uzaqdan iş',icaze:'Saatlıq icazə',odenissiz:'Ödənişsiz məzuniyyət',duzelis:'Davamiyyət düzəlişi'};
 var TZ='Asia/Baku';
 var ST={new:'Yeni',doing:'İcrada',review:'Yoxlamada',done:'Bitdi'},PR={urgent:'Təcili',high:'Yüksək',normal:'Normal',low:'Aşağı'};
@@ -452,7 +454,8 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
  if(PREVIEW){var bn=document.createElement('div');bn.className='pvbar';bn.innerHTML='👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.';document.body.insertBefore(bn,$('app'));}
  var tabs;
  if(OWNER)tabs=[['boss','Nəzarət']];
- else{tabs=[['today','Bu gün']];if(MGR)tabs.push(['boss','Nəzarət'],['panel','Panel']);tabs.push(['plans',MGR?'Aylıq planlar':'Aylıq plan'],['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['dir','Komanda'],['news','Elanlar'],['cal','Təqvim'],['docs','Sənədlər']);tabs.push(['me','Profilim']);if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}}
+ else{tabs=[['today','Bu gün']];if(MGR)tabs.push(['boss','Nəzarət'],['panel','Panel']);tabs.push(['plans',MGR?'Aylıq planlar':'Aylıq plan'],['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['dir','Komanda'],['news','Elanlar'],['cal','Təqvim'],['docs','Sənədlər']);tabs.push(['me','Profilim']);
+  if(SIMPLE)tabs=[['today','Bu gün'],['dir','Komanda']];if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}}
  document.body.classList.toggle('is-mgr',MGR);document.body.classList.toggle('owner',OWNER);
  $('tabs').innerHTML=tabs.map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');
  $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};
@@ -468,11 +471,12 @@ function loadAll(){return Promise.all([
   run(sb.from('office_tasks').select('*').order('due',{ascending:true,nullsFirst:false}).order('id',{ascending:false})),
   MGR?run(sb.from('lux_profiles').select('user_id,email,full_name,perms,is_admin,active')):Promise.resolve([]),MGR?run(sb.from('office_config').select('*').eq('id',1).maybeSingle()):Promise.resolve(null),
   run(sb.from('office_leaves').select('*').order('date_from',{ascending:false})),run(sb.from('office_holidays').select('*').order('day'))
- ]).then(function(r){EMPS=r[0]||[];DEPTS=r[1]||[];POS=r[2]||[];TASKS=r[3]||[];PROFS=r[4]||[];CFG=r[5];LEAVES=r[6]||[];HOL=r[7]||[];EMP=EMPS.find(function(e){return e.user_id===ME.user_id&&e.active;})||null;}).catch(err);}
+ ]).then(function(r){EMPS=r[0]||[];DEPTS=r[1]||[];POS=r[2]||[];TASKS=r[3]||[];PROFS=r[4]||[];CFG=r[5];LEAVES=r[6]||[];HOL=r[7]||[];EMP=EMPS.find(function(e){return e.user_id===ME.user_id&&e.active;})||null;
+  SIMPLE=!!(EMP&&EMP.simple_mode&&!MGR);if(SIMPLE){$('tabs').innerHTML=[['today','Bu gün'],['dir','Komanda']].map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');document.body.classList.add('simple');}}).catch(err);}
 
 /* ---------- BU GÜN / check-in ---------- */
 var MYDAY=null;
-function renderToday(){renderOwnerTasksForEmp();renderHomeExtras();renderPwBanner();renderPushCards();$('noEmp').style.display=(EMP||MGR)?'none':'';var ck=document.querySelector('.checkcard');if(ck)ck.style.display=(!EMP&&MGR)?'none':'';renderTgCard();renderHrBoxes();renderTodayAnn();
+function renderToday(){document.body.classList.toggle('simple',!!SIMPLE);renderOwnerTasksForEmp();renderHomeExtras();renderPwBanner();renderPushCards();$('noEmp').style.display=(EMP||MGR)?'none':'';var ck=document.querySelector('.checkcard');if(ck)ck.style.display=(!EMP&&MGR)?'none':'';renderTgCard();renderHrBoxes();renderTodayAnn();
  var my=TASKS.filter(function(t){return EMP&&t.assignee_id===EMP.id&&t.status!=='done'&&!t.from_owner;}).sort(function(a,b){return String(a.due||'9')<String(b.due||'9')?-1:1;});
  $('tMyTasks').innerHTML=my.length?my.map(taskRow).join(''):'<div class="empty">Açıq tapşırığınız yoxdur 🎉</div>';
  if(!EMP){$('tStatus').textContent='';$('tBtns').innerHTML='';$('tStats').innerHTML='';return;}
@@ -795,7 +799,7 @@ function savePlan(m,st,eid){eid=eid||(EMP&&EMP.id);var nv=$('plNew');if(nv&&nv.v
  var sbtn=$('plSend');if(sbtn){if(sbtn.disabled&&st==='submitted')return;sbtn.disabled=true;}
  var q=ex?sb.from('office_plans').update(b).eq('id',ex.id).select().single():sb.from('office_plans').insert(Object.assign(b,{employee_id:eid,month:m})).select().single();
  run(q).catch(function(e){if(sbtn)sbtn.disabled=false;throw e;}).then(function(p){toast(st==='submitted'?(ex&&ex.status==='submitted'?'Yenilənmiş plan rəhbərə göndərildi ✅':'Rəhbərə göndərildi ✅'):'Qaralama yadda saxlanıldı');if(st==='submitted')notify('plan_submitted',{id:p.id});closeModal();renderPlans();}).catch(err);}
-function renderPlansMgr(m){var act=EMPS.filter(function(e){return e.active;});var by={};PLANS.forEach(function(p){by[p.employee_id]=p;});
+function renderPlansMgr(m){var act=EMPS.filter(function(e){return e.active&&e.plan_required!==false;});var by={};PLANS.forEach(function(p){by[p.employee_id]=p;});
  var sub=act.filter(function(e){var p=by[e.id];return p&&(p.status==='submitted'||p.status==='approved');}).length,appr=PLANS.filter(function(p){return p.status==='approved';}),avg=appr.length?Math.round(appr.reduce(function(s2,p){return s2+planPct(p);},0)/appr.length):0;
  $('plKpi').innerHTML=kpi(sub+' / '+act.length,'plan verib','ok')+kpi(PLANS.filter(function(p){return p.status==='submitted';}).length,'təsdiq gözləyir','warn')+kpi(act.length-sub,'plan verməyib',act.length-sub?'bad':'ok')+kpi(avg+'%','orta icra');
  $('plBody').innerHTML='<div class="card tbl"><table><tr><th>İşçi</th><th>Status</th><th>Bənd</th><th>İcra</th><th></th></tr>'+act.map(function(e){var p=by[e.id];var st=p?p.status:null;
@@ -860,7 +864,7 @@ function renderOwner(){var d=today(),m=d.slice(0,7);
    var al=[];absent.forEach(function(e){al.push(['bad','❌',e.full_name+' bu gün xəbərsiz gəlməyib']);});
    rows.filter(function(x){return x.over.length;}).forEach(function(x){al.push(['bad','⚠️',x.e.full_name+': '+x.over.length+' işin vaxtı keçib']);});
    rows.filter(function(x){return x.r.lateN>=5;}).forEach(function(x){al.push(['warn','⏰',x.e.full_name+' bu ay '+x.r.lateN+' dəfə gecikib']);});
-   if(+d.slice(8)>=5)rows.filter(function(x){return !x.p||x.p.status==='draft';}).forEach(function(x){al.push(['warn','🗒',x.e.full_name+' aylıq planını verməyib']);});
+   if(+d.slice(8)>=5)rows.filter(function(x){return (!x.p||x.p.status==='draft')&&x.e.plan_required!==false;}).forEach(function(x){al.push(['warn','🗒',x.e.full_name+' aylıq planını verməyib']);});
    hrUpcoming().filter(function(h){return h.n<=14&&h.txt.indexOf('🎂')!==0;}).forEach(function(h){al.push(['warn','📄',h.txt.replace(/^\S+ /,'')+' — '+(h.n===0?'bu gün':h.n+' gün sonra')]);});
    hrUpcoming().filter(function(h){return h.n===0&&h.txt.indexOf('🎂')===0;}).forEach(function(h){al.push(['ok','🎂',h.txt.replace(/^\S+ /,'')+' — bu gün']);});
    var alerts='<div class="card"><h3>Diqqət tələb edənlər</h3>'+(al.length?al.map(function(a){return '<div class="alr '+a[0]+'"><span>'+a[1]+'</span>'+esc(a[2])+'</div>';}).join(''):'<p class="muted">Hər şey qaydasındadır 👍</p>')+'</div>';
@@ -1063,7 +1067,7 @@ function changePw(){var c=$('pwCur').value,n=$('pwNew').value,r=$('pwRep').value
  sb.auth.signInWithPassword({email:ME.email,password:c}).then(function(r1){if(r1.error)throw new Error('Cari şifrə səhvdir');return sb.auth.updateUser({password:n});})
  .then(function(r2){if(r2.error)throw r2.error;return sb.rpc('office_pw_changed');}).then(function(){if(EMP)EMP.pw_changed=true;['pwCur','pwNew','pwRep'].forEach(function(i){$(i).value='';});toast('Şifrə dəyişdirildi ✅ Növbəti girişdə yeni şifrəni istifadə edin');renderMe();renderPwBanner();})
  .catch(function(e){toast((e&&e.message)||'Şifrə dəyişdirilmədi');});}
-function renderPwBanner(){var b=$('tPw');if(!b)return;b.innerHTML=EMP&&!EMP.pw_changed?'<div class="card pwban" onclick="show(\'me\');setTimeout(function(){var c=$(\'pwCard\');if(c){c.scrollIntoView({behavior:\'smooth\',block:\'start\'});$(\'pwCur\').focus();}},400)"><span>🔒</span><div><b>Şifrənizi dəyişin</b><div class="small">Hazırda ümumi ilkin şifrə ilə daxil olursunuz. 1 dəqiqəlik işdir.</div></div><b class="go">›</b></div>':'';}
+function renderPwBanner(){var b=$('tPw');if(!b)return;b.innerHTML=EMP&&!EMP.pw_changed?'<div class="card pwban" onclick="if(SIMPLE){modal(\'<div class=&quot;mhead&quot;><h3>Şifrə</h3><button class=&quot;x&quot; onclick=&quot;closeModal()&quot;>×</button></div>\'+pwCard());return;}show(\'me\');setTimeout(function(){var c=$(\'pwCard\');if(c){c.scrollIntoView({behavior:\'smooth\',block:\'start\'});$(\'pwCur\').focus();}},400)"><span>🔒</span><div><b>Şifrənizi dəyişin</b><div class="small">Hazırda ümumi ilkin şifrə ilə daxil olursunuz. 1 dəqiqəlik işdir.</div></div><b class="go">›</b></div>':'';}
 
 /* ---------- Ad günü təbrikləri ---------- */
 var WISHES=[];
