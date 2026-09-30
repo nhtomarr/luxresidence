@@ -14,7 +14,7 @@
 :root{--bg:#f7f2ec;--card:#fff;--ink:#241109;--mut:#8a7566;--line:#ece2d7;--acc:#ba4d2c;--acc2:#9a3c20;--ok:#15803d;--warn:#b45309;--bad:#b23b3b;--soft:#f3e7dc;--esp:#251712;
 --sans:'Inter',-apple-system,system-ui,'Segoe UI',sans-serif;--serif:'Playfair Display',Georgia,serif;box-sizing:border-box;}
 *,*::before,*::after{box-sizing:inherit;margin:0;padding:0}
-html,body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+html,body{background:#efe6df url(/assets/km/bg.jpg) center/cover fixed no-repeat;color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 .top{position:sticky;top:0;z-index:30;background:var(--esp);color:#fff;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px;display:flex;align-items:center;gap:12px}
@@ -415,14 +415,15 @@ body.simple #tQuick,body.simple #tMood,body.simple #tDocsCard,body.simple #tOwne
 .ast-heroctl .ast-gear{position:static}
 
 /* Komendant üslubuna uyğunlaşma */
-.card{border-radius:18px!important;border:1px solid var(--line)}
+.card{border-radius:18px!important;border:1px solid rgba(255,255,255,.7);background:linear-gradient(160deg,rgba(255,255,255,.62),rgba(255,255,255,.42) 60%,rgba(255,255,255,.5));backdrop-filter:blur(26px) saturate(160%);-webkit-backdrop-filter:blur(26px) saturate(160%);box-shadow:0 20px 50px -30px rgba(90,45,25,.4)}
 .top .brand,.top .logo{font-family:var(--serif)}
-#v-boss .bgrid .card,#v-boss .kpi,.kpi{border-radius:18px}
+#v-boss .bgrid .card,#v-boss .kpi,.kpi{border-radius:18px;background:linear-gradient(160deg,rgba(255,255,255,.62),rgba(255,255,255,.42) 60%,rgba(255,255,255,.5));backdrop-filter:blur(26px) saturate(160%);-webkit-backdrop-filter:blur(26px) saturate(160%);border:1px solid rgba(255,255,255,.7)}
 button.go,.btn.primary,.go{background:linear-gradient(135deg,var(--acc),var(--acc2))!important}
 .tabbar .tab.on,.tab.on{color:var(--acc)!important}
 .pill.p-ok{background:#dcf1e1;color:var(--ok)}
 .pill.p-bad{background:#fde2dc;color:var(--bad)}
 a.back,.back{border-radius:99px}
+.oprof-head{display:flex;gap:16px;align-items:center}.oprof-av{width:64px;height:64px;border-radius:20px;flex-shrink:0;display:grid;place-items:center;font-size:24px;font-weight:800;color:#fff;background:radial-gradient(circle at 30% 25%,#f0a283,#ba4d2c 62%)}.oprof-h{font-size:1.05rem;margin:0 0 8px}.oprof-links{display:grid;grid-template-columns:1fr 1fr;gap:8px}.oprof-lnk{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.5);font-weight:600;text-decoration:none;color:var(--ink);font-size:.9rem}@media(max-width:640px){.oprof-links{grid-template-columns:1fr}}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -498,6 +499,7 @@ a.back,.back{border-radius:99px}
   <!-- TƏQVİM -->
   <section class="view" id="v-dir"><div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Komanda</h2></div><div class="dirtabs" id="dirTabs"></div><div class="dirbar" id="dirBar"><input id="dirQ" class="btn ghost" style="flex:1;min-width:200px;text-align:left;font-weight:500" placeholder="Axtar: ad, vəzifə, şöbə, telefon" oninput="renderDir()"><select id="dirD" class="btn ghost" onchange="renderDir()"></select></div><div id="dirBody"></div></section>
   <section class="view" id="v-docs"><h2>Sənədlər</h2><div id="docBody"></div></section>
+  <section class="view" id="v-oprofil"></section>
   <section class="view" id="v-asst"></section>
   <section class="view" id="v-me"><div id="meBody"></div></section>
   <section class="view" id="v-cal"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">İclaslar və otaqlar</h2><button class="btn mgr-only" onclick="openEv()">+ İclas</button></div><div id="calList"></div></section>
@@ -600,7 +602,7 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
  if(ME.is_admin){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';pv.onclick=function(){location.href=PREVIEW?OFB():OFB('?baxis=sahibkar');};$('outBtn').parentNode.insertBefore(pv,$('outBtn'));}
  if(PREVIEW){var bn=document.createElement('div');bn.className='pvbar';bn.innerHTML='👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.';document.body.insertBefore(bn,$('app'));}
  var tabs;
- if(OWNER)tabs=[['boss','Nəzarət'],['asst','🎯 Assistent']];
+ if(OWNER)tabs=[['boss','Nəzarət'],['asst','🎯 Assistent'],['oprofil','Profil']];
  else{tabs=[['today','Bu gün']];if(MGR)tabs.push(['boss','Nəzarət'],['panel','Panel']);tabs.push(['plans',MGR?'Aylıq planlar':'Aylıq plan'],['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['dir','Komanda'],['news','Elanlar'],['cal','Təqvim'],['docs','Sənədlər']);tabs.push(['me','Profilim']);
   if(SIMPLE)tabs=[['today','Bu gün'],['dir','Komanda']];if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}}
  document.body.classList.toggle('is-mgr',MGR);document.body.classList.toggle('owner',OWNER);
@@ -611,7 +613,7 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
  loadAll().then(function(){setTimeout(function(){iosSheetShow(false);},2500);if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':((OWNER||(ME.is_admin&&!EMP))?'boss':'today'));if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
 }
 function show(v){document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});var ab=document.querySelector('#tabs button.on');if(ab&&ab.scrollIntoView)try{ab.scrollIntoView({block:'nearest',inline:'center'});}catch(e){}
- if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss'){if(OWNER)renderOwner();else renderBoss();}if(v==='asst')renderAsst();if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();if(v==='dir'){dirFilters();var db=$('dirBar');if(db)db.style.display='';renderDir();}if(v==='docs')renderDocs();if(v==='me')renderMe();window.scrollTo(0,0);}
+ if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss'){if(OWNER)renderOwner();else renderBoss();}if(v==='asst')renderAsst();if(v==='oprofil')renderOProfil();if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();if(v==='dir'){dirFilters();var db=$('dirBar');if(db)db.style.display='';renderDir();}if(v==='docs')renderDocs();if(v==='me')renderMe();window.scrollTo(0,0);}
 function tick(){var n=new Date();$('tClock').textContent=n.toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit',second:'2-digit'});$('tDate').textContent=n.toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});}
 function loadAll(){return Promise.all([
   run(sb.from('office_employees').select('*').order('full_name')),run(sb.from('office_departments').select('*').order('sort').order('id')),run(sb.from('office_positions').select('*').order('sort').order('id')),
@@ -702,6 +704,25 @@ function asstSaveHist(){try{sessionStorage.setItem('asst_hist',JSON.stringify(AS
 var ASREC=null,ASchunks=[],ASscope='today',ASlisten=false,ASsilence=null,ASctx=null,ASanalyser=null,ASstream=null,ASbargeTimer=null,ASview='chat';
 var QUICK=[['Bu gün kim gəlməyib?','👥'],['İndi kim çöldədir?','🚶'],['Sabah kimin ad günüdür?','🎂'],['Təsdiq gözləyən sorğular','📋'],['Boş mənzillərin siyahısı','🏢'],['Borcluların siyahısı','💰'],['Bu ay kim gecikib?','⏰'],['Mənzil xülasəsi','📊'],['Bu gün nəyim var?','🗓']];
 function asstHi(){var h=new Date().getHours();return h<6?'Gecəniz xeyrə':h<12?'Sabahınız xeyir':h<18?'Gününüz uğurlu olsun':'Axşamınız xeyir';}
+
+function ocount(tbl,col,val){return run(sb.from(tbl).select('id',{count:'exact',head:true}).eq(col,val)).then(function(r){return r.count||0;}).catch(function(){return 0;});}
+function renderOProfil(){var v=$('v-oprofil');if(!v)return;var nm=(ME&&ME.full_name)||'Sahibkar';var em=(ME&&ME.email)||'';
+ var ini=nm.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase();
+ v.innerHTML=''
+  +'<div class="card oprof-head"><div class="oprof-av">'+esc(ini)+'</div><div><h2 style="margin:0;font-family:var(--serif);font-size:1.5rem">'+esc(nm)+'</h2><div class="muted">Sahibkar · Baş Ofis</div>'+(em?'<div class="muted small">'+esc(em)+'</div>':'')+'</div></div>'
+  +'<div class="card"><h3 class="oprof-h">🔔 Bildirişlər</h3><p class="muted small" style="margin:0 0 10px">Xatırlatmalar telefonunuza gəlsin deyə bildirişləri aktiv edin.</p><div id="oprofPush"><button class="btn" onclick="enablePush&&enablePush()">🔔 Bildirişləri aktiv et</button></div></div>'
+  +'<div class="card"><h3 class="oprof-h">⚡ Sürətli keçidlər</h3><div class="oprof-links">'
+  +'<a class="oprof-lnk" href="#" onclick="show(\'boss\');return false">📊 Nəzarət</a>'
+  +'<a class="oprof-lnk" href="#" onclick="show(\'asst\');return false">🎯 AI Köməkçi</a>'
+  +'<a class="oprof-lnk" href="https://luxresidence.az/komendant" target="_blank">🏢 Komendantlıq</a>'
+  +'<a class="oprof-lnk" href="https://luxresidence.az/nezaret" target="_blank">🖥 Nəzarət sistemi</a>'
+  +'<a class="oprof-lnk" href="https://techizat.pilothayat.az" target="_blank">📦 Təchizat</a>'
+  +'<a class="oprof-lnk" href="https://luxresidence.az/satis" target="_blank">🏗 Satış lövhəsi</a>'
+  +'</div></div>'
+  +'<div class="card"><button class="btn ghost" style="width:100%;color:var(--bad);border-color:var(--bad)" onclick="(window.doLogout||function(){location.reload()})()">Çıxış</button></div>';
+ if(typeof renderPushCard==='function'){try{renderPushCard($('oprofPush'));}catch(e){}}
+}
+
 function renderAsst(){var v=$('v-asst');if(!v)return;var nm=(ME&&ME.full_name)?ME.full_name:'';
  v.innerHTML=''
  +'<div class="ast-wrap">'
