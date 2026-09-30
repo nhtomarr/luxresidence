@@ -650,7 +650,7 @@ function asstView(v){ASview=v;var c=$('astChatView'),t=$('astTaskView');if(c)c.h
 function renderAsstTabs(){document.querySelectorAll('#asTabs button').forEach(function(b,i){var sc=['today','tomorrow','week','noday','done'][i];b.classList.toggle('on',sc===ASscope);});}
 function renderAsstChat(){var c=$('asChat');if(!c)return;
  if(!ASHIST.length){c.innerHTML='<div class="ast-empty"><div class="ast-empty-ico">🎯</div><p>Salam! Sizin köməkçinizəm.<br>Plan deyin, sual verin, tapşırıq yaradın.</p></div>';return;}
- c.innerHTML=ASHIST.slice(-20).map(function(h){return h.role==='user'?'<div class="ast-b user">'+esc(h.content)+'</div>':'<div class="ast-b ai">'+esc(h.content)+'</div>';}).join('');c.scrollTop=c.scrollHeight;}
+ c.innerHTML=ASHIST.slice(-20).map(function(h,i){if(h.role==='user')return '<div class="ast-b user">'+esc(h.content)+'</div>';var pdf=h.pdf?'<button class="ast-pdf" onclick="asstPdf('+ (ASHIST.length-20<0?i:ASHIST.length-20+i) +')">📄 PDF-i aç / yüklə</button>':'';return '<div class="ast-b ai">'+esc(h.content)+pdf+'</div>';}).join('');c.scrollTop=c.scrollHeight;}
 function asstQuickVoice(){ASVOICE=!ASVOICE;var vc=$('asVchip');if(vc)vc.textContent=ASVOICE?'🔊 Səs':'🔇 Səssiz';sb.functions.invoke('office-assistant',{body:{action:'prefs',set:{voice:ASPREFS.voice,speed:ASPREFS.speed,autospeak:ASVOICE}}}).catch(function(){});if(!ASVOICE&&ASAUDIO)ASAUDIO.pause();}
 function asstMic(){if(ASREC&&ASREC.state==='recording'){ASREC.stop();return;}stopSpeak();startRec(false);}
 function asstHands(){ASlisten=!ASlisten;var b=$('asHands');if(b){b.textContent='◉ Fasiləsiz '+(ASlisten?'aktiv':'');b.classList.toggle('on',ASlisten);}
@@ -683,7 +683,7 @@ function asstSend(blob,hands){setBusy(true,'…');
 function asstType(){var t=prompt('Assistentə deyin (yeni iş, sual, dəyişiklik):');if(t&&t.trim()){if(ASview!=='chat')asstView('chat');asstChat(t.trim(),false);}}
 function asstChat(text,hands){if(ASview!=='chat')asstView('chat');ASHIST.push({role:'user',content:text});renderAsstChat();setBusy(true,'…');
  sb.functions.invoke('office-assistant',{body:{action:'chat',text:text,history:ASHIST.slice(-8)}}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);
-  setBusy(false);ASHIST.push({role:'assistant',content:r.data.reply});renderAsstChat();renderAsstList();asstSpeak(r.data.reply,hands);
+  setBusy(false);ASHIST.push({role:'assistant',content:r.data.reply,pdf:r.data.pdf});renderAsstChat();renderAsstList();asstSpeak(r.data.reply,hands);
  }).catch(function(e){setBusy(false,'Xəta: '+(e.message||e));if(hands&&ASlisten)setTimeout(function(){startRec(true);},1500);});}
 function setBusy(on,msg){ASbusy=on;var o=$('asOut');if(!o)return;o.innerHTML=on?'<div class="ast-typing"><span></span><span></span><span></span></div>':(msg?'<div class="ast-err">'+esc(msg)+'</div>':'');}
 function stopSpeak(){if(ASAUDIO){try{ASAUDIO.pause();ASAUDIO.currentTime=0;}catch(e){}}clearInterval(ASbargeTimer);}
@@ -703,6 +703,23 @@ function asstSettings(){var voices=[['shimmer','Yumşaq qadın'],['nova','Canlı
  modal(html);}
 function asstTestVoice(){var v=$('apVoice').value,sp=+$('apSpeed').value;sb.functions.invoke('office-assistant',{body:{action:'prefs',set:{voice:v,speed:sp,autospeak:true}}}).then(function(){sb.functions.invoke('office-assistant',{body:{action:'tts',text:'Salam, mən sizin köməkçinizəm. Bu, səs nümunəsidir.'}}).then(function(r){if(r.data&&r.data.audio){stopSpeak();ASAUDIO=new Audio('data:audio/mp3;base64,'+r.data.audio);ASAUDIO.play().catch(function(){});}});});}
 function asstSaveVoice(){var v=$('apVoice').value,sp=+$('apSpeed').value,au=$('apAuto').checked;sb.functions.invoke('office-assistant',{body:{action:'prefs',set:{voice:v,speed:sp,autospeak:au}}}).then(function(r){if(r.data){ASPREFS=r.data;ASVOICE=au;var vc=$('asVchip');if(vc)vc.textContent=ASVOICE?'🔊 Səs':'🔇 Səssiz';}closeModal();toast('Yadda saxlanıldı');});}
+
+function asstPdf(idx){var h=ASHIST[idx];if(!h||!h.pdf){toast("PDF məlumatı yoxdur");return;}var d=h.pdf;var cols=d.columns||[],rows=d.rows||[];
+ var w=window.open("","_blank");if(!w){toast("Pop-up icazəsi verin");return;}
+ var doc=w.document;var esc2=function(x){return String(x==null?"":x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");};
+ var css="body{font:14px/1.5 -apple-system,Arial,sans-serif;color:#2a1d14;padding:32px;max-width:820px;margin:0 auto}h1{font-size:22px;color:#ba4d2c;margin:0 0 4px}.meta{color:#8b7a6b;font-size:12px;margin-bottom:20px}table{width:100%;border-collapse:collapse;font-size:13px}th{background:#ba4d2c;color:#fff;text-align:left;padding:9px 11px}td{padding:8px 11px;border-bottom:1px solid #eadfd3}tr:nth-child(even) td{background:#faf6f1}.foot{margin-top:24px;color:#8b7a6b;font-size:11px;text-align:center}.b{background:#ba4d2c;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer;margin:16px 0}@media print{.b{display:none}body{padding:12px}}";
+ var thead=cols.map(function(c){return "<th>"+esc2(c)+"</th>";}).join("");
+ var tbody=rows.map(function(r){return "<tr>"+r.map(function(c){return "<td>"+esc2(c)+"</td>";}).join("")+"</tr>";}).join("");
+ var parts=[];
+ parts.push("<!DOCTYPE html><html lang=\"az\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">");
+ parts.push("<title>"+esc2(d.title||"Hesabat")+"<\/title><style>"+css+"<\/style><\/head><body>");
+ parts.push("<h1>"+esc2(d.title||"Hesabat")+"<\/h1><div class=\"meta\">Baş Ofis · "+new Date().toLocaleString("az-AZ")+"<\/div>");
+ parts.push("<button class=\"b\" onclick=\"window.print()\">📄 PDF kimi yüklə / çap et<\/button>");
+ parts.push("<table><thead><tr>"+thead+"<\/tr><\/thead><tbody>"+tbody+"<\/tbody><\/table>");
+ parts.push("<div class=\"foot\">"+rows.length+" sətir · Baş Ofis idarəetmə sistemi<\/div><\/body><\/html>");
+ doc.open();doc.write(parts.join(""));doc.close();
+ setTimeout(function(){try{w.print();}catch(e){}},600);
+}
 function asstDueTxt(n){if(!n.due)return '';var d=new Date(n.due);return d.toLocaleDateString('az-AZ',{day:'2-digit',month:'short'})+(n.due_all_day?'':' '+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'}));}
 function renderAsstList(){var el=$('asList');if(!el)return;run(sb.rpc('notes_list',{p_scope:ASscope})).then(function(rows){
  el.innerHTML=rows.length?rows.map(function(n){var late=n.due&&new Date(n.due)<new Date()&&!n.done;
