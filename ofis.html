@@ -1099,7 +1099,7 @@ function plNav(){var m=$('plM').value,b=plBounds(),bt=document.querySelectorAll(
 function renderPlanMine(m){$('plKpi').innerHTML='';var lb=$('plML');if(lb)lb.textContent=mLabel(m);if(!EMP){$('plBody').innerHTML='<div class="card empty">Hesabınız işçi kartına bağlanmayıb. HR rəhbərinə müraciət edin.</div>';return;}
  var cur=today().slice(0,7),past=m<cur,p=PLANS.find(function(x){return x.employee_id===EMP.id;});PLI=JSON.parse(JSON.stringify((p&&p.items)||[]));
  PL_SAVED=JSON.stringify(((p&&p.items)||[]).map(function(x){return (x.t||'').trim();}));PL_ST=p?p.status:'none';
- var st=p?p.status:'none',edit=!past&&(st==='none'||st==='draft'||st==='returned'||st==='submitted'),prog=st==='approved'&&!past&&m<=cur,h='<div class="card">';
+ var st=p?p.status:'none',edit=!past&&(st==='none'||st==='draft'||st==='returned'),prog=(st==='approved'||st==='submitted')&&!past&&m<=cur,h='<div class="card">';
  var steps=[['Yaz',st==='none'||st==='draft'||st==='returned'],['Rəhbərə göndər',st==='submitted'],['Təsdiq',st==='approved']];
  h+='<div class="plsteps">'+steps.map(function(x,i){var done=(st==='submitted'&&i<1)||(st==='approved'&&i<2);return '<span class="'+(x[1]?'on':done?'ok':'')+'"><i>'+(done?'✓':i+1)+'</i>'+x[0]+'</span>';}).join('<em></em>')+'</div>';
  if(st==='none'&&!past)h+='<p class="plinfo">'+mLabel(m)+' ayında görəcəyiniz işlərin siyahısını yazın. Hazır olanda <b>“Rəhbərə göndər”</b> basın.</p>';
