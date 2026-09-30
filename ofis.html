@@ -408,6 +408,11 @@ body.simple #tQuick,body.simple #tMood,body.simple #tDocsCard,body.simple #tOwne
 .ast-check{display:flex;gap:8px;align-items:center;margin-top:12px;font-size:.9rem}
 .ast-save{flex:1;background:linear-gradient(135deg,#ba4d2c,#9a3c20);color:#fff;border:none;padding:11px;border-radius:14px;font-weight:700}
 @media(max-width:640px){.ast-title{font-size:1.3rem}.ast-body{padding:13px;border-radius:20px}.ast-hero{padding:13px}}
+
+.ast-back{border:none;background:rgba(255,255,255,.6);color:#8b7a6b;font-weight:600;font-size:.85rem;padding:7px 14px;border-radius:99px;margin-bottom:10px}
+.ast-back:active{background:#f3e7dc}
+.ast-heroctl{position:absolute;top:14px;right:14px;display:flex;gap:6px}
+.ast-heroctl .ast-gear{position:static}
 </style>
 </head>
 <body>
@@ -681,15 +686,17 @@ function hydrateSelfies(root){var ims=(root||document).querySelectorAll('img.sft
 function openSelfie(p){sb.storage.from('office').createSignedUrl(p,600).then(function(r){if(r.data)modal('<div class="mhead"><h3>📸 Selfi</h3><button class="x" onclick="closeModal()">×</button></div><img src="'+r.data.signedUrl+'" style="width:100%;border-radius:16px">');});}
 
 /* ---------- 🎯 AI Köməkçi (professional) ---------- */
-var ASVOICE=true,ASAUDIO=null,ASHIST=[],ASPREFS={voice:'shimmer',speed:1.0,autospeak:true};
+var ASVOICE=true,ASAUDIO=null,ASHIST=(function(){try{return JSON.parse(sessionStorage.getItem('asst_hist')||'[]')}catch(e){return[]}})(),ASPREFS={voice:'shimmer',speed:1.0,autospeak:true};
+function asstSaveHist(){try{sessionStorage.setItem('asst_hist',JSON.stringify(ASHIST.slice(-40)))}catch(e){}}
 var ASREC=null,ASchunks=[],ASscope='today',ASlisten=false,ASsilence=null,ASctx=null,ASanalyser=null,ASstream=null,ASbargeTimer=null,ASview='chat';
-var QUICK=[['Bu gün kim gəlməyib?','👥'],['İndi kim çöldədir?','🚶'],['Sabah kimin ad günüdür?','🎂'],['Təsdiq gözləyən sorğular','📋'],['Boş mənzillərin siyahısı','🏢'],['Borcluların siyahısı','💰'],['Bu ay kim gecikib?','⏰']];
+var QUICK=[['Bu gün kim gəlməyib?','👥'],['İndi kim çöldədir?','🚶'],['Sabah kimin ad günüdür?','🎂'],['Təsdiq gözləyən sorğular','📋'],['Boş mənzillərin siyahısı','🏢'],['Borcluların siyahısı','💰'],['Bu ay kim gecikib?','⏰'],['Mənzil xülasəsi','📊'],['Bu gün nəyim var?','🗓']];
 function asstHi(){var h=new Date().getHours();return h<6?'Gecəniz xeyrə':h<12?'Sabahınız xeyir':h<18?'Gününüz uğurlu olsun':'Axşamınız xeyir';}
 function renderAsst(){var v=$('v-asst');if(!v)return;var nm=(ME&&ME.full_name)?ME.full_name:'';
  v.innerHTML=''
  +'<div class="ast-wrap">'
+ +' <button class="ast-back" onclick="show(\'boss\')">‹ Nəzarətə qayıt</button>'
  +' <div class="ast-hero"><div class="ast-hero-ic">🎯</div><div><div class="ast-hi">'+asstHi()+(nm?', '+esc(nm):'')+'</div><h2 class="ast-title">AI Köməkçiniz</h2><div class="ast-sub">Mən sizin süni intellekt köməkçinizəm. Hansı tapşırığınız varsa, buyurun.</div></div>'
- +'  <button class="ast-gear" onclick="asstSettings()" title="Ayarlar">⚙️</button></div>'
+ +'  <div class="ast-heroctl"><button class="ast-gear" onclick="asstClear()" title="Söhbəti təmizlə">🗑</button><button class="ast-gear" onclick="asstSettings()" title="Ayarlar">⚙️</button></div></div>'
  +' <div class="ast-seg"><button class="'+(ASview==="chat"?"on":"")+'" onclick="asstView(\'chat\')">💬 Söhbət</button><button class="'+(ASview==="tasks"?"on":"")+'" onclick="asstView(\'tasks\')">🗒 Planlarım</button></div>'
  +' <div class="ast-body">'
  +'  <div id="astChatView" '+(ASview==="tasks"?'hidden':'')+'>'
@@ -709,6 +716,7 @@ function renderAsst(){var v=$('v-asst');if(!v)return;var nm=(ME&&ME.full_name)?M
  +' </div></div>';
  renderAsstChat();renderAsstList();
  sb.functions.invoke('office-assistant',{body:{action:'prefs'}}).then(function(r){if(r.data&&!r.data.error){ASPREFS=r.data;ASVOICE=r.data.autospeak!==false;var vc=$('asVchip');if(vc)vc.textContent=ASVOICE?'🔊 Səs':'🔇 Səssiz';}}).catch(function(){});}
+function asstClear(){if(!ASHIST.length){return;}if(!confirm('Söhbət təmizlənsin?'))return;ASHIST=[];asstSaveHist();renderAsstChat();stopSpeak();}
 function asstView(v){ASview=v;var c=$('astChatView'),t=$('astTaskView');if(c)c.hidden=(v!=='chat');if(t)t.hidden=(v!=='tasks');document.querySelectorAll('.ast-seg button').forEach(function(b,i){b.classList.toggle('on',(i===0&&v==='chat')||(i===1&&v==='tasks'));});if(v==='tasks')renderAsstList();}
 function renderAsstTabs(){document.querySelectorAll('#asTabs button').forEach(function(b,i){var sc=['today','tomorrow','week','noday','done'][i];b.classList.toggle('on',sc===ASscope);});}
 function renderAsstChat(){var c=$('asChat');if(!c)return;
@@ -742,9 +750,9 @@ function bargeLoop(st){try{if(!ASctx)ASctx=new(window.AudioContext||window.webki
 function asstSend(blob,hands){setBusy(true);var fd=new FormData();fd.append('audio',blob,'audio.webm');
  sb.functions.invoke('office-assistant',{body:fd}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);var t=(r.data.text||'').trim();setBusy(false);if(!t){if(hands&&ASlisten)startRec(true);return;}asstChat(t,hands);
  }).catch(function(e){setBusy(false,'Xəta: '+(e.message||e));if(hands&&ASlisten)setTimeout(function(){startRec(true);},1500);});}
-function asstChat(text,hands){if(ASview!=='chat')asstView('chat');ASHIST.push({role:'user',content:text});renderAsstChat();setBusy(true);
+function asstChat(text,hands){if(ASview!=='chat')asstView('chat');ASHIST.push({role:'user',content:text});asstSaveHist();renderAsstChat();setBusy(true);
  sb.functions.invoke('office-assistant',{body:{action:'chat',text:text,history:ASHIST.slice(-8).map(function(h){return {role:h.role,content:h.content};})}}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);
-  setBusy(false);ASHIST.push({role:'assistant',content:r.data.reply,table:r.data.table||null});renderAsstChat();renderAsstList();asstSpeak(r.data.reply,hands);
+  setBusy(false);ASHIST.push({role:'assistant',content:r.data.reply,table:r.data.table||null});asstSaveHist();renderAsstChat();renderAsstList();asstSpeak(r.data.reply,hands);
  }).catch(function(e){setBusy(false,'Xəta: '+(e.message||e));if(hands&&ASlisten)setTimeout(function(){startRec(true);},1500);});}
 function setBusy(on,msg){var o=$('asOut');if(!o)return;o.innerHTML=on?'<div class="ast-typing"><span></span><span></span><span></span></div>':(msg?'<div class="ast-err">'+esc(msg)+'</div>':'');}
 function stopSpeak(){if(ASAUDIO){try{ASAUDIO.pause();ASAUDIO.currentTime=0;}catch(e){}}clearInterval(ASbargeTimer);}
@@ -780,10 +788,11 @@ function asstSaveVoice(){var v=$('apVoice').value,sp=+$('apSpeed').value,au=$('a
 function asstDueTxt(n){if(!n.due)return '';var d=new Date(n.due);return d.toLocaleDateString('az-AZ',{day:'2-digit',month:'short'})+(n.due_all_day?'':' '+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'}));}
 function renderAsstList(){var el=$('asList');if(!el)return;run(sb.rpc('notes_list',{p_scope:ASscope})).then(function(rows){
  el.innerHTML=rows.length?rows.map(function(n){var late=n.due&&new Date(n.due)<new Date()&&!n.done;
-  return '<div class="ast-task'+(n.done?' done':'')+'"><button class="ast-ck'+(n.done?' on':'')+'" onclick="asstDone('+n.id+','+(!n.done)+')">'+(n.done?'✓':'')+'</button><div class="ast-tx"><b>'+esc(n.text)+'</b>'+(n.due?'<span class="ast-due'+(late?' late':'')+'">'+(late?'⏰ ':'')+asstDueTxt(n)+'</span>':'')+'</div><button class="ast-x" onclick="asstDel('+n.id+')">×</button></div>';
+  return '<div class="ast-task'+(n.done?' done':'')+'"><button class="ast-ck'+(n.done?' on':'')+'" onclick="asstDone('+n.id+','+(!n.done)+')">'+(n.done?'✓':'')+'</button><div class="ast-tx" onclick="asstEdit('+n.id+',\''+esc(n.text).replace(/'/g,"\\'")+'\')" style="cursor:text"><b>'+esc(n.text)+'</b>'+(n.due?'<span class="ast-due'+(late?' late':'')+'">'+(late?'⏰ ':'')+asstDueTxt(n)+'</span>':'')+'</div><button class="ast-x" onclick="asstDel('+n.id+')">×</button></div>';
  }).join(''):'<div class="ast-empty"><div class="ast-empty-ico">🗒</div><p>Bu siyahı boşdur.</p></div>';}).catch(err);}
 function asstDone(id,v){run(sb.from('office_notes').update({done:v,done_at:v?new Date().toISOString():null}).eq('id',id)).then(function(){renderAsstList();}).catch(err);}
 function asstDel(id){run(sb.from('office_notes').delete().eq('id',id)).then(function(){renderAsstList();}).catch(err);}
+function asstEdit(id,cur){var t=prompt('İşi düzəlt:',cur);if(t==null)return;t=t.trim();if(!t)return;run(sb.from('office_notes').update({text:t}).eq('id',id)).then(function(){renderAsstList();}).catch(err);}
 
 
 
