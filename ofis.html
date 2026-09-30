@@ -281,6 +281,7 @@ nav.tabs,#tabs{scroll-behavior:smooth}
 
 body.simple #tQuick,body.simple #tMood,body.simple #tDocsCard,body.simple #tOwnerTasks,body.simple #tKudos,body.simple #tAnn,body.simple #tgCard,body.simple .mytaskcard{display:none!important}
 .maplink{color:var(--acc);font-weight:600;text-decoration:none;white-space:nowrap}
+.asst .rec{background:#dc2626!important;animation:pulse 1.2s infinite}@keyframes pulse{50%{opacity:.6}}.asst input[type=checkbox]{width:18px;height:18px}
 </style>
 </head>
 <body>
@@ -339,6 +340,7 @@ body.simple #tQuick,body.simple #tMood,body.simple #tDocsCard,body.simple #tOwne
   </section>
   <!-- NƏZARƏT (sahibkar) -->
   <section class="view" id="v-boss"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2 class="bossh" style="margin:0">Ofisdə vəziyyət</h2><span class="muted" id="bDate"></span></div>
+   <div id="bAsst"></div>
    <div class="bgrid" id="bKpi"></div>
    <div id="bOut"></div>
    <div class="row" style="justify-content:space-between;margin:22px 0 10px"><h2 class="bossh" style="margin:0">İşçilər</h2><button class="btn ghost" onclick="monthReport()">🖨 Aylıq hesabat</button></div>
@@ -550,6 +552,44 @@ function outingEnd(endDay){if(endDay&&!confirm('Bu gün ofisə qayıtmayacaqsın
 function selfieThumb(p){return p?'<img class="sfthumb" data-p="'+esc(p)+'" onclick="openSelfie(this.dataset.p)" alt="">':'';}
 function hydrateSelfies(root){var ims=(root||document).querySelectorAll('img.sfthumb:not([src])');[].forEach.call(ims,function(im){sb.storage.from('office').createSignedUrl(im.dataset.p,3600).then(function(r){if(r.data)im.src=r.data.signedUrl;});});}
 function openSelfie(p){sb.storage.from('office').createSignedUrl(p,600).then(function(r){if(r.data)modal('<div class="mhead"><h3>📸 Selfi</h3><button class="x" onclick="closeModal()">×</button></div><img src="'+r.data.signedUrl+'" style="width:100%;border-radius:16px">');});}
+
+/* ---------- 🎤 Sahibkar assistenti ---------- */
+var ASREC=null,ASchunks=[],ASitems=[];
+function assistantCard(){return '<div class="card asst"><div class="row sp"><h3 style="margin:0">🎤 Səsli assistent</h3><div class="row" style="gap:6px"><button class="btn sm ghost" onclick="asstScope(\'today\')">Bu gün</button><button class="btn sm ghost" onclick="asstScope(\'tomorrow\')">Sabah</button></div></div>'+
+ '<p class="muted small" style="margin:6px 0 10px">Planlarınızı, tapşırıqlarınızı səslə deyin — sistem bir-bir qeyd edir, tarixi tanıyır və vaxtı çatanda xatırladır.</p>'+
+ '<div class="row" style="gap:8px"><button class="btn" id="asMic" onclick="asstMic()">🎤 Danışmağa başla</button><button class="btn ghost" onclick="asstType()">⌨️ Yazaraq əlavə et</button></div>'+
+ '<div id="asOut" style="margin-top:12px"></div><div id="asList" style="margin-top:14px"></div></div>';}
+function asstMic(){var b=$('asMic');
+ if(ASREC&&ASREC.state==='recording'){ASREC.stop();return;}
+ if(!navigator.mediaDevices){toast('Bu cihazda mikrofon dəstəklənmir');return;}
+ navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){
+  ASchunks=[];ASREC=new MediaRecorder(st);ASREC.ondataavailable=function(e){if(e.data.size)ASchunks.push(e.data);};
+  ASREC.onstop=function(){st.getTracks().forEach(function(t){t.stop();});b.textContent='🎤 Danışmağa başla';b.classList.remove('rec');asstTranscribe(new Blob(ASchunks,{type:ASREC.mimeType||'audio/webm'}));};
+  ASREC.start();b.textContent='⏹ Bitir və emal et';b.classList.add('rec');
+ }).catch(function(){toast('Mikrofon icazəsi verilmədi');});}
+function asstTranscribe(blob){$('asOut').innerHTML='<p class="status"><span class="spin"></span>Səs mətnə çevrilir…</p>';
+ var fd=new FormData();fd.append('audio',blob,'audio.webm');
+ sb.functions.invoke('office-assistant',{body:fd}).then(function(r){if(r.error)throw r.error;var d=r.data;if(d.error)throw new Error(d.error);
+  if(!d.text||!d.text.trim()){$('asOut').innerHTML='<p class="hint">Səs tanınmadı. Yenidən cəhd edin.</p>';return;}asstParse(d.text);
+ }).catch(function(e){$('asOut').innerHTML='<p class="status">Xəta: '+esc(e.message||e)+'</p>';});}
+function asstType(){var t=prompt('Planlarınızı yazın:');if(t&&t.trim())asstParse(t.trim());}
+function asstParse(text){$('asOut').innerHTML='<p class="status"><span class="spin"></span>“'+esc(text.slice(0,80))+'…” — işlərə bölünür…</p>';
+ sb.functions.invoke('office-assistant',{body:{action:'parse',text:text}}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);ASitems=r.data.items||[];asstReview(text);
+ }).catch(function(e){$('asOut').innerHTML='<p class="status">Xəta: '+esc(e.message)+'</p>';});}
+function asstReview(text){if(!ASitems.length){$('asOut').innerHTML='<p class="hint">İş tapılmadı. Daha aydın deyin.</p>';return;}
+ $('asOut').innerHTML='<div class="card" style="background:#fff"><b>Bunları qeyd edim?</b><div class="small muted" style="margin:2px 0 8px">Dediyiniz: “'+esc(text)+'”</div>'+
+  ASitems.map(function(it,i){return '<div class="row sp asrow" style="padding:7px 0;border-top:1px solid var(--line)"><label class="row" style="gap:8px;flex:1"><input type="checkbox" checked data-i="'+i+'"><span><b>'+esc(it.text)+'</b>'+(it.due?'<span class="pill p-acc" style="margin-left:6px">'+asstDue(it)+'</span>':'')+'</span></label></div>';}).join('')+
+  '<button class="btn" style="width:100%;margin-top:10px" onclick="asstSave()">✓ Təsdiqlə və qeyd et</button></div>';}
+function asstDue(it){if(!it.due)return '';var d=new Date(it.due);return d.toLocaleDateString('az-AZ',{day:'2-digit',month:'short'})+(it.all_day?'':' '+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'}));}
+function asstSave(){var keep=[];document.querySelectorAll('.asrow input:checked').forEach(function(c){keep.push(ASitems[+c.dataset.i]);});if(!keep.length){toast(' Heç nə seçilmədi');return;}
+ sb.functions.invoke('office-assistant',{body:{action:'save',items:keep}}).then(function(r){if(r.error)throw r.error;$('asOut').innerHTML='<div class="verdict v-good">'+r.data.count+' iş qeyd olundu ✓<small>Vaxtı çatanda xatırladılacaq.</small></div>';asstScope('today');
+ }).catch(function(e){toast(e.message);});}
+function asstScope(sc){run(sb.rpc('notes_list',{p_scope:sc})).then(function(rows){var lbl={today:'Bu günün planı',tomorrow:'Sabahın planı',open:'Bütün işlər'}[sc]||'İşlər';
+ $('asList').innerHTML='<div class="card" style="background:#fff"><div class="row sp"><b>'+lbl+'</b><span class="muted small">'+rows.length+' iş</span></div>'+
+  (rows.length?rows.map(function(n){return '<div class="row sp" style="padding:8px 0;border-top:1px solid var(--line)"><label class="row" style="gap:8px;flex:1"><input type="checkbox" '+(n.done?'checked':'')+' onchange="asstDone('+n.id+',this.checked)"><span'+(n.done?' style="text-decoration:line-through;opacity:.5"':'')+'>'+esc(n.text)+(n.due?' <span class="pill '+(new Date(n.due)<new Date()&&!n.done?'p-bad':'p-mut')+'">'+asstDue({due:n.due,all_day:n.due_all_day})+'</span>':'')+'</span></label><button class="x" onclick="asstDel('+n.id+')" style="font-size:16px">×</button></div>';}).join(''):'<p class="hint" style="margin:8px 0 0">Bu siyahı boşdur.</p>')+'</div>';
+ }).catch(err);}
+function asstDone(id,v){run(sb.from('office_notes').update({done:v,done_at:v?new Date().toISOString():null}).eq('id',id)).catch(err);}
+function asstDel(id){run(sb.from('office_notes').delete().eq('id',id)).then(function(){asstScope('today');}).catch(err);}
 
 var _scanKind='in';
 function loadJsQR(){return new Promise(function(res,rej){if(window.jsQR)return res();var sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';sc.onload=function(){res();};sc.onerror=function(){rej(new Error('QR oxuyucu yüklənmədi'));};document.head.appendChild(sc);});}
@@ -869,7 +909,7 @@ var OWN={};
 function grade(r,pp,over){var pts=0;var att=r.plan?(r.came+r.leave)/r.plan:1;if(att>=0.95)pts+=2;else if(att>=0.85)pts+=1;
  if(r.lateN<=1)pts+=2;else if(r.lateN<=4)pts+=1;if(pp===null)pts+=1;else if(pp>=70)pts+=2;else if(pp>=40)pts+=1;if(!over)pts+=2;else if(over<=1)pts+=1;
  return pts>=7?['Yaxşı','g-ok']:pts>=4?['Orta','g-warn']:['Zəif','g-bad'];}
-function renderOwner(){var d=today(),m=d.slice(0,7);renderOutingsCard('bOut',d);
+function renderOwner(){var d=today(),m=d.slice(0,7);var ac=$('bAsst');if(ac){ac.innerHTML=assistantCard();asstScope('today');}renderOutingsCard('bOut',d);
  $('bDate').textContent=new Date().toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long',year:'numeric'});
  var hs=document.querySelectorAll('#v-boss .bossh');var hr=+new Intl.DateTimeFormat('en-GB',{timeZone:TZ,hour:'2-digit',hour12:false}).format(new Date());var gr=hr>=5&&hr<12?'Sabahınız xeyir':hr>=12&&hr<17?'Günortanız xeyir':'Axşamınız xeyir';var nm=PREVIEW?'Afiq Rəhmanov':(ME.full_name||'Afiq Rəhmanov');hs[0].textContent=gr+', '+nm;var hb=$('ownGiveBtn');if(!hb){hb=document.createElement('button');hb.id='ownGiveBtn';hb.className='btn givebtn';hb.textContent='✍️ Tapşırıq ver';hb.onclick=function(){ownTaskModal();};hs[0].parentNode.insertBefore(hb,hs[0].nextSibling);}if(hs[1])hs[1].parentNode.style.display='none';
  var pm=document.querySelector('#v-boss > p.muted');if(pm)pm.style.display='none';$('bList').innerHTML='';
