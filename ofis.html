@@ -565,48 +565,68 @@ function hydrateSelfies(root){var ims=(root||document).querySelectorAll('img.sft
 function openSelfie(p){sb.storage.from('office').createSignedUrl(p,600).then(function(r){if(r.data)modal('<div class="mhead"><h3>📸 Selfi</h3><button class="x" onclick="closeModal()">×</button></div><img src="'+r.data.signedUrl+'" style="width:100%;border-radius:16px">');});}
 
 /* ---------- 🎯 Assistent (ayrıca bölmə) ---------- */
-var ASVOICE=(function(){try{return localStorage.getItem('asst_voice')!=='0'}catch(e){return true}})();
-var ASAUDIO=null;
-function asstToggleVoice(){ASVOICE=!ASVOICE;try{localStorage.setItem('asst_voice',ASVOICE?'1':'0')}catch(e){}var b=$('asVoice');if(b)b.textContent='🔊 Səsli cavab: '+(ASVOICE?'aktiv':'sönük');if(!ASVOICE&&ASAUDIO){ASAUDIO.pause();}}
-function asstSpeak(txt){if(!ASVOICE||!txt)return;
- sb.functions.invoke('office-assistant',{body:{action:'tts',text:txt}}).then(function(r){if(r.error||!r.data||!r.data.audio)return;
-  try{if(ASAUDIO)ASAUDIO.pause();ASAUDIO=new Audio('data:audio/mp3;base64,'+r.data.audio);ASAUDIO.play().catch(function(){});}catch(e){}
- }).catch(function(){});}
-
-var ASREC=null,ASchunks=[],ASscope='today';
+var ASVOICE=true,ASAUDIO=null,ASHIST=[],ASPREFS={voice:'shimmer',speed:1.0,autospeak:true};
+var ASREC=null,ASchunks=[],ASscope='today',ASlisten=false,ASsilence=null,ASctx=null,ASanalyser=null;
 function renderAsst(){var v=$('v-asst');if(!v)return;
- v.innerHTML='<div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">🎯 Assistent</h2></div>'+
-  '<div class="card asst"><div class="micwrap"><button class="micbtn" id="asMic" onclick="asstMic()"><span class="micico">🎤</span><span id="asMicTxt">Danışmaq üçün basın</span></button></div>'+
-  '<div class="row" style="gap:8px;justify-content:center;margin-top:8px"><button class="btn ghost sm" onclick="asstType()">⌨️ Yaz</button><button class="btn ghost sm" id="asVoice" onclick="asstToggleVoice()">🔊 Səsli cavab: aktiv</button></div><p class="muted small" style="text-align:center;margin:8px 4px 0">Plan deyin, sual verin: “bu gün kim gəlməyib”, “Elgün saat neçədə gəlib”, “köçüb yaşayan sakinlər”, “borclular”, “kim indi çöldədir”</p>'+
-  '<div id="asOut" style="margin-top:12px"></div></div>'+
+ v.innerHTML='<div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">🎯 Assistent</h2><button class="btn ghost sm" onclick="asstSettings()">⚙️</button></div>'+
+  '<div class="card asst"><div class="micwrap"><button class="micbtn" id="asMic" onclick="asstMic()"><span class="micico" id="asMicIco">🎤</span><span id="asMicTxt">Danışmaq üçün basın</span></button></div>'+
+  '<div class="row" style="gap:8px;justify-content:center;margin-top:8px"><button class="btn ghost sm '+(ASlisten?'on':'')+'" id="asHands" onclick="asstHands()">♾️ Fasiləsiz: '+(ASlisten?'aktiv':'sönük')+'</button><button class="btn ghost sm" onclick="asstType()">⌨️ Yaz</button></div>'+
+  '<p class="muted small" style="text-align:center;margin:8px 4px 0">Plan deyin, sual verin: “bu gün kim gəlməyib”, “sabah kimin ad günüdür”, “boş mənzillər”, “borclular”, “kim indi çöldədir”</p>'+
+  '<div id="asChat" style="margin-top:12px"></div><div id="asOut"></div></div>'+
   '<div class="tabs" id="asTabs" style="margin-top:14px">'+[['today','Bu gün'],['tomorrow','Sabah'],['week','Bu həftə'],['noday','Tarixsiz'],['done','Bitmişlər']].map(function(t){return '<button class="'+(t[0]===ASscope?'on':'')+'" onclick="ASscope=\''+t[0]+'\';renderAsstList();renderAsstTabs()">'+t[1]+'</button>';}).join('')+'</div>'+
   '<div id="asList" style="margin-top:10px"></div>';
- renderAsstList();var vb=$('asVoice');if(vb)vb.textContent='🔊 Səsli cavab: '+(ASVOICE?'aktiv':'sönük');}
+ renderAsstChat();renderAsstList();
+ sb.functions.invoke('office-assistant',{body:{action:'prefs'}}).then(function(r){if(r.data&&!r.data.error){ASPREFS=r.data;ASVOICE=r.data.autospeak!==false;}}).catch(function(){});}
 function renderAsstTabs(){document.querySelectorAll('#asTabs button').forEach(function(b,i){var sc=['today','tomorrow','week','noday','done'][i];b.classList.toggle('on',sc===ASscope);});}
+function renderAsstChat(){var c=$('asChat');if(!c)return;c.innerHTML=ASHIST.slice(-8).map(function(h){return h.role==='user'?'<div class="asyou">🗣 '+esc(h.content)+'</div>':'<div class="asai">🎯 '+esc(h.content)+'</div>';}).join('');c.scrollTop=c.scrollHeight;}
 function asstMic(){var b=$('asMic');
- if(ASREC&&ASREC.state==='recording'){ASREC.stop();return;}
- if(!navigator.mediaDevices){toast('Bu cihazda mikrofon dəstəklənmir');return;}
+ if(ASREC&&ASREC.state==='recording'){ASREC.stop();return;}startRec(false);}
+function asstHands(){ASlisten=!ASlisten;var b=$('asHands');if(b){b.textContent='♾️ Fasiləsiz: '+(ASlisten?'aktiv':'sönük');b.classList.toggle('on',ASlisten);}
+ if(ASlisten)startRec(true);else{if(ASREC&&ASREC.state==='recording')ASREC.stop();stopVAD();}}
+function startRec(hands){if(!navigator.mediaDevices){toast('Mikrofon dəstəklənmir');return;}
  navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){ASchunks=[];ASREC=new MediaRecorder(st);
   ASREC.ondataavailable=function(e){if(e.data.size)ASchunks.push(e.data);};
-  ASREC.onstop=function(){st.getTracks().forEach(function(t){t.stop();});b.classList.remove('rec');$('asMicTxt').textContent='Danışmaq üçün basın';asstSend(new Blob(ASchunks,{type:ASREC.mimeType||'audio/webm'}));};
-  ASREC.start();b.classList.add('rec');$('asMicTxt').textContent='Dinləyirəm… bitirmək üçün basın';
- }).catch(function(){toast('Mikrofon icazəsi verilmədi');});}
-function asstSend(blob){$('asOut').innerHTML='<p class="status"><span class="spin"></span>Dinlədim, emal edirəm…</p>';
+  ASREC.onstop=function(){var blob=new Blob(ASchunks,{type:ASREC.mimeType||'audio/webm'});setMic(false);if(!hands)st.getTracks().forEach(function(t){t.stop();});if(blob.size>2000)asstSend(blob,hands);else if(hands&&ASlisten)armVAD(st);};
+  ASREC.start();setMic(true,hands);
+  if(hands)armVAD(st);
+ }).catch(function(){toast('Mikrofon icazəsi verilmədi');ASlisten=false;});}
+function setMic(on,hands){var b=$('asMic'),ico=$('asMicIco'),t=$('asMicTxt');if(!b)return;b.classList.toggle('rec',on);if(t)t.textContent=on?(hands?'Dinləyirəm…':'Bitirmək üçün basın'):'Danışmaq üçün basın';}
+/* VAD: səs kəsiləndə avtomatik dayandır (fasiləsiz rejim) */
+function armVAD(st){try{if(!ASctx)ASctx=new(window.AudioContext||window.webkitAudioContext)();var src=ASctx.createMediaStreamSource(st);ASanalyser=ASctx.createAnalyser();ASanalyser.fftSize=512;src.connect(ASanalyser);var data=new Uint8Array(ASanalyser.frequencyBinCount);var quiet=0,spoke=false;
+ clearInterval(ASsilence);ASsilence=setInterval(function(){if(!ASREC||ASREC.state!=='recording'){clearInterval(ASsilence);return;}ASanalyser.getByteFrequencyData(data);var v=0;for(var i=0;i<data.length;i++)v+=data[i];v/=data.length;
+  if(v>12){spoke=true;quiet=0;}else if(spoke){quiet++;if(quiet>12){clearInterval(ASsilence);ASREC.stop();}}},120);
+ }catch(e){}}
+function stopVAD(){clearInterval(ASsilence);if(ASctx){try{ASctx.close();}catch(e){}ASctx=null;}}
+function asstSend(blob,hands){$('asOut').innerHTML='<p class="status"><span class="spin"></span>…</p>';
  var fd=new FormData();fd.append('audio',blob,'audio.webm');
- sb.functions.invoke('office-assistant',{body:fd}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);var t=(r.data.text||'').trim();if(!t){$('asOut').innerHTML='<p class="hint">Səs tanınmadı, yenidən deyin.</p>';return;}asstChat(t);
- }).catch(function(e){$('asOut').innerHTML='<p class="status">Xəta: '+esc(e.message||e)+'</p>';});}
-function asstType(){var t=prompt('Assistentə deyin (yeni iş, sual, dəyişiklik):');if(t&&t.trim()){$('asOut').innerHTML='';asstChat(t.trim());}}
-function asstChat(text){$('asOut').innerHTML='<div class="asyou">🗣 '+esc(text)+'</div><p class="status"><span class="spin"></span>…</p>';
- sb.functions.invoke('office-assistant',{body:{action:'chat',text:text}}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);
-  $('asOut').innerHTML='<div class="asyou">🗣 '+esc(text)+'</div><div class="asai">🎯 '+esc(r.data.reply)+'</div>';renderAsstList();asstSpeak(r.data.reply);
- }).catch(function(e){$('asOut').innerHTML='<p class="status">Xəta: '+esc(e.message||e)+'</p>';});}
+ sb.functions.invoke('office-assistant',{body:fd}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);var t=(r.data.text||'').trim();$('asOut').innerHTML='';if(!t){if(hands&&ASlisten)startRec(true);return;}asstChat(t,hands);
+ }).catch(function(e){$('asOut').innerHTML='<p class="status">Xəta: '+esc(e.message||e)+'</p>';if(hands&&ASlisten)setTimeout(function(){startRec(true);},1500);});}
+function asstType(){var t=prompt('Assistentə deyin:');if(t&&t.trim())asstChat(t.trim(),false);}
+function asstChat(text,hands){ASHIST.push({role:'user',content:text});renderAsstChat();$('asOut').innerHTML='<p class="status"><span class="spin"></span>…</p>';
+ sb.functions.invoke('office-assistant',{body:{action:'chat',text:text,history:ASHIST.slice(-6)}}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);
+  $('asOut').innerHTML='';ASHIST.push({role:'assistant',content:r.data.reply});renderAsstChat();renderAsstList();asstSpeak(r.data.reply,hands);
+ }).catch(function(e){$('asOut').innerHTML='<p class="status">Xəta: '+esc(e.message||e)+'</p>';if(hands&&ASlisten)setTimeout(function(){startRec(true);},1500);});}
+function asstSpeak(txt,hands){if(!ASVOICE||!txt){if(hands&&ASlisten)setTimeout(function(){startRec(true);},400);return;}
+ sb.functions.invoke('office-assistant',{body:{action:'tts',text:txt}}).then(function(r){if(r.error||!r.data||!r.data.audio){if(hands&&ASlisten)startRec(true);return;}
+  try{if(ASAUDIO)ASAUDIO.pause();ASAUDIO=new Audio('data:audio/mp3;base64,'+r.data.audio);ASAUDIO.onended=function(){if(hands&&ASlisten)startRec(true);};ASAUDIO.play().catch(function(){if(hands&&ASlisten)startRec(true);});}catch(e){if(hands&&ASlisten)startRec(true);}
+ }).catch(function(){if(hands&&ASlisten)startRec(true);});}
+function asstSettings(){var voices=[['shimmer','Yumşaq qadın'],['nova','Canlı qadın'],['coral','İsti qadın'],['sage','Sakit qadın'],['alloy','Neytral'],['onyx','Dərin kişi'],['echo','Kişi'],['ash','Aydın kişi']];
+ var html='<div class="mhead"><h3>⚙️ Səs ayarları</h3><button class="x" onclick="closeModal()">×</button></div>'+
+  '<label class="small muted">Səs</label><select id="apVoice" style="width:100%;padding:10px;border-radius:12px;margin:4px 0 12px">'+voices.map(function(v){return '<option value="'+v[0]+'"'+(ASPREFS.voice===v[0]?' selected':'')+'>'+v[1]+'</option>';}).join('')+'</select>'+
+  '<label class="small muted">Sürət: <b id="apSpeedV">'+(ASPREFS.speed||1).toFixed(2)+'</b></label><input type="range" id="apSpeed" min="0.7" max="1.3" step="0.05" value="'+(ASPREFS.speed||1)+'" style="width:100%;margin:4px 0 12px" oninput="$(\'apSpeedV\').textContent=(+this.value).toFixed(2)">'+
+  '<label class="row" style="gap:8px;margin-bottom:14px"><input type="checkbox" id="apAuto" '+(ASVOICE?'checked':'')+'> Cavabları səslə oxusun</label>'+
+  '<div class="row" style="gap:8px"><button class="btn ghost" onclick="asstTestVoice()">🔊 Sına</button><button class="btn" style="flex:1" onclick="asstSaveVoice()">Yadda saxla</button></div>';
+ modal(html);}
+function asstTestVoice(){var v=$('apVoice').value,sp=+$('apSpeed').value;sb.functions.invoke('office-assistant',{body:{action:'prefs',set:{voice:v,speed:sp,autospeak:true}}}).then(function(){sb.functions.invoke('office-assistant',{body:{action:'tts',text:'Salam, mən sizin assistentinizəm. Bu, səs nümunəsidir.'}}).then(function(r){if(r.data&&r.data.audio){if(ASAUDIO)ASAUDIO.pause();ASAUDIO=new Audio('data:audio/mp3;base64,'+r.data.audio);ASAUDIO.play().catch(function(){});}});});}
+function asstSaveVoice(){var v=$('apVoice').value,sp=+$('apSpeed').value,au=$('apAuto').checked;sb.functions.invoke('office-assistant',{body:{action:'prefs',set:{voice:v,speed:sp,autospeak:au}}}).then(function(r){if(r.data){ASPREFS=r.data;ASVOICE=au;}closeModal();toast('Yadda saxlanıldı');});}
 function asstDueTxt(n){if(!n.due)return '';var d=new Date(n.due);return d.toLocaleDateString('az-AZ',{day:'2-digit',month:'short'})+(n.due_all_day?'':' '+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'}));}
 function renderAsstList(){run(sb.rpc('notes_list',{p_scope:ASscope})).then(function(rows){
  $('asList').innerHTML=rows.length?rows.map(function(n){var late=n.due&&new Date(n.due)<new Date()&&!n.done;
-  return '<div class="card note'+(n.done?' ndone':'')+'"><label class="row" style="gap:10px;align-items:flex-start"><input type="checkbox" '+(n.done?'checked':'')+' onchange="asstDone('+n.id+',this.checked)"><div style="flex:1"><b>'+esc(n.text)+'</b>'+(n.due?'<span class="pill '+(late?'p-bad':'p-mut')+'" style="margin-left:6px">'+(late?'⏰ ':'')+asstDueTxt(n)+'</span>':'')+(n.note?'<div class="small muted" style="margin-top:2px">'+esc(n.note)+'</div>':'')+'</div><button class="x" onclick="asstDel('+n.id+')">×</button></label></div>';
- }).join(''):'<p class="hint" style="text-align:center;padding:16px">Bu siyahı boşdur. Mikrofona toxunub yeni iş deyin.</p>';}).catch(err);}
+  return '<div class="card note'+(n.done?' ndone':'')+'"><label class="row" style="gap:10px;align-items:flex-start"><input type="checkbox" '+(n.done?'checked':'')+' onchange="asstDone('+n.id+',this.checked)"><div style="flex:1"><b>'+esc(n.text)+'</b>'+(n.due?'<span class="pill '+(late?'p-bad':'p-mut')+'" style="margin-left:6px">'+(late?'⏰ ':'')+asstDueTxt(n)+'</span>':'')+'</div><button class="x" onclick="asstDel('+n.id+')">×</button></label></div>';
+ }).join(''):'<p class="hint" style="text-align:center;padding:16px">Bu siyahı boşdur.</p>';}).catch(err);}
 function asstDone(id,v){run(sb.from('office_notes').update({done:v,done_at:v?new Date().toISOString():null}).eq('id',id)).then(function(){renderAsstList();}).catch(err);}
 function asstDel(id){run(sb.from('office_notes').delete().eq('id',id)).then(function(){renderAsstList();}).catch(err);}
+
 
 
 var _scanKind='in';
