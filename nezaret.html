@@ -26,12 +26,13 @@ table{width:100%;border-collapse:collapse;font-size:13.5px}th{text-align:left;co
 pre{white-space:pre-wrap;font-size:11.5px;background:#f8fafc;border-radius:10px;padding:8px;margin-top:6px;max-height:180px;overflow:auto}
 .empty{color:var(--mut);text-align:center;padding:24px}select,input{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:14px;background:#fff}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:12px 18px;border-radius:99px;font-weight:600;z-index:99;display:none}
+.cfbars{display:flex;gap:2px;align-items:flex-end;height:58px;margin-top:8px}.cfbars i{flex:1;background:#2563eb;border-radius:2px;min-height:2px}.mini{flex:1;min-width:150px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px}.mini b{display:block;margin-bottom:6px;font-size:.9rem}.mini .row{padding:3px 0;font-size:13px}
 </style>
 </head>
 <body>
 <div class="top"><div><b>Sistem nəzarəti</b><small>LUX · Baş Ofis · Komendantlıq</small></div><div class="row"><button class="btn sm ghost" onclick="load()">↻ Yenilə</button></div></div>
 <main>
- <div class="tabs" id="tabs"><button class="on" data-t="health">🟢 Canlılıq</button><button data-t="errors">🐞 Xətalar</button><button data-t="audit">🧾 Əməliyyat jurnalı</button><button data-t="alerts">🚨 Xəbərdarlıqlar</button><button data-t="incidents">🧯 Hadisələr</button><button data-t="security">🔐 Təhlükəsizlik</button><button data-t="speed">⚡ Sürət</button><button data-t="reports">📊 Hesabatlar</button><button data-t="settings">⚙️ Ayarlar</button></div>
+ <div class="tabs" id="tabs"><button class="on" data-t="health">🟢 Canlılıq</button><button data-t="errors">🐞 Xətalar</button><button data-t="audit">🧾 Əməliyyat jurnalı</button><button data-t="alerts">🚨 Xəbərdarlıqlar</button><button data-t="incidents">🧯 Hadisələr</button><button data-t="security">🔐 Təhlükəsizlik</button><button data-t="speed">⚡ Sürət</button><button data-t="traffic">🌐 Sayt trafiki</button><button data-t="reports">📊 Hesabatlar</button><button data-t="settings">⚙️ Ayarlar</button></div>
  <div id="body"><div class="empty">Yüklənir…</div></div>
 </main>
 <div class="toast" id="toast"></div>
@@ -46,7 +47,7 @@ var OP={INSERT:['yaradıldı','p-ok'],UPDATE:['dəyişdirildi','p-acc'],DELETE:[
 document.querySelectorAll('#tabs button').forEach(function(b){b.onclick=function(){TAB=b.dataset.t;document.querySelectorAll('#tabs button').forEach(function(x){x.classList.toggle('on',x===b);});load();};});
 luxAuth({perm:'sys',title:'Sistem nəzarəti',noAdminLink:true,onReady:function(s,me){sb=s;ME=me;load();setInterval(function(){if(TAB==='health')load();},60000);}});
 function run(q){return q.then(function(r){if(r.error)throw r.error;return r.data;});}
-function load(){({health:loadHealth,errors:loadErrors,audit:loadAudit,reports:loadReports,alerts:loadAlerts,incidents:loadIncidents,security:loadSecurity,speed:loadSpeed,settings:loadSettings})[TAB]();}
+function load(){({traffic:loadTraffic,health:loadHealth,errors:loadErrors,audit:loadAudit,reports:loadReports,alerts:loadAlerts,incidents:loadIncidents,security:loadSecurity,speed:loadSpeed,settings:loadSettings})[TAB]();}
 function loadHealth(){var since=new Date(Date.now()-24*3600e3).toISOString();
  Promise.all([run(sb.from('sys_health_state').select('*')),run(sb.from('sys_health').select('target,ok,ms,at').gte('at',since).order('at')),run(sb.from('office_backup_log').select('*').order('id',{ascending:false}).limit(1))]).then(function(r){
   var st=r[0],h=r[1],bk=r[2][0];var html='<div class="grid">';
@@ -96,6 +97,23 @@ function loadSettings(){Promise.all([run(sb.from('sys_config').select('*').eq('i
  '<button class="btn" onclick="saveSettings()">Yadda saxla</button>';loadSettings._c=c;}).catch(fail);}
 function saveSettings(){var c=loadSettings._c;var doms=(c.domains||[]).map(function(d,i){return {name:d.name,expires:$('dom'+i).value||null};});
  run(sb.from('sys_config').update({domains:doms,heartbeat_url:$('hb').value.trim(),slow_ms:+$('slow').value||3000,updated_at:new Date().toISOString()}).eq('id',1)).then(function(){toast('Yadda saxlanıldı');}).catch(fail);}
+/* ---------- 🌐 Sayt trafiki (Cloudflare) ---------- */
+var TR30=null;
+function loadTraffic(){$("body").innerHTML=`<p class="status"><span class="spin"></span>Cloudflare-dən yüklənir…</p>`;
+ sb.functions.invoke("cf-analytics",{body:{days:30}}).then(function(r){if(r.error)throw r.error;var d=r.data;if(d.error)throw new Error(d.error);TR30=d;
+  var s=d.series||[],last=s[s.length-1]||{},prev7=s.slice(-14,-7),cur7=s.slice(-7);
+  var sum=function(a,k){return a.reduce(function(x,r){return x+(+r[k]||0);},0);};
+  var v7=sum(cur7,"visits"),v7p=sum(prev7,"visits"),chg=v7p?((v7-v7p)/v7p*100):null;
+  $("body").innerHTML=`<div class="stats"><div class="stat"><b>${(last.visits||0).toLocaleString("az")}</b><span>Dünən ziyarətçi</span></div><div class="stat"><b>${(last.views||0).toLocaleString("az")}</b><span>Dünən baxış</span></div><div class="stat"><b>${v7.toLocaleString("az")}</b><span>Son 7 gün ziyarətçi</span></div><div class="stat"><b>${chg==null?"—":(chg>0?"▲ +":"▼ ")+Math.abs(chg).toFixed(0)+"%"}</b><span>Ötən həftəyə</span></div></div>
+   <div class="trendc" style="margin-top:14px"><div class="trh"><b>Gündəlik ziyarətçilər (30 gün)</b><span>${d.totVisits.toLocaleString("az")} cəmi</span></div>${bars(s)}</div>
+   <div class="tbl" style="margin-top:14px"><table><thead><tr><th>Tarix</th><th>Ziyarətçi</th><th>Səhifə baxışı</th></tr></thead><tbody>${s.slice().reverse().slice(0,14).map(function(r){return `<tr><td>${new Date(r.date).toLocaleDateString("az-AZ",{day:"2-digit",month:"short",weekday:"short"})}</td><td class="p">${(r.visits||0).toLocaleString("az")}</td><td>${(r.views||0).toLocaleString("az")}</td></tr>`;}).join("")}</tbody></table></div>
+   <div class="row" style="gap:12px;flex-wrap:wrap;margin-top:14px">${miniTbl("🌍 Ölkələr",d.countries)}${miniTbl("📱 Brauzer",d.devices)}${miniTbl("↗️ Haradan gəlib",d.referers,true)}${miniTbl("📄 Ən çox baxılan",d.paths)}</div>
+   <p class="hint" style="margin-top:12px">Yalnız ictimai sayt (luxresidence.az) izlənir. Daxili sistemlər (ofis, komendant, təchizat) sayılmır. Məlumat 23.09-dan toplanır.</p>`;
+ }).catch(function(e){$("body").innerHTML=`<p class="status">Xəta: ${esc(e.message||e)}</p>`;});}
+function bars(s){if(!s.length)return "";var mx=Math.max.apply(null,s.map(function(r){return r.visits||0;}))||1;
+ return `<div class="cfbars">${s.map(function(r){var h=Math.round((r.visits||0)/mx*54);return `<i style="height:${Math.max(2,h)}px" title="${r.date}: ${r.visits} ziyarətçi"></i>`;}).join("")}</div><div class="row sp mut" style="font-size:11px;margin-top:2px"><span>${s[0]?new Date(s[0].date).toLocaleDateString("az-AZ",{day:"2-digit",month:"2-digit"}):""}</span><span>bu gün</span></div>`;}
+function miniTbl(title,rows,isRef){rows=(rows||[]).filter(function(r){return r.k;});if(isRef)rows=rows.filter(function(r){return r.k&&!/luxresidence\.az|^$/.test(r.k);});rows=rows.slice(0,6);
+ return `<div class="mini"><b>${title}</b>${rows.length?rows.map(function(r){return `<div class="row sp"><span>${esc(String(r.k).slice(0,26)||"—")}</span><b>${(r.n||0).toLocaleString("az")}</b></div>`;}).join(""):'<div class="mut small">—</div>'}</div>`;}
 function fail(e){$('body').innerHTML='<div class="card empty">Xəta: '+esc(e&&e.message||e)+'</div>';}
 </script>
 </body>
