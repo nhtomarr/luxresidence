@@ -86,9 +86,9 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
 .acct{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:6px 0 12px;background:#f8fafc}.acct h4{font-size:14px;margin-bottom:4px}
 .qopt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:8px;cursor:pointer}.qopt input{margin-top:4px}.qopt b{display:block}.qopt span{font-size:13px;color:var(--mut)}
 #printSheet{display:none}
-@media print{body>*{display:none!important}#printSheet{display:block!important}#printSheet .ps-in{display:flex;flex-direction:column;align-items:center;text-align:center;padding:14mm 10mm;font-family:var(--sans);color:#0f172a}
-.ps-t{font-size:44px;font-weight:800;letter-spacing:.06em}.ps-s{font-size:22px;color:#475569;margin:6px 0 22px}#psQr img,#psQr canvas{width:120mm!important;height:120mm!important}
-.ps-l{text-align:left;font-size:18px;margin:24px auto 0;line-height:1.8}.ps-f{margin-top:26px;color:#64748b;font-size:14px}@page{size:A4;margin:10mm}}
+@media print{body>*{display:none!important}#printSheet{display:block!important}#printSheet 
+#psQr img,#psQr canvas{width:120mm!important;height:120mm!important}
+@page{size:A4;margin:10mm}}
 .lvrow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}.lvrow:last-child{border-bottom:none}
 
 .clbar{height:6px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin-bottom:6px}.clbar i{display:block;height:100%;background:var(--ok)}
@@ -431,6 +431,28 @@ button.go,.btn.primary,.go{background:linear-gradient(135deg,var(--acc),var(--ac
 .pill.p-bad{background:#fde2dc;color:var(--bad)}
 a.back,.back{border-radius:99px}
 .oprof-head{display:flex;gap:16px;align-items:center}.oprof-av{width:64px;height:64px;border-radius:20px;flex-shrink:0;display:grid;place-items:center;font-size:24px;font-weight:800;color:#fff;background:radial-gradient(circle at 30% 25%,#f0a283,#ba4d2c 62%)}.oprof-h{font-size:1.05rem;margin:0 0 8px}.oprof-links{display:grid;grid-template-columns:1fr 1fr;gap:8px}.oprof-lnk{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.5);font-weight:600;text-decoration:none;color:var(--ink);font-size:.9rem}@media(max-width:640px){.oprof-links{grid-template-columns:1fr}}
+
+/* QR çap vərəqi — komendant dizaynı */
+.ps-in{display:flex;flex-direction:column;align-items:center;text-align:center;padding:20mm 16mm;font-family:'Inter',var(--sans);color:#241109;background:#fff;position:relative;min-height:270mm}
+.ps-in::before{content:'';position:absolute;inset:8mm;border:2px solid #ba4d2c;border-radius:8mm;pointer-events:none}
+.ps-in::after{content:'';position:absolute;inset:10mm;border:1px solid #eadfd3;border-radius:7mm;pointer-events:none}
+.ps-brand{font-family:'Playfair Display',serif;font-size:20px;font-weight:800;letter-spacing:.32em;color:#ba4d2c;margin-bottom:6mm;position:relative}
+.ps-brand::after{content:'';display:block;width:44px;height:3px;background:#ba4d2c;border-radius:2px;margin:8px auto 0}
+.ps-t{font-family:'Playfair Display',serif;font-size:56px;font-weight:800;letter-spacing:-.01em;color:#241109;margin:0}
+.ps-s{font-size:19px;color:#8a7566;margin:5mm 0 10mm;max-width:120mm;line-height:1.5}
+.ps-qrwrap{position:relative;padding:10mm;background:linear-gradient(160deg,#fdf7f3,#fbeee6);border-radius:6mm;box-shadow:0 12mm 30mm -18mm rgba(154,60,32,.5)}
+.ps-corner{position:absolute;width:12mm;height:12mm;border:3px solid #ba4d2c}
+.ps-corner.tl{top:4mm;left:4mm;border-right:none;border-bottom:none;border-radius:3mm 0 0 0}
+.ps-corner.tr{top:4mm;right:4mm;border-left:none;border-bottom:none;border-radius:0 3mm 0 0}
+.ps-corner.bl{bottom:4mm;left:4mm;border-right:none;border-top:none;border-radius:0 0 0 3mm}
+.ps-corner.br{bottom:4mm;right:4mm;border-left:none;border-top:none;border-radius:0 0 3mm 0}
+.ps-qrwrap #psQr{display:flex;justify-content:center}
+.ps-qrwrap #psQr img,.ps-qrwrap #psQr canvas{display:block;border-radius:2mm}
+.ps-steps{width:100%;max-width:135mm;margin:12mm 0 0;display:flex;flex-direction:column;gap:5mm}
+.ps-step{display:flex;align-items:center;gap:5mm;text-align:left;font-size:17px;line-height:1.4;color:#3a2418}
+.ps-num{flex-shrink:0;width:11mm;height:11mm;border-radius:50%;background:#ba4d2c;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px}
+.ps-f{margin-top:14mm;color:#8a7566;font-size:14px;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.ps-dot{width:5px;height:5px;border-radius:50%;background:#ba4d2c;display:inline-block}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -1626,8 +1648,19 @@ function saveCfg(){var qm=(document.querySelector('input[name=qmode]:checked')||
 
 function printQR(){if(!CFG||!CFG.static_qr)return toast('Əvvəlcə "Çap olunan sabit QR" seçib Yadda saxla basın');
  sb.rpc('office_qr_static').then(function(r){if(r.error)throw r.error;var url=location.origin+OFB('?c=')+r.data;
-  var sh=$('printSheet');sh.innerHTML='<div class="ps-in"><div class="ps-t">GƏLİŞ · GEDİŞ</div><div class="ps-s">Telefonun kamerası ilə skan edin</div><div id="psQr"></div><ol class="ps-l"><li>Kameranı QR koda tutun və linkə toxunun</li><li>Hesabınızla daxil olun (ilk dəfə)</li><li>Kamera və yer icazəsi verin</li></ol><div class="ps-f">Baş Ofis · İdarəetmə sistemi</div></div>';
-  new QRCode($('psQr'),{text:url,width:520,height:520,correctLevel:QRCode.CorrectLevel.H});
+  var sh=$('printSheet');sh.innerHTML='<div class="ps-in">'
+   +'<div class="ps-brand">BAŞ OFİS</div>'
+   +'<div class="ps-t">Gəliş · Gediş</div>'
+   +'<div class="ps-s">İşə gələndə və gedəndə telefonunuzla skan edin</div>'
+   +'<div class="ps-qrwrap"><div class="ps-corner tl"></div><div class="ps-corner tr"></div><div class="ps-corner bl"></div><div class="ps-corner br"></div><div id="psQr"></div></div>'
+   +'<div class="ps-steps">'
+   +'<div class="ps-step"><span class="ps-num">1</span><span>Telefonun kamerasını QR koda tutun və çıxan linkə toxunun</span></div>'
+   +'<div class="ps-step"><span class="ps-num">2</span><span>İlk dəfə hesabınızla (email və şifrə) daxil olun</span></div>'
+   +'<div class="ps-step"><span class="ps-num">3</span><span>Kamera və yer (məkan) icazəsini verin</span></div>'
+   +'</div>'
+   +'<div class="ps-f"><span class="ps-dot"></span>Baş Ofis · İdarəetmə Sistemi<span class="ps-dot"></span></div>'
+   +'</div>';
+  new QRCode($('psQr'),{text:url,width:460,height:460,correctLevel:QRCode.CorrectLevel.H});
   modal('<div class="mhead"><h3>Çap üçün QR</h3><button class="x" onclick="closeModal()">×</button></div><p class="muted small">A4 vərəqə çap edin və girişə, göz səviyyəsində vurun.</p><div id="pvQr" style="display:flex;justify-content:center;margin:12px 0"></div><div class="row"><button class="btn" onclick="window.print()">🖨 Çap et</button><button class="btn ghost" onclick="dlQR()">PNG yüklə</button></div>');
   new QRCode($('pvQr'),{text:url,width:240,height:240,correctLevel:QRCode.CorrectLevel.H});
  }).catch(err);}
