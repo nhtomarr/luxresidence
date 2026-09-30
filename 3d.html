@@ -124,6 +124,7 @@ function luxConv(kind,extra){try{var L=window.LUX_ADS,lab=L[kind];if(!lab||typeo
 /* telefon və WhatsApp klikləri */
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href^="tel:"],a[href*="wa.me/"],a[href*="api.whatsapp.com"]');if(a)luxConv('call',{value:1.0,currency:'USD'});},true);
 </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "80c09aec8f13452180b1bd70a88350be"}'></script>
 </head>
 <body>
 <div id="stage"><canvas id="c"></canvas></div>
