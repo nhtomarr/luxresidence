@@ -1062,7 +1062,12 @@ function planPct(p){var it=(p&&p.items)||[];if(!it.length)return 0;return Math.r
 var PST={draft:['qaralama','p-mut'],submitted:['təsdiq gözləyir','p-warn'],approved:['təsdiqlənib','p-ok'],returned:['düzəlişə qaytarılıb','p-bad']};
 function loadPlans(m){return run(sb.from('office_plans').select('*').eq('month',m)).then(function(r){var ex={};EMPS.forEach(function(e){if(e.plan_required===false)ex[e.id]=1;});PLANS=(r||[]).filter(function(p){return !ex[p.employee_id];});return PLANS;});}
 function bar(p){return '<div class="pbar"><i style="width:'+p+'%;background:'+(p>=80?'var(--ok)':p>=40?'var(--warn)':'var(--bad)')+'"></i></div>';}
-function renderPlans(){var mi=$('plM');var b=plBounds();if(!mi.value||mi.value<b[0]||mi.value>b[1])mi.value=today().slice(0,7);var m=mi.value;plNav();var lb=$('plML');if(lb)lb.textContent=mLabel(m);
+function renderPlans(){var mi=$('plM');var b=plBounds();if(!mi.value||mi.value<b[0]||mi.value>b[1])mi.value=today().slice(0,7);
+ // Rəhbər: təsdiq gözləyən plan başqa aydadırsa, o aya keç (bir dəfə)
+ if(MGR&&!renderPlans._did){renderPlans._did=1;
+  run(sb.from('office_plans').select('month').eq('status','submitted').gte('month',b[0]).lte('month',b[1]).order('month',{ascending:false}).limit(1)).then(function(r){
+   if(r&&r[0]&&r[0].month&&r[0].month!==mi.value){mi.value=r[0].month;renderPlans();}}).catch(function(){});}
+ var m=mi.value;plNav();var lb=$('plML');if(lb)lb.textContent=mLabel(m);
  $('plH').textContent=MGR?'Aylıq iş planları':'Mənim aylıq planım';
  loadPlans(m).then(function(){if(MGR)return renderPlansMgr(m);renderPlanMine(m);}).catch(err);}
 function mAdd(m,k){var y=+m.slice(0,4),mo=+m.slice(5,7)+k;while(mo<1){mo+=12;y--;}while(mo>12){mo-=12;y++;}return y+'-'+String(mo).padStart(2,'0');}
