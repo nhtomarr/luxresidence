@@ -282,6 +282,16 @@ nav.tabs,#tabs{scroll-behavior:smooth}
 body.simple #tQuick,body.simple #tMood,body.simple #tDocsCard,body.simple #tOwnerTasks,body.simple #tKudos,body.simple #tAnn,body.simple #tgCard,body.simple .mytaskcard{display:none!important}
 .maplink{color:var(--acc);font-weight:600;text-decoration:none;white-space:nowrap}
 .asst .rec{background:#dc2626!important;animation:pulse 1.2s infinite}@keyframes pulse{50%{opacity:.6}}.asst input[type=checkbox]{width:18px;height:18px}
+
+.micwrap{display:flex;justify-content:center;padding:6px 0}
+.micbtn{display:flex;flex-direction:column;align-items:center;gap:8px;border:none;background:none;cursor:pointer;color:var(--ink)}
+.micbtn .micico{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;font-size:38px;background:radial-gradient(circle at 30% 25%,#f0a283,#ba4d2c 60%,#8a3418);box-shadow:0 12px 28px -10px rgba(154,60,32,.7);transition:.15s}
+.micbtn.rec .micico{background:radial-gradient(circle at 30% 25%,#f87171,#dc2626 60%,#991b1b);animation:mpulse 1.1s infinite}
+@keyframes mpulse{50%{transform:scale(1.08);box-shadow:0 0 0 12px rgba(220,38,38,.15)}}
+.micbtn span:last-child{font-size:14px;font-weight:600;color:var(--muted)}
+.asyou{background:rgba(255,255,255,.7);border-radius:14px 14px 14px 4px;padding:9px 13px;font-weight:600;margin-bottom:6px}
+.asai{background:linear-gradient(135deg,#fff5ef,#fde8dd);border:1px solid #f3d3c4;border-radius:14px 14px 4px 14px;padding:11px 14px;white-space:pre-line}
+.note{padding:12px 14px;margin-bottom:8px}.note.ndone b{text-decoration:line-through;opacity:.5}.note .x{font-size:18px}
 </style>
 </head>
 <body>
@@ -356,6 +366,7 @@ body.simple #tQuick,body.simple #tMood,body.simple #tDocsCard,body.simple #tOwne
   <!-- TƏQVİM -->
   <section class="view" id="v-dir"><div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Komanda</h2></div><div class="dirtabs" id="dirTabs"></div><div class="dirbar" id="dirBar"><input id="dirQ" class="btn ghost" style="flex:1;min-width:200px;text-align:left;font-weight:500" placeholder="Axtar: ad, vəzifə, şöbə, telefon" oninput="renderDir()"><select id="dirD" class="btn ghost" onchange="renderDir()"></select></div><div id="dirBody"></div></section>
   <section class="view" id="v-docs"><h2>Sənədlər</h2><div id="docBody"></div></section>
+  <section class="view" id="v-asst"></section>
   <section class="view" id="v-me"><div id="meBody"></div></section>
   <section class="view" id="v-cal"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">İclaslar və otaqlar</h2><button class="btn mgr-only" onclick="openEv()">+ İclas</button></div><div id="calList"></div></section>
   <!-- KOMANDA / DAVAMİYYƏT -->
@@ -457,7 +468,7 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
  if(ME.is_admin){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';pv.onclick=function(){location.href=PREVIEW?OFB():OFB('?baxis=sahibkar');};$('outBtn').parentNode.insertBefore(pv,$('outBtn'));}
  if(PREVIEW){var bn=document.createElement('div');bn.className='pvbar';bn.innerHTML='👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.';document.body.insertBefore(bn,$('app'));}
  var tabs;
- if(OWNER)tabs=[['boss','Nəzarət']];
+ if(OWNER)tabs=[['boss','Nəzarət'],['asst','🎯 Assistent']];
  else{tabs=[['today','Bu gün']];if(MGR)tabs.push(['boss','Nəzarət'],['panel','Panel']);tabs.push(['plans',MGR?'Aylıq planlar':'Aylıq plan'],['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['dir','Komanda'],['news','Elanlar'],['cal','Təqvim'],['docs','Sənədlər']);tabs.push(['me','Profilim']);
   if(SIMPLE)tabs=[['today','Bu gün'],['dir','Komanda']];if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}}
  document.body.classList.toggle('is-mgr',MGR);document.body.classList.toggle('owner',OWNER);
@@ -468,7 +479,7 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
  loadAll().then(function(){setTimeout(function(){iosSheetShow(false);},2500);if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');show(new URLSearchParams(location.search).get('qr')&&MGR?'set':((OWNER||(ME.is_admin&&!EMP))?'boss':'today'));if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
 }
 function show(v){document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});var ab=document.querySelector('#tabs button.on');if(ab&&ab.scrollIntoView)try{ab.scrollIntoView({block:'nearest',inline:'center'});}catch(e){}
- if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss'){if(OWNER)renderOwner();else renderBoss();}if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();if(v==='dir'){dirFilters();var db=$('dirBar');if(db)db.style.display='';renderDir();}if(v==='docs')renderDocs();if(v==='me')renderMe();window.scrollTo(0,0);}
+ if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss'){if(OWNER)renderOwner();else renderBoss();}if(v==='asst')renderAsst();if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();if(v==='dir'){dirFilters();var db=$('dirBar');if(db)db.style.display='';renderDir();}if(v==='docs')renderDocs();if(v==='me')renderMe();window.scrollTo(0,0);}
 function tick(){var n=new Date();$('tClock').textContent=n.toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit',second:'2-digit'});$('tDate').textContent=n.toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});}
 function loadAll(){return Promise.all([
   run(sb.from('office_employees').select('*').order('full_name')),run(sb.from('office_departments').select('*').order('sort').order('id')),run(sb.from('office_positions').select('*').order('sort').order('id')),
@@ -553,43 +564,42 @@ function selfieThumb(p){return p?'<img class="sfthumb" data-p="'+esc(p)+'" oncli
 function hydrateSelfies(root){var ims=(root||document).querySelectorAll('img.sfthumb:not([src])');[].forEach.call(ims,function(im){sb.storage.from('office').createSignedUrl(im.dataset.p,3600).then(function(r){if(r.data)im.src=r.data.signedUrl;});});}
 function openSelfie(p){sb.storage.from('office').createSignedUrl(p,600).then(function(r){if(r.data)modal('<div class="mhead"><h3>📸 Selfi</h3><button class="x" onclick="closeModal()">×</button></div><img src="'+r.data.signedUrl+'" style="width:100%;border-radius:16px">');});}
 
-/* ---------- 🎤 Sahibkar assistenti ---------- */
-var ASREC=null,ASchunks=[],ASitems=[];
-function assistantCard(){return '<div class="card asst"><div class="row sp"><h3 style="margin:0">🎤 Səsli assistent</h3><div class="row" style="gap:6px"><button class="btn sm ghost" onclick="asstScope(\'today\')">Bu gün</button><button class="btn sm ghost" onclick="asstScope(\'tomorrow\')">Sabah</button></div></div>'+
- '<p class="muted small" style="margin:6px 0 10px">Planlarınızı, tapşırıqlarınızı səslə deyin — sistem bir-bir qeyd edir, tarixi tanıyır və vaxtı çatanda xatırladır.</p>'+
- '<div class="row" style="gap:8px"><button class="btn" id="asMic" onclick="asstMic()">🎤 Danışmağa başla</button><button class="btn ghost" onclick="asstType()">⌨️ Yazaraq əlavə et</button></div>'+
- '<div id="asOut" style="margin-top:12px"></div><div id="asList" style="margin-top:14px"></div></div>';}
+/* ---------- 🎯 Assistent (ayrıca bölmə) ---------- */
+var ASREC=null,ASchunks=[],ASscope='today';
+function renderAsst(){var v=$('v-asst');if(!v)return;
+ v.innerHTML='<div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">🎯 Assistent</h2></div>'+
+  '<div class="card asst"><div class="micwrap"><button class="micbtn" id="asMic" onclick="asstMic()"><span class="micico">🎤</span><span id="asMicTxt">Danışmaq üçün basın</span></button></div>'+
+  '<div class="row" style="gap:8px;justify-content:center;margin-top:8px"><button class="btn ghost sm" onclick="asstType()">⌨️ Yaz</button></div>'+
+  '<div id="asOut" style="margin-top:12px"></div></div>'+
+  '<div class="tabs" id="asTabs" style="margin-top:14px">'+[['today','Bu gün'],['tomorrow','Sabah'],['week','Bu həftə'],['noday','Tarixsiz'],['done','Bitmişlər']].map(function(t){return '<button class="'+(t[0]===ASscope?'on':'')+'" onclick="ASscope=\''+t[0]+'\';renderAsstList();renderAsstTabs()">'+t[1]+'</button>';}).join('')+'</div>'+
+  '<div id="asList" style="margin-top:10px"></div>';
+ renderAsstList();}
+function renderAsstTabs(){document.querySelectorAll('#asTabs button').forEach(function(b,i){var sc=['today','tomorrow','week','noday','done'][i];b.classList.toggle('on',sc===ASscope);});}
 function asstMic(){var b=$('asMic');
  if(ASREC&&ASREC.state==='recording'){ASREC.stop();return;}
  if(!navigator.mediaDevices){toast('Bu cihazda mikrofon dəstəklənmir');return;}
- navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){
-  ASchunks=[];ASREC=new MediaRecorder(st);ASREC.ondataavailable=function(e){if(e.data.size)ASchunks.push(e.data);};
-  ASREC.onstop=function(){st.getTracks().forEach(function(t){t.stop();});b.textContent='🎤 Danışmağa başla';b.classList.remove('rec');asstTranscribe(new Blob(ASchunks,{type:ASREC.mimeType||'audio/webm'}));};
-  ASREC.start();b.textContent='⏹ Bitir və emal et';b.classList.add('rec');
+ navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){ASchunks=[];ASREC=new MediaRecorder(st);
+  ASREC.ondataavailable=function(e){if(e.data.size)ASchunks.push(e.data);};
+  ASREC.onstop=function(){st.getTracks().forEach(function(t){t.stop();});b.classList.remove('rec');$('asMicTxt').textContent='Danışmaq üçün basın';asstSend(new Blob(ASchunks,{type:ASREC.mimeType||'audio/webm'}));};
+  ASREC.start();b.classList.add('rec');$('asMicTxt').textContent='Dinləyirəm… bitirmək üçün basın';
  }).catch(function(){toast('Mikrofon icazəsi verilmədi');});}
-function asstTranscribe(blob){$('asOut').innerHTML='<p class="status"><span class="spin"></span>Səs mətnə çevrilir…</p>';
+function asstSend(blob){$('asOut').innerHTML='<p class="status"><span class="spin"></span>Dinlədim, emal edirəm…</p>';
  var fd=new FormData();fd.append('audio',blob,'audio.webm');
- sb.functions.invoke('office-assistant',{body:fd}).then(function(r){if(r.error)throw r.error;var d=r.data;if(d.error)throw new Error(d.error);
-  if(!d.text||!d.text.trim()){$('asOut').innerHTML='<p class="hint">Səs tanınmadı. Yenidən cəhd edin.</p>';return;}asstParse(d.text);
+ sb.functions.invoke('office-assistant',{body:fd}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);var t=(r.data.text||'').trim();if(!t){$('asOut').innerHTML='<p class="hint">Səs tanınmadı, yenidən deyin.</p>';return;}asstChat(t);
  }).catch(function(e){$('asOut').innerHTML='<p class="status">Xəta: '+esc(e.message||e)+'</p>';});}
-function asstType(){var t=prompt('Planlarınızı yazın:');if(t&&t.trim())asstParse(t.trim());}
-function asstParse(text){$('asOut').innerHTML='<p class="status"><span class="spin"></span>“'+esc(text.slice(0,80))+'…” — işlərə bölünür…</p>';
- sb.functions.invoke('office-assistant',{body:{action:'parse',text:text}}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);ASitems=r.data.items||[];asstReview(text);
- }).catch(function(e){$('asOut').innerHTML='<p class="status">Xəta: '+esc(e.message)+'</p>';});}
-function asstReview(text){if(!ASitems.length){$('asOut').innerHTML='<p class="hint">İş tapılmadı. Daha aydın deyin.</p>';return;}
- $('asOut').innerHTML='<div class="card" style="background:#fff"><b>Bunları qeyd edim?</b><div class="small muted" style="margin:2px 0 8px">Dediyiniz: “'+esc(text)+'”</div>'+
-  ASitems.map(function(it,i){return '<div class="row sp asrow" style="padding:7px 0;border-top:1px solid var(--line)"><label class="row" style="gap:8px;flex:1"><input type="checkbox" checked data-i="'+i+'"><span><b>'+esc(it.text)+'</b>'+(it.due?'<span class="pill p-acc" style="margin-left:6px">'+asstDue(it)+'</span>':'')+'</span></label></div>';}).join('')+
-  '<button class="btn" style="width:100%;margin-top:10px" onclick="asstSave()">✓ Təsdiqlə və qeyd et</button></div>';}
-function asstDue(it){if(!it.due)return '';var d=new Date(it.due);return d.toLocaleDateString('az-AZ',{day:'2-digit',month:'short'})+(it.all_day?'':' '+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'}));}
-function asstSave(){var keep=[];document.querySelectorAll('.asrow input:checked').forEach(function(c){keep.push(ASitems[+c.dataset.i]);});if(!keep.length){toast(' Heç nə seçilmədi');return;}
- sb.functions.invoke('office-assistant',{body:{action:'save',items:keep}}).then(function(r){if(r.error)throw r.error;$('asOut').innerHTML='<div class="verdict v-good">'+r.data.count+' iş qeyd olundu ✓<small>Vaxtı çatanda xatırladılacaq.</small></div>';asstScope('today');
- }).catch(function(e){toast(e.message);});}
-function asstScope(sc){run(sb.rpc('notes_list',{p_scope:sc})).then(function(rows){var lbl={today:'Bu günün planı',tomorrow:'Sabahın planı',open:'Bütün işlər'}[sc]||'İşlər';
- $('asList').innerHTML='<div class="card" style="background:#fff"><div class="row sp"><b>'+lbl+'</b><span class="muted small">'+rows.length+' iş</span></div>'+
-  (rows.length?rows.map(function(n){return '<div class="row sp" style="padding:8px 0;border-top:1px solid var(--line)"><label class="row" style="gap:8px;flex:1"><input type="checkbox" '+(n.done?'checked':'')+' onchange="asstDone('+n.id+',this.checked)"><span'+(n.done?' style="text-decoration:line-through;opacity:.5"':'')+'>'+esc(n.text)+(n.due?' <span class="pill '+(new Date(n.due)<new Date()&&!n.done?'p-bad':'p-mut')+'">'+asstDue({due:n.due,all_day:n.due_all_day})+'</span>':'')+'</span></label><button class="x" onclick="asstDel('+n.id+')" style="font-size:16px">×</button></div>';}).join(''):'<p class="hint" style="margin:8px 0 0">Bu siyahı boşdur.</p>')+'</div>';
- }).catch(err);}
-function asstDone(id,v){run(sb.from('office_notes').update({done:v,done_at:v?new Date().toISOString():null}).eq('id',id)).catch(err);}
-function asstDel(id){run(sb.from('office_notes').delete().eq('id',id)).then(function(){asstScope('today');}).catch(err);}
+function asstType(){var t=prompt('Assistentə deyin (yeni iş, sual, dəyişiklik):');if(t&&t.trim()){$('asOut').innerHTML='';asstChat(t.trim());}}
+function asstChat(text){$('asOut').innerHTML='<div class="asyou">🗣 '+esc(text)+'</div><p class="status"><span class="spin"></span>…</p>';
+ sb.functions.invoke('office-assistant',{body:{action:'chat',text:text}}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);
+  $('asOut').innerHTML='<div class="asyou">🗣 '+esc(text)+'</div><div class="asai">🎯 '+esc(r.data.reply)+'</div>';renderAsstList();
+ }).catch(function(e){$('asOut').innerHTML='<p class="status">Xəta: '+esc(e.message||e)+'</p>';});}
+function asstDueTxt(n){if(!n.due)return '';var d=new Date(n.due);return d.toLocaleDateString('az-AZ',{day:'2-digit',month:'short'})+(n.due_all_day?'':' '+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'}));}
+function renderAsstList(){run(sb.rpc('notes_list',{p_scope:ASscope})).then(function(rows){
+ $('asList').innerHTML=rows.length?rows.map(function(n){var late=n.due&&new Date(n.due)<new Date()&&!n.done;
+  return '<div class="card note'+(n.done?' ndone':'')+'"><label class="row" style="gap:10px;align-items:flex-start"><input type="checkbox" '+(n.done?'checked':'')+' onchange="asstDone('+n.id+',this.checked)"><div style="flex:1"><b>'+esc(n.text)+'</b>'+(n.due?'<span class="pill '+(late?'p-bad':'p-mut')+'" style="margin-left:6px">'+(late?'⏰ ':'')+asstDueTxt(n)+'</span>':'')+(n.note?'<div class="small muted" style="margin-top:2px">'+esc(n.note)+'</div>':'')+'</div><button class="x" onclick="asstDel('+n.id+')">×</button></label></div>';
+ }).join(''):'<p class="hint" style="text-align:center;padding:16px">Bu siyahı boşdur. Mikrofona toxunub yeni iş deyin.</p>';}).catch(err);}
+function asstDone(id,v){run(sb.from('office_notes').update({done:v,done_at:v?new Date().toISOString():null}).eq('id',id)).then(function(){renderAsstList();}).catch(err);}
+function asstDel(id){run(sb.from('office_notes').delete().eq('id',id)).then(function(){renderAsstList();}).catch(err);}
+
 
 var _scanKind='in';
 function loadJsQR(){return new Promise(function(res,rej){if(window.jsQR)return res();var sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';sc.onload=function(){res();};sc.onerror=function(){rej(new Error('QR oxuyucu yüklənmədi'));};document.head.appendChild(sc);});}
@@ -909,7 +919,7 @@ var OWN={};
 function grade(r,pp,over){var pts=0;var att=r.plan?(r.came+r.leave)/r.plan:1;if(att>=0.95)pts+=2;else if(att>=0.85)pts+=1;
  if(r.lateN<=1)pts+=2;else if(r.lateN<=4)pts+=1;if(pp===null)pts+=1;else if(pp>=70)pts+=2;else if(pp>=40)pts+=1;if(!over)pts+=2;else if(over<=1)pts+=1;
  return pts>=7?['Yaxşı','g-ok']:pts>=4?['Orta','g-warn']:['Zəif','g-bad'];}
-function renderOwner(){var d=today(),m=d.slice(0,7);var ac=$('bAsst');if(ac){ac.innerHTML=assistantCard();asstScope('today');}renderOutingsCard('bOut',d);
+function renderOwner(){var d=today(),m=d.slice(0,7);var ac=$('bAsst');if(ac)ac.innerHTML='<div class="card asst" style="cursor:pointer" onclick="show(\'asst\')"><div class="row sp"><b>🎯 Səsli assistent</b><span class="go">›</span></div><div class="muted small" style="margin-top:4px">Planlarınızı səslə deyin, xatırlatma alın</div></div>';renderOutingsCard('bOut',d);
  $('bDate').textContent=new Date().toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long',year:'numeric'});
  var hs=document.querySelectorAll('#v-boss .bossh');var hr=+new Intl.DateTimeFormat('en-GB',{timeZone:TZ,hour:'2-digit',hour12:false}).format(new Date());var gr=hr>=5&&hr<12?'Sabahınız xeyir':hr>=12&&hr<17?'Günortanız xeyir':'Axşamınız xeyir';var nm=PREVIEW?'Afiq Rəhmanov':(ME.full_name||'Afiq Rəhmanov');hs[0].textContent=gr+', '+nm;var hb=$('ownGiveBtn');if(!hb){hb=document.createElement('button');hb.id='ownGiveBtn';hb.className='btn givebtn';hb.textContent='✍️ Tapşırıq ver';hb.onclick=function(){ownTaskModal();};hs[0].parentNode.insertBefore(hb,hs[0].nextSibling);}if(hs[1])hs[1].parentNode.style.display='none';
  var pm=document.querySelector('#v-boss > p.muted');if(pm)pm.style.display='none';$('bList').innerHTML='';
@@ -1160,6 +1170,7 @@ function showWishes(id){var e=EMPS.find(function(x){return x.id===id;});loadWish
   (EMP&&EMP.id!==id&&!w.some(function(x){return x.from_emp===EMP.id;})?'<button class="btn" style="width:100%;margin-top:10px" onclick="openWish('+id+')">🎉 Təbrik et</button>':''));});}
 
 /* ---------- Profilim ---------- */
+function renderMeProfileLink(){}
 function renderMe(){var b=$('meBody');if(!EMP){b.innerHTML='<div class="card empty">Hesabınız işçi kartına bağlanmayıb.</div>';return;}var e=EMP,d=deptOf(e),mg=e.manager_id?EMPS.find(function(x){return x.id===e.manager_id;}):null,yr=+today().slice(0,4),used=leaveUsed(e.id,yr),left=(e.leave_days||21)-used;
  loadKudos().then(function(){var rec=KUDOS.filter(function(k){return k.to_emp===e.id;}).length;
  b.innerHTML='<div class="card mehead"><div class="meava" title="Profil şəklini dəyiş" onclick="$(\'mePh\').click()">'+avatarE(e,86)+'<i class="cam">📷</i></div><input id="mePh" type="file" accept="image/*" style="display:none" onchange="uploadPhoto(this.files[0])">'+'<div style="flex:1"><h2 style="margin:0">'+esc(e.full_name)+'</h2><div class="muted">'+esc((posOf(e)||{}).title||'')+(d?' · '+esc(d.name):'')+'</div>'+(e.photo?'<button class="linkbtn" onclick="removePhoto()">Şəkli sil</button>':'<div class="muted small" style="margin-top:4px">Profil şəkli əlavə etmək üçün dairəyə toxunun</div>')+'<div class="row" style="gap:8px;margin-top:8px">'+(e.hire_date?'<span class="pill p-acc">🗓 '+tenure(e.hire_date)+'</span>':'')+'<span class="pill p-acc">🙌 '+rec+' təşəkkür</span>'+(mg?'<span class="pill p-mut">Rəhbər: '+esc(mg.full_name)+'</span>':'')+'</div></div></div>'+
