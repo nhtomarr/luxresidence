@@ -1,0 +1,152 @@
+<!doctype html><html lang="az"><head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LUX Residence — Müqavilələr</title>
+<link rel="manifest" href="/muqavile.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Müqavilələr"><meta name="theme-color" content="#251712">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--rust:#ba4d2c;--rust2:#9a3c20;--ink:#241109;--muted:#8a7566;--line:#ece2d7;--bg:#f7f2ec;--card:#fff;--ok:#15803d;--bad:#b23b3b;--serif:'Playfair Display',Georgia,serif;--sans:'Inter',system-ui,sans-serif}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+:root{padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0)}
+button{font-family:inherit;cursor:pointer}.muted{color:var(--muted)}a{color:inherit}
+#gate{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(130% 130% at 15% 0%,#3a1d0d,#25120a 60%,#1b0d06)}
+.gcard{width:min(400px,100%);background:rgba(255,251,247,.94);border-radius:22px;padding:38px 32px;text-align:center;box-shadow:0 40px 80px -40px rgba(0,0,0,.6)}
+.gcard .logo{font-family:var(--serif);font-weight:800;font-size:26px;color:var(--rust)}.gcard .sub{color:var(--muted);font-size:12px;margin:4px 0 24px;letter-spacing:.14em;text-transform:uppercase}
+.gcard input{width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:16px;margin-bottom:10px}
+.gcard .err{color:var(--bad);font-size:13px;min-height:18px}.gcard button{width:100%;margin-top:8px;padding:14px;border:none;border-radius:12px;background:var(--rust);color:#fff;font-weight:700;font-size:15px}
+#app{max-width:1100px;margin:0 auto;padding:clamp(14px,2.5vw,26px);display:none}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.top .logo{font-family:var(--serif);font-weight:800;font-size:22px;color:var(--rust)}
+.top .spacer{flex:1}
+.lnk{border:1px solid var(--line);background:var(--card);padding:8px 14px;border-radius:99px;font-weight:600;font-size:.85rem;color:var(--muted);text-decoration:none}
+.tabs{display:flex;gap:6px;margin-bottom:16px}
+.tabs button{flex:1;border:1px solid var(--line);background:var(--card);padding:11px;border-radius:14px;font-weight:600;color:var(--muted)}
+.tabs button.on{background:var(--rust);color:#fff;border-color:var(--rust)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px}
+h1{font-family:var(--serif);font-size:1.5rem;margin:0 0 4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fld label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:4px}
+.fld input,.fld select,.fld textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:12px;font-size:15px;background:#fff}
+.fld{margin-bottom:12px}
+.btn{background:linear-gradient(135deg,var(--rust),var(--rust2));color:#fff;border:none;padding:13px 22px;border-radius:14px;font-weight:700;font-size:15px}
+.btn.ghost{background:#fff;color:var(--rust);border:1px solid var(--rust)}
+.search{width:100%;padding:12px 16px;border:1px solid var(--line);border-radius:99px;font-size:15px;margin-bottom:14px}
+.tbl{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.9rem}
+th{background:#f3e7dc;color:var(--muted);text-align:left;padding:10px 12px;white-space:nowrap;font-size:.8rem}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:hover td{background:#faf6f1;cursor:pointer}
+.chip{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.78rem;font-weight:600}
+.chip.aktiv{background:#dcf1e1;color:var(--ok)}.chip.legv{background:#fde2dc;color:var(--bad)}
+.empty{text-align:center;padding:36px;color:var(--muted)}
+.status{padding:14px;color:var(--muted)}.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--rust);border-radius:50%;animation:sp .8s linear infinite;vertical-align:-3px;margin-right:8px}@keyframes sp{to{transform:rotate(360deg)}}
+.mask{position:fixed;inset:0;z-index:80;background:rgba(30,15,8,.5);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.modal{width:min(620px,100%);background:#fff;border-radius:20px;padding:22px;margin-top:20px}
+.mhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.mhd h3{margin:0;font-family:var(--serif);font-size:1.25rem}
+.x{border:none;background:none;font-size:24px;color:var(--muted)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:12px;z-index:200;font-size:.9rem;opacity:0;transition:.3s}.toast.on{opacity:1}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}#app{padding:14px}}
+</style>
+<script src="/assets/lux-auth.js?v=1790690641"></script>
+</head><body>
+<div id="gate"></div>
+<div id="app">
+ <div class="top"><span class="logo">LUX Residence</span><span class="muted" id="who"></span><span class="spacer"></span><a class="lnk" href="/satis">‹ Satış lövhəsi</a><a class="lnk" href="#" onclick="doLogout();return false">Çıxış</a></div>
+ <div class="tabs"><button id="tabNew" class="on" onclick="showTab('new')">✍️ Yeni müqavilə</button><button id="tabArch" onclick="showTab('arch')">🗄 Arxiv</button></div>
+ <div id="paneNew"></div>
+ <div id="paneArch" hidden></div>
+</div>
+<div class="mask" id="mask"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+var SB,ME,TOK,UNITS=[],CONTRACTS=[];
+var U='https://avqchschbbltnnasabdm.supabase.co',K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2cWNoc2NoYmJsdG5uYXNhYmRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5NDA2NTAsImV4cCI6MjEwNTUxNjY1MH0.PVxxfLrj8KZH6AUaQQPx5sEqpiGEMDIFy3Mq206OMKI';
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmt(n){return (+n||0).toLocaleString('az-AZ')+' ₼';}
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2200);}
+function api(path,opt){opt=opt||{};opt.headers=Object.assign({apikey:K,Authorization:'Bearer '+TOK,'Content-Type':'application/json'},opt.headers||{});return fetch(U+'/rest/v1/'+path,opt).then(function(r){return r.text().then(function(t){return {ok:r.ok,status:r.status,data:t?JSON.parse(t):null};});});}
+function doLogout(){try{localStorage.removeItem('sb-avqchschbbltnnasabdm-auth-token');}catch(e){}location.reload();}
+
+luxAuth({perms:['sales','contracts','archive'],title:'Müqavilələr',onReady:function(sb,me,tok){SB=sb;ME=me;TOK=tok;$('gate').style.display='none';$('app').style.display='block';$('who').textContent=(me&&me.full_name)||'';loadUnits();loadContracts();showTab('new');}});
+
+function loadUnits(){api('km_units?select=id,bina,floor,number,rooms,area,status&demo=eq.false&order=bina,number').then(function(r){if(r.ok)UNITS=r.data||[];renderNew();});}
+function loadContracts(){api('lux_contracts?select=*&order=signed_date.desc,id.desc').then(function(r){if(r.ok)CONTRACTS=r.data||[];if(!$('paneArch').hidden)renderArch();});}
+
+function showTab(t){$('tabNew').classList.toggle('on',t==='new');$('tabArch').classList.toggle('on',t==='arch');$('paneNew').hidden=(t!=='new');$('paneArch').hidden=(t!=='arch');if(t==='arch')renderArch();else renderNew();}
+
+function renderNew(){
+ var opts='<option value="">— mənzil seçin —</option>'+UNITS.map(function(u){return '<option value="'+u.id+'">Bina '+u.bina+' · Mənzil '+esc(u.number)+' · '+(u.rooms||'?')+' otaq · '+(u.area?Math.round(u.area)+' m²':'')+' ('+statusAz(u.status)+')</option>';}).join('');
+ $('paneNew').innerHTML='<div class="card"><h1>Yeni müqavilə</h1><p class="muted" style="margin:0 0 16px">Mənzili seçin, alıcı məlumatlarını yazın. Nömrə avtomatik verilir.</p>'
+ +'<div class="fld"><label>Mənzil</label><select id="cUnit" onchange="fillUnit()">'+opts+'</select></div>'
+ +'<div class="grid2"><div class="fld"><label>Alıcının adı, soyadı *</label><input id="cBuyer" placeholder="Ad Soyad"></div><div class="fld"><label>FİN / şəxsiyyət vəsiqəsi</label><input id="cId" placeholder="AZE0000000"></div></div>'
+ +'<div class="grid2"><div class="fld"><label>Telefon</label><input id="cPhone" placeholder="+994"></div><div class="fld"><label>Ünvan</label><input id="cAddr" placeholder="Yaşayış ünvanı"></div></div>'
+ +'<div class="grid2"><div class="fld"><label>Qiymət (₼)</label><input id="cPrice" type="number" inputmode="decimal" placeholder="0"></div><div class="fld"><label>Ödəniş növü</label><select id="cPay"><option value="nagd">Nağd</option><option value="kredit">Kredit</option><option value="hisseli">Hissə-hissə</option><option value="ipoteka">İpoteka</option></select></div></div>'
+ +'<div class="grid2"><div class="fld"><label>İmza tarixi</label><input id="cDate" type="date" value="'+new Date().toLocaleDateString('en-CA')+'"></div><div class="fld"><label>Sahə / otaq</label><input id="cArea" placeholder="avtomatik" readonly></div></div>'
+ +'<div class="fld"><label>Qeyd</label><textarea id="cNote" rows="2" placeholder="əlavə şərtlər, qeydlər"></textarea></div>'
+ +'<button class="btn" onclick="saveContract()">Müqaviləni yarat</button></div>';
+}
+function statusAz(s){return {yasayir:'yaşayır',bos:'boş',satilib:'satılıb',satisda:'satışda',investor:'investor',fond:'fond'}[s]||s;}
+function fillUnit(){var id=$('cUnit').value;var u=UNITS.find(function(x){return x.id==id;});if(!u)return;$('cArea').value=(u.area?Math.round(u.area)+' m²':'')+(u.rooms?' · '+u.rooms+' otaq':'');}
+function saveContract(){
+ var id=$('cUnit').value,u=UNITS.find(function(x){return x.id==id;});
+ var buyer=$('cBuyer').value.trim();if(!buyer){toast('Alıcının adını yazın');return;}
+ var rec={unit_id:id?+id:null,bina:u?u.bina:null,menzil:u?u.number:null,buyer_name:buyer,buyer_id:$('cId').value.trim()||null,buyer_phone:$('cPhone').value.trim()||null,buyer_address:$('cAddr').value.trim()||null,price:+$('cPrice').value||null,area:u?u.area:null,rooms:u?u.rooms:null,payment_type:$('cPay').value,signed_date:$('cDate').value||null,note:$('cNote').value.trim()||null,created_by:ME&&ME.user_id};
+ api('lux_contracts',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(rec)}).then(function(r){
+  if(!r.ok){toast('Xəta: '+(r.data&&r.data.message||r.status));return;}
+  var c=r.data[0];toast('Müqavilə yaradıldı: '+c.no);CONTRACTS.unshift(c);openContract(c.id);renderNew();
+ });
+}
+function renderArch(){
+ var q=(($('archSearch')&&$('archSearch').value)||'').toLowerCase();
+ var rows=CONTRACTS.filter(function(c){if(!q)return true;return (c.no+' '+c.buyer_name+' '+(c.menzil||'')+' '+(c.buyer_phone||'')).toLowerCase().indexOf(q)>=0;});
+ $('paneArch').innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h1 style="margin:0">Arxiv</h1><span class="muted">'+CONTRACTS.length+' müqavilə</span></div>'
+ +'<input class="search" id="archSearch" placeholder="🔎 nömrə, alıcı, mənzil, telefon…" value="'+esc(q)+'" oninput="renderArch()">'
+ +(rows.length?'<div class="tbl"><table><thead><tr><th>Nömrə</th><th>Tarix</th><th>Alıcı</th><th>Mənzil</th><th>Qiymət</th><th>Status</th></tr></thead><tbody>'
+   +rows.map(function(c){return '<tr onclick="openContract('+c.id+')"><td><b>'+esc(c.no)+'</b></td><td>'+(c.signed_date?new Date(c.signed_date).toLocaleDateString('az-AZ'):'')+'</td><td>'+esc(c.buyer_name)+'</td><td>'+(c.bina?'B'+c.bina+' · '+esc(c.menzil||''):'—')+'</td><td>'+(c.price?fmt(c.price):'—')+'</td><td><span class="chip '+(c.status==='ləğv'?'legv':'aktiv')+'">'+esc(c.status)+'</span></td></tr>';}).join('')
+   +'</tbody></table></div>':'<div class="empty">Müqavilə tapılmadı.</div>')+'</div>';
+ var el=$('archSearch');if(el&&q){el.focus();el.setSelectionRange(el.value.length,el.value.length);}
+}
+function openContract(id){var c=CONTRACTS.find(function(x){return x.id==id;});if(!c)return;
+ $('modal').innerHTML='<div class="mhd"><h3>'+esc(c.no)+'</h3><button class="x" onclick="closeM()">×</button></div>'
+ +'<div class="grid2"><div class="fld"><label>Alıcı</label><div><b>'+esc(c.buyer_name)+'</b></div></div><div class="fld"><label>FİN</label><div>'+esc(c.buyer_id||'—')+'</div></div>'
+ +'<div class="fld"><label>Telefon</label><div>'+esc(c.buyer_phone||'—')+'</div></div><div class="fld"><label>Ünvan</label><div>'+esc(c.buyer_address||'—')+'</div></div>'
+ +'<div class="fld"><label>Mənzil</label><div>'+(c.bina?'Bina '+c.bina+' · Mənzil '+esc(c.menzil||''):'—')+(c.area?' · '+Math.round(c.area)+' m²':'')+(c.rooms?' · '+c.rooms+' otaq':'')+'</div></div>'
+ +'<div class="fld"><label>Qiymət</label><div><b>'+(c.price?fmt(c.price):'—')+'</b> ('+esc(c.payment_type||'')+')</div></div>'
+ +'<div class="fld"><label>İmza tarixi</label><div>'+(c.signed_date?new Date(c.signed_date).toLocaleDateString('az-AZ'):'—')+'</div></div><div class="fld"><label>Status</label><div><span class="chip '+(c.status==='ləğv'?'legv':'aktiv')+'">'+esc(c.status)+'</span></div></div></div>'
+ +(c.note?'<div class="fld"><label>Qeyd</label><div>'+esc(c.note)+'</div></div>':'')
+ +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn" onclick="printContract('+c.id+')">📄 Müqaviləni çap et / PDF</button>'
+ +(c.status!=='ləğv'?'<button class="btn ghost" onclick="cancelContract('+c.id+')">Ləğv et</button>':'<button class="btn ghost" onclick="reactivateContract('+c.id+')">Bərpa et</button>')+'</div>';
+ $('mask').style.display='flex';
+}
+function closeM(){$('mask').style.display='none';}
+$('mask')&&($('mask').onclick=function(e){if(e.target===$('mask'))closeM();});
+function cancelContract(id){if(!confirm('Müqavilə ləğv edilsin?'))return;api('lux_contracts?id=eq.'+id,{method:'PATCH',body:JSON.stringify({status:'ləğv'})}).then(function(r){if(r.ok){var c=CONTRACTS.find(function(x){return x.id==id;});if(c)c.status='ləğv';closeM();renderArch();toast('Ləğv edildi');}});}
+function reactivateContract(id){api('lux_contracts?id=eq.'+id,{method:'PATCH',body:JSON.stringify({status:'aktiv'})}).then(function(r){if(r.ok){var c=CONTRACTS.find(function(x){return x.id==id;});if(c)c.status='aktiv';closeM();renderArch();toast('Bərpa edildi');}});}
+function printContract(id){var c=CONTRACTS.find(function(x){return x.id==id;});if(!c)return;var w=window.open('','_blank');if(!w){toast('Pop-up icazəsi verin');return;}
+ var A=String.fromCharCode(60),Z=String.fromCharCode(62),o=function(t){return A+t+Z;},cl=function(t){return A+'/'+t+Z;};
+ var e2=esc;var d=c.signed_date?new Date(c.signed_date).toLocaleDateString('az-AZ'):'';
+ var css='body{font:14px/1.7 Times New Roman,serif;color:#111;max-width:780px;margin:0 auto;padding:40px}h1{text-align:center;font-size:20px;margin:0 0 4px}.c{text-align:center;color:#666;font-size:12px;margin-bottom:26px}.r{margin:8px 0}.r b{display:inline-block;min-width:200px}.sec{margin-top:22px;font-weight:bold;border-bottom:1px solid #ccc;padding-bottom:4px}.sign{display:flex;justify-content:space-between;margin-top:60px}.sign div{width:44%;border-top:1px solid #333;padding-top:6px;text-align:center;font-size:12px}.b{background:#ba4d2c;color:#fff;border:none;padding:11px 22px;border-radius:8px;font-size:14px;cursor:pointer;margin-bottom:20px}@media print{.b{display:none}body{padding:12px}}';
+ var doc=w.document;doc.open();
+ doc.write(o('!DOCTYPE html')+o('html lang="az"')+o('head')+o('meta charset="utf-8"')+o('title')+'Müqavilə '+e2(c.no)+cl('title')+o('style')+css+cl('style')+cl('head')+o('body'));
+ doc.write(o('button class="b" onclick="window.print()"')+'📄 PDF kimi yüklə / çap et'+cl('button'));
+ doc.write(o('h1')+'ALQI-SATQI MÜQAVİLƏSİ'+cl('h1')+o('div class="c"')+'№ '+e2(c.no)+' · '+d+' · Bakı şəhəri'+cl('div'));
+ doc.write(o('div class="sec"')+'1. Tərəflər'+cl('div'));
+ doc.write(o('div class="r"')+o('b')+'Satıcı:'+cl('b')+' LUX Residence'+cl('div'));
+ doc.write(o('div class="r"')+o('b')+'Alıcı:'+cl('b')+' '+e2(c.buyer_name)+(c.buyer_id?' (FİN: '+e2(c.buyer_id)+')':'')+cl('div'));
+ if(c.buyer_phone)doc.write(o('div class="r"')+o('b')+'Əlaqə:'+cl('b')+' '+e2(c.buyer_phone)+cl('div'));
+ if(c.buyer_address)doc.write(o('div class="r"')+o('b')+'Ünvan:'+cl('b')+' '+e2(c.buyer_address)+cl('div'));
+ doc.write(o('div class="sec"')+'2. Obyekt'+cl('div'));
+ doc.write(o('div class="r"')+o('b')+'Mənzil:'+cl('b')+' Bina '+(c.bina||'')+', Mənzil '+e2(c.menzil||'')+cl('div'));
+ if(c.area)doc.write(o('div class="r"')+o('b')+'Sahə:'+cl('b')+' '+Math.round(c.area)+' m²'+(c.rooms?', '+c.rooms+' otaqlı':'')+cl('div'));
+ doc.write(o('div class="sec"')+'3. Qiymət və ödəniş'+cl('div'));
+ doc.write(o('div class="r"')+o('b')+'Ümumi məbləğ:'+cl('b')+' '+(c.price?(+c.price).toLocaleString('az-AZ')+' ₼':'—')+cl('div'));
+ doc.write(o('div class="r"')+o('b')+'Ödəniş növü:'+cl('b')+' '+e2(c.payment_type||'')+cl('div'));
+ if(c.note)doc.write(o('div class="sec"')+'4. Əlavə şərtlər'+cl('div')+o('div class="r"')+e2(c.note)+cl('div'));
+ doc.write(o('div class="sign"')+o('div')+'Satıcı'+cl('div')+o('div')+'Alıcı'+cl('div')+cl('div'));
+ doc.write(cl('body')+cl('html'));doc.close();setTimeout(function(){try{w.print();}catch(e){}},600);
+}
+</script>
+</body></html>
