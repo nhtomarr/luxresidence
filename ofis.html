@@ -565,15 +565,23 @@ function hydrateSelfies(root){var ims=(root||document).querySelectorAll('img.sft
 function openSelfie(p){sb.storage.from('office').createSignedUrl(p,600).then(function(r){if(r.data)modal('<div class="mhead"><h3>📸 Selfi</h3><button class="x" onclick="closeModal()">×</button></div><img src="'+r.data.signedUrl+'" style="width:100%;border-radius:16px">');});}
 
 /* ---------- 🎯 Assistent (ayrıca bölmə) ---------- */
+var ASVOICE=(function(){try{return localStorage.getItem('asst_voice')!=='0'}catch(e){return true}})();
+var ASAUDIO=null;
+function asstToggleVoice(){ASVOICE=!ASVOICE;try{localStorage.setItem('asst_voice',ASVOICE?'1':'0')}catch(e){}var b=$('asVoice');if(b)b.textContent='🔊 Səsli cavab: '+(ASVOICE?'aktiv':'sönük');if(!ASVOICE&&ASAUDIO){ASAUDIO.pause();}}
+function asstSpeak(txt){if(!ASVOICE||!txt)return;
+ sb.functions.invoke('office-assistant',{body:{action:'tts',text:txt}}).then(function(r){if(r.error||!r.data||!r.data.audio)return;
+  try{if(ASAUDIO)ASAUDIO.pause();ASAUDIO=new Audio('data:audio/mp3;base64,'+r.data.audio);ASAUDIO.play().catch(function(){});}catch(e){}
+ }).catch(function(){});}
+
 var ASREC=null,ASchunks=[],ASscope='today';
 function renderAsst(){var v=$('v-asst');if(!v)return;
  v.innerHTML='<div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">🎯 Assistent</h2></div>'+
   '<div class="card asst"><div class="micwrap"><button class="micbtn" id="asMic" onclick="asstMic()"><span class="micico">🎤</span><span id="asMicTxt">Danışmaq üçün basın</span></button></div>'+
-  '<div class="row" style="gap:8px;justify-content:center;margin-top:8px"><button class="btn ghost sm" onclick="asstType()">⌨️ Yaz</button></div><p class="muted small" style="text-align:center;margin:8px 4px 0">Plan deyin, sual verin: “bu gün kim gəlməyib”, “Elgün saat neçədə gəlib”, “köçüb yaşayan sakinlər”, “borclular”, “kim indi çöldədir”</p>'+
+  '<div class="row" style="gap:8px;justify-content:center;margin-top:8px"><button class="btn ghost sm" onclick="asstType()">⌨️ Yaz</button><button class="btn ghost sm" id="asVoice" onclick="asstToggleVoice()">🔊 Səsli cavab: aktiv</button></div><p class="muted small" style="text-align:center;margin:8px 4px 0">Plan deyin, sual verin: “bu gün kim gəlməyib”, “Elgün saat neçədə gəlib”, “köçüb yaşayan sakinlər”, “borclular”, “kim indi çöldədir”</p>'+
   '<div id="asOut" style="margin-top:12px"></div></div>'+
   '<div class="tabs" id="asTabs" style="margin-top:14px">'+[['today','Bu gün'],['tomorrow','Sabah'],['week','Bu həftə'],['noday','Tarixsiz'],['done','Bitmişlər']].map(function(t){return '<button class="'+(t[0]===ASscope?'on':'')+'" onclick="ASscope=\''+t[0]+'\';renderAsstList();renderAsstTabs()">'+t[1]+'</button>';}).join('')+'</div>'+
   '<div id="asList" style="margin-top:10px"></div>';
- renderAsstList();}
+ renderAsstList();var vb=$('asVoice');if(vb)vb.textContent='🔊 Səsli cavab: '+(ASVOICE?'aktiv':'sönük');}
 function renderAsstTabs(){document.querySelectorAll('#asTabs button').forEach(function(b,i){var sc=['today','tomorrow','week','noday','done'][i];b.classList.toggle('on',sc===ASscope);});}
 function asstMic(){var b=$('asMic');
  if(ASREC&&ASREC.state==='recording'){ASREC.stop();return;}
@@ -590,7 +598,7 @@ function asstSend(blob){$('asOut').innerHTML='<p class="status"><span class="spi
 function asstType(){var t=prompt('Assistentə deyin (yeni iş, sual, dəyişiklik):');if(t&&t.trim()){$('asOut').innerHTML='';asstChat(t.trim());}}
 function asstChat(text){$('asOut').innerHTML='<div class="asyou">🗣 '+esc(text)+'</div><p class="status"><span class="spin"></span>…</p>';
  sb.functions.invoke('office-assistant',{body:{action:'chat',text:text}}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);
-  $('asOut').innerHTML='<div class="asyou">🗣 '+esc(text)+'</div><div class="asai">🎯 '+esc(r.data.reply)+'</div>';renderAsstList();
+  $('asOut').innerHTML='<div class="asyou">🗣 '+esc(text)+'</div><div class="asai">🎯 '+esc(r.data.reply)+'</div>';renderAsstList();asstSpeak(r.data.reply);
  }).catch(function(e){$('asOut').innerHTML='<p class="status">Xəta: '+esc(e.message||e)+'</p>';});}
 function asstDueTxt(n){if(!n.due)return '';var d=new Date(n.due);return d.toLocaleDateString('az-AZ',{day:'2-digit',month:'short'})+(n.due_all_day?'':' '+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'}));}
 function renderAsstList(){run(sb.rpc('notes_list',{p_scope:ASscope})).then(function(rows){
