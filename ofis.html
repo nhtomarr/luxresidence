@@ -292,6 +292,59 @@ body.simple #tQuick,body.simple #tMood,body.simple #tDocsCard,body.simple #tOwne
 .asyou{background:rgba(255,255,255,.7);border-radius:14px 14px 14px 4px;padding:9px 13px;font-weight:600;margin-bottom:6px}
 .asai{background:linear-gradient(135deg,#fff5ef,#fde8dd);border:1px solid #f3d3c4;border-radius:14px 14px 4px 14px;padding:11px 14px;white-space:pre-line}
 .note{padding:12px 14px;margin-bottom:8px}.note.ndone b{text-decoration:line-through;opacity:.5}.note .x{font-size:18px}
+/* Assistent — professional (komendant palitrası) */
+.ast-wrap{max-width:760px;margin:0 auto}
+.ast-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.ast-title{font-family:var(--serif,'Playfair Display',Georgia,serif);font-size:1.7rem;font-weight:800;letter-spacing:-.02em;margin:0;color:#2a1d14}
+.ast-sub{color:#8b7a6b;font-size:.9rem;margin-top:2px}
+.ast-seg{display:flex;gap:2px;background:rgba(255,255,255,.6);border:1px solid rgba(186,77,44,.12);border-radius:99px;padding:3px}
+.ast-seg button{border:none;background:none;padding:7px 15px;border-radius:99px;font-weight:600;font-size:.9rem;color:#8b7a6b}
+.ast-seg button.on{background:#fff;color:#ba4d2c;box-shadow:0 4px 10px -6px rgba(154,60,32,.5)}
+.ast-body{background:rgba(255,255,255,.72);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.8);border-radius:26px;padding:18px;box-shadow:0 24px 60px -34px rgba(90,45,25,.5)}
+.ast-chat{min-height:180px;max-height:46vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 2px}
+.ast-b{max-width:82%;padding:10px 14px;border-radius:16px;font-size:.95rem;line-height:1.45;white-space:pre-line;animation:astin .2s ease}
+@keyframes astin{from{opacity:0;transform:translateY(4px)}}
+.ast-b.user{align-self:flex-end;background:linear-gradient(135deg,#ba4d2c,#9a3c20);color:#fff;border-bottom-right-radius:5px}
+.ast-b.ai{align-self:flex-start;background:#fff;border:1px solid #eadfd3;color:#2a1d14;border-bottom-left-radius:5px}
+.ast-empty{text-align:center;padding:30px 16px;color:#8b7a6b}
+.ast-empty-ico{font-size:36px;margin-bottom:8px;opacity:.8}
+.ast-out{min-height:0}
+.ast-typing{display:flex;gap:4px;padding:10px 4px}
+.ast-typing span{width:8px;height:8px;border-radius:50%;background:#ba4d2c;opacity:.4;animation:astbounce 1.2s infinite}
+.ast-typing span:nth-child(2){animation-delay:.2s}.ast-typing span:nth-child(3){animation-delay:.4s}
+@keyframes astbounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
+.ast-err{color:#b91c1c;font-size:.88rem;padding:6px 2px}
+.ast-quick{display:flex;gap:7px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}.ast-quick::-webkit-scrollbar{display:none}
+.ast-quick button{white-space:nowrap;border:1px solid #eadfd3;background:#fff;color:#5e4e44;padding:8px 13px;border-radius:99px;font-size:.85rem;font-weight:500;flex-shrink:0}
+.ast-quick button:active{background:#f3e7dc}
+.ast-mic{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:14px}
+.ast-orb{width:92px;height:92px;border-radius:50%;border:none;display:grid;place-items:center;font-size:38px;cursor:pointer;
+ background:radial-gradient(circle at 32% 26%,#f0a283,#ba4d2c 58%,#8a3418);box-shadow:0 16px 34px -12px rgba(154,60,32,.75),inset 0 2px 6px rgba(255,255,255,.3);transition:transform .15s}
+.ast-orb:active{transform:scale(.94)}
+.ast-orb.rec{background:radial-gradient(circle at 32% 26%,#f87171,#dc2626 58%,#991b1b);animation:astpulse 1.1s infinite}
+@keyframes astpulse{50%{box-shadow:0 0 0 14px rgba(220,38,38,.14),0 16px 34px -12px rgba(154,60,32,.75)}}
+.ast-microw{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.ast-chip{border:1px solid #eadfd3;background:#fff;color:#5e4e44;padding:8px 14px;border-radius:99px;font-size:.85rem;font-weight:600}
+.ast-chip.on{background:#ba4d2c;color:#fff;border-color:#ba4d2c}
+.ast-save{flex:1;background:linear-gradient(135deg,#ba4d2c,#9a3c20);color:#fff;border:none;padding:11px;border-radius:14px;font-weight:700}
+.ast-hint{color:#8b7a6b;font-size:.85rem}
+.ast-tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}.ast-tabs::-webkit-scrollbar{display:none}
+.ast-tabs button{white-space:nowrap;border:1px solid #eadfd3;background:#fff;color:#8b7a6b;padding:8px 15px;border-radius:99px;font-weight:600;font-size:.88rem}
+.ast-tabs button.on{background:#ba4d2c;color:#fff;border-color:#ba4d2c}
+.ast-list{display:flex;flex-direction:column;gap:8px}
+.ast-task{display:flex;align-items:flex-start;gap:11px;background:#fff;border:1px solid #eadfd3;border-radius:16px;padding:13px 14px}
+.ast-task.done{opacity:.55}
+.ast-ck{flex-shrink:0;width:24px;height:24px;border-radius:8px;border:2px solid #d8c7b6;background:#fff;color:#fff;font-size:14px;font-weight:800;display:grid;place-items:center;margin-top:1px}
+.ast-ck.on{background:#15803d;border-color:#15803d}
+.ast-tx{flex:1;min-width:0}.ast-tx b{font-weight:600;font-size:.96rem}.ast-task.done .ast-tx b{text-decoration:line-through}
+.ast-due{display:inline-block;margin-left:8px;font-size:.78rem;background:#f3e7dc;color:#8b7a6b;padding:2px 9px;border-radius:99px}
+.ast-due.late{background:#fde2dc;color:#c2412d;font-weight:700}
+.ast-x{flex-shrink:0;border:none;background:none;color:#c9b8a8;font-size:20px;line-height:1;padding:0 2px}
+.ast-add{width:100%;margin-top:12px;border:1.5px dashed rgba(186,77,44,.4);background:rgba(255,255,255,.5);color:#7a4a35;padding:13px;border-radius:16px;font-weight:600}
+.ast-lbl{display:block;font-size:.82rem;color:#8b7a6b;margin:10px 0 4px}
+.ast-sel,.ast-range{width:100%}.ast-sel{padding:10px;border-radius:12px;border:1px solid #eadfd3;background:#fff}
+.ast-check{display:flex;gap:8px;align-items:center;margin-top:12px;font-size:.9rem}
+@media(max-width:640px){.ast-title{font-size:1.4rem}.ast-body{padding:14px;border-radius:22px}.ast-b{max-width:88%}}
 </style>
 </head>
 <body>
@@ -564,68 +617,100 @@ function selfieThumb(p){return p?'<img class="sfthumb" data-p="'+esc(p)+'" oncli
 function hydrateSelfies(root){var ims=(root||document).querySelectorAll('img.sfthumb:not([src])');[].forEach.call(ims,function(im){sb.storage.from('office').createSignedUrl(im.dataset.p,3600).then(function(r){if(r.data)im.src=r.data.signedUrl;});});}
 function openSelfie(p){sb.storage.from('office').createSignedUrl(p,600).then(function(r){if(r.data)modal('<div class="mhead"><h3>📸 Selfi</h3><button class="x" onclick="closeModal()">×</button></div><img src="'+r.data.signedUrl+'" style="width:100%;border-radius:16px">');});}
 
-/* ---------- 🎯 Assistent (ayrıca bölmə) ---------- */
+/* ---------- 🎯 Assistent (professional, komendant dizaynı) ---------- */
 var ASVOICE=true,ASAUDIO=null,ASHIST=[],ASPREFS={voice:'shimmer',speed:1.0,autospeak:true};
-var ASREC=null,ASchunks=[],ASscope='today',ASlisten=false,ASsilence=null,ASctx=null,ASanalyser=null;
+var ASREC=null,ASchunks=[],ASscope='today',ASlisten=false,ASsilence=null,ASctx=null,ASanalyser=null,ASstream=null,ASbusy=false,ASbargeTimer=null,ASview='chat';
+var QUICK=[['Bu gün kim gəlməyib?','👥'],['İndi kim çöldədir?','🚶'],['Sabah kimin ad günüdür?','🎂'],['Təsdiq gözləyən sorğular','📋'],['Boş mənzillər','🏢'],['Borclular kimdir?','💰'],['Bu ay kim gecikib?','⏰'],['Bu gün nəyim var?','🎯']];
 function renderAsst(){var v=$('v-asst');if(!v)return;
- v.innerHTML='<div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">🎯 Assistent</h2><button class="btn ghost sm" onclick="asstSettings()">⚙️</button></div>'+
-  '<div class="card asst"><div class="micwrap"><button class="micbtn" id="asMic" onclick="asstMic()"><span class="micico" id="asMicIco">🎤</span><span id="asMicTxt">Danışmaq üçün basın</span></button></div>'+
-  '<div class="row" style="gap:8px;justify-content:center;margin-top:8px"><button class="btn ghost sm '+(ASlisten?'on':'')+'" id="asHands" onclick="asstHands()">♾️ Fasiləsiz: '+(ASlisten?'aktiv':'sönük')+'</button><button class="btn ghost sm" onclick="asstType()">⌨️ Yaz</button></div>'+
-  '<p class="muted small" style="text-align:center;margin:8px 4px 0">Plan deyin, sual verin: “bu gün kim gəlməyib”, “sabah kimin ad günüdür”, “boş mənzillər”, “borclular”, “kim indi çöldədir”</p>'+
-  '<div id="asChat" style="margin-top:12px"></div><div id="asOut"></div></div>'+
-  '<div class="tabs" id="asTabs" style="margin-top:14px">'+[['today','Bu gün'],['tomorrow','Sabah'],['week','Bu həftə'],['noday','Tarixsiz'],['done','Bitmişlər']].map(function(t){return '<button class="'+(t[0]===ASscope?'on':'')+'" onclick="ASscope=\''+t[0]+'\';renderAsstList();renderAsstTabs()">'+t[1]+'</button>';}).join('')+'</div>'+
-  '<div id="asList" style="margin-top:10px"></div>';
+ v.innerHTML=''
+ +'<div class="ast-wrap">'
+ +' <div class="ast-head"><div><h2 class="ast-title">Assistent</h2><div class="ast-sub" id="astSub">Səslə danışın və ya yazın</div></div>'
+ +'  <div class="ast-seg"><button class="'+(ASview==="chat"?"on":"")+'" onclick="asstView(\'chat\')">Söhbət</button><button class="'+(ASview==="tasks"?"on":"")+'" onclick="asstView(\'tasks\')">Planlarım</button><button onclick="asstSettings()" title="Ayarlar">⚙️</button></div></div>'
+ +' <div class="ast-body">'
+ // CHAT view
+ +'  <div id="astChatView" '+(ASview==="tasks"?'hidden':'')+'>'
+ +'   <div id="asChat" class="ast-chat"></div>'
+ +'   <div id="asOut" class="ast-out"></div>'
+ +'   <div class="ast-quick" id="asQuick">'+QUICK.map(function(q){return '<button onclick="asstChat(\''+q[0].replace(/'/g,"\\'")+'\',false)">'+q[1]+' '+esc(q[0])+'</button>';}).join('')+'</div>'
+ +'   <div class="ast-mic"><button class="ast-orb" id="asMic" onclick="asstMic()"><span id="asMicIco">🎤</span></button>'
+ +'    <div class="ast-microw"><button class="ast-chip '+(ASlisten?'on':'')+'" id="asHands" onclick="asstHands()">◉ Fasiləsiz '+(ASlisten?'aktiv':'')+'</button><button class="ast-chip" onclick="asstType()">⌨︎ Yaz</button><button class="ast-chip" id="asVchip" onclick="asstQuickVoice()">'+(ASVOICE?'🔊 Səs':'🔇 Səssiz')+'</button></div>'
+ +'    <div class="ast-hint" id="asMicTxt">Danışmaq üçün toxunun</div></div>'
+ +'  </div>'
+ // TASKS view
+ +'  <div id="astTaskView" '+(ASview==="tasks"?'':'hidden')+'>'
+ +'   <div class="ast-tabs" id="asTabs">'+[['today','Bu gün'],['tomorrow','Sabah'],['week','Bu həftə'],['noday','Tarixsiz'],['done','Bitmiş']].map(function(t){return '<button class="'+(t[0]===ASscope?'on':'')+'" onclick="ASscope=\''+t[0]+'\';renderAsstList();renderAsstTabs()">'+t[1]+'</button>';}).join('')+'</div>'
+ +'   <div id="asList" class="ast-list"></div>'
+ +'   <button class="ast-add" onclick="asstType()">+ Səslə və ya yazaraq əlavə et</button>'
+ +'  </div>'
+ +' </div>'
+ +'</div>';
  renderAsstChat();renderAsstList();
- sb.functions.invoke('office-assistant',{body:{action:'prefs'}}).then(function(r){if(r.data&&!r.data.error){ASPREFS=r.data;ASVOICE=r.data.autospeak!==false;}}).catch(function(){});}
+ sb.functions.invoke('office-assistant',{body:{action:'prefs'}}).then(function(r){if(r.data&&!r.data.error){ASPREFS=r.data;ASVOICE=r.data.autospeak!==false;var vc=$('asVchip');if(vc)vc.textContent=ASVOICE?'🔊 Səs':'🔇 Səssiz';}}).catch(function(){});}
+function asstView(v){ASview=v;var c=$('astChatView'),t=$('astTaskView');if(c)c.hidden=(v!=='chat');if(t)t.hidden=(v!=='tasks');document.querySelectorAll('.ast-seg button').forEach(function(b,i){if(i<2)b.classList.toggle('on',(i===0&&v==='chat')||(i===1&&v==='tasks'));});if(v==='tasks')renderAsstList();}
 function renderAsstTabs(){document.querySelectorAll('#asTabs button').forEach(function(b,i){var sc=['today','tomorrow','week','noday','done'][i];b.classList.toggle('on',sc===ASscope);});}
-function renderAsstChat(){var c=$('asChat');if(!c)return;c.innerHTML=ASHIST.slice(-8).map(function(h){return h.role==='user'?'<div class="asyou">🗣 '+esc(h.content)+'</div>':'<div class="asai">🎯 '+esc(h.content)+'</div>';}).join('');c.scrollTop=c.scrollHeight;}
-function asstMic(){var b=$('asMic');
- if(ASREC&&ASREC.state==='recording'){ASREC.stop();return;}startRec(false);}
-function asstHands(){ASlisten=!ASlisten;var b=$('asHands');if(b){b.textContent='♾️ Fasiləsiz: '+(ASlisten?'aktiv':'sönük');b.classList.toggle('on',ASlisten);}
- if(ASlisten)startRec(true);else{if(ASREC&&ASREC.state==='recording')ASREC.stop();stopVAD();}}
+function renderAsstChat(){var c=$('asChat');if(!c)return;
+ if(!ASHIST.length){c.innerHTML='<div class="ast-empty"><div class="ast-empty-ico">🎯</div><p>Salam! Sizin köməkçinizəm.<br>Plan deyin, sual verin, tapşırıq yaradın.</p></div>';return;}
+ c.innerHTML=ASHIST.slice(-20).map(function(h){return h.role==='user'?'<div class="ast-b user">'+esc(h.content)+'</div>':'<div class="ast-b ai">'+esc(h.content)+'</div>';}).join('');c.scrollTop=c.scrollHeight;}
+function asstQuickVoice(){ASVOICE=!ASVOICE;var vc=$('asVchip');if(vc)vc.textContent=ASVOICE?'🔊 Səs':'🔇 Səssiz';sb.functions.invoke('office-assistant',{body:{action:'prefs',set:{voice:ASPREFS.voice,speed:ASPREFS.speed,autospeak:ASVOICE}}}).catch(function(){});if(!ASVOICE&&ASAUDIO)ASAUDIO.pause();}
+function asstMic(){if(ASREC&&ASREC.state==='recording'){ASREC.stop();return;}stopSpeak();startRec(false);}
+function asstHands(){ASlisten=!ASlisten;var b=$('asHands');if(b){b.textContent='◉ Fasiləsiz '+(ASlisten?'aktiv':'');b.classList.toggle('on',ASlisten);}
+ if(ASlisten){stopSpeak();startRec(true);}else{if(ASREC&&ASREC.state==='recording')ASREC.stop();stopVAD();releaseStream();}}
 function startRec(hands){if(!navigator.mediaDevices){toast('Mikrofon dəstəklənmir');return;}
- navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){ASchunks=[];ASREC=new MediaRecorder(st);
+ var g=ASstream?Promise.resolve(ASstream):navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
+ g.then(function(st){ASstream=st;ASchunks=[];ASREC=new MediaRecorder(st);
   ASREC.ondataavailable=function(e){if(e.data.size)ASchunks.push(e.data);};
-  ASREC.onstop=function(){var blob=new Blob(ASchunks,{type:ASREC.mimeType||'audio/webm'});setMic(false);if(!hands)st.getTracks().forEach(function(t){t.stop();});if(blob.size>2000)asstSend(blob,hands);else if(hands&&ASlisten)armVAD(st);};
-  ASREC.start();setMic(true,hands);
-  if(hands)armVAD(st);
- }).catch(function(){toast('Mikrofon icazəsi verilmədi');ASlisten=false;});}
-function setMic(on,hands){var b=$('asMic'),ico=$('asMicIco'),t=$('asMicTxt');if(!b)return;b.classList.toggle('rec',on);if(t)t.textContent=on?(hands?'Dinləyirəm…':'Bitirmək üçün basın'):'Danışmaq üçün basın';}
-/* VAD: səs kəsiləndə avtomatik dayandır (fasiləsiz rejim) */
-function armVAD(st){try{if(!ASctx)ASctx=new(window.AudioContext||window.webkitAudioContext)();var src=ASctx.createMediaStreamSource(st);ASanalyser=ASctx.createAnalyser();ASanalyser.fftSize=512;src.connect(ASanalyser);var data=new Uint8Array(ASanalyser.frequencyBinCount);var quiet=0,spoke=false;
+  ASREC.onstop=function(){var blob=new Blob(ASchunks,{type:ASREC.mimeType||'audio/webm'});setMic(false);if(blob.size>2500)asstSend(blob,hands);else if(hands&&ASlisten)armVAD(st);};
+  ASREC.start();setMic(true,hands);if(hands)armVAD(st);
+ }).catch(function(){toast('Mikrofon icazəsi verilmədi');ASlisten=false;var b=$('asHands');if(b){b.textContent='◉ Fasiləsiz';b.classList.remove('on');}});}
+function setMic(on,hands){var b=$('asMic'),t=$('asMicTxt');if(b)b.classList.toggle('rec',on);if(t)t.textContent=on?(hands?'Dinləyirəm…':'Bitirmək üçün toxunun'):(hands&&ASlisten?'Fasiləsiz dinləmə aktiv':'Danışmaq üçün toxunun');}
+function releaseStream(){if(ASstream&&!ASlisten){ASstream.getTracks().forEach(function(t){t.stop();});ASstream=null;}}
+/* VAD: səs kəsiləndə avtomatik dayan */
+function armVAD(st){try{if(!ASctx)ASctx=new(window.AudioContext||window.webkitAudioContext)();if(ASctx.state==='suspended')ASctx.resume();var src=ASctx.createMediaStreamSource(st);ASanalyser=ASctx.createAnalyser();ASanalyser.fftSize=512;src.connect(ASanalyser);var data=new Uint8Array(ASanalyser.frequencyBinCount);var quiet=0,spoke=false;
  clearInterval(ASsilence);ASsilence=setInterval(function(){if(!ASREC||ASREC.state!=='recording'){clearInterval(ASsilence);return;}ASanalyser.getByteFrequencyData(data);var v=0;for(var i=0;i<data.length;i++)v+=data[i];v/=data.length;
-  if(v>12){spoke=true;quiet=0;}else if(spoke){quiet++;if(quiet>12){clearInterval(ASsilence);ASREC.stop();}}},120);
+  if(v>13){spoke=true;quiet=0;}else if(spoke){quiet++;if(quiet>11){clearInterval(ASsilence);ASREC.stop();}}},110);
  }catch(e){}}
-function stopVAD(){clearInterval(ASsilence);if(ASctx){try{ASctx.close();}catch(e){}ASctx=null;}}
-function asstSend(blob,hands){$('asOut').innerHTML='<p class="status"><span class="spin"></span>…</p>';
+function stopVAD(){clearInterval(ASsilence);}
+/* BARGE-IN: assistent danışarkən istifadəçi danışsa, dərhal sus və dinlə */
+function armBargeIn(){try{if(!ASstream)return;if(!ASctx)ASctx=new(window.AudioContext||window.webkitAudioContext)();if(ASctx.state==='suspended')ASctx.resume();
+ var src=ASctx.createMediaStreamSource(ASstream);var an=ASctx.createAnalyser();an.fftSize=512;src.connect(an);var data=new Uint8Array(an.frequencyBinCount);var hi=0;
+ clearInterval(ASbargeTimer);ASbargeTimer=setInterval(function(){if(!ASAUDIO||ASAUDIO.paused){clearInterval(ASbargeTimer);return;}an.getByteFrequencyData(data);var v=0;for(var i=0;i<data.length;i++)v+=data[i];v/=data.length;
+  if(v>22){hi++;if(hi>3){clearInterval(ASbargeTimer);stopSpeak();startRec(ASlisten);}}else hi=0;},90);
+ }catch(e){}}
+function asstSend(blob,hands){setBusy(true,'…');
  var fd=new FormData();fd.append('audio',blob,'audio.webm');
- sb.functions.invoke('office-assistant',{body:fd}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);var t=(r.data.text||'').trim();$('asOut').innerHTML='';if(!t){if(hands&&ASlisten)startRec(true);return;}asstChat(t,hands);
- }).catch(function(e){$('asOut').innerHTML='<p class="status">Xəta: '+esc(e.message||e)+'</p>';if(hands&&ASlisten)setTimeout(function(){startRec(true);},1500);});}
-function asstType(){var t=prompt('Assistentə deyin:');if(t&&t.trim())asstChat(t.trim(),false);}
-function asstChat(text,hands){ASHIST.push({role:'user',content:text});renderAsstChat();$('asOut').innerHTML='<p class="status"><span class="spin"></span>…</p>';
- sb.functions.invoke('office-assistant',{body:{action:'chat',text:text,history:ASHIST.slice(-6)}}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);
-  $('asOut').innerHTML='';ASHIST.push({role:'assistant',content:r.data.reply});renderAsstChat();renderAsstList();asstSpeak(r.data.reply,hands);
- }).catch(function(e){$('asOut').innerHTML='<p class="status">Xəta: '+esc(e.message||e)+'</p>';if(hands&&ASlisten)setTimeout(function(){startRec(true);},1500);});}
-function asstSpeak(txt,hands){if(!ASVOICE||!txt){if(hands&&ASlisten)setTimeout(function(){startRec(true);},400);return;}
+ sb.functions.invoke('office-assistant',{body:fd}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);var t=(r.data.text||'').trim();setBusy(false);if(!t){if(hands&&ASlisten)startRec(true);return;}asstChat(t,hands);
+ }).catch(function(e){setBusy(false,'Xəta: '+(e.message||e));if(hands&&ASlisten)setTimeout(function(){startRec(true);},1500);});}
+function asstType(){var t=prompt('Assistentə deyin (yeni iş, sual, dəyişiklik):');if(t&&t.trim()){if(ASview!=='chat')asstView('chat');asstChat(t.trim(),false);}}
+function asstChat(text,hands){if(ASview!=='chat')asstView('chat');ASHIST.push({role:'user',content:text});renderAsstChat();setBusy(true,'…');
+ sb.functions.invoke('office-assistant',{body:{action:'chat',text:text,history:ASHIST.slice(-8)}}).then(function(r){if(r.error)throw r.error;if(r.data.error)throw new Error(r.data.error);
+  setBusy(false);ASHIST.push({role:'assistant',content:r.data.reply});renderAsstChat();renderAsstList();asstSpeak(r.data.reply,hands);
+ }).catch(function(e){setBusy(false,'Xəta: '+(e.message||e));if(hands&&ASlisten)setTimeout(function(){startRec(true);},1500);});}
+function setBusy(on,msg){ASbusy=on;var o=$('asOut');if(!o)return;o.innerHTML=on?'<div class="ast-typing"><span></span><span></span><span></span></div>':(msg?'<div class="ast-err">'+esc(msg)+'</div>':'');}
+function stopSpeak(){if(ASAUDIO){try{ASAUDIO.pause();ASAUDIO.currentTime=0;}catch(e){}}clearInterval(ASbargeTimer);}
+function asstSpeak(txt,hands){if(!ASVOICE||!txt){if(hands&&ASlisten)setTimeout(function(){startRec(true);},350);return;}
  sb.functions.invoke('office-assistant',{body:{action:'tts',text:txt}}).then(function(r){if(r.error||!r.data||!r.data.audio){if(hands&&ASlisten)startRec(true);return;}
-  try{if(ASAUDIO)ASAUDIO.pause();ASAUDIO=new Audio('data:audio/mp3;base64,'+r.data.audio);ASAUDIO.onended=function(){if(hands&&ASlisten)startRec(true);};ASAUDIO.play().catch(function(){if(hands&&ASlisten)startRec(true);});}catch(e){if(hands&&ASlisten)startRec(true);}
+  try{stopSpeak();ASAUDIO=new Audio('data:audio/mp3;base64,'+r.data.audio);
+   ASAUDIO.onplay=function(){armBargeIn();};
+   ASAUDIO.onended=function(){clearInterval(ASbargeTimer);if(hands&&ASlisten)startRec(true);};
+   ASAUDIO.play().catch(function(){if(hands&&ASlisten)startRec(true);});}catch(e){if(hands&&ASlisten)startRec(true);}
  }).catch(function(){if(hands&&ASlisten)startRec(true);});}
 function asstSettings(){var voices=[['shimmer','Yumşaq qadın'],['nova','Canlı qadın'],['coral','İsti qadın'],['sage','Sakit qadın'],['alloy','Neytral'],['onyx','Dərin kişi'],['echo','Kişi'],['ash','Aydın kişi']];
- var html='<div class="mhead"><h3>⚙️ Səs ayarları</h3><button class="x" onclick="closeModal()">×</button></div>'+
-  '<label class="small muted">Səs</label><select id="apVoice" style="width:100%;padding:10px;border-radius:12px;margin:4px 0 12px">'+voices.map(function(v){return '<option value="'+v[0]+'"'+(ASPREFS.voice===v[0]?' selected':'')+'>'+v[1]+'</option>';}).join('')+'</select>'+
-  '<label class="small muted">Sürət: <b id="apSpeedV">'+(ASPREFS.speed||1).toFixed(2)+'</b></label><input type="range" id="apSpeed" min="0.7" max="1.3" step="0.05" value="'+(ASPREFS.speed||1)+'" style="width:100%;margin:4px 0 12px" oninput="$(\'apSpeedV\').textContent=(+this.value).toFixed(2)">'+
-  '<label class="row" style="gap:8px;margin-bottom:14px"><input type="checkbox" id="apAuto" '+(ASVOICE?'checked':'')+'> Cavabları səslə oxusun</label>'+
-  '<div class="row" style="gap:8px"><button class="btn ghost" onclick="asstTestVoice()">🔊 Sına</button><button class="btn" style="flex:1" onclick="asstSaveVoice()">Yadda saxla</button></div>';
+ var html='<div class="mhead"><h3>Səs ayarları</h3><button class="x" onclick="closeModal()">×</button></div>'+
+  '<label class="ast-lbl">Səs</label><select id="apVoice" class="ast-sel">'+voices.map(function(v){return '<option value="'+v[0]+'"'+(ASPREFS.voice===v[0]?' selected':'')+'>'+v[1]+'</option>';}).join('')+'</select>'+
+  '<label class="ast-lbl">Sürət: <b id="apSpeedV">'+(+ASPREFS.speed||1).toFixed(2)+'</b></label><input type="range" id="apSpeed" min="0.7" max="1.3" step="0.05" value="'+(ASPREFS.speed||1)+'" class="ast-range" oninput="$(\'apSpeedV\').textContent=(+this.value).toFixed(2)">'+
+  '<label class="ast-check"><input type="checkbox" id="apAuto" '+(ASVOICE?'checked':'')+'> Cavabları səslə oxusun</label>'+
+  '<div class="row" style="gap:8px;margin-top:14px"><button class="ast-chip" onclick="asstTestVoice()">🔊 Sına</button><button class="ast-save" onclick="asstSaveVoice()">Yadda saxla</button></div>';
  modal(html);}
-function asstTestVoice(){var v=$('apVoice').value,sp=+$('apSpeed').value;sb.functions.invoke('office-assistant',{body:{action:'prefs',set:{voice:v,speed:sp,autospeak:true}}}).then(function(){sb.functions.invoke('office-assistant',{body:{action:'tts',text:'Salam, mən sizin assistentinizəm. Bu, səs nümunəsidir.'}}).then(function(r){if(r.data&&r.data.audio){if(ASAUDIO)ASAUDIO.pause();ASAUDIO=new Audio('data:audio/mp3;base64,'+r.data.audio);ASAUDIO.play().catch(function(){});}});});}
-function asstSaveVoice(){var v=$('apVoice').value,sp=+$('apSpeed').value,au=$('apAuto').checked;sb.functions.invoke('office-assistant',{body:{action:'prefs',set:{voice:v,speed:sp,autospeak:au}}}).then(function(r){if(r.data){ASPREFS=r.data;ASVOICE=au;}closeModal();toast('Yadda saxlanıldı');});}
+function asstTestVoice(){var v=$('apVoice').value,sp=+$('apSpeed').value;sb.functions.invoke('office-assistant',{body:{action:'prefs',set:{voice:v,speed:sp,autospeak:true}}}).then(function(){sb.functions.invoke('office-assistant',{body:{action:'tts',text:'Salam, mən sizin köməkçinizəm. Bu, səs nümunəsidir.'}}).then(function(r){if(r.data&&r.data.audio){stopSpeak();ASAUDIO=new Audio('data:audio/mp3;base64,'+r.data.audio);ASAUDIO.play().catch(function(){});}});});}
+function asstSaveVoice(){var v=$('apVoice').value,sp=+$('apSpeed').value,au=$('apAuto').checked;sb.functions.invoke('office-assistant',{body:{action:'prefs',set:{voice:v,speed:sp,autospeak:au}}}).then(function(r){if(r.data){ASPREFS=r.data;ASVOICE=au;var vc=$('asVchip');if(vc)vc.textContent=ASVOICE?'🔊 Səs':'🔇 Səssiz';}closeModal();toast('Yadda saxlanıldı');});}
 function asstDueTxt(n){if(!n.due)return '';var d=new Date(n.due);return d.toLocaleDateString('az-AZ',{day:'2-digit',month:'short'})+(n.due_all_day?'':' '+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'}));}
-function renderAsstList(){run(sb.rpc('notes_list',{p_scope:ASscope})).then(function(rows){
- $('asList').innerHTML=rows.length?rows.map(function(n){var late=n.due&&new Date(n.due)<new Date()&&!n.done;
-  return '<div class="card note'+(n.done?' ndone':'')+'"><label class="row" style="gap:10px;align-items:flex-start"><input type="checkbox" '+(n.done?'checked':'')+' onchange="asstDone('+n.id+',this.checked)"><div style="flex:1"><b>'+esc(n.text)+'</b>'+(n.due?'<span class="pill '+(late?'p-bad':'p-mut')+'" style="margin-left:6px">'+(late?'⏰ ':'')+asstDueTxt(n)+'</span>':'')+'</div><button class="x" onclick="asstDel('+n.id+')">×</button></label></div>';
- }).join(''):'<p class="hint" style="text-align:center;padding:16px">Bu siyahı boşdur.</p>';}).catch(err);}
+function renderAsstList(){var el=$('asList');if(!el)return;run(sb.rpc('notes_list',{p_scope:ASscope})).then(function(rows){
+ el.innerHTML=rows.length?rows.map(function(n){var late=n.due&&new Date(n.due)<new Date()&&!n.done;
+  return '<div class="ast-task'+(n.done?' done':'')+'"><button class="ast-ck'+(n.done?' on':'')+'" onclick="asstDone('+n.id+','+(!n.done)+')">'+(n.done?'✓':'')+'</button><div class="ast-tx"><b>'+esc(n.text)+'</b>'+(n.due?'<span class="ast-due'+(late?' late':'')+'">'+(late?'⏰ ':'')+asstDueTxt(n)+'</span>':'')+'</div><button class="ast-x" onclick="asstDel('+n.id+')">×</button></div>';
+ }).join(''):'<div class="ast-empty"><div class="ast-empty-ico">🗒</div><p>Bu siyahı boşdur.</p></div>';}).catch(err);}
 function asstDone(id,v){run(sb.from('office_notes').update({done:v,done_at:v?new Date().toISOString():null}).eq('id',id)).then(function(){renderAsstList();}).catch(err);}
 function asstDel(id){run(sb.from('office_notes').delete().eq('id',id)).then(function(){renderAsstList();}).catch(err);}
+
 
 
 
