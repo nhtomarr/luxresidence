@@ -112,6 +112,43 @@ body.hide .filt,body.hide .legend,body.hide .fr .dots{display:none!important;}
  .pbody{padding:18px 18px calc(20px + env(safe-area-inset-bottom,0px));}
  .pplan{aspect-ratio:16/10;}
 }
+
+/* ---------- günəş və kölgə ---------- */
+.sunbtn{position:fixed;left:286px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:10;display:flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.75);background:rgba(255,252,248,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:99px;padding:10px 16px;font-family:var(--sans);font-size:14px;font-weight:700;color:var(--ink);box-shadow:0 10px 28px -12px rgba(74,42,24,.5);cursor:pointer;}
+.sunbtn:hover{background:#fff;}
+.sunbox{position:fixed;left:286px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:10;width:350px;display:none;background:rgba(255,252,248,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.75);border-radius:18px;padding:12px 14px 14px;box-shadow:0 20px 50px -24px rgba(74,42,24,.55);}
+body.sun .sunbox{display:block;}body.sun .sunbtn{display:none;}
+.sunhd{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.sunhd b{font-family:var(--serif);font-size:16px;flex:1;}
+.cmp{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;position:relative;flex:none;}
+.cmp .cn{position:absolute;inset:0;transition:transform .1s linear;}
+.cmp .cn i{position:absolute;left:50%;top:9px;margin-left:-4px;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:9px solid var(--rust);}
+.cmp .cn span{position:absolute;left:50%;top:1px;transform:translateX(-50%);font-size:8px;font-weight:800;color:var(--rust);line-height:1;}
+.cmp::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:var(--ink);}
+.sx{width:30px;height:30px;border-radius:50%;border:none;background:#f0e6da;font-size:17px;color:var(--ink);flex:none;cursor:pointer;}
+.sdays{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:10px;}
+.sdays::-webkit-scrollbar{display:none;}
+.sdays button{flex:none;border:1px solid var(--line);background:#fff;border-radius:99px;padding:6px 10px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;}
+.sdays button.on{background:var(--rust);border-color:var(--rust);color:#fff;}
+.srow{display:flex;align-items:center;gap:10px;}
+.splay{width:34px;height:34px;border-radius:50%;border:none;background:#24303a;color:#fff;font-size:13px;flex:none;cursor:pointer;}
+.srow input{flex:1;accent-color:var(--rust);min-width:0;}
+.sval{font-family:var(--serif);font-weight:700;font-size:16px;width:46px;text-align:right;flex:none;}
+.sinfo{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.4;}
+.psun{background:#fbf2e4;border-radius:12px;padding:11px 13px;margin-bottom:14px;font-size:13px;line-height:1.45;}
+.psun b{display:block;font-size:13.5px;margin-bottom:4px;}
+.psun .sh{display:flex;gap:8px;margin-top:6px;}
+.psun .sh div{flex:1;background:#fff;border-radius:9px;padding:7px 9px;}
+.psun .sh small{display:block;color:var(--muted);font-size:11px;}
+.psun .sh strong{font-size:15px;}
+.psun a{display:inline-block;margin-top:8px;color:var(--rust);font-weight:700;text-decoration:none;cursor:pointer;}
+body.night #stage{background:linear-gradient(180deg,#1f2738 0%,#3a3f55 55%,#4f4a55 100%);}
+@media (max-width:760px){
+ .sunbtn{left:10px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:9px 13px;font-size:13px;}
+ .sunbtn span{display:none;}
+ .sunbox{left:8px;right:68px;width:auto;bottom:calc(10px + env(safe-area-inset-bottom,0px));padding:10px 12px 12px;}
+ body.sun .hint{display:none;}
+}
 </style>
 <!-- Google tag (gtag.js) — Google Ads AW-18475026857 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18475026857"></script>
@@ -144,6 +181,13 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <div class="tip" id="tip"></div>
 <div id="lbls"></div>
 <div class="panel" id="panel"><button class="x" id="px">×</button><div class="pbody" id="pbody"></div></div>
+<button class="sunbtn" id="sunbtn" aria-label="Günəş və kölgə">☀️ <span>Günəş və kölgə</span></button>
+<div class="sunbox" id="sunbox">
+  <div class="sunhd"><b>☀️ Günəş və kölgə</b><div class="cmp" title="Kompas · Ş = şimal"><div class="cn" id="cmpN"><span>Ş</span><i></i></div></div><button class="sx" id="sunx" aria-label="Bağla">×</button></div>
+  <div class="sdays" id="sdays"><button data-d="today" class="on">Bu gün</button><button data-d="3-20" title="21 mart">Yaz</button><button data-d="6-21" title="21 iyun">Yay</button><button data-d="9-23" title="23 sentyabr">Payız</button><button data-d="12-21" title="21 dekabr">Qış</button></div>
+  <div class="srow"><button class="splay" id="splay" aria-label="Günü oynat">▶</button><input type="range" id="stime" min="300" max="1290" step="5" aria-label="Saat"><span class="sval" id="sval">12:00</span></div>
+  <div class="sinfo" id="sinfo"></div>
+</div>
 <div class="load" id="load">LUX Residence yüklənir…</div>
 
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
@@ -183,7 +227,7 @@ const canvas=document.getElementById('c');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,MOB?1.6:2));
 renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
-renderer.shadowMap.enabled=!MOB;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(38,1,0.5,2200);
 scene.fog=new THREE.Fog(0xf0dcc6,260,1300);
@@ -303,9 +347,9 @@ function buildInner(f){
  const tiles=[];
  [[north,1],[south,-1]].forEach(([row,side])=>{
   if(!row.length)return;const tot=row.reduce((s,u)=>s+(parseFloat(u.area)||80),0);let x=-W/2+0.3;const z0=side*1.9,z1=side*(D/2-0.3),zc=(z0+z1)/2,dz=Math.abs(z1-z0);
-  row.forEach(u=>{const w=(W-0.6)*((parseFloat(u.area)||80)/tot),xc=x+w/2;
+  row.forEach((u,ri)=>{const w=(W-0.6)*((parseFloat(u.area)||80)/tot),xc=x+w/2;
    const ok=match(u),mat=new THREE.MeshStandardMaterial({color:OFF()?0xd8c3a6:(ok?COL[u.st]:COL.dim),roughness:.7,emissive:0x000000});
-   const t=box(w-0.35,0.16,dz-0.35,mat,xc,y+0.2,zc,inner,false);t.userData={u,ok,base:OFF()?0xd8c3a6:(ok?COL[u.st]:COL.dim)};tiles.push(t);
+   const t=box(w-0.35,0.16,dz-0.35,mat,xc,y+0.2,zc,inner,false);t.userData={u,ok,base:OFF()?0xd8c3a6:(ok?COL[u.st]:COL.dim),face:[new THREE.Vector3(0,0,side)].concat(ri===0?[new THREE.Vector3(-1,0,0)]:[]).concat(ri===row.length-1?[new THREE.Vector3(1,0,0)]:[])};tiles.push(t);
    box(0.18,1.0,dz,MAT.wall,x,y+0.55,zc,inner);
    x+=w;});
   box(0.18,1.0,dz,MAT.wall,W/2-0.3,y+0.55,zc,inner);
@@ -348,7 +392,7 @@ function openApt(u){
  const a=findApt(u);ASEL=u;
  $('pbody').innerHTML=(OFF()?'':stBadge(u.st))+'<h3>Mənzil № '+u.n+'</h3><div class="psub">'+CUR+' · '+ord(SEL)+' mərtəbə · '+(u.room||'—')+' otaqlı</div>'
  +'<div class="pplan">'+(a&&a.plan?'<img src="'+(String(a.plan).charAt(0)==='/'||/^https?:|^data:/.test(a.plan)?a.plan:'/'+a.plan)+'" alt="Mənzil planı">':'<em>Plan tezliklə əlavə olunacaq</em>')+'</div>'
- +'<div class="pgrid"><div><small>Sahə</small><b>'+(u.area||'—')+' m²</b></div><div><small>Otaq</small><b>'+(u.room||'—')+'</b></div><div><small>Mərtəbə</small><b>'+SEL+' / '+F1+'</b></div><div><small>Qiymət</small><b>Sorğu ilə</b></div></div>'
+ +sunBlock(u)+'<div class="pgrid"><div><small>Sahə</small><b>'+(u.area||'—')+' m²</b></div><div><small>Otaq</small><b>'+(u.room||'—')+'</b></div><div><small>Mərtəbə</small><b>'+SEL+' / '+F1+'</b></div><div><small>Qiymət</small><b>Sorğu ilə</b></div></div>'
  +(a?'<a class="pbtn pri" href="/apt/'+a.id+'">Mənzilə ətraflı bax</a>':'<a class="pbtn pri" href="/planlar">Planlara bax</a>')
  +'<a class="pbtn sec" href="tel:+994508090088">Zəng edin</a><div class="note">3D model sxematikdir; mənzillərin yerləşməsi təxminidir. Dəqiq plan üçün satış ofisi ilə əlaqə saxlayın.</div>';
  $('panel').classList.add('on');
@@ -374,11 +418,83 @@ canvas.addEventListener('pointerup',e=>{if(!down)return;const moved=Math.hypot(e
  if(!SEL){if(p&&p.f){setHover(null);$('tip').style.display='none';selectFloor(p.f);}return;}
  if(p&&p.tile){if(p.tile.userData.ok)openApt(p.tile.userData.u);}else closePanel();});
 
+
+/* ---------- günəş və kölgə (Bakı, real günəş mövqeyi) ---------- */
+/* Kompleks: 40.36664, 49.81879. Şimal istiqaməti Alov qüllələrinə görə kalibrlənib (kompleksdən azimut ≈141.6°). */
+const LAT=40.36664,LON=49.81879,TZ=4,RAD=Math.PI/180;
+const PHI_N=(()=>{const f=new THREE.Vector3(-0.65,0,-0.76).normalize(),th=Math.atan2(f.x,f.z),x=-70,z=300;
+ const wx=x*Math.cos(th)+z*Math.sin(th),wz=-x*Math.sin(th)+z*Math.cos(th);return Math.atan2(wx,wz)+141.6*RAD;})();
+function bearingToWorld(b){const p=PHI_N-b*RAD;return new THREE.Vector3(Math.sin(p),0,Math.cos(p));}
+function worldToBearing(v){let b=(PHI_N-Math.atan2(v.x,v.z))/RAD;return ((b%360)+360)%360;}
+const DIRS=['Şimal','Şimal-şərq','Şərq','Cənub-şərq','Cənub','Cənub-qərb','Qərb','Şimal-qərb'];
+const dirName=b=>DIRS[Math.round(b/45)%8];
+function doyOf(m,d){return Math.round((Date.UTC(2026,m-1,d)-Date.UTC(2026,0,1))/864e5)+1;}
+function sunPos(doy,min){ /* min = Bakı yerli vaxtı, dəqiqə */
+ const g=2*Math.PI/365*(doy-1+(min/60-12)/24);
+ const eq=229.18*(0.000075+0.001868*Math.cos(g)-0.032077*Math.sin(g)-0.014615*Math.cos(2*g)-0.040849*Math.sin(2*g));
+ const de=0.006918-0.399912*Math.cos(g)+0.070257*Math.sin(g)-0.006758*Math.cos(2*g)+0.000907*Math.sin(2*g)-0.002697*Math.cos(3*g)+0.00148*Math.sin(3*g);
+ const tst=min+eq+4*LON-60*TZ,ha=(tst/4-180)*RAD,la=LAT*RAD;
+ const alt=Math.asin(Math.sin(la)*Math.sin(de)+Math.cos(la)*Math.cos(de)*Math.cos(ha));
+ const az=(Math.atan2(Math.sin(ha),Math.cos(ha)*Math.sin(la)-Math.tan(de)*Math.cos(la))/RAD+180+360)%360;
+ return {alt:alt/RAD,az};}
+function sunVec(p){const h=bearingToWorld(p.az),c=Math.cos(p.alt*RAD);return new THREE.Vector3(h.x*c,Math.sin(p.alt*RAD),h.z*c);}
+function riseSet(doy){let r=null,s=null,prev=sunPos(doy,0).alt;for(let m=2;m<=1440;m+=2){const a=sunPos(doy,m).alt;if(prev<-0.83&&a>=-0.83&&r===null)r=m;if(prev>=-0.83&&a<-0.83)s=m;prev=a;}return {r,s};}
+function sunHours(doy,normals){let n=0,first=null,last=null;for(let m=240;m<=1260;m+=10){const p=sunPos(doy,m);if(p.alt<3)continue;const v=sunVec(p);if(normals.some(nv=>nv.dot(v)>0.08)){n++;if(first===null)first=m;last=m;}}return {h:n*10/60,first,last};}
+const hhmm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(Math.round(m%60)).padStart(2,'0');
+const hfmt=h=>h<0.25?'yoxdur':(h<1?'~'+Math.round(h*60)+' dəq':'~'+(Math.round(h*2)/2).toString().replace('.',',')+' saat');
+
+const SUN={on:false,doy:0,min:720,play:false,shadowsReady:!MOB};
+const SUN0={pos:sun.position.clone(),int:sun.intensity,col:sun.color.clone()};
+const hemi=scene.children.find(o=>o.isHemisphereLight);const HEMI0=hemi?hemi.intensity:1;
+const fogDay=scene.fog.color.clone(),fogNight=new THREE.Color(0x3b4052);
+function bakuNow(){const d=new Date(Date.now()+TZ*3600e3);return {m:d.getUTCMonth()+1,d:d.getUTCDate(),min:d.getUTCHours()*60+d.getUTCMinutes()};}
+function enableShadowsMobile(){if(SUN.shadowsReady)return;SUN.shadowsReady=true;if(sun.shadow.map){sun.shadow.map.dispose();sun.shadow.map=null;}sun.shadow.mapSize.set(2048,2048);sun.castShadow=true;}
+function applySun(){
+ if(!SUN.on){sun.position.copy(SUN0.pos);sun.target.position.set(0,0,0);sun.intensity=SUN0.int;sun.color.copy(SUN0.col);if(hemi)hemi.intensity=HEMI0;scene.fog.color.copy(fogDay);renderer.toneMappingExposure=1.05;document.body.classList.remove('night');
+  Object.assign(sun.shadow.camera,{left:-60,right:60,top:70,bottom:-40,near:10,far:260});sun.shadow.camera.updateProjectionMatrix();return;}
+ const p=sunPos(SUN.doy,SUN.min),v=sunVec(p);
+ const k=THREE.MathUtils.smoothstep(p.alt,-2,12);
+ sun.target.position.set(0,18,0);sun.position.copy(v.multiplyScalar(240)).add(sun.target.position);
+ sun.intensity=p.alt>0?2.4*k+0.15:0;
+ sun.color.setRGB(1,0.62+0.3*k,0.42+0.45*k);
+ if(hemi)hemi.intensity=0.3+0.85*THREE.MathUtils.smoothstep(p.alt,-8,20);
+ renderer.toneMappingExposure=0.8+0.25*THREE.MathUtils.smoothstep(p.alt,-6,15);
+ scene.fog.color.copy(fogNight).lerp(fogDay,THREE.MathUtils.smoothstep(p.alt,-6,10));
+ document.body.classList.toggle('night',p.alt<-3);
+ Object.assign(sun.shadow.camera,{left:-130,right:130,top:130,bottom:-130,near:20,far:520});sun.shadow.camera.updateProjectionMatrix();
+ $('sval').textContent=hhmm(SUN.min);$('stime').value=SUN.min;
+ const rs=riseSet(SUN.doy);
+ const dd=new Date(Date.UTC(2026,0,SUN.doy)),MN=['yanvar','fevral','mart','aprel','may','iyun','iyul','avqust','sentyabr','oktyabr','noyabr','dekabr'],ds=dd.getUTCDate()+' '+MN[dd.getUTCMonth()]+' · ';
+ $('sinfo').innerHTML=ds+(p.alt>0?('Günəş '+dirName(p.az).toLowerCase()+' tərəfdədir, hündürlüyü '+Math.round(p.alt)+'° · Gün çıxır '+hhmm(rs.r)+', batır '+hhmm(rs.s)):('Günəş üfüqün altındadır · Gün çıxır '+hhmm(rs.r)+', batır '+hhmm(rs.s)));
+}
+if(!scene.children.includes(sun.target))scene.add(sun.target);
+function setDay(key){if(key==='today'){const n=bakuNow();SUN.doy=doyOf(n.m,n.d);}else{const [m,d]=key.split('-').map(Number);SUN.doy=doyOf(m,d);}
+ [...$('sdays').children].forEach(b=>b.classList.toggle('on',b.dataset.d===key));applySun();}
+function openSun(){SUN.on=true;enableShadowsMobile();controls.autoRotate=false;$('hint').style.opacity=0;document.body.classList.add('sun');
+ if(!SUN.doy){const n=bakuNow();SUN.doy=doyOf(n.m,n.d);const rs=riseSet(SUN.doy);SUN.min=(n.min>rs.r+20&&n.min<rs.s-20)?n.min:Math.round((rs.r+rs.s)/2);}applySun();}
+function closeSun(){SUN.on=false;SUN.play=false;$('splay').textContent='▶';document.body.classList.remove('sun');applySun();}
+$('sunbtn').addEventListener('click',openSun);$('sunx').addEventListener('click',closeSun);
+$('sdays').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setDay(b.dataset.d);});
+$('stime').addEventListener('input',e=>{SUN.min=+e.target.value;SUN.play=false;$('splay').textContent='▶';applySun();});
+$('splay').addEventListener('click',()=>{SUN.play=!SUN.play;$('splay').textContent=SUN.play?'❚❚':'▶';if(SUN.play){const rs=riseSet(SUN.doy);if(SUN.min>=Math.min(1290,rs.s+20))SUN.min=Math.max(300,rs.r-20);}});
+let lastT=0;function sunTick(now){const dt=Math.min(50,now-(lastT||now));lastT=now;
+ if(SUN.on&&SUN.play){SUN.min+=dt*0.12;const rs=riseSet(SUN.doy);const end=Math.min(1290,rs.s+20);if(SUN.min>=end){SUN.min=end;SUN.play=false;$('splay').textContent='▶';}applySun();}
+ if(SUN.on){const az=controls.getAzimuthalAngle(),fwd=az+Math.PI,bUp=(PHI_N-fwd)/RAD;$('cmpN').style.transform='rotate('+(-bUp)+'deg)';}}
+
+function sunBlock(u){const t=(floors[SEL].tiles||[]).find(x=>x.userData.u===u);if(!t||!t.userData.face)return '';
+ const nf=t.userData.face,names=nf.map(v=>dirName(worldToBearing(v)));
+ const su=sunHours(doyOf(6,21),nf),wi=sunHours(doyOf(12,21),nf);
+ return '<div class="psun"><b>☀️ Günəş işığı</b>Pəncərələr: <strong>'+names.join(', ')+'</strong> tərəfə baxır'
+ +'<div class="sh"><div><small>Yayda (21 iyun)</small><strong>'+hfmt(su.h)+'</strong></div><div><small>Qışda (21 dekabr)</small><strong>'+hfmt(wi.h)+'</strong></div></div>'
+ +(wi.h>=0.25?'<div style="margin-top:6px;color:var(--muted);font-size:12px">Qışda birbaşa günəş: '+hhmm(wi.first)+'–'+hhmm(wi.last+10)+'</div>':'')
+ +'<a id="psunGo">Kölgəni 3D-də gör →</a></div>';}
+document.addEventListener('click',e=>{if(e.target&&e.target.id==='psunGo'){closePanel();openSun();}});
+
 /* ---------- loop ---------- */
 function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
 function loop(now){requestAnimationFrame(loop);
  if(anim){const t=Math.min(1,(now-anim.s)/anim.ms),k=ease(t);camera.position.lerpVectors(anim.p0,anim.p1,k);controls.target.lerpVectors(anim.t0,anim.t1,k);if(t>=1)anim=null;}
- controls.update();renderer.render(scene,camera);if(lblItems.length)updLabels();}
+ sunTick(now);controls.update();renderer.render(scene,camera);if(lblItems.length)updLabels();}
 requestAnimationFrame(loop);
 
 (async function(){await loadData();buildTabs();buildList();$('load').classList.add('off');
