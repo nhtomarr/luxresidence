@@ -455,13 +455,15 @@ a.back,.back{border-radius:99px}
 .ps-dot{width:5px;height:5px;border-radius:50%;background:#ba4d2c;display:inline-block}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 <div id="bootload" style="position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0f172a;color:#fff;font-family:system-ui,sans-serif">
  <div style="font-size:22px;font-weight:800;letter-spacing:.02em">Baş Ofis</div>
  <div style="width:34px;height:34px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:bootspin .8s linear infinite;margin-top:16px"></div>
  <div style="margin-top:12px;font-size:13px;color:#94a3b8">Yüklənir…</div>
- <style>@keyframes bootspin{to{transform:rotate(360deg)}}</style>
+ <style>@keyframes bootspin{to{transform:rotate(360deg)}}.recbtn{border:1px solid var(--line);background:#fff;border-radius:8px;width:30px;height:30px;font-size:14px;flex-shrink:0;padding:0}.recbtn.on{background:#eef2ff;border-color:var(--acc)}.rectag{display:inline-block;font-size:.72rem;background:#eef2ff;color:var(--acc);padding:1px 7px;border-radius:99px;font-weight:600;vertical-align:middle}
+</style>
 </div>
 <div id="app" style="display:none">
  <header class="top"><div class="brand">Baş Ofis<small>İdarəetmə sistemi</small></div><button class="out" id="instBtn" style="display:none">⬇ Quraşdır</button><div class="me" id="meBox"></div><button class="out" id="outBtn">Çıxış</button></header>
@@ -1103,7 +1105,7 @@ function plBounds(){var c=today().slice(0,7);return [mAdd(c,-1),mAdd(c,1)];}
 function plShift(k){var m=$('plM').value||today().slice(0,7),n=mAdd(m,k),b=plBounds();if(n<b[0]||n>b[1])return;$('plM').value=n;renderPlans();}
 function plNav(){var m=$('plM').value,b=plBounds(),bt=document.querySelectorAll('.msw button');if(bt.length<2)return;bt[0].disabled=m<=b[0];bt[1].disabled=m>=b[1];}
 function renderPlanMine(m){$('plKpi').innerHTML='';var lb=$('plML');if(lb)lb.textContent=mLabel(m);if(!EMP){$('plBody').innerHTML='<div class="card empty">Hesabınız işçi kartına bağlanmayıb. HR rəhbərinə müraciət edin.</div>';return;}
- var cur=today().slice(0,7),past=m<cur,p=PLANS.find(function(x){return x.employee_id===EMP.id;});PLI=JSON.parse(JSON.stringify((p&&p.items)||[]));
+ var cur=today().slice(0,7),past=m<cur,p=PLANS.find(function(x){return x.employee_id===EMP.id;});PLI=JSON.parse(JSON.stringify((p&&p.items)||[]));if((!p||!p.items||!p.items.length)&&m>=cur){var pr=mAdd(m,-1);run(sb.from('office_plans').select('items').eq('employee_id',EMP.id).eq('month',pr).maybeSingle()).then(function(r){var rec=((r&&r.data&&r.data.items)||[]).filter(function(x){return x.rec;}).map(function(x){return {t:x.t,done:false,note:'',rec:true};});if(rec.length&&(!PLI.length)){PLI=rec;drawPlanItems(true,false);plDirty();toast(rec.length+' mütəmadi iş keçən aydan gətirildi');}}).catch(function(){});}
  PL_SAVED=JSON.stringify(((p&&p.items)||[]).map(function(x){return (x.t||'').trim();}));PL_ST=p?p.status:'none';
  var st=p?p.status:'none',edit=!past&&(st==='none'||st==='draft'||st==='returned'),prog=(st==='approved'||st==='submitted')&&!past&&m<=mAdd(cur,1),h='<div class="card">';
  var steps=[['Yaz',st==='none'||st==='draft'||st==='returned'],['Rəhbərə göndər',st==='submitted'],['Təsdiq',st==='approved']];
@@ -1116,7 +1118,7 @@ function renderPlanMine(m){$('plKpi').innerHTML='';var lb=$('plML');if(lb)lb.tex
  if(past&&st==='none')h+='<p class="muted">Bu ay üçün plan verilməyib.</p>';
  if(past&&st!=='none'&&st!=='approved')h+='<p class="muted small">Ay bitib — plan artıq dəyişdirilə bilməz.</p>';
  h+='<div id="plItems" style="margin-top:10px"></div>';
- if(edit)h+='<div class="row" style="margin-top:10px"><input id="plNew" class="plin" style="flex:1" placeholder="Yeni iş, məs: 20 müştəri ilə görüş" oninput="plDirty()" onkeydown="if(event.key===\'Enter\'){event.preventDefault();plAdd();}"><button class="btn ghost sm" onclick="plAdd()">+ Əlavə et</button></div>'+
+ if(edit)h+='<div class="row" style="margin-top:10px"><input id="plNew" class="plin" style="flex:1" placeholder="Yeni iş, məs: 20 müştəri ilə görüş" oninput="plDirty()" onkeydown="if(event.key===\'Enter\'){event.preventDefault();plAdd();}"><button class="btn ghost sm" onclick="plAdd()">+ Əlavə et</button></div>'+'<div class="row" style="margin-top:8px;gap:8px"><input type="file" id="plXlsx" accept=".xlsx,.xls,.csv" style="display:none" onchange="plImportXlsx(this.files[0])"><button class="btn ghost sm" onclick="plPickXlsx()">📄 Excel-dən yüklə</button><span class="muted small" style="align-self:center">hər sətir bir iş</span></div>'+
   '<div class="row" style="justify-content:flex-end;margin-top:16px">'+(st==='submitted'?'':'<button class="btn ghost" onclick="savePlan(\''+m+'\',\'draft\')">Qaralama saxla</button>')+'<button class="btn" id="plSend" onclick="savePlan(\''+m+'\',\'submitted\')">'+(st==='returned'?'Düzəldib yenidən göndər':st==='submitted'?'Yenilənmiş planı göndər':'Rəhbərə göndər')+'</button></div>';
  
  h+='</div>';
@@ -1124,8 +1126,8 @@ function renderPlanMine(m){$('plKpi').innerHTML='';var lb=$('plML');if(lb)lb.tex
  $('plBody').innerHTML=h;drawPlanItems(edit,prog,st==='approved'&&!prog);plDirty();}
 function drawPlanItems(edit,prog,ro){var b=$('plItems');if(!b)return;
  b.innerHTML=PLI.length?PLI.map(function(x,i){
-  if(edit)return '<div class="pli"><span class="pln">'+(i+1)+'.</span><input class="plin plin-e" value="'+esc(x.t)+'" oninput="PLI['+i+'].t=this.value.trim();plDirty()"><button title="Sil" onclick="PLI.splice('+i+',1);drawPlanItems(true,false);plDirty()">×</button></div>';
-  if(prog)return '<div class="pli"><input type="checkbox"'+(x.done?' checked':'')+' onchange="PLI['+i+'].done=this.checked;planAutoSave()"><div style="flex:1"><div'+(x.done?' style="text-decoration:line-through;color:var(--mut)"':'')+'>'+esc(x.t)+'</div>'+
+  if(edit)return '<div class="pli"><span class="pln">'+(i+1)+'.</span><input class="plin plin-e" value="'+esc(x.t)+'" oninput="PLI['+i+'].t=this.value.trim();plDirty()"><button class="recbtn'+(x.rec?' on':'')+'" title="'+(x.rec?'Mütəmadi — hər ay təkrarlanır':'Birdəfəlik iş')+'" onclick="PLI['+i+'].rec=!PLI['+i+'].rec;drawPlanItems(true,false);plDirty()">'+(x.rec?'🔁':'1️⃣')+'</button><button title="Sil" onclick="PLI.splice('+i+',1);drawPlanItems(true,false);plDirty()">×</button></div>';
+  if(prog)return '<div class="pli"><input type="checkbox"'+(x.done?' checked':'')+' onchange="PLI['+i+'].done=this.checked;planAutoSave()"><div style="flex:1"><div'+(x.done?' style="text-decoration:line-through;color:var(--mut)"':'')+'>'+(x.rec?'<span class="rectag">🔁</span> ':'')+esc(x.t)+'</div>'+
    (x.note?'<div class="small muted" onclick="plNote('+i+')" style="cursor:pointer">💬 '+esc(x.note)+'</div>':'<button class="linkbtn" onclick="plNote('+i+')">+ qeyd</button>')+'</div></div>';
   return '<div class="pli"><span class="pln">'+(ro&&x.done?'✅':(i+1)+'.')+'</span><div style="flex:1">'+esc(x.t)+(x.note?'<div class="small muted">💬 '+esc(x.note)+'</div>':'')+'</div></div>';}).join('')
   :'<div class="muted small">'+(edit?'Hələ bənd yoxdur. Aşağıda yazıb “+ Əlavə et” basın.':'Bənd yoxdur')+'</div>';}
@@ -1135,6 +1137,50 @@ var _plT;function planAutoSave(){drawPlanItems(false,true);clearTimeout(_plT);_p
 function planRecall(m){if(!confirm('Plan rəhbərdən geri çağırılsın? Dəyişdikdən sonra yenidən göndərməlisiniz.'))return;var ex=PLANS.find(function(x){return EMP&&x.employee_id===EMP.id;});
  run(sb.from('office_plans').update({status:'draft'}).eq('id',ex.id)).then(function(){toast('Geri çağırıldı — indi dəyişə bilərsiniz');renderPlans();}).catch(err);}
 function plAdd(){var v=$('plNew').value.trim();if(!v)return;PLI.push({t:v,done:false,note:''});$('plNew').value='';drawPlanItems(true,false);plDirty();$('plNew').focus();}
+
+function plPickXlsx(){var el=document.getElementById('plXlsx');if(el){el.value='';el.click();}}
+function plImportXlsx(file){if(!file)return;
+ function parseRows(rows){var added=0;
+  rows.forEach(function(r,idx){
+   if(!r||!r.length)return;
+   var txt=(r[0]==null?'':String(r[0])).trim();
+   if(!txt)return;
+   // başlıq sətrini at (ilk sətir "iş/plan/vəzifə/tapşırıq" kimidirsə)
+   if(idx===0&&/^(i[sş]|plan|v[əe]zif[əe]|tap[sş][ıi]r[ıi]q|ad|№|no|work|task)/i.test(txt)&&!/\d/.test(txt))return;
+   // ikinci sütun status ola bilər: mütəmadi/təkrar/hər ay → rec
+   var st=(r[1]==null?'':String(r[1])).toLowerCase();
+   var rec=/m[üu]t[əe]madi|t[əe]krar|h[əe]r ay|daimi|recurring|monthly|rec/.test(st);
+   PLI.push({t:txt.slice(0,300),done:false,note:'',rec:rec});added++;
+  });
+  return added;
+ }
+ var ext=(file.name||'').toLowerCase();
+ var reader=new FileReader();
+ reader.onload=function(e){
+  try{
+   var rows;
+   if(ext.endsWith('.csv')){
+    var text=e.target.result;
+    rows=text.split(/\r?\n/).map(function(ln){
+     // sadə CSV: vergül və ya nöqtəli vergül
+     var sep=ln.indexOf(';')>=0&&ln.indexOf(',')<0?';':',';
+     return ln.split(sep).map(function(c){return c.replace(/^"|"$/g,'').trim();});
+    });
+   }else{
+    if(!window.XLSX){toast('Excel oxuyucu yüklənmədi, yenidən cəhd edin');return;}
+    var wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+    var sh=wb.Sheets[wb.SheetNames[0]];
+    rows=XLSX.utils.sheet_to_json(sh,{header:1,raw:false});
+   }
+   var n=parseRows(rows||[]);
+   if(n>0){drawPlanItems(true,false);plDirty();toast(n+' iş əlavə olundu ✅');}
+   else toast('Faylda iş tapılmadı. Birinci sütunda işləri yazın.');
+  }catch(err){toast('Fayl oxunmadı: '+(err.message||err));}
+ };
+ if(ext.endsWith('.csv'))reader.readAsText(file,'utf-8');
+ else reader.readAsArrayBuffer(file);
+}
+
 var PL_SAVED='[]',PL_ST='none';
 function plDirty(){var b=$('plSend');if(!b)return;var nv=$('plNew'),cur=JSON.stringify(PLI.map(function(x){return (x.t||'').trim();}).filter(Boolean).concat(nv&&nv.value.trim()?[nv.value.trim()]:[]));
  if(PL_ST==='submitted'){var ch=cur!==PL_SAVED;b.disabled=!ch;b.textContent=ch?'Yenilənmiş planı göndər':'✓ Göndərilib — dəyişiklik yoxdur';}}
