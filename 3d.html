@@ -372,7 +372,7 @@ function buildInner(f){
   if(!row.length)return;const tot=row.reduce((s,u)=>s+(parseFloat(u.area)||80),0);let x=-W/2+0.3;const z0=side*1.9,z1=side*(D/2-0.3),zc=(z0+z1)/2,dz=Math.abs(z1-z0);
   row.forEach((u,ri)=>{const w=(W-0.6)*((parseFloat(u.area)||80)/tot),xc=x+w/2;
    const ok=match(u),mat=new THREE.MeshStandardMaterial({color:OFF()?0xd8c3a6:(ok?COL[u.st]:COL.dim),roughness:.7,emissive:0x000000});
-   const t=box(w-0.35,0.16,dz-0.35,mat,xc,y+0.2,zc,inner,false);const pid=planOf(u,findApt(u));if(pid){const ig=aptMini(pid),sx=(w-0.7)/PLANS[pid].W,sz=(dz-0.6)/PLANS[pid].D;ig.scale.set(sx,Math.min(sx,sz),sz);ig.position.set(xc,y+0.37,zc);ig.rotation.y=side>0?0:Math.PI;inner.add(ig);t.userData.lblOff=new THREE.Vector3(0,1.4,side*(dz/2-0.7));}
+   const t=box(w-0.35,0.16,dz-0.35,mat,xc,y+0.2,zc,inner,false);const pid=planOf(u,findApt(u));if(pid){const ig=aptMini(pid),sx=(w-0.7)/PLANS[pid].W,sz=(dz-0.6)/PLANS[pid].D;const PP=PLANS[pid],r0=PP.out===side,cd=xc>0?-1:1,mx=cd/(r0?PP.entX:-PP.entX);ig.scale.set(mx*sx,Math.min(sx,sz),sz);ig.position.set(xc,y+0.37,zc);ig.rotation.y=r0?0:Math.PI;inner.add(ig);t.userData.lblOff=new THREE.Vector3(0,1.4,side*(dz/2-0.7));}
    t.userData=Object.assign(t.userData||{},{u,ok,base:OFF()?0xd8c3a6:(ok?COL[u.st]:COL.dim),face:[new THREE.Vector3(0,0,side)].concat(ri===0?[new THREE.Vector3(-1,0,0)]:[]).concat(ri===row.length-1?[new THREE.Vector3(1,0,0)]:[])});tiles.push(t);
    box(0.18,1.0,dz,MAT.wall,x,y+0.55,zc,inner);
    x+=w;});
@@ -574,8 +574,8 @@ const WALLS101=[[90,185,90,205,26],[90,640,90,745,26],[90,1015,90,1150,26],[80,1
  [295,205,295,520,14],[295,620,295,665,14],[90,665,130,665,14],[205,665,300,665,14],[300,672,745,672,14],[745,460,745,535,14],[745,612,745,672,14],[735,460,840,460,14],[840,205,840,465,14],[840,465,860,465,14],[925,465,1125,465,14],[745,680,760,680,14],[825,680,845,680,14]];
 const WINS101=[[90,205,90,640],[90,745,90,1015],[100,195,290,195],[400,195,740,195],[880,195,1020,195]];
 const PLANS={
- '108':{s:93,ox:695,oy:740,rooms:ROOMS108,walls:WALLS108,wins:WINS108,def:DEF108,b:[150,85,1240,1395],key:'lux_int_2otaq_111',ent:[1200,470],sub:'111,64 m² · 2 otaqlı',alt:[111.62,111.64]},
- '101':{s:108,ox:607,oy:667,rooms:ROOMS101,walls:WALLS101,wins:WINS101,def:DEF101,b:[90,195,1125,1140],key:'lux_int_1otaq_70',ent:[1105,565],sub:'70,37 m² · 1 otaqlı',alt:[70.37,70.67,70.68]}
+ '108':{s:93,ox:695,oy:740,rooms:ROOMS108,walls:WALLS108,wins:WINS108,def:DEF108,b:[150,85,1240,1395],key:'lux_int_2otaq_111',ent:[1200,470],out:1,entX:1,sub:'111,64 m² · 2 otaqlı',alt:[111.62,111.64]},
+ '101':{s:108,ox:607,oy:667,rooms:ROOMS101,walls:WALLS101,wins:WINS101,def:DEF101,b:[90,195,1125,1140],key:'lux_int_1otaq_70',ent:[1105,565],out:-1,entX:1,sub:'70,37 m² · 1 otaqlı',alt:[70.37,70.67,70.68]}
 };
 for(const k in PLANS){const P=PLANS[k];P.W=(P.b[2]-P.b[0])/P.s+0.3;P.D=(P.b[3]-P.b[1])/P.s+0.3;}
 function usePlan(id){const P=PLANS[id];PLAN=id;PXM=P.s;OX=P.ox;OY=P.oy;ROOMS=P.rooms;WALLS=P.walls;WINS=P.wins;DEF=P.def;XMIN=X(P.b[0]);XMAX=X(P.b[2]);ZMIN=Z(P.b[1]);ZMAX=Z(P.b[3]);INT.key=P.key;return P;}
