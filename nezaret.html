@@ -14,7 +14,8 @@
 .top b{font-size:17px}.top small{display:block;color:#94a3b8;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
 main{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
 h2{font-size:20px;margin:22px 0 10px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin-bottom:12px}
-.tabs{display:flex;gap:6px;overflow-x:auto;margin:4px 0 6px;scrollbar-width:none}.tabs button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:9px 15px;font-weight:600;white-space:nowrap;cursor:pointer}.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin:4px 0 6px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}.tabs{-webkit-overflow-scrolling:touch;scroll-behavior:smooth}.tabs button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:9px 15px;font-weight:600;white-space:nowrap;cursor:pointer}.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
 .st{border-radius:16px;padding:14px;border:1px solid var(--line);background:#fff}.st .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}.st b{font-size:15px}.st .m{color:var(--mut);font-size:12px;margin-top:4px}
 .bars{display:flex;gap:2px;margin-top:10px;height:22px;align-items:flex-end}.bars i{flex:1;border-radius:2px;background:var(--ok);height:100%}.bars i.x{background:var(--bad)}.bars i.n{background:var(--line)}
