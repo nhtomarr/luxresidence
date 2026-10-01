@@ -893,7 +893,7 @@ function autoCheck(token){history.replaceState(null,'',OFB());if(!EMP){toast('He
   if(!kind){toast('Bu gün gəliş və çıxış artıq qeyd olunub');return;}
   if(kind==='out'&&!confirm('Çıxışı qeyd edək?'))return;doCheck(kind,token);}).catch(err);}
 function doCheck(kind,token){toast('Yer yoxlanılır…');var _scanAt=new Date().toISOString();
- function send(lat,lng){sb.rpc('office_check',{p_kind:kind,p_token:token,p_lat:lat,p_lng:lng,p_at:_scanAt}).then(function(r){if(r.error)throw r.error;var msg=(r.data&&r.data.msg)||'Qeyd olundu';return selfieCapture(kind).then(function(){toast(msg);renderToday();});}).catch(err);}
+ function send(lat,lng){sb.rpc('office_check',{p_kind:kind,p_token:token,p_lat:lat,p_lng:lng,p_at:_scanAt}).then(function(r){if(r.error)throw r.error;var msg=(r.data&&r.data.msg)||'Qeyd olundu';toast(msg);renderToday();return selfieCapture(kind).then(function(){renderToday();}).catch(function(){});}).catch(err);}
  if(!navigator.geolocation)return send(null,null);
  navigator.geolocation.getCurrentPosition(function(p){send(p.coords.latitude,p.coords.longitude);},function(){send(null,null);},{enableHighAccuracy:true,timeout:12000,maximumAge:0});}
 
