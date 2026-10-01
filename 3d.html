@@ -417,7 +417,7 @@ function openApt(u){
  $('pbody').innerHTML=(OFF()?'':stBadge(u.st))+'<h3>Mənzil № '+u.n+'</h3><div class="psub">'+CUR+' · '+ord(SEL)+' mərtəbə · '+(u.room||'—')+' otaqlı</div>'
  +'<div class="pplan">'+(a&&a.plan?'<img src="'+(String(a.plan).charAt(0)==='/'||/^https?:|^data:/.test(a.plan)?a.plan:'/'+a.plan)+'" alt="Mənzil planı">':'<em>Plan tezliklə əlavə olunacaq</em>')+'</div>'
  +sunBlock(u)+'<div class="pgrid"><div><small>Sahə</small><b>'+(u.area||'—')+' m²</b></div><div><small>Otaq</small><b>'+(u.room||'—')+'</b></div><div><small>Mərtəbə</small><b>'+SEL+' / '+F1+'</b></div><div><small>Qiymət</small><b>Sorğu ilə</b></div></div>'
- +(isInt(u,a)?'<a class="pbtn pri" id="intGo" href="#">🛋️ İçəri bax · əşyaları yerləşdir</a>':'')+(a?'<a class="pbtn '+(isInt(u,a)?'sec':'pri')+'" href="/apt/'+a.id+'">Mənzilə ətraflı bax</a>':'<a class="pbtn pri" href="/planlar">Planlara bax</a>')
+ +(isInt(u,a)?'<a class="pbtn pri" id="intGo" href="#">🛋️ İçəri bax · əşyaları yerləşdir</a>':'')+'<a class="pbtn pri" href="/menzil-tur?u='+u.n+'&back=/3d" style="margin-top:6px">🚶 İçində gəz · 3D interyer turu</a>'+(a?'<a class="pbtn '+(isInt(u,a)?'sec':'pri')+'" href="/apt/'+a.id+'">Mənzilə ətraflı bax</a>':'<a class="pbtn pri" href="/planlar">Planlara bax</a>')
  +'<a class="pbtn sec" href="tel:+994508090088">Zəng edin</a><div class="note">3D model sxematikdir; mənzillərin yerləşməsi təxminidir. Dəqiq plan üçün satış ofisi ilə əlaqə saxlayın.</div>';
  $('panel').classList.add('on');
  if(MOB&&!SHIFT){SHIFT=true;const d=new THREE.Vector3(0,-14,0);flyTo(camera.position.clone().add(d),controls.target.clone().add(d),500);}
