@@ -246,7 +246,7 @@ async function loadData(){
 
 /* ---------- scene ---------- */
 const canvas=document.getElementById('c');
-{const tc=document.createElement('canvas');if(!(tc.getContext('webgl2')||tc.getContext('webgl'))){document.getElementById('load').innerHTML='<div class="err">Bu cihaz 3D görünüşü dəstəkləmir. <a href="/secim">Sadə seçim səhifəsinə keçin</a>.</div>';throw new Error('no webgl');}}
+{const tc=document.createElement('canvas');if(!(tc.getContext('webgl2')||tc.getContext('webgl')||tc.getContext('experimental-webgl'))){document.getElementById('load').innerHTML='<div class="err">Bu cihaz 3D görünüşü dəstəkləmir. <a href="/secim">Sadə seçim səhifəsinə keçin</a>.</div>';throw new Error('no webgl');}}
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,MOB?1.6:2));
 renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;

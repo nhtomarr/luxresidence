@@ -59,6 +59,7 @@ import * as THREE from 'three';
 
 const MOB = matchMedia('(hover:none)').matches || innerWidth<820;
 const cv = document.getElementById('c');
+(function(){try{var t=document.createElement('canvas');if(!(window.WebGLRenderingContext&&(t.getContext('webgl2')||t.getContext('webgl')||t.getContext('experimental-webgl')))){document.getElementById('load').innerHTML='<div style=\"text-align:center;padding:20px;color:#e0c3a8\">Bu cihaz 3D turu dəstəkləmir.<br><a href=\"/3d\" style=\"color:#e08a5a\">‹ Binaya qayıt</a></div>';throw new Error('no webgl');}}catch(e){throw e;}})();
 const renderer = new THREE.WebGLRenderer({canvas:cv, antialias:!MOB, powerPreference:'high-performance'});
 renderer.setPixelRatio(Math.min(devicePixelRatio, MOB?2:2));
 renderer.setSize(innerWidth, innerHeight);
