@@ -463,6 +463,7 @@ a.back,.back{border-radius:99px}
  <div style="width:34px;height:34px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:bootspin .8s linear infinite;margin-top:16px"></div>
  <div style="margin-top:12px;font-size:13px;color:#94a3b8">Yüklənir…</div>
  <style>@keyframes bootspin{to{transform:rotate(360deg)}}.recbtn{border:1px solid var(--line);background:#fff;border-radius:8px;width:30px;height:30px;font-size:14px;flex-shrink:0;padding:0}.recbtn.on{background:#eef2ff;border-color:var(--acc)}.rectag{display:inline-block;font-size:.72rem;background:#eef2ff;color:var(--acc);padding:1px 7px;border-radius:99px;font-weight:600;vertical-align:middle}
+.rmopt:active{background:#f3e7dc}.rmopt:hover{border-color:var(--acc)}
 </style>
 </div>
 <div id="app" style="display:none">
@@ -536,6 +537,7 @@ a.back,.back{border-radius:99px}
   <!-- TƏQVİM -->
   <section class="view" id="v-dir"><div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Komanda</h2></div><div class="dirtabs" id="dirTabs"></div><div class="dirbar" id="dirBar"><input id="dirQ" class="btn ghost" style="flex:1;min-width:200px;text-align:left;font-weight:500" placeholder="Axtar: ad, vəzifə, şöbə, telefon" oninput="renderDir()"><select id="dirD" class="btn ghost" onchange="renderDir()"></select></div><div id="dirBody"></div></section>
   <section class="view" id="v-docs"><h2>Sənədlər</h2><div id="docBody"></div></section>
+  <section class="view" id="v-remind"></section>
   <section class="view" id="v-oprofil"></section>
   <section class="view" id="v-asst"></section>
   <section class="view" id="v-me"><div id="meBody"></div></section>
@@ -639,8 +641,8 @@ function start(){$('app').style.display='';var _bl=document.getElementById('boot
  if(ME.is_admin){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';pv.onclick=function(){location.href=PREVIEW?OFB():OFB('?baxis=sahibkar');};$('outBtn').parentNode.insertBefore(pv,$('outBtn'));}
  if(PREVIEW){var bn=document.createElement('div');bn.className='pvbar';bn.innerHTML='👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.';document.body.insertBefore(bn,$('app'));}
  var tabs;
- if(OWNER)tabs=[['boss','Nəzarət'],['asst','🎯 Assistent'],['oprofil','Profil']];
- else{tabs=[['today','Bu gün']];if(MGR)tabs.push(['boss','Nəzarət'],['panel','Panel']);tabs.push(['plans',MGR?'Aylıq planlar':'Aylıq plan'],['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['dir','Komanda'],['news','Elanlar'],['cal','Təqvim'],['docs','Sənədlər']);tabs.push(['me','Profilim']);
+ if(OWNER)tabs=[['boss','Nəzarət'],['remind','🔔 Xatırlat'],['asst','🎯 Assistent'],['oprofil','Profil']];
+ else{tabs=[['today','Bu gün']];if(MGR)tabs.push(['boss','Nəzarət'],['panel','Panel'],['remind','🔔 Xatırlat']);tabs.push(['plans',MGR?'Aylıq planlar':'Aylıq plan'],['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['dir','Komanda'],['news','Elanlar'],['cal','Təqvim'],['docs','Sənədlər']);tabs.push(['me','Profilim']);
   if(SIMPLE)tabs=[['today','Bu gün'],['dir','Komanda']];if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}}
  document.body.classList.toggle('is-mgr',MGR);document.body.classList.toggle('owner',OWNER);
  $('tabs').innerHTML=tabs.map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');
@@ -650,7 +652,7 @@ function start(){$('app').style.display='';var _bl=document.getElementById('boot
  loadAll().then(function(){setTimeout(function(){iosSheetShow(false);},2500);if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');(function(){var def=new URLSearchParams(location.search).get('qr')&&MGR?'set':((OWNER||(ME.is_admin&&!EMP))?'boss':'today');var saved='';try{saved=sessionStorage.getItem('ofis_tab')||'';}catch(e){}var allowed=tabs.map(function(t){return t[0];});show(saved&&allowed.indexOf(saved)>=0?saved:def);})();if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
 }
 function show(v){try{sessionStorage.setItem('ofis_tab',v);}catch(e){}document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});var ab=document.querySelector('#tabs button.on');if(ab&&ab.scrollIntoView)try{ab.scrollIntoView({block:'nearest',inline:'center'});}catch(e){}
- if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss'){if(OWNER)renderOwner();else renderBoss();}if(v==='asst')renderAsst();if(v==='oprofil')renderOProfil();if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();if(v==='dir'){dirFilters();var db=$('dirBar');if(db)db.style.display='';renderDir();}if(v==='docs')renderDocs();if(v==='me')renderMe();window.scrollTo(0,0);}
+ if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss'){if(OWNER)renderOwner();else renderBoss();}if(v==='asst')renderAsst();if(v==='oprofil')renderOProfil();if(v==='remind')renderRemind();if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();if(v==='dir'){dirFilters();var db=$('dirBar');if(db)db.style.display='';renderDir();}if(v==='docs')renderDocs();if(v==='me')renderMe();window.scrollTo(0,0);}
 function tick(){var n=new Date();$('tClock').textContent=n.toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit',second:'2-digit'});$('tDate').textContent=n.toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});}
 function loadAll(){return Promise.all([
   run(sb.from('office_employees').select('*').order('full_name')),run(sb.from('office_departments').select('*').order('sort').order('id')),run(sb.from('office_positions').select('*').order('sort').order('id')),
@@ -743,6 +745,77 @@ var QUICK=[['Bu gün kim gəlməyib?','👥'],['İndi kim çöldədir?','🚶'],
 function asstHi(){var h=new Date().getHours();return h<6?'Gecəniz xeyrə':h<12?'Sabahınız xeyir':h<18?'Gününüz uğurlu olsun':'Axşamınız xeyir';}
 
 function ocount(tbl,col,val){return run(sb.from(tbl).select('id',{count:'exact',head:true}).eq(col,val)).then(function(r){return r.count||0;}).catch(function(){return 0;});}
+/* ---------- 🔔 Xatırlatma bölməsi ---------- */
+var RMTMPL=[],RMFORGOT=[];
+function renderRemind(){var v=$('v-remind');if(!v)return;
+ v.innerHTML='<div class="row sp" style="margin-bottom:12px"><h2 class="bossh" style="margin:0">🔔 Xatırlat</h2><button class="btn ghost sm" onclick="rmTemplates()">⚙️ Şablonlar</button></div>'
+  +'<p class="muted small" style="margin:0 0 14px">Sistemdə bir işi tamamlamağı unudan işçilər. Yanındakı düymə ilə xatırlatma göndərin.</p>'
+  +'<div id="rmList"><p class="status"><span class="spin"></span>Yoxlanılır…</p></div>';
+ Promise.all([run(sb.rpc('office_forgot_list')),run(sb.from('office_remind_templates').select('*').order('sort'))])
+  .then(function(r){RMFORGOT=r[0]||[];RMTMPL=r[1]||[];rmDraw();}).catch(err);
+}
+function rmIco(n){return {cixis:'🚪',gelis:'🌅',colde:'🚶',plan:'📋',push:'🔕'}[n]||'⚠️';}
+function rmDraw(){var el=$('rmList');if(!el)return;
+ if(!RMFORGOT.length){el.innerHTML='<div class="card" style="text-align:center;padding:24px;color:var(--ok)">✓ Hər kəs hər şeyi tamamlayıb. Xatırladılacaq heç nə yoxdur.</div>';return;}
+ // növə görə qrupla
+ var groups={};RMFORGOT.forEach(function(f){(groups[f.nov]=groups[f.nov]||[]).push(f);});
+ var lbl={cixis:'Çıxışı qeyd etməyənlər',gelis:'Gəlməyənlər',colde:'Qısa çıxışdan qayıtmayanlar',plan:'Aylıq plan verməyənlər',push:'Bildirişi aktiv etməyənlər'};
+ var html='';
+ Object.keys(groups).forEach(function(nov){var arr=groups[nov];
+  html+='<div class="card" style="margin-bottom:12px"><div class="row sp" style="margin-bottom:8px"><b>'+rmIco(nov)+' '+(lbl[nov]||nov)+'</b><span class="muted small">'+arr.length+' nəfər</span></div>';
+  arr.forEach(function(f){
+   html+='<div class="row sp" style="padding:9px 0;border-top:1px solid var(--line)"><div><b>'+esc(f.ad)+'</b>'+(f.detal?'<div class="muted small">'+esc(f.detal)+'</div>':'')+'</div>'
+    +'<button class="btn sm" onclick="rmPick('+f.emp_id+',\''+nov+'\',\''+esc(f.ad).replace(/'/g,"\\'")+'\')">Xatırlat</button></div>';
+  });
+  // qrupa toplu göndər
+  if(arr.length>1)html+='<button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="rmPickBulk(\''+nov+'\')">Hamısına ('+arr.length+') xatırlat</button>';
+  html+='</div>';
+ });
+ el.innerHTML=html;
+}
+function rmPick(empId,nov,ad){
+ // uyğun şablonları göstər (bu növə aid + custom)
+ var opts=RMTMPL.filter(function(t){return t.kind===nov||t.kind==='custom';});
+ if(!opts.length)opts=RMTMPL;
+ var html='<div class="mhead"><h3>'+esc(ad)+'-ə xatırlatma</h3><button class="x" onclick="closeModal()">×</button></div>'
+  +'<p class="muted small" style="margin-bottom:10px">Şablon seçin və ya öz mesajınızı yazın:</p><div id="rmOpts">'
+  +opts.map(function(t,i){return '<div class="card rmopt" style="cursor:pointer;margin-bottom:6px;padding:11px" onclick="rmSend('+empId+',this,\''+esc(t.title).replace(/'/g,"\\'")+'\')" data-body="'+esc(t.body)+'"><b>'+esc(t.title)+'</b><div class="muted small">'+esc(t.body)+'</div></div>';}).join('')
+  +'</div><div style="margin-top:10px"><textarea id="rmCustom" rows="3" placeholder="Öz mesajınızı yazın…" style="width:100%;padding:11px;border:1px solid var(--line);border-radius:12px"></textarea>'
+  +'<button class="btn" style="width:100%;margin-top:8px" onclick="rmSendCustom('+empId+')">Öz mesajımı göndər</button></div>';
+ modal(html);
+}
+function rmSend(empId,elOrBody,title){var body=typeof elOrBody==='string'?elOrBody:elOrBody.getAttribute('data-body');
+ run(sb.rpc('office_remind_send',{p_emp_id:empId,p_title:'🔔 '+title,p_body:body})).then(function(){closeModal();toast('Xatırlatma göndərildi ✅');}).catch(function(e){toast('Xəta: '+(e.message||e));});}
+function rmSendCustom(empId){var t=$('rmCustom').value.trim();if(!t){toast('Mesaj yazın');return;}
+ run(sb.rpc('office_remind_send',{p_emp_id:empId,p_title:'🔔 Xatırlatma',p_body:t})).then(function(){closeModal();toast('Göndərildi ✅');}).catch(function(e){toast(e.message);});}
+function rmPickBulk(nov){var arr=RMFORGOT.filter(function(f){return f.nov===nov;});
+ var opts=RMTMPL.filter(function(t){return t.kind===nov||t.kind==='custom';});if(!opts.length)opts=RMTMPL;
+ var html='<div class="mhead"><h3>'+arr.length+' nəfərə xatırlatma</h3><button class="x" onclick="closeModal()">×</button></div>'
+  +'<p class="muted small" style="margin-bottom:10px">'+arr.map(function(f){return esc(f.ad);}).join(', ')+'</p><div>'
+  +opts.map(function(t){return '<div class="card rmopt" style="cursor:pointer;margin-bottom:6px;padding:11px" onclick="rmSendBulk(\''+nov+'\',\''+esc(t.title).replace(/'/g,"\\'")+'\',this)" data-body="'+esc(t.body)+'"><b>'+esc(t.title)+'</b><div class="muted small">'+esc(t.body)+'</div></div>';}).join('')
+  +'</div>';
+ modal(html);
+}
+function rmSendBulk(nov,title,el){var body=el.getAttribute('data-body');var arr=RMFORGOT.filter(function(f){return f.nov===nov;});
+ var p=arr.map(function(f){return sb.rpc('office_remind_send',{p_emp_id:f.emp_id,p_title:'🔔 '+title,p_body:body}).catch(function(){});});
+ Promise.all(p).then(function(){closeModal();toast(arr.length+' nəfərə göndərildi ✅');});}
+/* şablon idarəetməsi */
+function rmTemplates(){
+ var html='<div class="mhead"><h3>Şablonlar</h3><button class="x" onclick="closeModal()">×</button></div>'
+  +'<div id="rmTList">'+RMTMPL.map(function(t){return '<div class="card" style="margin-bottom:6px;padding:10px"><div class="row sp"><b>'+esc(t.title)+'</b>'+(t.builtin?'<span class="pill p-mut">hazır</span>':'<button class="x" onclick="rmDelTmpl('+t.id+')">×</button>')+'</div><div class="muted small">'+esc(t.body)+'</div></div>';}).join('')+'</div>'
+  +'<div class="card" style="margin-top:10px;padding:12px"><b>Yeni şablon</b>'
+  +'<input id="ntTitle" placeholder="Qısa ad (məs: Hesabatı təqdim et)" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;margin:8px 0">'
+  +'<textarea id="ntBody" rows="3" placeholder="Mesaj mətni…" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px"></textarea>'
+  +'<button class="btn" style="width:100%;margin-top:8px" onclick="rmAddTmpl()">+ Əlavə et</button></div>';
+ modal(html);
+}
+function rmAddTmpl(){var t=$('ntTitle').value.trim(),b=$('ntBody').value.trim();if(!t||!b){toast('Ad və mətn yazın');return;}
+ run(sb.from('office_remind_templates').insert({title:t,body:b,kind:'custom',builtin:false})).then(function(){
+  run(sb.from('office_remind_templates').select('*').order('sort')).then(function(r){RMTMPL=r||[];rmTemplates();toast('Əlavə olundu ✅');});
+ }).catch(function(e){toast(e.message);});}
+function rmDelTmpl(id){if(!confirm('Şablon silinsin?'))return;run(sb.from('office_remind_templates').delete().eq('id',id)).then(function(){
+  run(sb.from('office_remind_templates').select('*').order('sort')).then(function(r){RMTMPL=r||[];rmTemplates();});});}
+
 function renderOProfil(){var v=$('v-oprofil');if(!v)return;var nm=(ME&&ME.full_name)||'Sahibkar';var em=(ME&&ME.email)||'';
  var ini=nm.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase();
  v.innerHTML=''
