@@ -1140,41 +1140,55 @@ function plAdd(){var v=$('plNew').value.trim();if(!v)return;PLI.push({t:v,done:f
 
 function plPickXlsx(){var el=document.getElementById('plXlsx');if(el){el.value='';el.click();}}
 function plImportXlsx(file){if(!file)return;
- function parseRows(rows){var added=0;
-  rows.forEach(function(r,idx){
-   if(!r||!r.length)return;
-   var txt=(r[0]==null?'':String(r[0])).trim();
-   if(!txt)return;
-   // başlıq sətrini at (ilk sətir "iş/plan/vəzifə/tapşırıq" kimidirsə)
-   if(idx===0&&/^(i[sş]|plan|v[əe]zif[əe]|tap[sş][ıi]r[ıi]q|ad|№|no|work|task)/i.test(txt)&&!/\d/.test(txt))return;
-   // ikinci sütun status ola bilər: mütəmadi/təkrar/hər ay → rec
-   var st=(r[1]==null?'':String(r[1])).toLowerCase();
-   var rec=/m[üu]t[əe]madi|t[əe]krar|h[əe]r ay|daimi|recurring|monthly|rec/.test(st);
-   PLI.push({t:txt.slice(0,300),done:false,note:'',rec:rec});added++;
+ function cellTxt(v){return (v==null?'':String(v)).replace(/\s+/g,' ').trim();}
+ function isNoise(t){ // sıra nömrəsi, başlıq, boş — plan deyil
+  if(!t)return true;
+  if(/^\d{1,3}[.\)]?$/.test(t))return true;        // "1", "2.", "3)"
+  if(/^(№|no|nömrə|sira|s\/n|#)$/i.test(t))return true;
+  if(/^(i[sş]|plan|v[əe]zif[əe]|tap[sş][ıi]r[ıi]q|ad|work|task|status|qeyd|m[əe]bl[əe][ğg]|tarix|month|ay|i[şs]l[əe]r|g[öo]r[üu]l[əe]c[əe]k)$/i.test(t))return true;
+  return false;
+ }
+ function recOf(t){return /m[üu]t[əe]madi|t[əe]krar|h[əe]r ay|daimi|recurring|monthly/i.test(t);}
+ function parseGrid(grid){
+  // boş sətirləri at
+  grid=grid.filter(function(r){return r&&r.some(function(c){return cellTxt(c);});});
+  if(!grid.length){toast('Fayl boşdur');return;}
+  // ən çox "mətn" (hərf olan, uzun) xanası olan sütunu tap = plan sütunu
+  var maxCols=0;grid.forEach(function(r){if(r.length>maxCols)maxCols=r.length;});
+  var score=[];
+  for(var c=0;c<maxCols;c++){score[c]=0;
+   grid.forEach(function(r){var t=cellTxt(r[c]);if(t&&!isNoise(t)&&/[a-zA-ZəĞğÜüÖöÇçŞşİıÀ-ÿ]/.test(t)&&t.length>=4)score[c]+=t.length;});
+  }
+  var planCol=0,best=-1;score.forEach(function(v,c){if(v>best){best=v;planCol=c;}});
+  if(best<=0){toast('Faylda iş mətni tapılmadı');return;}
+  // status sütunu: mütəmadi/təkrar sözləri olan başqa sütun
+  var statusCol=-1;
+  for(var c=0;c<maxCols;c++){if(c===planCol)continue;var hit=0;grid.forEach(function(r){if(recOf(cellTxt(r[c])))hit++;});if(hit>0){statusCol=c;break;}}
+  var added=0;
+  grid.forEach(function(r){
+   var t=cellTxt(r[planCol]);
+   if(!t||isNoise(t))return;
+   var rec=statusCol>=0?recOf(cellTxt(r[statusCol])):recOf(r.map(cellTxt).join(' '));
+   PLI.push({t:t.slice(0,300),done:false,note:'',rec:rec});added++;
   });
-  return added;
+  if(added>0){drawPlanItems(true,false);plDirty();toast(added+' iş əlavə olundu ✅');}
+  else toast('İş tapılmadı. Faylda işlərin adını yoxlayın.');
  }
  var ext=(file.name||'').toLowerCase();
  var reader=new FileReader();
  reader.onload=function(e){
   try{
-   var rows;
+   var grid;
    if(ext.endsWith('.csv')){
     var text=e.target.result;
-    rows=text.split(/\r?\n/).map(function(ln){
-     // sadə CSV: vergül və ya nöqtəli vergül
-     var sep=ln.indexOf(';')>=0&&ln.indexOf(',')<0?';':',';
-     return ln.split(sep).map(function(c){return c.replace(/^"|"$/g,'').trim();});
-    });
+    grid=text.split(/\r?\n/).map(function(ln){var sep=ln.indexOf(';')>=0&&ln.indexOf(',')<0?';':',';return ln.split(sep).map(function(c){return c.replace(/^"|"$/g,'');});});
    }else{
     if(!window.XLSX){toast('Excel oxuyucu yüklənmədi, yenidən cəhd edin');return;}
     var wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
     var sh=wb.Sheets[wb.SheetNames[0]];
-    rows=XLSX.utils.sheet_to_json(sh,{header:1,raw:false});
+    grid=XLSX.utils.sheet_to_json(sh,{header:1,raw:false,defval:''});
    }
-   var n=parseRows(rows||[]);
-   if(n>0){drawPlanItems(true,false);plDirty();toast(n+' iş əlavə olundu ✅');}
-   else toast('Faylda iş tapılmadı. Birinci sütunda işləri yazın.');
+   parseGrid(grid||[]);
   }catch(err){toast('Fayl oxunmadı: '+(err.message||err));}
  };
  if(ext.endsWith('.csv'))reader.readAsText(file,'utf-8');
