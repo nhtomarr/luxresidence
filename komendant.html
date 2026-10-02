@@ -292,9 +292,10 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
  $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};
  if('serviceWorker' in navigator)navigator.serviceWorker.register('/ofis-sw.js',{scope:'/'}).catch(function(){});
  run(sb.from('km_config').select('*').eq('id',1).maybeSingle()).then(function(c){CFG=c||{};}).catch(function(){}).then(function(){
-  if(STAFF)return loadStaff().then(function(){show('dash');});
-  return loadRes().then(function(){show('home');});});}
-function show(v){document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
+  function _ksaved(def){var sv='';try{sv=sessionStorage.getItem('komendant_tab')||'';}catch(e){}var v=document.getElementById('v-'+sv);return v?sv:def;}
+  if(STAFF)return loadStaff().then(function(){show(_ksaved('dash'));});
+  return loadRes().then(function(){show(_ksaved('home'));});});}
+function show(v){try{sessionStorage.setItem('komendant_tab',v);}catch(e){}document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
  ({dash:renderDash,units:renderUnits,pay:renderPay,req:renderReq,ann:renderAnn,guard:renderGuard,set:renderSet,home:renderHome,rpay:renderRPay,rreq:renderRReq,rguest:renderRGuest,rinfo:renderRInfo,svc:renderSvc,tech:renderTech,comm:renderComm,rbook:renderRBook,rmeter:renderRMeter,rcomm:renderRComm}[v]||function(){})();window.scrollTo(0,0);}
 
 /* ================= STAFF: məlumat ================= */
