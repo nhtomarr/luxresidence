@@ -670,7 +670,8 @@ function renderToday(){document.body.classList.toggle('simple',!!SIMPLE);renderO
  if(!EMP){$('tStatus').textContent='';$('tBtns').innerHTML='';$('tStats').innerHTML='';return;}
  run(sb.from('office_attendance').select('*').eq('employee_id',EMP.id).gte('day',today().slice(0,7)+'-01').order('day')).then(function(rows){
   MYDAY=rows.find(function(r){return r.day===today();})||null;
-  var s,btn;if(!MYDAY||!MYDAY.check_in){var hh=dayHours(EMP,today());s='Bu gün hələ gəliş qeyd olunmayıb · iş saatı '+hh[0]+'–'+hh[1];btn='<button class="btn" onclick="scan(\'in\')">📷 Gəlişi qeyd et</button>';}
+  var s,btn;if(!isWorkdayToday()&&(!MYDAY||!MYDAY.check_in)){s='🏠 Bu gün iş günü deyil · xoş istirahət';btn='<button class="btn ghost" onclick="scan(\'in\')" style="opacity:.85">📷 İşə gəlmişəmsə, qeyd et</button>';}
+  else if(!MYDAY||!MYDAY.check_in){var hh=dayHours(EMP,today());s='Bu gün hələ gəliş qeyd olunmayıb · iş saatı '+hh[0]+'–'+hh[1];btn='<button class="btn" onclick="scan(\'in\')">📷 Gəlişi qeyd et</button>';}
   else if(!MYDAY.check_out){s='Gəliş: '+hm(MYDAY.check_in)+(MYDAY.late_min?' · '+MYDAY.late_min+' dəq gecikmə':' · vaxtında');btn='<button class="btn" onclick="scan(\'out\')">📷 Çıxışı qeyd et</button>';}
   else{s='Gəliş '+hm(MYDAY.check_in)+' · Çıxış '+hm(MYDAY.check_out)+' · '+hmin(MYDAY.worked_min);btn='';}
   $('tStatus').textContent=s;$('tBtns').innerHTML=btn;loadMyOuting().then(function(){if(MYOUT&&btn)$('tBtns').innerHTML='';renderOutingBox();});
