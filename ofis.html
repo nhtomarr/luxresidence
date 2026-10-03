@@ -464,6 +464,28 @@ a.back,.back{border-radius:99px}
  <div style="margin-top:12px;font-size:13px;color:#94a3b8">Yüklənir…</div>
  <style>@keyframes bootspin{to{transform:rotate(360deg)}}.recbtn{border:1px solid var(--line);background:#fff;border-radius:8px;width:30px;height:30px;font-size:14px;flex-shrink:0;padding:0}.recbtn.on{background:#eef2ff;border-color:var(--acc)}.rectag{display:inline-block;font-size:.72rem;background:#eef2ff;color:var(--acc);padding:1px 7px;border-radius:99px;font-weight:600;vertical-align:middle}
 .rmopt:active{background:#f3e7dc}.rmopt:hover{border-color:var(--acc)}
+
+.chatrow{display:flex;gap:12px;align-items:center;padding:12px;border-bottom:1px solid var(--line);cursor:pointer}
+.chatrow:active{background:rgba(0,0,0,.03)}
+.chatav{width:44px;height:44px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;font-weight:700;color:#fff;background:linear-gradient(135deg,#2563eb,#1d4ed8);font-size:15px}
+body.owner .chatav{background:linear-gradient(135deg,#ba4d2c,#9a3c20)}
+.chatmeta{flex:1;min-width:0}
+.chattime{font-size:.75rem;color:var(--mut)}
+.chatlast{font-size:.85rem;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+.chatbadge{background:#dc2626;color:#fff;font-size:.72rem;font-weight:700;min-width:20px;height:20px;border-radius:99px;display:grid;place-items:center;padding:0 6px}
+.chathead{display:flex;align-items:center;gap:10px;padding:10px 4px 14px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.chatbackbtn{border:none;background:none;font-size:26px;color:var(--acc);padding:0 6px;line-height:1}
+.chatmsgs{height:calc(100vh - 290px);min-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:4px}
+.msg{max-width:78%;padding:9px 13px;border-radius:15px;font-size:.93rem;line-height:1.4;position:relative;word-break:break-word}
+.msg.mine{align-self:flex-end;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border-bottom-right-radius:4px}
+body.owner .msg.mine{background:linear-gradient(135deg,#ba4d2c,#9a3c20)}
+.msg.their{align-self:flex-start;background:#fff;border:1px solid var(--line);color:var(--ink);border-bottom-left-radius:4px}
+.msgt{display:block;font-size:.68rem;opacity:.65;margin-top:3px;text-align:right}
+.chatinput{display:flex;gap:8px;margin-top:10px;padding-bottom:env(safe-area-inset-bottom,0)}
+.chatinput input{flex:1;border:1px solid var(--line);border-radius:99px;padding:12px 16px;font-size:.95rem;background:#fff}
+.chatsend{flex-shrink:0;width:46px;height:46px;border-radius:50%;border:none;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-size:18px}
+body.owner .chatsend{background:linear-gradient(135deg,#ba4d2c,#9a3c20)}
+.tabbadge{background:#dc2626;color:#fff;font-size:.68rem;font-weight:700;padding:1px 6px;border-radius:99px;margin-left:2px}
 </style>
 </div>
 <div id="app" style="display:none">
@@ -537,6 +559,7 @@ a.back,.back{border-radius:99px}
   <!-- TƏQVİM -->
   <section class="view" id="v-dir"><div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Komanda</h2></div><div class="dirtabs" id="dirTabs"></div><div class="dirbar" id="dirBar"><input id="dirQ" class="btn ghost" style="flex:1;min-width:200px;text-align:left;font-weight:500" placeholder="Axtar: ad, vəzifə, şöbə, telefon" oninput="renderDir()"><select id="dirD" class="btn ghost" onchange="renderDir()"></select></div><div id="dirBody"></div></section>
   <section class="view" id="v-docs"><h2>Sənədlər</h2><div id="docBody"></div></section>
+  <section class="view" id="v-chat"></section>
   <section class="view" id="v-remind"></section>
   <section class="view" id="v-oprofil"></section>
   <section class="view" id="v-asst"></section>
@@ -641,18 +664,18 @@ function start(){$('app').style.display='';var _bl=document.getElementById('boot
  if(ME.is_admin){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';pv.onclick=function(){location.href=PREVIEW?OFB():OFB('?baxis=sahibkar');};$('outBtn').parentNode.insertBefore(pv,$('outBtn'));}
  if(PREVIEW){var bn=document.createElement('div');bn.className='pvbar';bn.innerHTML='👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.';document.body.insertBefore(bn,$('app'));}
  var tabs;
- if(OWNER)tabs=[['boss','Nəzarət'],['remind','🔔 Xatırlat'],['asst','🎯 Assistent'],['oprofil','Profil']];
- else{tabs=[['today','Bu gün']];if(MGR)tabs.push(['boss','Nəzarət'],['panel','Panel'],['remind','🔔 Xatırlat']);tabs.push(['plans',MGR?'Aylıq planlar':'Aylıq plan'],['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['dir','Komanda'],['news','Elanlar'],['cal','Təqvim'],['docs','Sənədlər']);tabs.push(['me','Profilim']);
+ if(OWNER)tabs=[['boss','Nəzarət'],['chat','💬 Çat'],['remind','🔔 Xatırlat'],['asst','🎯 Assistent'],['oprofil','Profil']];
+ else{tabs=[['today','Bu gün'],['chat','💬 Çat']];if(MGR)tabs.push(['boss','Nəzarət'],['panel','Panel'],['remind','🔔 Xatırlat']);tabs.push(['plans',MGR?'Aylıq planlar':'Aylıq plan'],['tasks','Tapşırıqlar']);if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);tabs.push(['leave','Sorğular'],['dir','Komanda'],['news','Elanlar'],['cal','Təqvim'],['docs','Sənədlər']);tabs.push(['me','Profilim']);
   if(SIMPLE)tabs=[['today','Bu gün'],['dir','Komanda']];if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}}
  document.body.classList.toggle('is-mgr',MGR);document.body.classList.toggle('owner',OWNER);
  $('tabs').innerHTML=tabs.map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');
- $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};
+ $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};if(typeof chatUpdateBadge==='function')setTimeout(chatUpdateBadge,800);
  $('dDay').value=today();$('mMonth').value=today().slice(0,7);$('dDay').onchange=renderDay;$('mMonth').onchange=renderMonth;$('tkFilter').onchange=renderKanban;
  setInterval(tick,1000);tick();
  loadAll().then(function(){setTimeout(function(){iosSheetShow(false);},2500);if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');(function(){var def=new URLSearchParams(location.search).get('qr')&&MGR?'set':((OWNER||(ME.is_admin&&!EMP))?'boss':'today');var saved='';try{saved=sessionStorage.getItem('ofis_tab')||'';}catch(e){}var allowed=tabs.map(function(t){return t[0];});show(saved&&allowed.indexOf(saved)>=0?saved:def);})();if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
 }
 function show(v){try{sessionStorage.setItem('ofis_tab',v);}catch(e){}document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});var ab=document.querySelector('#tabs button.on');if(ab&&ab.scrollIntoView)try{ab.scrollIntoView({block:'nearest',inline:'center'});}catch(e){}
- if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss'){if(OWNER)renderOwner();else renderBoss();}if(v==='asst')renderAsst();if(v==='oprofil')renderOProfil();if(v==='remind')renderRemind();if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();if(v==='dir'){dirFilters();var db=$('dirBar');if(db)db.style.display='';renderDir();}if(v==='docs')renderDocs();if(v==='me')renderMe();window.scrollTo(0,0);}
+ if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss'){if(OWNER)renderOwner();else renderBoss();}if(v==='asst')renderAsst();if(v==='oprofil')renderOProfil();if(v==='remind')renderRemind();if(v==='chat')renderChat();if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();if(v==='dir'){dirFilters();var db=$('dirBar');if(db)db.style.display='';renderDir();}if(v==='docs')renderDocs();if(v==='me')renderMe();window.scrollTo(0,0);}
 function tick(){var n=new Date();$('tClock').textContent=n.toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit',second:'2-digit'});$('tDate').textContent=n.toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});}
 function loadAll(){return Promise.all([
   run(sb.from('office_employees').select('*').order('full_name')),run(sb.from('office_departments').select('*').order('sort').order('id')),run(sb.from('office_positions').select('*').order('sort').order('id')),
@@ -746,6 +769,57 @@ var QUICK=[['Bu gün kim gəlməyib?','👥'],['İndi kim çöldədir?','🚶'],
 function asstHi(){var h=new Date().getHours();return h<6?'Gecəniz xeyrə':h<12?'Sabahınız xeyir':h<18?'Gününüz uğurlu olsun':'Axşamınız xeyir';}
 
 function ocount(tbl,col,val){return run(sb.from(tbl).select('id',{count:'exact',head:true}).eq(col,val)).then(function(r){return r.count||0;}).catch(function(){return 0;});}
+/* ---------- 💬 Komanda çatı ---------- */
+var CHATother=null,CHATname='',CHATsub=null,CHATview='list';
+function renderChat(){var v=$('v-chat');if(!v)return;
+ if(CHATother){renderChatRoom();return;}
+ v.innerHTML='<div class="row sp" style="margin-bottom:12px"><h2 class="bossh" style="margin:0">💬 Çat</h2><button class="btn ghost sm" onclick="chatNew()">+ Yeni</button></div>'
+  +'<div id="chatThreads"><p class="status"><span class="spin"></span>Yüklənir…</p></div>';
+ run(sb.rpc('msg_threads')).then(function(rows){chatDrawThreads(rows||[]);}).catch(err);
+}
+function chatInitials(n){return (n||'?').split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase();}
+function chatDrawThreads(rows){var el=$('chatThreads');if(!el)return;
+ if(!rows.length){el.innerHTML='<div class="card" style="text-align:center;padding:26px;color:var(--mut)">Hələ yazışmanız yoxdur.<br><button class="btn" style="margin-top:12px" onclick="chatNew()">+ Yeni söhbət başlat</button></div>';return;}
+ el.innerHTML=rows.map(function(t){
+  return '<div class="chatrow" onclick="chatOpen(\''+t.other+'\',\''+esc(t.ad||'').replace(/\x27/g,"\\x27")+'\')">'
+   +'<div class="chatav">'+esc(chatInitials(t.ad))+'</div>'
+   +'<div class="chatmeta"><div class="row sp"><b>'+esc(t.ad||'İşçi')+'</b><span class="chattime">'+chatTime(t.son)+'</span></div>'
+   +'<div class="row sp"><span class="chatlast">'+esc((t.son_mesaj||'').slice(0,42))+'</span>'+(t.oxunmamis>0?'<span class="chatbadge">'+t.oxunmamis+'</span>':'')+'</div></div></div>';
+ }).join('');
+}
+function chatTime(iso){if(!iso)return '';var d=new Date(iso),now=new Date();if(d.toDateString()===now.toDateString())return d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'});return d.toLocaleDateString('az-AZ',{day:'2-digit',month:'2-digit'});}
+function chatNew(){run(sb.rpc('msg_contacts')).then(function(list){
+  var html='<div class="mhead"><h3>Kimə yazmaq istəyirsiniz?</h3><button class="x" onclick="closeModal()">×</button></div>'
+   +'<input id="chatSearch" placeholder="🔎 Ad axtar…" style="width:100%;padding:11px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px" oninput="chatFilterContacts(this.value)">'
+   +'<div id="chatContacts" style="max-height:50vh;overflow-y:auto">'+chatContactsHtml(list)+'</div>';
+  window.CHAT_CONTACTS=list;modal(html);
+ }).catch(err);
+}
+function chatContactsHtml(list){return list.map(function(c){return '<div class="chatrow" onclick="closeModal();chatOpen(\''+c.uid+'\',\''+esc(c.ad||'').replace(/\x27/g,"\\x27")+'\')"><div class="chatav">'+esc(chatInitials(c.ad))+'</div><div class="chatmeta"><b>'+esc(c.ad)+'</b><div class="muted small">'+esc(c.vezife||'')+'</div></div></div>';}).join('')||'<p class="hint">İşçi tapılmadı</p>';}
+function chatFilterContacts(q){q=(q||'').toLowerCase();var f=(window.CHAT_CONTACTS||[]).filter(function(c){return (c.ad||'').toLowerCase().indexOf(q)>=0||(c.vezife||'').toLowerCase().indexOf(q)>=0;});$('chatContacts').innerHTML=chatContactsHtml(f);}
+function chatOpen(uid,ad){CHATother=uid;CHATname=ad;renderChatRoom();}
+function chatBack(){CHATother=null;if(CHATsub){try{CHATsub.unsubscribe();}catch(e){}CHATsub=null;}renderChat();chatUpdateBadge();}
+function renderChatRoom(){var v=$('v-chat');if(!v)return;
+ v.innerHTML='<div class="chathead"><button class="chatbackbtn" onclick="chatBack()">‹</button><div class="chatav">'+esc(chatInitials(CHATname))+'</div><div><b>'+esc(CHATname||'İşçi')+'</b></div></div>'
+  +'<div id="chatMsgs" class="chatmsgs"><p class="status"><span class="spin"></span></p></div>'
+  +'<div class="chatinput"><input id="chatText" placeholder="Mesaj yazın…" onkeydown="if(event.key===\'Enter\')chatSend()"><button class="chatsend" onclick="chatSend()">➤</button></div>';
+ chatLoadMsgs();chatSubscribe();
+}
+function chatLoadMsgs(){run(sb.rpc('msg_open',{p_other:CHATother})).then(function(rows){chatDrawMsgs(rows||[]);}).catch(err);}
+function chatDrawMsgs(rows){var el=$('chatMsgs');if(!el)return;
+ el.innerHTML=rows.length?rows.map(function(m){return '<div class="msg '+(m.mine?'mine':'their')+'">'+esc(m.body)+'<span class="msgt">'+new Date(m.at).toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'})+'</span></div>';}).join(''):'<div class="hint" style="text-align:center;padding:20px">İlk mesajı yazın 👋</div>';
+ el.scrollTop=el.scrollHeight;
+}
+function chatSend(){var el=$('chatText');if(!el)return;var t=el.value.trim();if(!t)return;el.value='';
+ run(sb.from('office_messages').insert({receiver:CHATother,body:t})).then(function(){chatLoadMsgs();}).catch(function(e){toast('Göndərilmədi: '+(e.message||e));});
+}
+function chatSubscribe(){if(CHATsub){try{CHATsub.unsubscribe();}catch(e){}}
+ try{CHATsub=sb.channel('chat-'+CHATother).on('postgres_changes',{event:'INSERT',schema:'public',table:'office_messages'},function(p){
+  var m=p.new;if(!m)return;if((m.sender===CHATother)||(m.receiver===CHATother)){chatLoadMsgs();}
+ }).subscribe();}catch(e){}
+}
+function chatUpdateBadge(){run(sb.rpc('msg_unread')).then(function(n){var b=document.querySelector('#tabs button[data-v=\"chat\"]');if(!b)return;b.innerHTML='💬 Çat'+(n>0?' <span class="tabbadge">'+n+'</span>':'');}).catch(function(){});}
+
 /* ---------- 🔔 Xatırlatma bölməsi ---------- */
 var RMTMPL=[],RMFORGOT=[];
 function renderRemind(){var v=$('v-remind');if(!v)return;
