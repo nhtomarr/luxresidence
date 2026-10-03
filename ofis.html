@@ -3674,7 +3674,7 @@ function svg(k){var f=/\*$/.test(k),c=(k.split('#')[1]||'');k=k.replace(/[*]|#.*
 window.uiIcon=function(n){return P[n]?svg(n):'';};
 var keys=Object.keys(M).sort(function(a,b){return b.length-a.length;});
 var RX=new RegExp('('+keys.map(function(k){return k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}).join('|')+')\\uFE0F?','g');
-var SKIP='.svvr,.msgbody,.igm,.igpb,.igcm .cmb>div,.sorbar,.sorsum,.msgreact,.svr1,.svcap,.soce,.s3ce,.iggrp,.igst,.chatlast,.iglast,.igrep,.igpin,.soshared,.somoment p,.s3mem p,.s3qa,.s3my,.s3q p,.s3ansb p,.s3ann p,.sopoll,.svstk,.svbar,#igCtx,.igreacts,.chatreacts,.mood,.moodpick,.sochips,.fpchal,.s3th,.sorpick,.igvoice,.sotag,.svfoot,.sorx,.no-ic,[contenteditable]';
+var SKIP='.cmemo,.stcol,.svvr,.msgbody,.igm,.igpb,.igcm .cmb>div,.sorbar,.sorsum,.msgreact,.svr1,.svcap,.soce,.s3ce,.iggrp,.igst,.chatlast,.iglast,.igrep,.igpin,.soshared,.somoment p,.s3mem p,.s3qa,.s3my,.s3q p,.s3ansb p,.s3ann p,.sopoll,.svstk,.svbar,#igCtx,.igreacts,.chatreacts,.mood,.moodpick,.sochips,.fpchal,.s3th,.sorpick,.igvoice,.sotag,.svfoot,.sorx,.no-ic,[contenteditable]';
 var NOTAG={SCRIPT:1,STYLE:1,TEXTAREA:1,INPUT:1,SELECT:1,OPTION:1,svg:1,SVG:1,TITLE:1,CODE:1,PRE:1};
 function fix(root){if(!root)return;if(root.nodeType===3){one(root);return;}if(root.nodeType!==1||NOTAG[root.nodeName])return;
  var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),l=[],n;while((n=w.nextNode())){RX.lastIndex=0;if(RX.test(n.nodeValue))l.push(n);}l.forEach(one);}
@@ -4236,6 +4236,328 @@ var _socProfile7=socProfile;socProfile=function(uid){_socProfile7(uid);if(uid!==
 
 var _backAct7=backAct;backAct=function(){if($('mvw')){mediaClose();return true;}if($('igSV')&&typeof storyClose==='function'){var sh=document.querySelector('#igSV .svsheet,#igSV .svmenu');if(sh){if(sh.classList.contains('svsheet'))svSheetClose();else{sh.remove();if(_sv)_sv.input=false;svPause(false);}}else storyClose();return true;}
  if($('s4wr')){wrappedClose();return true;}if($('s4quiz')){quizClose();return true;}var rm=$('s4room');if(rm&&!rm.classList.contains('min')){roomMin();return true;}return _backAct7();};
+</script>
+<style>
+/* ===== IG paritet ===== */
+.skp{background:#fff;margin:0 -14px 6px;padding-bottom:12px}@media(min-width:700px){.skp{margin:0 0 16px;border-radius:14px}}
+.skh{display:flex;align-items:center;gap:10px;padding:10px 12px}.skh i{width:36px;height:36px;border-radius:50%;background:#eee}.skh b{width:120px;height:12px;border-radius:6px;background:#eee}
+.skm{aspect-ratio:4/5;background:#efefef}.skl{height:11px;border-radius:6px;background:#eee;margin:12px 14px 0;width:70%}.skl.s{width:40%;margin-top:8px}
+.skp i,.skp b,.skm,.skl,.skprof i,.skprof b,.sk1{animation:skp 1.2s ease-in-out infinite}
+.feedend{text-align:center;color:#8e8e8e;font-size:.85rem;padding:18px 0 30px}
+.ptr{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));z-index:120;width:36px;height:36px;border-radius:50%;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18);display:grid;place-items:center;transform:translate(-50%,0)}
+.ptr.go{transform:translate(-50%,60px)!important;opacity:1!important;transition:transform .2s}
+/* səhifələr */
+.pg{position:fixed;inset:0;z-index:61;background:#fff;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateX(100%);transition:transform .23s cubic-bezier(.2,.8,.2,1);padding-bottom:calc(30px + env(safe-area-inset-bottom,0px))}
+.pg.on{transform:none}
+@media(min-width:760px){.pg{left:50%;width:min(720px,100%);margin-left:calc(min(720px,100%) / -2);box-shadow:0 0 30px rgba(0,0,0,.12)}.pg.on{transform:none}}
+body.haspg{overflow:hidden}
+.pgh{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top,0px)) 8px 8px;background:rgba(255,255,255,.96);border-bottom:.5px solid #efefef}
+.pgh b{flex:1;font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pgb{border:none;background:none;width:40px;height:40px;display:grid;place-items:center;color:#0a0a0a;padding:0}.pgr{display:flex}
+.pgc{padding:0 14px}.pgc.sopostm{padding:0}.pgc.sopostm .igpost.ig2{margin:0!important;border:none!important;border-radius:0!important}
+.sk1{display:inline-block;width:120px;height:14px;border-radius:7px;background:#eee}
+.skprof{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:20px 0}.skprof i{width:86px;height:86px;border-radius:50%;background:#eee}.skprof b{width:60%;height:12px;border-radius:6px;background:#eee}
+/* profil */
+.pftop{display:flex;align-items:center;gap:18px;padding:22px 0 8px}
+.pfaw{position:relative;flex:none;padding-top:14px}
+.pfav{border-radius:50%;padding:3px;cursor:pointer;box-shadow:0 0 0 2.5px var(--lc);position:relative;background:#fff}
+.pfav.ring{box-shadow:none;background:conic-gradient(from 210deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5,#feda75)}.pfav.ring.seen{background:#dbdbdb}.pfav.ring.cf{background:#22c55e}
+.pfav>*:first-child{border:3px solid #fff;border-radius:50%}
+.pfplus{position:absolute;right:2px;bottom:2px;width:24px;height:24px;border-radius:50%;background:#0a84ff;color:#fff;display:grid;place-items:center;border:2.5px solid #fff;font-size:15px}
+.pflv{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);color:#fff;font-size:.6rem;font-weight:800;border-radius:99px;padding:2px 8px;border:2px solid #fff;white-space:nowrap}
+.pfnote{position:absolute;left:-4px;top:-14px;background:#fff;border-radius:16px;padding:6px 10px;font-size:.72rem;max-width:120px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.14);z-index:2;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pfnote:after{content:'';position:absolute;left:24px;bottom:-5px;width:9px;height:9px;background:#fff;border-radius:50%;box-shadow:1px 1px 3px rgba(0,0,0,.1)}.pfnote.empty{color:#8e8e8e}
+.pfst{flex:1;display:flex;justify-content:space-around;text-align:center}.pfst div{font-size:.82rem;color:#0a0a0a;cursor:pointer}.pfst b{display:block;font-size:1.15rem}
+.pfinfo{padding:6px 0 2px}.pfinfo>b{font-size:.95rem}.pfj{color:#737373;font-size:.86rem}.pfinfo p{margin:4px 0;font-size:.9rem;white-space:pre-line}
+.pfm{font-size:.82rem;color:#3c3c43;margin-top:3px}.pfch{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.pfch span{background:#f2f2f2;border-radius:99px;padding:3px 10px;font-size:.78rem}
+.pfbt{display:flex;gap:6px;margin:12px 0 8px}.pfbt .btn{flex:1;padding:8px;font-size:.88rem;border-radius:10px}.pfbt .btn.sq{flex:0 0 42px}
+.pfsk{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}.pfsk button{border:1px solid #c7d2fe;background:#eef2ff;color:#3730a3;border-radius:99px;padding:4px 10px;font-size:.78rem;font-weight:600}.pfsk button b{background:#fff;border-radius:99px;padding:0 5px;margin-left:2px}.pfsk button.on{background:#4f46e5;color:#fff}
+.pfbd{display:flex;gap:8px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:none}.pfbd span{flex:none;display:flex;flex-direction:column;align-items:center;font-size:1.4rem;min-width:64px}.pfbd small{font-size:.62rem;color:#737373;text-align:center}
+.pfhl{padding:6px 0 12px!important}
+.pftabs{display:flex;border-top:.5px solid #dbdbdb;margin:0 -14px;position:sticky;top:calc(56px + env(safe-area-inset-top,0px));background:#fff;z-index:4}
+.pftabs button{flex:1;border:none;background:none;padding:10px;color:#8e8e8e;border-bottom:1.5px solid transparent;display:grid;place-items:center}.pftabs button.on{color:#0a0a0a;border-bottom-color:#0a0a0a}
+.pfgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:2px -14px 0}
+.srch .pfgrid,.cmt .pfgrid{margin:2px 0 0}
+.pfgrid button{position:relative;aspect-ratio:3/4;border:none;padding:0;background:#efefef;overflow:hidden}
+.pfgrid img,.pfgrid video{width:100%;height:100%;object-fit:cover;display:block}
+.pftx{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:8px;font-size:.78rem;background:linear-gradient(135deg,#eef2ff,#fdf2f8);color:#3c3c43;text-align:center;box-sizing:border-box}
+.pfmi{position:absolute;right:6px;top:6px;color:#fff;font-style:normal;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.pfgrid em{position:absolute;left:6px;bottom:5px;color:#fff;font-style:normal;font-size:.72rem;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.pfempty{grid-column:1/-1;text-align:center;color:#8e8e8e;padding:40px 10px;font-size:.9rem}
+.stnote{position:absolute;left:50%;top:-12px;transform:translateX(-50%);background:#fff;color:#0a0a0a;border-radius:12px;padding:3px 8px;font-size:.62rem;max-width:84px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:2;font-weight:500}
+.stnote.empty{color:#8e8e8e}.igstories{padding-top:14px!important}
+/* lent başlığı */
+.soseg .sectb{background:transparent!important;border:1px solid rgba(60,60,67,.2)!important}
+.soseg button i{font-style:normal;margin-left:4px;opacity:.7}
+.sectg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.sectg button{border:none;background:#f5f5f7;border-radius:16px;padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:#0a0a0a}
+.sectg span{font-size:1.5rem}
+.srch{margin-bottom:12px}.srch input{width:100%;border:none;background:rgba(118,118,128,.12);border-radius:12px;padding:11px 14px;font-size:.95rem}
+.srhash{width:44px;height:44px;border-radius:50%;border:1px solid #dbdbdb;display:grid;place-items:center;font-size:1.2rem;flex:none}
+/* reels */
+#igReel{position:fixed;inset:0;z-index:600;background:#000;color:#fff}
+.rlh{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top,0px)) 16px 10px;background:linear-gradient(rgba(0,0,0,.4),transparent)}
+.rlh b{font-size:1.25rem}.rlh button{border:none;background:none;color:#fff;font-size:1.4rem}
+.rlw{height:100%;overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none}.rlw::-webkit-scrollbar{display:none}
+.rlw section{height:100%;scroll-snap-align:start;scroll-snap-stop:always;position:relative;display:flex;align-items:center;justify-content:center}
+.rlw video{width:100%;height:100%;object-fit:cover}
+.rlsk{height:100%;display:grid;place-items:center;text-align:center;opacity:.8}
+.rlside{position:absolute;right:8px;bottom:calc(110px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:18px;align-items:center}
+.rlside button{border:none;background:none;color:#fff;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.78rem;font-weight:600;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+.rlside svg{width:30px;height:30px}
+.rlcap{position:absolute;left:14px;right:70px;bottom:calc(30px + env(safe-area-inset-bottom,0px));text-shadow:0 1px 4px rgba(0,0,0,.6)}.rlcap p{font-size:.9rem;margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rlau{display:flex;align-items:center;gap:8px;cursor:pointer}
+.rlmute{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,.5);display:grid;place-items:center;font-size:1.6rem;opacity:0;pointer-events:none}
+.rlmute.flash{animation:rlf .8s}@keyframes rlf{20%{opacity:1}70%{opacity:1}100%{opacity:0}}
+/* post redaktoru */
+.fped{margin-top:8px}.fpar{display:flex;gap:6px;margin-bottom:8px}.fpar button{border:1px solid #e5e7eb;background:#fff;border-radius:99px;padding:5px 12px;font-size:.8rem}.fpar button.on{background:#0a0a0a;color:#fff;border-color:#0a0a0a}
+.fpfl{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.fpfl button{flex:none;border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0}
+.fpfl img{width:62px;height:62px;object-fit:cover;border-radius:10px;border:2px solid transparent}.fpfl button.on img{border-color:#0a84ff}.fpfl small{font-size:.66rem}
+/* hekayə redaktoru */
+.stpk{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stpk button{border:none;background:#f5f5f7;border-radius:16px;padding:18px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:600;color:#0a0a0a}.stpk span{font-size:1.6rem;font-weight:800}
+#stEd{position:fixed;inset:0;z-index:690;background:#000;color:#fff}
+.sted{position:absolute;inset:0}
+.stcv{position:absolute;left:0;right:0;top:env(safe-area-inset-top,0px);bottom:calc(76px + env(safe-area-inset-bottom,0px));border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111}
+.stcv img,.stcv video{width:100%;height:100%;object-fit:contain;pointer-events:none}
+.stly{position:absolute;inset:0}.stl{position:absolute;font-weight:700;font-size:1.5rem;white-space:nowrap;touch-action:none;cursor:move;text-shadow:0 2px 6px rgba(0,0,0,.45);padding:2px 4px;user-select:none}
+.stl.bg{text-shadow:none;padding:6px 14px;border-radius:12px}
+#stEd.trash .stcv:after{content:'🗑';position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:54px;height:54px;border-radius:50%;background:rgba(255,59,48,.85);display:grid;place-items:center;font-size:1.4rem}
+.sttop{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));left:10px;right:10px;display:flex;gap:8px;z-index:3}.sttop span{flex:1}
+.sttop button{width:42px;height:42px;border-radius:50%;border:none;background:rgba(0,0,0,.45);color:#fff;font-size:1.1rem;font-weight:800}
+.stbot{position:absolute;left:0;right:0;bottom:env(safe-area-inset-bottom,0px);height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;gap:10px}
+.stbot .s3aud{margin:0}.stbot .s3aud button{background:rgba(255,255,255,.12);color:#fff;border-color:transparent;font-size:.78rem;padding:6px 10px}.stbot .s3aud button.on{background:#fff;color:#000}.stbot .s3aud button[data-a=cf].on{background:#22c55e;color:#fff}
+.stgo{border:none;background:#fff;color:#000;border-radius:99px;padding:11px 18px;font-weight:700;white-space:nowrap}
+#stPanel{position:absolute;left:0;right:0;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:4}
+.stpan{background:rgba(20,20,20,.92);margin:8px;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.stpan input{width:100%;background:transparent!important;border:none!important;color:#fff!important;font-size:1.3rem;font-weight:700;text-align:center;-webkit-text-fill-color:#fff;outline:none}
+.stpan .fppoll input{font-size:.95rem;font-weight:500;background:rgba(255,255,255,.1)!important;border-radius:10px;padding:8px;text-align:left}
+.stcol{display:flex;gap:8px;justify-content:center;align-items:center}.stcol button{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.6)}.stcol button.on{outline:2px solid #fff;outline-offset:2px}.stcol label{font-size:.8rem;margin-left:6px}
+.stchip{margin:8px;background:#fff;color:#000;border-radius:12px;padding:8px 12px;font-size:.85rem;display:inline-block}
+/* DM */
+.chs{display:flex;gap:8px;align-items:center;padding:6px 2px}.chs input{flex:1;border:none;background:#f2f2f2;border-radius:10px;padding:9px 12px}.chs span{font-size:.75rem;color:#8e8e8e}.chs button{border:none;background:none;color:#0a84ff;font-weight:600}
+/* bildirişlər */
+.ntsec{font-weight:700;font-size:.95rem;padding:12px 4px 4px}
+.ntav2{position:relative;display:block;width:44px;height:44px}.ntav2>*{position:absolute}.ntav2>*:first-child{right:0;top:0}.ntav2>*:last-child{left:0;bottom:0;border:2px solid #fff;border-radius:50%}
+.sonotif .btn.sm{flex:none}
+/* şərhlər */
+.igcm.pin{background:#fafafa;border-radius:12px}.cmpin{display:block;color:#8e8e8e;font-size:.7rem}
+.cmemo{display:flex;justify-content:space-between;padding:8px 2px 0;border-top:.5px solid #efefef;margin-top:6px}.cmemo button{border:none;background:none;font-size:1.4rem;padding:2px}
+.cmq{font-size:.82rem;color:#737373;padding:4px 4px 10px;border-bottom:.5px solid #efefef;margin-bottom:4px}
+.igvc video{transform:none!important}
+</style>
+<script>
+/* ===================== IG PARİTET: performans, səhifələr, profil, reels, redaktor, DM, bildiriş ===================== */
+/* ---------- 1. ŞƏKİL SIXMA ---------- */
+function imgCompress(file,max,q){return new Promise(function(res){if(!/^image\/(jpeg|jpg|png|webp|heic|heif)$/i.test(file.type)||file.size<350*1024)return res(file);
+ var u=URL.createObjectURL(file),im=new Image();im.onload=function(){var w=im.naturalWidth,h=im.naturalHeight,s=Math.min(1,max/Math.max(w,h));var c=document.createElement('canvas');c.width=Math.round(w*s);c.height=Math.round(h*s);
+  c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(function(b){if(!b||b.size>=file.size)return res(file);res(new File([b],(file.name||'img').replace(/\.\w+$/,'')+'.jpg',{type:'image/jpeg'}));},'image/jpeg',q||.82);};
+ im.onerror=function(){URL.revokeObjectURL(u);res(file);};im.src=u;});}
+var _chatUpload8=chatUpload;
+chatUpload=function(file,prefix){return imgCompress(file,prefix==='story'?1920:prefix==='cover'?1600:1600,.82).then(function(f){return _chatUpload8(f,prefix);});};
+
+/* ---------- 2. LAZY YÜKLƏMƏ ---------- */
+(function(){var fx=function(r){if(!r||r.nodeType!==1)return;var l=r.tagName==='IMG'?[r]:r.querySelectorAll?r.querySelectorAll('img:not([loading])'):[];Array.prototype.forEach.call(l,function(i){if(!i.hasAttribute('loading')){i.setAttribute('loading','lazy');i.setAttribute('decoding','async');}});
+  var v=r.tagName==='VIDEO'?[r]:r.querySelectorAll?r.querySelectorAll('video:not([preload])'):[];Array.prototype.forEach.call(v,function(x){x.setAttribute('preload','metadata');});};
+ new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(fx);});}).observe(document.body,{childList:true,subtree:true});fx(document.body);})();
+
+/* ---------- 3. SONSUZ LENT, SKELET, YUXARI ÇƏK-YENİLƏ ---------- */
+var FEED_END=false,FEED_BUSY=false,FEED_MODES=['all','following','tag','saved','video','club','challenge'];
+function skel(n){var h='';for(var i=0;i<(n||2);i++)h+='<div class="skp"><div class="skh"><i></i><b></b></div><div class="skm"></div><div class="skl"></div><div class="skl s"></div></div>';return h;}
+var _feedLoad8=feedLoad;
+feedLoad=function(){FEED_END=false;var el=$('igPosts');if(el&&!FEED.length)el.innerHTML=skel(2);_feedLoad8();};
+function feedMore(){if(FEED_END||FEED_BUSY||FEED_MODES.indexOf(FMODE)<0||!FEED.length)return;var el=$('igPosts');if(!el)return;
+ var ts=FEED.filter(function(p){return !p.pinned&&p.at;}).map(function(p){return p.at;}).sort();var before=ts[0];if(!before)return;FEED_BUSY=true;var m=FMODE,a=FARG;
+ el.insertAdjacentHTML('beforeend','<div id="feedMoreSk">'+skel(1)+'</div>');
+ sb.rpc('feed2',{p_mode:m==='club'?'club':m,p_arg:a,p_before:before}).then(function(r){FEED_BUSY=false;var s=$('feedMoreSk');if(s)s.remove();if(m!==FMODE)return;var l=(r.data||[]).filter(function(p){return !FEED.some(function(x){return x.id===p.id;});});
+  if(!l.length){FEED_END=true;el.insertAdjacentHTML('beforeend','<div class="feedend">✓ Hamısına baxdın</div>');return;}l.forEach(function(p){FEED.push(p);});el.insertAdjacentHTML('beforeend',l.map(postCard).join(''));igAutoplay();if(typeof s3seenObs==='function')s3seenObs();},function(){FEED_BUSY=false;var s=$('feedMoreSk');if(s)s.remove();});}
+window.addEventListener('scroll',function(){var v=$('v-feed');if(!v||!v.classList.contains('on'))return;if(window.innerHeight+window.scrollY>document.body.scrollHeight-900)feedMore();},{passive:true});
+(function(){var y0=null,pull=0,ind=null;
+ document.addEventListener('touchstart',function(e){var v=$('v-feed');if(!v||!v.classList.contains('on')||window.scrollY>0||document.body.classList.contains('incall')||$('modal').classList.contains('on')||document.querySelector('.pg.on'))return;y0=e.touches[0].clientY;pull=0;},{passive:true});
+ document.addEventListener('touchmove',function(e){if(y0==null)return;pull=e.touches[0].clientY-y0;if(pull<=0){if(ind){ind.remove();ind=null;}return;}if(!ind){ind=document.createElement('div');ind.className='ptr';ind.innerHTML='<span class="spin"></span>';document.body.appendChild(ind);}
+  var d=Math.min(90,pull*.5);ind.style.transform='translate(-50%,'+d+'px) rotate('+(pull*2)+'deg)';ind.style.opacity=Math.min(1,pull/120);},{passive:true});
+ document.addEventListener('touchend',function(){if(y0==null)return;y0=null;var go=pull>140;if(ind){var i=ind;ind=null;if(go){i.classList.add('go');setTimeout(function(){i.remove();},900);}else i.remove();}if(go){try{navigator.vibrate&&navigator.vibrate(10);}catch(e){}FEED=[];feedMode(FMODE==='tag'||FMODE==='user'?'all':FMODE,FARG);if(typeof storyLoad==='function')storyLoad();if(typeof noteLoad==='function')noteLoad();}},{passive:true});})();
+
+/* ---------- 4. SƏHİFƏ YIĞINI (naviqasiya) ---------- */
+var PG=[];
+function pgPush(html,key){var d=document.createElement('div');d.className='pg';d.dataset.key=key||'';d.innerHTML=html;document.body.appendChild(d);PG.push(d);requestAnimationFrame(function(){d.classList.add('on');});document.body.classList.add('haspg');return d;}
+function pgPop(){var d=PG.pop();if(!d)return false;d.classList.remove('on');d.querySelectorAll('video').forEach(function(v){v.pause();});setTimeout(function(){d.remove();},230);if(!PG.length)document.body.classList.remove('haspg');return true;}
+function pgTop(){return PG[PG.length-1];}
+function pgHead(t,right){return '<div class="pgh"><button class="pgb" onclick="pgPop()">'+igSvg('<path d="m15 18-6-6 6-6"/>')+'</button><b>'+t+'</b><span class="pgr">'+(right||'')+'</span></div>';}
+var _backAct8=backAct;backAct=function(){if($('mvw')||$('igSV')||$('s4wr')||$('s4quiz')||$('igReel')||$('stEd'))return _backAct8();if($('modal').classList.contains('on'))return _backAct8();if(PG.length){pgPop();return true;}return _backAct8();};
+var _show8=show;show=function(v){while(PG.length){var d=PG.pop();d.remove();}document.body.classList.remove('haspg');_show8(v);};
+
+/* postu səhifədə aç */
+postOpen=function(id){if(typeof closeModal==='function'&&$('modal').classList.contains('on'))closeModal();run(sb.rpc('post_get',{p_id:id})).then(function(p){if(!p){toast('Post tapılmadı');return;}var i=FEED.findIndex(function(x){return x.id===p.id;});if(i>=0)FEED[i]=p;else FEED.push(p);
+ var a=p.author||p.ref||{};pgPush(pgHead('Post')+'<div class="pgc sopostm">'+postCard(p)+'</div>','post:'+id);igAutoplay();if(typeof s3seenObs==='function')s3seenObs();}).catch(err);};
+
+/* ---------- 5. PROFİL SƏHİFƏSİ ---------- */
+var NOTES={};function noteLoad(){return run(sb.rpc('note_list')).then(function(n){NOTES=n||{};if(typeof storyDrawRow==='function'&&$('igStories'))storyDrawRow();return NOTES;}).catch(function(){return NOTES;});}
+socProfile=function(uid){if(!uid||uid==='undefined')return;if($('modal').classList.contains('on'))closeModal();var t=pgTop(),re=t&&t.dataset.key==='prof:'+uid;
+ var pg=re?t:pgPush(pgHead('<span class="sk1"></span>')+'<div class="pgc"><div class="skprof"><i></i><b></b><b></b></div></div>','prof:'+uid);
+ Promise.all([run(sb.rpc('soc_profile',{p_uid:uid})),run(sb.rpc('soc_profile_x',{p_uid:uid})).catch(function(){return null;}),run(sb.rpc('feed2',{p_mode:'user',p_arg:uid,p_before:null})).catch(function(){return [];}),lvlLoad(),noteLoad()]).then(function(r){
+  var p=r[0]||{},x=r[1]||{hl:[],skills:[]},posts=r[2]||[];if(!p.ad){pgPop();return;}window._prof=p;x._me=uid===ME.user_id;x._uid=uid;window._profX=x;
+  posts.forEach(function(q){var i=FEED.findIndex(function(y){return y.id===q.id;});if(i>=0)FEED[i]=q;else FEED.push(q);});
+  var me=x._me,yrs=p.hire?Math.floor((Date.now()-new Date(p.hire))/31557600000):0,lv=LVL[uid]||0,LN=['Yeni','Fəal','Təcrübəli','Ulduz','Əfsanə'];
+  var si=(CHAT_STORIES||[]).findIndex(function(u){return u.uid===uid;}),su=CHAT_STORIES[si],nt=NOTES[uid];
+  var ava='<div class="pfav'+(su?' ring'+(su.unseen?'':' seen')+(su.cf?' cf':''):'')+'" style="--lc:'+LVLC[lv]+'" onclick="'+(su?'storyOpen('+si+')':(me?'storyPick()':''))+'">'+chatAva(p.ad,p.photo,86)+(me&&!su?'<b class="pfplus">+</b>':'')+'</div>';
+  var note=nt||me?'<div class="pfnote'+(nt?'':' empty')+'" onclick="'+(me?'noteEdit()':'')+'">'+(nt?esc(nt.t):'Qeyd…')+'</div>':'';
+  var menu=me?'<button class="pgb" onclick="pfMenu()">'+igSvg('<path d="M4 6h16M4 12h16M4 18h16"/>')+'</button>':'<button class="pgb" onclick="pfMenu(\''+uid+'\')">'+igSvg(IGP.more,'currentColor')+'</button>';
+  var h=pgHead(esc(p.ad),menu)+'<div class="pgc pf">'
+   +'<div class="pftop"><div class="pfaw">'+note+ava+'<span class="pflv" style="background:'+LVLC[lv]+'">'+LN[lv]+'</span></div><div class="pfst"><div><b>'+p.posts+'</b>post</div><div onclick="followList(\''+uid+'\',\'followers\')"><b>'+p.followers+'</b>izləyici</div><div onclick="followList(\''+uid+'\',\'following\')"><b>'+p.following+'</b>izləyir</div></div></div>'
+   +'<div class="pfinfo"><b>'+esc(p.ad)+'</b><div class="pfj">'+esc(p.vezife||'')+'</div>'+(p.bio?'<p>'+esc(p.bio)+'</p>':'')+'<div class="pfm">'+(yrs>=1?'🏢 '+yrs+' il komandada':'')+(p.bday?(yrs>=1?' · ':'')+'🎂 '+esc(p.bday):'')+(p.kudos?' · 🙌 '+p.kudos+' təşəkkür':'')+'</div>'
+   +(x.mentor?'<div class="pfm" onclick="socProfile(\''+x.mentor.uid+'\')">🧭 Mentoru: <b>'+esc(x.mentor.ad)+'</b></div>':'')+(x.mentees&&x.mentees.length?'<div class="pfm">🧭 Mentordur: '+x.mentees.map(function(m){return '<b onclick="socProfile(\''+m.uid+'\')">'+esc(m.ad)+'</b>';}).join(', ')+'</div>':'')
+   +(p.interests&&p.interests.length?'<div class="pfch">'+p.interests.map(function(i){return '<span>'+esc(i)+'</span>';}).join('')+'</div>':'')+'</div>'
+   +'<div class="pfbt">'+(me?'<button class="btn ghost" onclick="profEdit()">Profili redaktə et</button><button class="btn ghost" onclick="insOpen(30)">Statistika</button>'
+     :'<button class="btn'+(p.ifollow?' ghost':'')+'" onclick="pfFollow(\''+uid+'\','+(!p.ifollow)+')">'+(p.ifollow?'İzləyirsən ▾':'İzlə')+'</button><button class="btn ghost" onclick="show(\'chat\');chatOpen(\''+uid+'\',\''+chatArg(p.ad)+'\')">Mesaj</button><button class="btn ghost sq" onclick="var e=(typeof EMPS!==\'undefined\'?EMPS:[]).find(function(z){return z.user_id===\''+uid+'\'});if(e&&typeof openKudos===\'function\')openKudos(e.id)">🙌</button>')+'</div>'
+   +(x.skills&&x.skills.length?'<div class="pfsk">'+x.skills.map(function(s){return '<button class="'+(s.my?'on':'')+'" '+(me?'':'onclick="skEnd(\''+uid+'\',\''+chatArg(s.s)+'\','+(!s.my)+')"')+'>'+esc(s.s)+(s.n?' <b>'+s.n+'</b>':'')+'</button>';}).join('')+'</div>':'')
+   +(p.badges&&p.badges.length?'<div class="pfbd">'+p.badges.map(function(b){var i=badgeInfo(b);return '<span title="'+esc(i[1])+'">'+i[0]+'<small>'+esc(i[1])+'</small></span>';}).join('')+'</div>':'')
+   +'<div class="s3hl pfhl">'+(me?'<button onclick="hlNew()"><span class="s3hlc add">+</span><small>Yeni</small></button>':'')+(x.hl||[]).map(function(H,i){var c=H.items&&H.items[0];return '<button onclick="hlView('+i+')"><span class="s3hlc">'+(c?(c.kind==='video'?'🎬':'<img src="'+esc(c.url)+'">'):'⭐')+'</span><small>'+esc(H.title)+'</small></button>';}).join('')+'</div>'
+   +'<div class="pftabs"><button class="on" onclick="pfTab(this,\'p\',\''+uid+'\')">'+igSvg('<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>')+'</button><button onclick="pfTab(this,\'r\',\''+uid+'\')">'+igSvg('<rect x="2" y="3" width="20" height="18" rx="4"/><path d="M2 8h20M8 3l3 5M14 3l3 5"/><path d="m10 12 5 3-5 3z" fill="currentColor"/>')+'</button><button onclick="pfTab(this,\'t\',\''+uid+'\')">'+igSvg('<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19a6 6 0 0 1 11 0"/>')+'</button></div>'
+   +'<div id="pfGrid" class="pfgrid"></div></div>';
+  pg.innerHTML=h;window._pfPosts=posts;pfGrid(posts.filter(function(q){return q.kind==='post';}),me?'Hələ post paylaşmamısan':'Hələ post yoxdur');}).catch(function(e){err(e);});};
+function pfGrid(l,empty){var g=pgTop()&&pgTop().querySelector('#pfGrid');if(!g)return;g.innerHTML=l.length?l.map(function(x){var m=x.media&&x.media[0],img=m?m.url:x.image,vid=m&&m.kind==='video';
+ return '<button onclick="postOpen(\''+x.id+'\')">'+(img?(vid?'<video src="'+esc(img)+'#t=0.1" muted playsinline preload="metadata"></video>':'<img src="'+esc(img)+'">'):'<span class="pftx">'+esc((x.body||'').slice(0,70))+'</span>')+(x.media&&x.media.length>1?'<i class="pfmi">❐</i>':vid?'<i class="pfmi">▶</i>':'')+(x.likes?'<em>♥ '+x.likes+'</em>':'')+'</button>';}).join(''):'<div class="pfempty">'+esc(empty)+'</div>';}
+function pfTab(b,k,uid){Array.prototype.forEach.call(b.parentNode.children,function(x){x.classList.toggle('on',x===b);});var P=window._pfPosts||[];
+ if(k==='p')pfGrid(P.filter(function(q){return q.kind==='post';}),'Post yoxdur');else if(k==='r')pfGrid(P.filter(function(q){return q.media&&q.media.some(function(m){return m.kind==='video';});}),'Reels yoxdur');
+ else{var g=pgTop().querySelector('#pfGrid');g.innerHTML=skel(1);run(sb.rpc('posts_tagged',{p_uid:uid})).then(function(l){(l||[]).forEach(function(q){if(!FEED.some(function(y){return y.id===q.id;}))FEED.push(q);});pfGrid(l||[],'Hələ heç kim işarələməyib');}).catch(err);}}
+function pfFollow(uid,on){if(!on&&!confirm('İzləməni dayandırmaq istəyirsən?'))return;run(sb.rpc('soc_follow',{p_uid:uid,p_on:on})).then(function(){socProfile(uid);}).catch(err);}
+function pfMenu(uid){var x=window._profX||{};if(!uid){modal('<div class="mhead"><h3>Menyu</h3><button class="x" onclick="closeModal()">×</button></div>'
+  +[['📊','Statistika','insOpen(30)'],['📝','Qaralamalar və planlılar','closeModal();feedCompose();setTimeout(draftList,200)'],['🔖','Saxlanılanlar','closeModal();show(\'feed\');feedMode(\'saved\')'],['⭐','Yaxın dostlar','closeModal();cfManage()'],['💬','Qeydini dəyiş','closeModal();noteEdit()'],['🎁','Xal mağazası','closeModal();show(\'feed\');feedMode(\'shop\')']].map(function(a){return '<button class="igmenu" onclick="'+a[2]+'">'+a[0]+' '+a[1]+'</button>';}).join(''));return;}
+ modal('<div class="mhead"><h3>'+esc((window._prof||{}).ad||'')+'</h3><button class="x" onclick="closeModal()">×</button></div><button class="igmenu" onclick="closeModal();cfSet(\''+uid+'\','+(!x.cf)+')">'+(x.cf?'⭐ Yaxın dostlardan çıxar':'☆ Yaxın dostlara əlavə et')+'</button>'
+  +(x.mod&&x.newbie?'<button class="igmenu" onclick="closeModal();mentorPick(\''+uid+'\')">🧭 Mentor təyin et</button>':'')+'<button class="igmenu" onclick="closeModal();show(\'chat\');chatOpen(\''+uid+'\',\''+chatArg((window._prof||{}).ad||'')+'\')">💬 Mesaj göndər</button><button class="igmenu" style="color:#ed4956" onclick="repOpen(\'user\',\''+uid+'\')">🚩 Şikayət et</button>');}
+function followList(uid,kind){run(sb.rpc('follow_list',{p_uid:uid,p_kind:kind})).then(function(l){l=l||[];pgPush(pgHead(kind==='followers'?'İzləyicilər':'İzlədikləri')+'<div class="pgc">'+(l.length?l.map(function(u){return '<div class="igrow"><span onclick="socProfile(\''+u.uid+'\')">'+chatAva(u.ad,u.photo,48)+'</span><div class="igmeta" onclick="socProfile(\''+u.uid+'\')"><div class="igname">'+esc(u.ad)+'</div><div class="iglast">'+esc(u.vezife||'')+'</div></div>'+(u.uid!==ME.user_id?'<button class="btn sm'+(u.ifollow?' ghost':'')+'" onclick="socFollow2(\''+u.uid+'\','+(!u.ifollow)+',this)">'+(u.ifollow?'İzləyirsən':'İzlə')+'</button>':'')+'</div>';}).join(''):'<div class="pfempty">Siyahı boşdur</div>')+'</div>');}).catch(err);}
+function noteEdit(){var cur=(NOTES[ME.user_id]||{}).t||'';var v=prompt('Qeydin (24 saat görünür, maks. 60 simvol). Silmək üçün boş burax:',cur);if(v===null)return;run(sb.rpc('note_set',{p_text:v})).then(function(){noteLoad().then(function(){var t=pgTop();if(t&&t.dataset.key==='prof:'+ME.user_id)socProfile(ME.user_id);});toast(v.trim()?'Qeyd paylaşıldı':'Qeyd silindi');}).catch(err);}
+/* hekayə sırasında qeyd balonları */
+var _storyDrawRow8=storyDrawRow;storyDrawRow=function(){_storyDrawRow8();var el=$('igStories');if(!el)return;var k=0;
+ Array.prototype.forEach.call(el.children,function(c,i){var uid=i===0?ME.user_id:null;if(i>0){var us=CHAT_STORIES.filter(function(u){return !u.me;});uid=us[i-1]&&us[i-1].uid;}var n=uid&&NOTES[uid];
+  if(n||i===0){var s=c.querySelector('.igring');if(s&&!s.querySelector('.stnote')){s.insertAdjacentHTML('beforeend','<span class="stnote'+(n?'':' empty')+'" onclick="event.stopPropagation();'+(i===0?'noteEdit()':'')+'">'+(n?esc(n.t):'Qeyd…')+'</span>');}}});};
+
+/* ---------- 6. LENT SADƏLƏŞDİRMƏ + REELS + AXTARIŞ ---------- */
+var SECT=[['team','🏆','Komanda'],['fun','🎮','Əyləncə'],['qa','❓','Suallar'],['events','📅','Tədbirlər'],['clubs','👥','Klublar'],['albums','🖼','Albomlar'],['saved','🔖','Saxlanılanlar'],['shop','🎁','Mağaza']];
+feedSeg=function(){var el=$('soSeg');if(!el)return;var cur=SECT.concat([['mod','🛡','Moderasiya'],['explore','🔎','Kəşf']]).find(function(s){return s[0]===FMODE||(s[0]==='clubs'&&FMODE==='club')||(s[0]==='team'&&FMODE==='challenge');});
+ el.innerHTML='<button class="'+(FMODE==='all'?'on':'')+'" onclick="feedMode(\'all\')">Hamısı</button><button class="'+(FMODE==='following'?'on':'')+'" onclick="feedMode(\'following\')">İzlədiklərim</button>'
+  +(cur?'<button class="on">'+cur[1]+' '+cur[2]+' <i onclick="event.stopPropagation();feedMode(\'all\')">✕</i></button>':'')+'<button class="sectb" onclick="sectOpen()">⊞ Bölmələr'+(typeof _repN!=='undefined'&&_repN&&SOC_MOD?' <b class="s3n">'+_repN+'</b>':'')+'</button>';};
+function sectOpen(){var l=SECT.slice();if(SOC_MOD)l.push(['mod','🛡','Moderasiya'+(_repN?' ('+_repN+')':'')]);modal('<div class="mhead"><h3>Bölmələr</h3><button class="x" onclick="closeModal()">×</button></div><div class="sectg">'+l.map(function(s){return '<button onclick="closeModal();feedMode(\''+s[0]+'\')"><span>'+s[1]+'</span>'+s[2]+'</button>';}).join('')+'</div>');}
+var _renderFeed8=renderFeed;renderFeed=function(){_renderFeed8();var hd=document.querySelector('#v-feed .sohead');if(hd&&!hd.querySelector('.reelb'))hd.insertAdjacentHTML('afterbegin','<button class="igicon reelb" onclick="reelsTab()" title="Reels">'+igSvg('<rect x="2" y="3" width="20" height="18" rx="4"/><path d="M2 8h20M8 3l3 5M14 3l3 5"/><path d="m10 12 5 3-5 3z" fill="currentColor"/>')+'</button>');
+ if(typeof storyLoad==='function'&&FMODE!=='all')storyLoad();noteLoad();};
+/* Kəşf: vahid axtarış */
+var _feedMode8=feedMode;feedMode=function(m,arg){_feedMode8(m,arg);if(m==='explore'){var n=0;(function go(){var b=$('soBody');if(!b||FMODE!=='explore')return;if(!b.querySelector('.igsec')&&n++<40){setTimeout(go,100);return;}if($('srchI'))return;
+  b.insertAdjacentHTML('afterbegin','<div class="srch"><input id="srchI" placeholder="Axtar: insan, #mövzu, post…" oninput="clearTimeout(window._srT);window._srT=setTimeout(srchGo,280)"><div id="srchR"></div></div>');})();}};
+function srchGo(){var q=($('srchI')||{}).value||'';var r=$('srchR');if(!r)return;var rest=Array.prototype.slice.call($('soBody').children).filter(function(c){return !c.classList.contains('srch');});
+ if(!q.trim()){r.innerHTML='';rest.forEach(function(c){c.style.display='';});return;}rest.forEach(function(c){c.style.display='none';});r.innerHTML=skel(1);
+ run(sb.rpc('soc_search',{p_q:q})).then(function(s){if(($('srchI')||{}).value!==q)return;s=s||{};var h='';
+  if(s.people&&s.people.length)h+='<div class="igsec">İnsanlar</div>'+s.people.map(function(u){return '<div class="igrow" onclick="socProfile(\''+u.uid+'\')">'+chatAva(u.ad,u.photo,44)+'<div class="igmeta"><div class="igname">'+esc(u.ad)+'</div><div class="iglast">'+esc(u.vezife||'')+'</div></div></div>';}).join('');
+  if(s.tags&&s.tags.length)h+='<div class="igsec">Mövzular</div>'+s.tags.map(function(t){return '<div class="igrow" onclick="feedMode(\'tag\',\''+esc(t.t)+'\')"><span class="srhash">#</span><div class="igmeta"><div class="igname">#'+esc(t.t)+'</div><div class="iglast">'+t.n+' post</div></div></div>';}).join('');
+  if(s.posts&&s.posts.length){s.posts.forEach(function(p){if(!FEED.some(function(y){return y.id===p.id;}))FEED.push(p);});h+='<div class="igsec">Postlar</div><div class="pfgrid">'+s.posts.map(function(x){var m=x.media&&x.media[0],img=m?m.url:x.image;return '<button onclick="postOpen(\''+x.id+'\')">'+(img?'<img src="'+esc(img)+'">':'<span class="pftx">'+esc((x.body||'').slice(0,70))+'</span>')+'</button>';}).join('')+'</div>';}
+  r.innerHTML=h||'<div class="pfempty">"'+esc(q)+'" üzrə nəticə yoxdur</div>';}).catch(err);}
+/* REELS */
+var _rl=null;
+function reelsTab(){var o=document.createElement('div');o.id='igReel';o.innerHTML='<div class="rlh"><b>Reels</b><button onclick="reelsClose()">✕</button></div><div class="rlw" id="rlW"><div class="rlsk"><span class="spin"></span></div></div>';document.body.appendChild(o);document.body.classList.add('incall');
+ run(sb.rpc('feed2',{p_mode:'video',p_arg:null,p_before:null})).then(function(l){l=(l||[]).filter(function(p){return p.media&&p.media.some(function(m){return m.kind==='video';});});var w=$('rlW');if(!w)return;
+  if(!l.length){w.innerHTML='<div class="rlsk">Hələ video yoxdur.<br>İlk Reels-i sən paylaş!</div>';return;}l.forEach(function(p){var i=FEED.findIndex(function(x){return x.id===p.id;});if(i>=0)FEED[i]=p;else FEED.push(p);});
+  w.innerHTML=l.map(function(p){var v=p.media.find(function(m){return m.kind==='video';}),a=p.author||{};return '<section data-id="'+p.id+'"><video src="'+esc(v.url)+'" playsinline loop preload="metadata"></video><span class="rlmute">🔇</span>'
+   +'<div class="rlside"><button onclick="reelLike(\''+p.id+'\',this)" class="'+(p.my?'on':'')+'">'+igSvg(IGP.heart,p.my?'#ff3040':'none')+'<span>'+igNum(p.likes||0)+'</span></button><button onclick="feedComments(\''+p.id+'\')">'+igSvg(IGP.cm)+'<span>'+igNum(p.comments||0)+'</span></button><button onclick="postShare(\''+p.id+'\')">'+igSvg(IGP.snd)+'</button><button onclick="postSave(\''+p.id+'\','+(!p.saved)+')">'+igSvg(IGP.bm,p.saved?'#fff':'none')+'</button></div>'
+   +'<div class="rlcap"><div class="rlau" onclick="reelsClose();socProfile(\''+a.uid+'\')">'+chatAva(a.ad,a.photo,32)+'<b>'+esc(a.ad||'')+'</b></div>'+(p.body?'<p>'+esc(p.body)+'</p>':'')+'</div></section>';}).join('');
+  _rl={muted:true,io:new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target.querySelector('video');if(e.isIntersecting&&e.intersectionRatio>.7){v.muted=_rl.muted;v.play().catch(function(){});if(typeof _seenQ!=='undefined'){var id=e.target.dataset.id;if(!_seenDone[id]){_seenDone[id]=1;_seenQ.push(id);}}}else v.pause();});},{threshold:[0,.7,1]})};
+  Array.prototype.forEach.call(w.querySelectorAll('section'),function(s){_rl.io.observe(s);var last=0;s.addEventListener('click',function(e){if(e.target.closest('.rlside,.rlcap'))return;var now=Date.now();if(now-last<280){var b=s.querySelector('.rlside button');if(!b.classList.contains('on'))reelLike(s.dataset.id,b);var h=document.createElement('span');h.className='svbig';h.textContent='❤️';s.appendChild(h);setTimeout(function(){h.remove();},900);last=0;return;}last=now;
+   setTimeout(function(){if(last!==now)return;_rl.muted=!_rl.muted;w.querySelectorAll('video').forEach(function(v){v.muted=_rl.muted;});w.querySelectorAll('.rlmute').forEach(function(m){m.textContent=_rl.muted?'🔇':'🔊';m.classList.remove('flash');void m.offsetWidth;m.classList.add('flash');});},290);});});}).catch(err);}
+function reelLike(id,b){var p=FEED.find(function(x){return x.id===id;});if(!p)return;var on=!b.classList.contains('on');b.classList.toggle('on',on);p.likes=(p.likes||0)+(on?1:-1);p.my=on?'❤️':null;b.innerHTML=igSvg(IGP.heart,on?'#ff3040':'none')+'<span>'+igNum(p.likes)+'</span>';sb.rpc('post_react',{p_id:id,p_emoji:on?'❤️':null}).then(function(){},function(){});}
+function reelsClose(){var o=$('igReel');if(!o)return;o.querySelectorAll('video').forEach(function(v){v.pause();});if(_rl&&_rl.io)_rl.io.disconnect();_rl=null;o.remove();document.body.classList.remove('incall');}
+var _backAct9=backAct;backAct=function(){if($('igReel')){if($('modal').classList.contains('on'))closeModal();else reelsClose();return true;}if($('stEd')){stEdClose();return true;}return _backAct9();};
+
+/* ---------- 7. POST: redaktə, kəsmə və filtr ---------- */
+var _feedMenu8=feedMenu;feedMenu=function(id){_feedMenu8(id);var p=FEED.find(function(x){return x.id===id;})||{};var mb=$('mbox');if(mb&&p.mine&&p.kind==='post'){var f=mb.querySelector('.igmenu');if(f)f.insertAdjacentHTML('beforebegin','<button class="igmenu" onclick="postEdit(\''+id+'\')">✏️ Redaktə et</button>');}};
+function postEdit(id){var p=FEED.find(function(x){return x.id===id;})||{};modal('<div class="mhead"><h3>Postu redaktə et</h3><button class="x" onclick="closeModal()">×</button></div><textarea id="peT" rows="6" style="width:100%">'+esc(p.body||'')+'</textarea><button class="btn" style="width:100%;margin-top:10px" onclick="postEditGo(\''+id+'\')">Yadda saxla</button>');mentionBind($('peT'));}
+function postEditGo(id){var b=$('peT').value;run(sb.rpc('post_edit',{p_id:id,p_body:b})).then(function(){closeModal();var p=FEED.find(function(x){return x.id===id;});if(p){p.body=b;postRedraw(p);}toast('Yeniləndi');}).catch(err);}
+var FPF={n:['Normal',''],c:['Clarendon','contrast(1.2) saturate(1.35)'],j:['Juno','saturate(1.4) hue-rotate(-8deg) brightness(1.05)'],l:['Lark','brightness(1.1) saturate(.85) contrast(.95)'],g:['Gingham','brightness(1.05) hue-rotate(-10deg) sepia(.15)'],m:['Moon','grayscale(1) contrast(1.1) brightness(1.05)'],w:['İsti','sepia(.3) saturate(1.3) brightness(1.03)']};
+var _fpAR='o',_fpFL='n';
+var _fpPrev8=fpPrev;fpPrev=function(){_fpPrev8();var el=$('fpPrev');if(!el)return;var imgs=_fpMedia.some(function(f){return !f.url&&/^image/.test(f.type);});var ed=$('fpEd');
+ if(!imgs){if(ed)ed.remove();return;}if(!ed){el.insertAdjacentHTML('afterend','<div id="fpEd" class="fped"></div>');ed=$('fpEd');}
+ ed.innerHTML='<div class="fpar">'+[['o','Orijinal'],['s','1:1'],['p','4:5']].map(function(a){return '<button class="'+(_fpAR===a[0]?'on':'')+'" onclick="_fpAR=\''+a[0]+'\';fpPrev()">'+a[1]+'</button>';}).join('')+'</div><div class="fpfl">'+Object.keys(FPF).map(function(k){var f=_fpMedia.find(function(x){return !x.url&&/^image/.test(x.type);});return '<button class="'+(_fpFL===k?'on':'')+'" onclick="_fpFL=\''+k+'\';fpPrev()"><img src="'+URL.createObjectURL(f)+'" style="filter:'+FPF[k][1]+'"><small>'+FPF[k][0]+'</small></button>';}).join('')+'</div>';
+ el.querySelectorAll('img').forEach(function(i){i.style.filter=FPF[_fpFL][1];i.style.aspectRatio=_fpAR==='s'?'1':_fpAR==='p'?'4/5':'';i.style.objectFit='cover';});};
+function fpProcess(f){if(f.url||!/^image\//.test(f.type)||(_fpAR==='o'&&_fpFL==='n'))return Promise.resolve(f);return new Promise(function(res){var u=URL.createObjectURL(f),im=new Image();im.onload=function(){var W=im.naturalWidth,H=im.naturalHeight,r=_fpAR==='s'?1:_fpAR==='p'?.8:W/H,sw=W,sh=H;if(W/H>r)sw=H*r;else sh=W/r;var sc=Math.min(1,1600/Math.max(sw,sh));
+ var c=document.createElement('canvas');c.width=Math.round(sw*sc);c.height=Math.round(sh*sc);var x=c.getContext('2d');x.filter=FPF[_fpFL][1]||'none';x.drawImage(im,(W-sw)/2,(H-sh)/2,sw,sh,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(function(b){res(b?new File([b],'post.jpg',{type:'image/jpeg'}):f);},'image/jpeg',.86);};im.onerror=function(){res(f);};im.src=u;});}
+fpUploadAll=function(){return Promise.all(_fpMedia.map(function(f){if(f.url)return Promise.resolve({url:f.url,kind:f.kind||'image'});return fpProcess(f).then(function(g){return chatUpload(g,'post').then(function(u){return {url:u,kind:/^video/.test(f.type)?'video':'image'};});});}));};
+var _feedCompose8=feedCompose;feedCompose=function(c,ch){_fpAR='o';_fpFL='n';_feedCompose8(c,ch);};
+
+/* ---------- 8. HEKAYƏ REDAKTORU ---------- */
+var _st=null,STC=['#ffffff','#000000','#ff3040','#ffcc00','#34c759','#0a84ff','#af52de'];
+storyPick=function(){modal('<div class="mhead"><h3>Hekayəyə əlavə et</h3><button class="x" onclick="closeModal()">×</button></div><div class="stpk"><button onclick="stFile(true)"><span>📷</span>Kamera</button><button onclick="stFile(false)"><span>🖼</span>Qalereya</button><button onclick="closeModal();stText()"><span>Aa</span>Yazı</button></div>');};
+function stFile(cam){var i=document.createElement('input');i.type='file';i.accept=cam?'image/*':'image/*,video/*';if(cam)i.setAttribute('capture','environment');i.onchange=function(){var f=i.files[0];if(!f)return;if(f.size>60*1024*1024){toast('Fayl çox böyükdür');return;}closeModal();stEdit(f);};i.click();}
+function stText(){var c=document.createElement('canvas');c.width=1080;c.height=1920;var x=c.getContext('2d'),g=x.createLinearGradient(0,0,1080,1920);g.addColorStop(0,'#6366f1');g.addColorStop(1,'#ec4899');x.fillStyle=g;x.fillRect(0,0,1080,1920);c.toBlob(function(b){stEdit(new File([b],'bg.png',{type:'image/png'}),true);});}
+function stEdit(f,textMode){var vid=/^video\//.test(f.type),u=URL.createObjectURL(f);_st={f:f,vid:vid,u:u,layers:[],aud:'all',stk:null};_stoStk=null;
+ var o=document.createElement('div');o.id='stEd';o.innerHTML='<div class="sted"><div class="stcv" id="stCv">'+(vid?'<video src="'+u+'" autoplay muted loop playsinline></video>':'<img src="'+u+'">')+'<div class="stly" id="stLy"></div></div>'
+  +'<div class="sttop"><button onclick="stEdClose()">✕</button><span></span><button onclick="stAddText()">Aa</button><button onclick="stMention()">@</button><button onclick="stStk()">☺</button></div>'
+  +'<div class="stbot"><div class="s3aud"><button class="on" data-a="all" onclick="stAud(this)">🌐 Hamı</button><button data-a="cf" onclick="stAud(this)">⭐ Yaxın dostlar</button></div><button class="stgo" id="stGo" onclick="stShare()">Hekayən ➜</button></div><div id="stPanel"></div></div>';
+ document.body.appendChild(o);document.body.classList.add('incall');if(textMode)setTimeout(stAddText,200);}
+function stEdClose(){if(!_st)return;var o=$('stEd');if(o)o.remove();URL.revokeObjectURL(_st.u);_st=null;document.body.classList.remove('incall');}
+function stAud(b){_st.aud=b.dataset.a;Array.prototype.forEach.call(b.parentNode.children,function(x){x.classList.toggle('on',x===b);});}
+function stAddText(pre){var p=$('stPanel');p.innerHTML='<div class="stpan"><input id="stT" maxlength="120" placeholder="Yazı…" value="'+esc(pre||'')+'"><div class="stcol">'+STC.map(function(c,i){return '<button style="background:'+c+'" class="'+(i?'':'on')+'" data-c="'+c+'" onclick="Array.prototype.forEach.call(this.parentNode.children,function(x){x.classList.remove(\'on\')});this.classList.add(\'on\')"></button>';}).join('')+'<label><input type="checkbox" id="stBg"> fon</label></div><button class="btn" onclick="stTextOk()">Əlavə et</button></div>';setTimeout(function(){$('stT').focus();},50);}
+function stTextOk(){var t=$('stT').value.trim();var c=(document.querySelector('#stPanel .stcol .on')||{}).dataset;$('stPanel').innerHTML='';if(!t)return;var L={t:t,c:c?c.c:'#fff',bg:$('stBg')?$('stBg').checked:false,x:.5,y:.4,s:1};_st.layers.push(L);stDrawLayers();}
+function stMention(){s3pick('Kimi qeyd edək?',function(uid,ad){closeModal();_st.ment=(_st.ment||[]).concat([uid]);_st.layers.push({t:'@'+ad,c:'#ffffff',bg:true,x:.5,y:.6,s:1,m:1});stDrawLayers();},true);}
+function stStk(){var p=$('stPanel');p.innerHTML='<div class="stpan"><div class="fptools" style="justify-content:center"><button class="btn ghost sm" onclick="stoStk(\'poll\')">📊 Sorğu</button><button class="btn ghost sm" onclick="stoStk(\'q\')">❓ Sual</button><button class="btn ghost sm" onclick="_stoStk=null;$(\'stPanel\').innerHTML=\'\'">Ləğv</button></div><div id="stoStkF"></div><button class="btn" style="width:100%;margin-top:6px" onclick="stStkOk()">Hazırdır</button></div>';}
+function stStkOk(){var st=null;if(_stoStk==='poll'){var q=$('skQ').value.trim(),a=$('skA').value.trim()||'Bəli',b=$('skB').value.trim()||'Xeyr';if(q)st={type:'poll',q:q,opts:[a,b]};}else if(_stoStk==='q'){var q2=$('skQ').value.trim();if(q2)st={type:'q',q:q2};}_st.stk=st;$('stPanel').innerHTML=st?'<div class="stchip">'+(st.type==='poll'?'📊 ':'❓ ')+esc(st.q)+' <a onclick="_st.stk=null;this.parentNode.remove()">✕</a></div>':'';}
+function stDrawLayers(){var ly=$('stLy');if(!ly)return;ly.innerHTML=_st.layers.map(function(L,i){return '<span class="stl'+(L.bg?' bg':'')+'" data-i="'+i+'" style="left:'+(L.x*100)+'%;top:'+(L.y*100)+'%;color:'+(L.bg?(L.c==='#ffffff'?'#000':'#fff'):L.c)+';'+(L.bg?'background:'+L.c:'')+';transform:translate(-50%,-50%) scale('+L.s+')">'+esc(L.t)+'</span>';}).join('');
+ Array.prototype.forEach.call(ly.children,function(el){var L=_st.layers[+el.dataset.i],P={},d0=0,s0=1;el.addEventListener('pointerdown',function(e){e.preventDefault();el.setPointerCapture(e.pointerId);P[e.pointerId]={x:e.clientX,y:e.clientY};var k=Object.keys(P);if(k.length===2){d0=Math.hypot(P[k[0]].x-P[k[1]].x,P[k[0]].y-P[k[1]].y);s0=L.s;}el._t=Date.now();});
+  el.addEventListener('pointermove',function(e){if(!P[e.pointerId])return;P[e.pointerId]={x:e.clientX,y:e.clientY};var k=Object.keys(P),r=$('stCv').getBoundingClientRect();if(k.length===2){var d=Math.hypot(P[k[0]].x-P[k[1]].x,P[k[0]].y-P[k[1]].y);L.s=Math.max(.5,Math.min(3,s0*d/d0));}else{L.x=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));L.y=Math.max(0,Math.min(1,(e.clientY-r.top)/r.height));}
+   el.style.left=(L.x*100)+'%';el.style.top=(L.y*100)+'%';el.style.transform='translate(-50%,-50%) scale('+L.s+')';var tr=L.y>.88;$('stEd').classList.toggle('trash',tr);});
+  el.addEventListener('pointerup',function(e){delete P[e.pointerId];if($('stEd').classList.contains('trash')){$('stEd').classList.remove('trash');_st.layers.splice(_st.layers.indexOf(L),1);stDrawLayers();return;}if(Date.now()-el._t<200&&Object.keys(P).length===0&&!L.m){_st.layers.splice(_st.layers.indexOf(L),1);stDrawLayers();stAddText(L.t);}});});}
+function stCompose(){return new Promise(function(res){if(_st.vid||!_st.layers.length)return res(_st.f);var im=new Image();im.onload=function(){var c=document.createElement('canvas');c.width=1080;c.height=1920;var x=c.getContext('2d');x.fillStyle='#000';x.fillRect(0,0,1080,1920);
+ var cv=$('stCv').getBoundingClientRect(),s=Math.min(1080/im.naturalWidth,1920/im.naturalHeight),w=im.naturalWidth*s,h=im.naturalHeight*s;
+ var blur=document.createElement('canvas');x.filter='blur(40px) brightness(.6)';x.drawImage(im,-60,-60,1200,2040);x.filter='none';x.drawImage(im,(1080-w)/2,(1920-h)/2,w,h);
+ _st.layers.forEach(function(L){var fs=Math.round(64*L.s);x.font='700 '+fs+'px Inter,system-ui,sans-serif';x.textAlign='center';x.textBaseline='middle';var tx=L.x*1080,ty=L.y*1920,tw=x.measureText(L.t).width;
+  if(L.bg){x.fillStyle=L.c;var pw=tw+fs*.8,ph=fs*1.5;if(x.roundRect){x.beginPath();x.roundRect(tx-pw/2,ty-ph/2,pw,ph,ph*.3);x.fill();}else x.fillRect(tx-pw/2,ty-ph/2,pw,ph);x.fillStyle=L.c==='#ffffff'?'#000':'#fff';}else{x.fillStyle=L.c;x.shadowColor='rgba(0,0,0,.45)';x.shadowBlur=12;}
+  x.fillText(L.t,tx,ty);x.shadowBlur=0;});
+ c.toBlob(function(b){res(new File([b],'story.jpg',{type:'image/jpeg'}));},'image/jpeg',.88);};im.onerror=function(){res(_st.f);};im.src=_st.u;});}
+function stShare(){var g=$('stGo');g.disabled=true;g.textContent='Yüklənir…';var S=_st;stCompose().then(function(f){return chatUpload(f,'story');}).then(function(url){var cap=S.vid&&S.layers.length?S.layers.map(function(l){return l.t;}).join(' · '):null;
+  return run(sb.rpc('story_add3',{p_url:url,p_kind:S.vid?'video':'image',p_caption:cap,p_sticker:S.stk,p_audience:S.aud}));}).then(function(){(S.ment||[]).forEach(function(u){sb.rpc('msg_send',{p_to:u,p_group:null,p_body:'📸 Səni hekayəsində qeyd etdi',p_kind:'text'}).then(function(){},function(){});});stEdClose();toast(S.aud==='cf'?'⭐ Yaxın dostlarla paylaşıldı':'Hekayən paylaşıldı');storyLoad();}).catch(function(e){g.disabled=false;g.textContent='Hekayən ➜';toast('Alınmadı: '+(e.message||e));});}
+
+/* ---------- 9. DM: axtarış, media, yönləndirmə ---------- */
+var _chatRoomMenu8=chatRoomMenu;chatRoomMenu=function(){_chatRoomMenu8();var mb=$('mbox');if(mb){var f=mb.querySelector('.igmenu');if(f)f.insertAdjacentHTML('afterend','<button class="igmenu" onclick="closeModal();chatSearch()">🔎 Söhbətdə axtar</button><button class="igmenu" onclick="closeModal();chatMedia()">🖼 Media, fayl və linklər</button>');}};
+function chatSearch(){var hd=document.querySelector('.igroom .ighead');if(!hd||$('chS'))return;hd.insertAdjacentHTML('afterend','<div class="chs" id="chS"><input id="chSI" placeholder="Mesajlarda axtar…" oninput="chatSearchGo()"><span id="chSN"></span><button onclick="chatSearchEnd()">Bağla</button></div>');$('chSI').focus();}
+function chatSearchGo(){var q=($('chSI').value||'').toLowerCase().trim(),n=0,first=null;document.querySelectorAll('#chatMsgs .igline').forEach(function(l){var m=CHATmsgs.find(function(x){return 'msg'+x.id===(l.querySelector('[id^=msg]')||{}).id;});var hit=!q||(m&&(m.body||'').toLowerCase().indexOf(q)>=0);l.style.display=hit?'':'none';if(q&&hit){n++;if(!first)first=l;}});
+ document.querySelectorAll('#chatMsgs .igtime,#chatMsgs .igsys,#chatMsgs .igseen').forEach(function(x){x.style.display=q?'none':'';});$('chSN').textContent=q?n+' nəticə':'';if(first)first.scrollIntoView({block:'center'});}
+function chatSearchEnd(){var s=$('chS');if(s)s.remove();document.querySelectorAll('#chatMsgs .igline,#chatMsgs .igtime,#chatMsgs .igsys,#chatMsgs .igseen').forEach(function(x){x.style.display='';});var el=$('chatMsgs');if(el)el.scrollTop=el.scrollHeight;}
+function chatMedia(){var M=(CHATmsgs||[]).filter(function(m){return !m.deleted;}),im=M.filter(function(m){return m.image||(m.kind==='vcircle'&&m.file);}),fl=M.filter(function(m){return m.kind==='file';}),ln=M.filter(function(m){return /https?:\/\//.test(m.body||'');});
+ window._cmL=im.map(function(m){return m.image?{url:m.image,kind:'image'}:{url:m.file,kind:'video'};});
+ modal('<div class="mhead"><h3>Media və fayllar</h3><button class="x" onclick="closeModal()">×</button></div><div class="soseg s3sub"><button class="on" onclick="cmTab(this,0)">Media ('+im.length+')</button><button onclick="cmTab(this,1)">Fayllar ('+fl.length+')</button><button onclick="cmTab(this,2)">Linklər ('+ln.length+')</button></div>'
+  +'<div class="cmt"><div class="pfgrid">'+(im.length?im.map(function(m,i){return '<button onclick="closeModal();mediaView(window._cmL,'+i+')">'+(m.image?'<img src="'+esc(m.image)+'">':'<video src="'+esc(m.file)+'#t=0.1" muted></video><i class="pfmi">▶</i>')+'</button>';}).join(''):'<div class="pfempty">Media yoxdur</div>')+'</div></div>'
+  +'<div class="cmt" style="display:none">'+(fl.length?fl.map(function(m){return '<a class="igrow" href="'+esc(m.file)+'" target="_blank" rel="noopener"><span class="igfic">📄</span><div class="igmeta"><div class="igname">'+esc(m.fname||'Fayl')+'</div><div class="iglast">'+chatFmtSize(m.fsize)+' · '+chatAgo(m.at)+'</div></div></a>';}).join(''):'<div class="pfempty">Fayl yoxdur</div>')+'</div>'
+  +'<div class="cmt" style="display:none">'+(ln.length?ln.map(function(m){var u=(m.body.match(/https?:\/\/\S+/)||[''])[0];return '<a class="igrow" href="'+esc(u)+'" target="_blank" rel="noopener"><span class="igfic">🔗</span><div class="igmeta"><div class="igname">'+esc(u.replace(/^https?:\/\//,'').slice(0,50))+'</div><div class="iglast">'+chatAgo(m.at)+'</div></div></a>';}).join(''):'<div class="pfempty">Link yoxdur</div>')+'</div>');}
+function cmTab(b,i){Array.prototype.forEach.call(b.parentNode.children,function(x,k){x.classList.toggle('on',k===i);});Array.prototype.forEach.call(document.querySelectorAll('#mbox .cmt'),function(x,k){x.style.display=k===i?'':'none';});}
+var _chatMsgMenu8=chatMsgMenu;chatMsgMenu=function(id){_chatMsgMenu8(id);var c=$('igCtx');if(!c)return;var b=c.querySelector('[onclick*="chatSetReply"]');if(!b)return;var n=b.cloneNode(true);n.setAttribute('onclick','chatCtxClose();chatFwd('+id+')');n.innerHTML=n.innerHTML.replace('Cavab ver','Yönləndir').replace('↩︎','↪︎');b.parentNode.insertBefore(n,b.nextSibling);};
+function chatFwd(id){var m=CHATmsgs.find(function(x){return x.id===id;});if(!m)return;Promise.all([run(sb.rpc('msg_threads')).catch(function(){return [];}),socContacts()]).then(function(r){var th=(r[0]||[]).slice(0,20);
+ modal('<div class="mhead"><h3>Yönləndir</h3><button class="x" onclick="closeModal()">×</button></div><div style="max-height:60vh;overflow-y:auto">'+th.map(function(t){return '<div class="igrow">'+(t.is_group?grpAva(t.emoji,40):chatAva(t.ad,t.photo,40))+'<div class="igmeta"><div class="igname">'+esc(t.ad)+'</div></div><button class="btn sm" onclick="chatFwdGo('+id+',\''+t.other+'\','+(t.is_group?1:0)+',this)">Göndər</button></div>';}).join('')+'</div>');});}
+function chatFwdGo(id,to,g,b){var m=CHATmsgs.find(function(x){return x.id===id;});if(!m)return;b.disabled=true;b.textContent='✓';
+ run(sb.rpc('msg_send',{p_to:g?null:to,p_group:g?to:null,p_body:m.body||'',p_kind:m.kind==='story_react'?'text':(m.kind||'text'),p_image:m.image||null,p_file_url:m.file||null,p_file_name:m.fname||null,p_file_size:m.fsize||null,p_duration:m.dur||null})).catch(err);}
+
+/* ---------- 10. BİLDİRİŞLƏR: qruplaşdırma, bölmələr, İzlə ---------- */
+notifOpen=function(){Promise.all([run(sb.rpc('notif_list')),run(sb.rpc('follow_list',{p_uid:ME.user_id,p_kind:'following'})).catch(function(){return [];})]).then(function(r){var l=r[0]||[],fw={};(r[1]||[]).forEach(function(u){fw[u.uid]=1;});
+ var ic={react:'❤️',comment:'💬',reply:'↩︎',mention:'@',follow:'👤',share:'🔁',clike:'❤️',event:'📅',story:'📸',mentor:'🧭',endorse:'🏅',qa:'❓',coffee:'☕',chal:'🏆',mod:'🛡',sched:'⏰',shop:'🎁',comp:'💌',streak:'🔥'};
+ var G=[],key={};l.forEach(function(n){var grp=['react','clike','comment','follow'].indexOf(n.kind)>=0;var k=grp?n.kind+'|'+(n.post||'')+'|'+new Date(n.at).toDateString():null;if(k&&key[k]){key[k].more.push(n);if(!n.read)key[k].read=false;return;}var o=Object.assign({more:[]},n);G.push(o);if(k)key[k]=o;});
+ var day=86400000,now=Date.now(),sec=function(n){var d=now-new Date(n.at);return d<day?'Bu gün':d<7*day?'Bu həftə':'Daha əvvəl';};
+ var go=function(n,a){if(n.post&&n.kind!=='story')return "postOpen('"+n.post+"')";if(['follow','endorse','mentor'].indexOf(n.kind)>=0)return "socProfile('"+a.uid+"')";if(n.kind==='event')return "show('feed');feedMode('events')";if(n.kind==='qa')return "show('feed');feedMode('qa')";if(['coffee','chal','streak'].indexOf(n.kind)>=0)return "show('feed');feedMode('team')";if(n.kind==='comp')return "show('feed');feedMode('fun')";if(n.kind==='shop')return "show('feed');feedMode('shop')";return '';};
+ var cur='',h='';G.forEach(function(n){var s=sec(n);if(s!==cur){cur=s;h+='<div class="ntsec">'+s+'</div>';}var a=n.actor||{},sys=['mod','sched','chal','shop','comp','streak'].indexOf(n.kind)>=0;
+  var names=[a].concat(n.more.map(function(m){return m.actor||{};})).filter(function(x,i,arr){return x.uid&&arr.findIndex(function(y){return y.uid===x.uid;})===i;});
+  var who=sys?'Baş Ofis':esc(names[0]&&names[0].ad||'')+(names.length===2?' və '+esc(names[1].ad):names.length>2?' və '+(names.length-1)+' nəfər':'');
+  var av=sys?'<span class="s3ni">'+(ic[n.kind]||'🔔')+'</span>':names.length>1?'<span class="ntav2">'+chatAva(names[1].ad,names[1].photo,30)+chatAva(names[0].ad,names[0].photo,30)+'</span>':chatAva(a.ad,a.photo,44);
+  var act=n.kind==='follow'&&names.length===1&&a.uid?'<button class="btn sm'+(fw[a.uid]?' ghost':'')+'" onclick="event.stopPropagation();socFollow2(\''+a.uid+'\','+(!fw[a.uid])+',this)">'+(fw[a.uid]?'İzləyirsən':'Sən də izlə')+'</button>':'';
+  h+='<div class="sonotif'+(n.read?'':' un')+'" onclick="closeModal();'+go(n,a)+'"><span class="soni">'+av+(sys?'':'<i>'+(ic[n.kind]||'🔔')+'</i>')+'</span><div style="flex:1;min-width:0"><b>'+who+'</b> '+esc(n.text)+'<small>'+chatAgo(n.at)+'</small></div>'+act+'</div>';});
+ modal('<div class="mhead"><h3>Bildirişlər</h3><button class="x" onclick="closeModal()">×</button></div><div style="max-height:70vh;overflow-y:auto">'+(h||'<p class="hint">Hələ bildiriş yoxdur</p>')+'</div>');sb.rpc('notif_read_all').then(function(){NOTIF_N=0;notifCount();},function(){});}).catch(err);};
+
+/* ---------- 11. ŞƏRHLƏR: emoji zolağı, sabitləmə, basıb saxla ---------- */
+feedComments=function(id){_cParent=null;_ment={};var P=FEED.find(function(x){return x.id===id;})||{};run(sb.rpc('post_comments2',{p_id:id})).then(function(r){r=r||[];window._cmts=r;window._cmPost=id;var top=r.filter(function(c){return !c.parent;}),kids=function(pid){return r.filter(function(c){return c.parent===pid;});};
+ var one=function(c,sub){return '<div class="igcm'+(sub?' sub':'')+(c.pinned?' pin':'')+'" data-c="'+c.id+'" oncontextmenu="event.preventDefault();cmAct('+c.id+')" ontouchstart="this._t=setTimeout(function(){cmAct('+c.id+')},500)" ontouchend="clearTimeout(this._t)" ontouchmove="clearTimeout(this._t)">'+chatAva(c.ad,c.photo,sub?26:32)+'<div class="cmb">'+(c.pinned?'<small class="cmpin">📌 Sabitlənib</small>':'')+'<div><b onclick="socProfile(\''+c.uid+'\')">'+esc(c.ad)+'</b> '+socText(c.body)+'</div><small>'+chatAgo(c.at)+(c.likes?' · '+c.likes+' bəyənmə':'')+' · <a onclick="cmReply('+(c.parent||c.id)+',\''+chatArg(c.ad)+'\')">Cavab ver</a></small></div><button class="cmlk'+(c.liked?' on':'')+'" onclick="cmLike(\''+id+'\','+c.id+','+(!c.liked)+')">'+(c.liked?'❤️':'🤍')+'</button></div>';};
+ modal('<div class="mhead"><h3>Şərhlər</h3><button class="x" onclick="closeModal()">×</button></div><div style="max-height:52vh;overflow-y:auto">'+(top.length?top.map(function(c){return one(c)+kids(c.id).map(function(k){return one(k,1);}).join('');}).join(''):'<div class="pfempty">Hələ şərh yoxdur<br><small>Söhbətə ilk sən başla</small></div>')+'</div>'
+  +'<div class="cmemo">'+['❤️','🙌','🔥','👏','😢','😍','😮','😂'].map(function(e){return '<button onclick="var i=$(\'fcB\');i.value+=\''+e+'\';i.focus()">'+e+'</button>';}).join('')+'</div>'
+  +'<div id="cmTo" class="cmto"></div><div class="row" style="gap:6px;margin-top:6px;position:relative"><input id="fcB" placeholder="Şərh yaz… (@ ilə qeyd et)" style="flex:1" onkeydown="if(event.key===\'Enter\')feedComment(\''+id+'\')"><button class="btn" onclick="feedComment(\''+id+'\')">Göndər</button></div>');mentionBind($('fcB'));}).catch(err);};
+function cmAct(cid){var c=(window._cmts||[]).find(function(x){return x.id===cid;});if(!c)return;try{navigator.vibrate&&navigator.vibrate(12);}catch(e){}var pid=window._cmPost,P=FEED.find(function(x){return x.id===pid;})||{},own=P.mine||SOC_MOD;
+ var d=document.createElement('div');d.className='s3over';d.innerHTML='<div class="s3sheet"><div class="cmq">'+esc(c.ad)+': '+esc(c.body.slice(0,80))+'</div>'
+  +'<button class="igmenu" onclick="this.closest(\'.s3over\').remove();cmReply('+(c.parent||c.id)+',\''+chatArg(c.ad)+'\')">↩︎ Cavab ver</button>'
+  +(own&&!c.parent?'<button class="igmenu" onclick="this.closest(\'.s3over\').remove();cmPin('+cid+','+(!c.pinned)+')">📌 '+(c.pinned?'Sabitdən çıxar':'Sabitlə')+'</button>':'')
+  +(c.mine||own?'<button class="igmenu" style="color:#ed4956" onclick="this.closest(\'.s3over\').remove();cmDel('+cid+')">🗑 Sil</button>':'')
+  +(!c.mine?'<button class="igmenu" onclick="this.closest(\'.s3over\').remove();repOpen(\'comment\',\''+cid+'\')">🚩 Şikayət et</button>':'')
+  +'<button class="igmenu" onclick="this.closest(\'.s3over\').remove()">Ləğv et</button></div>';d.onclick=function(e){if(e.target===d)d.remove();};document.body.appendChild(d);}
+function cmPin(cid,on){run(sb.rpc('comment_pin',{p_id:cid,p_on:on})).then(function(){feedComments(window._cmPost);}).catch(err);}
+function cmDel(cid){if(!confirm('Şərh silinsin?'))return;run(sb.rpc('comment_delete',{p_id:cid})).then(function(){var p=FEED.find(function(x){return x.id===window._cmPost;});if(p){p.comments=Math.max(0,(p.comments||1)-1);postRedraw(p);}feedComments(window._cmPost);}).catch(err);}
 </script>
 </body>
 </html>
