@@ -211,3 +211,4 @@ Frontend ofis.html sonunda ayrıca `<style>`+`<script>` bloku ("SOSİAL v3"). Ba
 - Çat: video dairə (kind `vcircle`), 24 saat silinən mesaj/tema/ləqəb (`chat_style`, `chat_style_set`). `trg_msg_push`-a vcircle mətni əlavə edildi.
 - Elanlar tabı (MGR): oxumayanlar + `ann_remind`.
 - 4 okt: Bazarça interfeysdən silindi (ofis-v58); `office_market` cədvəli və `mk_*` RPC-lər bazada qalır.
+- 4 okt: emoji ikonlar xətti SVG ikonlarla əvəz edildi (ofis.html sonunda 'UI İKONLARI' bloku: MutationObserver emoji→SVG, istifadəçi məzmunu — mesaj, post, reaksiya — toxunulmur; `uiIcon(name)`). Salamlama saat 00–05 üçün düzəldildi. ofis-v59.
