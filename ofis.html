@@ -3286,7 +3286,7 @@ function annOk(id){run(sb.rpc('ann_read',{p_id:id})).then(function(){var e=$('an
 
 /* ---- qarşılama axını ---- */
 function onbHtml(o){var st=o.steps||[],ok=st.filter(function(s){return s.ok;}).length;if(ok===st.length)return '';
- var act={photo:"show('me')",bio:"socProfile(ME.user_id);setTimeout(profEdit,1300)",skills:"socProfile(ME.user_id);setTimeout(profEdit,1300)",follow:"feedMode('explore')",post:"feedCompose()",story:"storyPick()",coffee:"coffeeSet(true)"};
+ var act={photo:"show('me')",bio:"socProfile(ME.user_id);setTimeout(profEdit,1300)",skills:"socProfile(ME.user_id);setTimeout(profEdit,1300)",follow:"feedMode('explore')",post:"feedCompose()",story:"storyPick()"};
  return '<div class="s3onb"><div class="row sp"><b>👋 Xoş gəldin! İlk addımlar</b><small>'+ok+'/'+st.length+'</small></div><div class="s3bar"><i style="width:'+Math.round(ok*100/st.length)+'%"></i></div>'
   +(o.mentor?'<div class="igrow" onclick="socProfile(\''+o.mentor.uid+'\')">'+chatAva(o.mentor.ad,o.mentor.photo,36)+'<div class="igmeta"><div class="igname">🧭 Mentorun: '+esc(o.mentor.ad)+'</div><div class="iglast">Sualın olsa, ona yaz</div></div><button class="btn sm ghost" onclick="event.stopPropagation();show(\'chat\');chatOpen(\''+o.mentor.uid+'\',\''+chatArg(o.mentor.ad)+'\')">Yaz</button></div>':'')
   +st.map(function(s){return '<button class="s3step'+(s.ok?' ok':'')+'" onclick="'+(s.ok?'':act[s.k]||'')+'"><i>'+(s.ok?'✓':'○')+'</i>'+esc(s.t)+'</button>';}).join('')+'</div>';}
@@ -3303,7 +3303,7 @@ function qotdSetGo(){var q=$('qsQ').value.trim();if(!q){toast('Sual yazın');ret
 
 /* ---- KOMANDA bölməsi ---- */
 function teamRender(){var b=$('soBody');
- Promise.all([run(sb.rpc('soc_digest')).catch(function(){return {};}),run(sb.rpc('qotd_today')).catch(function(){return null;}),run(sb.rpc('chal_list')).catch(function(){return [];}),run(sb.rpc('eom_state')).catch(function(){return null;}),run(sb.rpc('points_board')).catch(function(){return null;}),run(sb.rpc('coffee_state')).catch(function(){return null;})]).then(function(r){
+ Promise.all([run(sb.rpc('soc_digest')).catch(function(){return {};}),run(sb.rpc('qotd_today')).catch(function(){return null;}),run(sb.rpc('chal_list')).catch(function(){return [];}),run(sb.rpc('eom_state')).catch(function(){return null;}),run(sb.rpc('points_board')).catch(function(){return null;}),Promise.resolve(null)]).then(function(r){
   if(FMODE!=='team')return;var d=r[0]||{},q=r[1],ch=r[2]||[],eo=r[3],pb=r[4],cf=r[5],h='';
   h+='<div id="s4Team"></div><div class="s3dig"><b>📬 Bu həftə</b><span>'+(d.posts||0)+' post</span><span>'+(d.stories||0)+' hekayə</span>'+(d.events?'<span>'+d.events+' tədbir</span>':'')+(d.bdays?'<span>🎂 '+d.bdays+'</span>':'')+(d.newbies?'<span>👋 '+d.newbies+' yeni</span>':'')+(d.chal?'<span>🏁 '+d.chal+' çağırış</span>':'')+'</div>';
   if(q)h+='<div id="s3Q">'+qotdHtml(q,false)+'</div>';
@@ -3486,7 +3486,7 @@ function skEnd(uid,s,on){run(sb.rpc('skill_endorse',{p_uid:uid,p_skill:s,p_on:on
 function mentorPick(uid){s3pick('Mentor seç',function(m,ad){run(sb.rpc('mentor_set',{p_newbie:uid,p_mentor:m})).then(function(){toast('🧭 '+ad+' mentor təyin edildi');socProfile(uid);}).catch(err);},true);}
 var _profEdit3=profEdit;
 profEdit=function(){_profEdit3();var x=window._profX&&window._profX._me?window._profX:null;var mb=$('mbox');if(!mb)return;var btn=mb.querySelector('.btn:not(.ghost)');if(!btn)return;
- var go=function(x){if(!$('peS'))btn.insertAdjacentHTML('beforebegin','<div class="field"><label>🧠 Bacarıqlar (vergüllə, 15-ə qədər)</label><input id="peS" value="'+esc((x&&x.skills||[]).map(function(s){return s.s;}).join(', '))+'" placeholder="Excel, AutoCAD, danışıqlar"></div><label class="s3sw"><input type="checkbox" id="peD" '+(!x||x.digest?'checked':'')+'><span></span>📬 Həftəlik xülasə bildirişi</label><label class="s3sw"><input type="checkbox" id="peC" '+(x&&x.coffee?'checked':'')+'><span></span>☕ Qəhvə tanışlığında iştirak</label>');};
+ var go=function(x){if(!$('peS'))btn.insertAdjacentHTML('beforebegin','<div class="field"><label>🧠 Bacarıqlar (vergüllə, 15-ə qədər)</label><input id="peS" value="'+esc((x&&x.skills||[]).map(function(s){return s.s;}).join(', '))+'" placeholder="Excel, AutoCAD, danışıqlar"></div><label class="s3sw"><input type="checkbox" id="peD" '+(!x||x.digest?'checked':'')+'><span></span>📬 Həftəlik xülasə bildirişi</label>');};
  if(x)go(x);else run(sb.rpc('soc_profile_x',{p_uid:ME.user_id})).then(function(r){go(r);window._peX=r;}).catch(function(){go(null);});};
 var _profSave3=profSave;
 profSave=function(){var s=$('peS'),d=$('peD'),c=$('peC');var x=window._profX&&window._profX._me?window._profX:window._peX;var jobs=[];
