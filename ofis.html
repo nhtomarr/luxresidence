@@ -5141,5 +5141,45 @@ stShare=function(){var S=_st;if(!S)return;var th=S.vid?null:S.u,lay=S.layers.sli
     d.querySelectorAll('[data-k]').forEach(function(b){b.onclick=function(){d.remove();inp.accept=b.dataset.k;inp._ok=1;_ic.call(inp);};});return;}}
   return _ic.call(inp);};})();
 </script>
+<style>
+#mbox.cpsheet{padding-bottom:0!important}
+.cpmed{margin:4px 0 10px}.cpadd{width:100%;border:1.5px dashed #c7c7cc;background:#fafafa;border-radius:16px;padding:22px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;color:#0a0a0a}
+.cpadd span{font-size:1.8rem;line-height:1;color:#0a84ff}.cpadd b{font-size:.95rem}.cpadd small{color:#8e8e8e;font-size:.76rem}
+.cpadd.small{width:auto;flex-direction:row;padding:8px 14px;border-radius:99px;gap:8px;margin-bottom:8px}.cpadd.small span{font-size:1.1rem}.cpadd.small small{display:none}.cpadd.small b:after{content:''}
+.cpcap{display:flex;gap:10px;align-items:flex-start;padding:6px 0 4px;border-top:.5px solid #efefef}
+.cpcap textarea{flex:1;border:none!important;background:transparent!important;resize:none;font-size:1rem;line-height:1.4;padding:6px 0!important;outline:none;box-shadow:none!important;min-height:64px}
+.cpmini{display:flex;gap:6px;flex-wrap:wrap;padding:4px 0 10px}.cpmini button{border:1px solid #e5e7eb;background:#fff;border-radius:99px;padding:6px 11px;font-size:.8rem;font-weight:600;color:#0a0a0a}
+.cplist{border-top:.5px solid #efefef}
+.cprow{width:100%;display:flex;align-items:center;gap:12px;border:none;background:none;padding:13px 2px;border-bottom:.5px solid #efefef;color:#0a0a0a;text-align:left}
+.cpic{width:24px;text-align:center;font-size:1.25rem;color:#0a0a0a}.cpt{flex:1;font-size:.95rem}.cpv{color:#0a84ff;font-size:.85rem;font-weight:600;max-width:45%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cprow i{font-style:normal;color:#c7c7cc;font-size:1.3rem}
+.cprow.set .cpt{font-weight:600}
+#fpPoll .fppoll,#fpWhen>*{margin:6px 0 10px}#fpChal .fpchal{padding:10px 2px;border-bottom:.5px solid #efefef;margin:0}
+.cpfoot{position:sticky;bottom:0;display:flex;gap:8px;padding:12px 0 calc(14px + env(safe-area-inset-bottom,0px));background:inherit;margin-top:6px}.cpfoot .btn{flex:1;padding:13px}.cpfoot #fpGo{flex:2}
+</style>
+<script>
+/* ---- Post yaratma: sadə, Instagram üslubu (klaviatura avtomatik açılmır) ---- */
+feedCompose=function(club,chal){_fpMedia=[];_fpPoll=null;_fpClub=club||null;_ment={};_fpDraft=null;_fpChal=chal||null;_fpWhen=null;_fpAR='o';_fpFL='n';_fpTags=[];_fpPlace=null;_fpCollab=null;
+ var me=typeof EMP!=='undefined'&&EMP&&EMP.photo;
+ var row=function(id,ic,t,fn,extra){return '<button class="cprow" id="'+id+'" onclick="'+fn+'"><span class="cpic">'+ic+'</span><span class="cpt">'+t+'</span><span class="cpv"></span><i>›</i></button>'+(extra||'');};
+ modal('<div class="mhead"><h3>Yeni post</h3><button class="x" onclick="closeModal()">×</button></div>'
+  +'<div class="cpmed"><button class="cpadd" id="fpAdd" onclick="feedPickImg()"><span>＋</span><b>Şəkil və ya video əlavə et</b><small>10-a qədər · karusel olur</small></button><div id="fpPrev" class="fpprev"></div></div>'
+  +'<div class="cpcap">'+chatAva(ME&&ME.full_name||'Mən',me||null,34)+'<textarea id="fpB" rows="3" placeholder="Yazı əlavə et… (@ ilə qeyd, # ilə mövzu)"></textarea></div>'
+  +'<div class="cpmini"><button onclick="aiCap()">✨ AI ilə yaz</button><button onclick="fpTag()"># Mövzu</button><button onclick="draftList()">📝 Qaralamalar</button></div><div id="fpAi"></div>'
+  +'<div class="cplist">'+row('rTag','👤','İnsanları işarələ','fpTagUI()')+row('rPlace','📍','Məkan əlavə et','fpPlaceUI()')+row('rCol','🤝','Birgə müəllif dəvət et','fpCollabUI()')
+  +row('rPoll','📊','Sorğu əlavə et','fpPollToggle();cpSync()','<div id="fpPoll"></div>')+'<div id="fpChal"></div>'
+  +row('fpWT','⏰','Paylaşım vaxtı','fpWhenToggle();cpSync()','<div id="fpWhen" class="fpwhen"></div>')+'</div><div id="fpMeta" style="display:none"></div>'
+  +'<div class="cpfoot"><button class="btn ghost" onclick="draftSave(false)">Qaralama</button><button class="btn" id="fpGo" onclick="feedPost()">Paylaş</button></div>');
+ $('mbox').classList.add('cpsheet');mentionBind($('fpB'));cpSync();
+ run(sb.rpc('chal_list')).then(function(l){var a=(l||[]).filter(function(c){return c.active;});var el=$('fpChal');if(!el||!a.length)return;
+  el.innerHTML='<div class="fpchal"><span>🏁 Çağırışa qat:</span>'+a.map(function(c){return '<button data-c="'+c.id+'" class="'+(_fpChal===c.id?'on':'')+'" onclick="_fpChal=_fpChal===\''+c.id+'\'?null:\''+c.id+'\';Array.prototype.forEach.call(this.parentNode.querySelectorAll(\'button\'),function(b){b.classList.toggle(\'on\',b.dataset.c===_fpChal)})">'+esc(c.emoji+' '+c.title)+'</button>';}).join('')+'</div>';}).catch(function(){});};
+function cpSync(){var v=function(id,t){var e=$(id);if(!e)return;var s=e.querySelector('.cpv');if(s)s.textContent=t||'';e.classList.toggle('set',!!t);};
+ v('rTag',(_fpTags||[]).length?_fpTags.map(function(t){return t.ad.split(' ')[0];}).join(', '):'');v('rPlace',_fpPlace||'');v('rCol',_fpCollab?_fpCollab.ad.split(' ')[0]:'');v('rPoll',_fpPoll?'Əlavə edilib':'');
+ var w=$('fpW');v('fpWT',_fpWhen&&w?w.value.replace('T',' '):'');var t=$('fpWT');if(t){var x=t.querySelector('.cpt');if(x)x.textContent='Paylaşım vaxtı';}
+ var a=$('fpAdd');if(a)a.classList.toggle('small',(_fpMedia||[]).length>0);}
+fpMetaDraw=function(){cpSync();};
+var _fpPrev19=fpPrev;fpPrev=function(){_fpPrev19();cpSync();};
+var _fpWhenToggle19=fpWhenToggle;fpWhenToggle=function(){_fpWhenToggle19();var w=$('fpW');if(w)w.onchange=cpSync;var t=$('fpWT');if(t){var x=t.querySelector('.cpt');if(x)x.textContent='Paylaşım vaxtı';}};
+var _closeModal19=closeModal;closeModal=function(){var m=$('mbox');if(m)m.classList.remove('cpsheet');_closeModal19();};
+</script>
 </body>
 </html>
