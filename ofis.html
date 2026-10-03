@@ -5128,5 +5128,18 @@ stShare=function(){var S=_st;if(!S)return;var th=S.vid?null:S.u,lay=S.layers.sli
    .then(function(){ment.forEach(function(u){sb.rpc('msg_send',{p_to:u,p_group:null,p_body:'📸 Səni hekayəsində qeyd etdi',p_kind:'story_mention',p_image:vid?null:url0,p_file_url:vid?url0:null}).then(function(){},function(){});});bar.done(true,aud==='cf'?'Yaxın dostlarla paylaşıldı':'Hekayən paylaşıldı');storyLoad();})
    .catch(function(e){bar.done(false,'Alınmadı: '+((e&&e.message)||e),go);});};go();}).catch(function(e){g.disabled=false;g.textContent='Hekayən ➜';toast(e.message||e);});};
 </script>
+<style>
+.pkr{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:6px 0 4px}.pkr button{border:none;background:#f5f5f7;border-radius:16px;padding:20px 6px;display:flex;flex-direction:column;align-items:center;gap:8px;font-weight:700;font-size:.95rem;color:#0a0a0a}.pkr span{font-size:1.8rem}
+</style>
+<script>
+/* ---- Android tətbiqində (WebView) "şəkil və video" birlikdə seçimi açılmır → seçim pəncərəsi ---- */
+(function(){var _ic=HTMLInputElement.prototype.click;
+ HTMLInputElement.prototype.click=function(){var inp=this,a=inp.accept||'';
+  if(inp.type==='file'&&!inp._ok&&typeof isNative==='function'&&isNative()&&a.indexOf(',')>=0){
+   var kinds=a.split(',').map(function(s){return s.trim();}).filter(Boolean);if(kinds.length>1){
+    var lab={'image/*':['🖼','Şəkil'],'video/*':['🎬','Video']};var d=ovl('<div class="cmq">Nə seçmək istəyirsən?</div><div class="pkr">'+kinds.map(function(k){var l=lab[k]||['📎',k];return '<button data-k="'+k+'"><span>'+l[0]+'</span>'+l[1]+'</button>';}).join('')+'</div>');
+    d.querySelectorAll('[data-k]').forEach(function(b){b.onclick=function(){d.remove();inp.accept=b.dataset.k;inp._ok=1;_ic.call(inp);};});return;}}
+  return _ic.call(inp);};})();
+</script>
 </body>
 </html>
