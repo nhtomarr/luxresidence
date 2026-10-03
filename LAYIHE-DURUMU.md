@@ -244,3 +244,4 @@ Frontend ofis.html sonunda ayrıca `<style>`+`<script>` bloku ("SOSİAL v3"). Ba
 - 4 okt (ofis-v82): səhifələrdə (profil, post, kanal, arxiv, fəaliyyət, Ofis anı) yuxarıdan aşağı çəkib yeniləmə (`pgRefresh`).
 - 4 okt (ofis-v83): profildə nişan sətri gizlədildi; avatarın altındakı səviyyə yazısı 'Yeni · 🏅N' — toxunanda 'Nişanlar və səviyyə' pəncərəsi (bdOpen, nişan izahları).
 - 4 okt (ofis-v84): Qəhvə tanışlığı ləğv edildi — Komandadan kart, onboarding addımı, profil ayarı silindi; social_weekly cütləşdirmə etmir; hamının coffee=false. Cədvəllər (office_coffee) toxunulmayıb.
+- 4 okt (ofis-v85): Lent təmizliyi (IG) — 'Hamısı'da hekayələrdən dərhal sonra postlar; Ofis anı/xülasə/günün sualı/elanlar/ilk addımlar/xatirələr kiçik sürüşən 'bu gün' kartlarına yığıldı (tdCards, toxunanda pəncərədə açılır); yazı paneli əvəzinə başlıqda ⊕; saxlanılanlar ikonu başlıqdan çıxdı (Bölmələrdə var); satış/təşəkkür reytinqləri Komandaya köçdü.

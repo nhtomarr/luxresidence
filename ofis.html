@@ -5441,5 +5441,39 @@ function bdOpen(uid){var p=window._prof||{},b=p.badges||[],me=uid===ME.user_id,L
   +(b.length?'<div class="bdg">'+b.map(function(c){var i=badgeInfo(c);return '<div class="bdc"><span>'+i[0]+'</span><b>'+esc(i[1])+'</b><small>'+esc(bdDesc(c))+'</small></div>';}).join('')+'</div>'
    :'<div class="pfempty">'+(me?'Hələ nişanın yoxdur.<br><small>İlk postunu paylaş, vaxtında gəl, çağırışlara qatıl — nişanlar avtomatik gələcək.</small>':'Hələ nişan yoxdur')+'</div>'));}
 </script>
+<style>
+#v-feed #soX3,#v-feed #s4W{display:none}#tdBox #soX3{display:block}
+#v-feed .igfeed>#soBody>.igcompose{display:none}
+#v-feed #soBody>#igBoards{display:none}
+.tds{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:2px 0 14px;margin:0 -14px;padding-left:14px;padding-right:14px}.tds::-webkit-scrollbar{display:none}
+.tdc{flex:0 0 136px;border:none;border-radius:18px;padding:12px;display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;color:#fff;min-height:96px;box-shadow:0 6px 16px -10px rgba(0,0,0,.4)}
+.tdc span{width:30px;height:30px;border-radius:10px;background:rgba(255,255,255,.22);display:grid;place-items:center;margin-bottom:4px}.tdc span .ui-ic{width:18px;height:18px}
+.tdc b{font-size:.86rem;line-height:1.15}.tdc small{font-size:.7rem;opacity:.85;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tdc.mom{background:linear-gradient(135deg,#1e293b,#475569)}.tdc.mom.hot{background:linear-gradient(135deg,#f59e0b,#ef4444);animation:s4p 1.4s infinite}
+.tdc.wr{background:linear-gradient(135deg,#4f46e5,#db2777)}.tdc.qt{background:linear-gradient(135deg,#7c3aed,#a855f7)}.tdc.an{background:linear-gradient(135deg,#0284c7,#2563eb)}
+.tdc.ob{background:linear-gradient(135deg,#059669,#10b981)}.tdc.me{background:linear-gradient(135deg,#ca8a04,#0891b2)}
+#tdBox .s3ann,#tdBox .s3onb,#tdBox .s3qotd{margin-bottom:10px}
+</style>
+<script>
+/* ---- Lent təmizliyi: postlar dərhal görünsün (IG kimi) ---- */
+function tdCards(){var x=$('soX3');if(!x||FMODE!=='all')return;var st=$('tdStrip');if(!st){x.insertAdjacentHTML('beforebegin','<div id="tdStrip" class="tds"></div>');st=$('tdStrip');}var c=[],I=function(n){return typeof uiIcon==='function'?uiIcon(n):'';};
+ var mb=$('momB');if(mb){var hot=mb.classList.contains('hot'),ok=mb.classList.contains('ok');c.push({cls:'mom'+(hot?' hot':''),ic:I('zap'),t:hot?'Ofis anı!':ok?'Ofis anları':'Ofis anı',s:hot?'2 dəqiqən var':(mb.querySelector('small')||{}).textContent||'',fn:hot||!ok?'momCapture()':'momOpen()'});}
+ var wb=$('s4W');if(wb)c.push({cls:'wr',ic:I('chart'),t:'Ayın xülasən',s:'Bax və paylaş',fn:(wb.getAttribute('onclick')||'')});
+ var q=$('s3Q');if(q){var my=!!q.querySelector('.s3my');c.push({cls:'qt',ic:I('msq'),t:'Günün sualı',s:my?'Cavablara bax':'Cavab ver',fn:"tdOpen('s3Q','💭 Günün sualı')"});}
+ var an=x.querySelectorAll('.s3ann');if(an.length)c.push({cls:'an',ic:I('mega'),t:an.length+' yeni elan',s:(an[0].querySelector('b')||{}).textContent||'',fn:"tdOpen('.s3ann','📢 Elanlar',1)"});
+ var ob=x.querySelector('.s3onb');if(ob){var pr=(ob.querySelector('small')||{}).textContent||'';c.push({cls:'ob',ic:I('userplus'),t:'İlk addımlar',s:pr+' tamamlandı',fn:"tdOpen('.s3onb','👋 İlk addımlar')"});}
+ x.querySelectorAll('.s3mem').forEach(function(m){c.push({cls:'me',ic:I('clock'),t:'Xatirə',s:(m.querySelector('span')||{}).textContent.replace(/^[^·]*·\s*/,'')||'',fn:m.getAttribute('onclick')||''});});
+ st.innerHTML=c.map(function(k){return '<button class="tdc '+k.cls+'" onclick="'+k.fn.replace(/"/g,'&quot;')+'"><span>'+k.ic+'</span><b>'+esc(k.t)+'</b><small>'+esc(k.s)+'</small></button>';}).join('');st.style.display=c.length?'':'none';}
+function tdOpen(sel,title,all){var x=$('soX3');if(!x)return;var nodes=all?Array.prototype.slice.call(x.querySelectorAll(sel)):[x.querySelector(sel.charAt(0)==='.'||sel.charAt(0)==='#'?sel:'#'+sel)];nodes=nodes.filter(Boolean);if(!nodes.length)return;
+ modal('<div class="mhead"><h3>'+title+'</h3><button class="x" onclick="closeModal()">×</button></div><div id="tdBox"></div>');var b=$('tdBox');nodes.forEach(function(n){n._home=n.parentNode;b.appendChild(n);});window._tdNodes=nodes;}
+var _closeModal22=closeModal;closeModal=function(){var ns=window._tdNodes;if(ns){window._tdNodes=null;ns.forEach(function(n){if(n._home&&n._home.isConnected)n._home.appendChild(n);});setTimeout(tdCards,50);}_closeModal22();};
+(function(){var t=null;new MutationObserver(function(){clearTimeout(t);t=setTimeout(function(){if(!window._tdNodes)tdCards();},120);}).observe(document.body,{childList:true,subtree:true,attributes:false});})();
+/* başlıq: + yarat, saxlanılanlar ikonu menyuya */
+var _renderFeed22=renderFeed;renderFeed=function(){_renderFeed22();var hd=document.querySelector('#v-feed .sohead');if(!hd)return;var bm=hd.querySelector('button[onclick*="saved"]');if(bm)bm.remove();
+ if(!hd.querySelector('.addb'))hd.insertAdjacentHTML('afterbegin','<button class="igicon addb" onclick="feedCompose()" title="Yeni post">'+igSvg('<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/>')+'</button>');};
+/* reytinq lövhələri Komandaya köçür */
+var _s4team22=s4team;s4team=function(){_s4team22();var b=$('s4Team');if(b&&!$('igBoards')){b.insertAdjacentHTML('afterend','<div class="igboards" id="igBoards"></div>');if(typeof feedBoards==='function')feedBoards();}};
+var _chatLastTxt22=chatLastTxt;chatLastTxt=function(t){if(t.son_kind==='vcircle')return (t.son_mine?'Sən: ':'')+'Video mesaj';return _chatLastTxt22(t);};
+</script>
 </body>
 </html>
