@@ -486,6 +486,19 @@ body.owner .msg.mine{background:linear-gradient(135deg,#ba4d2c,#9a3c20)}
 .chatsend{flex-shrink:0;width:46px;height:46px;border-radius:50%;border:none;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-size:18px}
 body.owner .chatsend{background:linear-gradient(135deg,#ba4d2c,#9a3c20)}
 .tabbadge{background:#dc2626;color:#fff;font-size:.68rem;font-weight:700;padding:1px 6px;border-radius:99px;margin-left:2px}
+
+.chatattach{flex-shrink:0;width:42px;height:46px;border:none;background:none;font-size:20px;color:var(--mut)}
+.msgbody{display:inline}
+.msgimg{display:block;max-width:200px;max-height:220px;border-radius:12px;margin:2px 0;cursor:pointer}
+.msgreply{font-size:.78rem;opacity:.75;border-left:3px solid currentColor;padding:2px 8px;margin-bottom:4px;border-radius:4px;background:rgba(0,0,0,.06)}
+.msg.mine .msgreply{background:rgba(255,255,255,.2)}
+.msgreact{position:absolute;bottom:-10px;right:8px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:1px 5px;font-size:.8rem;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+.msg{position:relative;margin-bottom:8px;user-select:none}
+.chatreacts{display:flex;justify-content:space-around;gap:6px;padding:10px 0}
+.chatreacts button{border:none;background:#f3f4f6;border-radius:50%;width:48px;height:48px;font-size:24px}
+.chatreacts button:active{background:#e5e7eb;transform:scale(1.15)}
+.replybar{display:flex;justify-content:space-between;align-items:center;background:#eef2ff;border-left:3px solid var(--acc);padding:8px 12px;border-radius:8px;margin-bottom:6px;font-size:.85rem}
+.replybar button{border:none;background:none;font-size:18px;color:var(--mut)}
 </style>
 </div>
 <div id="app" style="display:none">
@@ -770,7 +783,7 @@ function asstHi(){var h=new Date().getHours();return h<6?'Gecəniz xeyrə':h<12?
 
 function ocount(tbl,col,val){return run(sb.from(tbl).select('id',{count:'exact',head:true}).eq(col,val)).then(function(r){return r.count||0;}).catch(function(){return 0;});}
 /* ---------- 💬 Komanda çatı ---------- */
-var CHATother=null,CHATname='',CHATsub=null,CHATview='list';
+var CHATother=null,CHATname='',CHATsub=null,CHATreply=null,CHATmsgs=[];
 function renderChat(){var v=$('v-chat');if(!v)return;
  if(CHATother){renderChatRoom();return;}
  v.innerHTML='<div class="row sp" style="margin-bottom:12px"><h2 class="bossh" style="margin:0">💬 Çat</h2><button class="btn ghost sm" onclick="chatNew()">+ Yeni</button></div>'
@@ -797,28 +810,74 @@ function chatNew(){run(sb.rpc('msg_contacts')).then(function(list){
 }
 function chatContactsHtml(list){return list.map(function(c){return '<div class="chatrow" onclick="closeModal();chatOpen(\''+c.uid+'\',\''+esc(c.ad||'').replace(/\x27/g,"\\x27")+'\')"><div class="chatav">'+esc(chatInitials(c.ad))+'</div><div class="chatmeta"><b>'+esc(c.ad)+'</b><div class="muted small">'+esc(c.vezife||'')+'</div></div></div>';}).join('')||'<p class="hint">İşçi tapılmadı</p>';}
 function chatFilterContacts(q){q=(q||'').toLowerCase();var f=(window.CHAT_CONTACTS||[]).filter(function(c){return (c.ad||'').toLowerCase().indexOf(q)>=0||(c.vezife||'').toLowerCase().indexOf(q)>=0;});$('chatContacts').innerHTML=chatContactsHtml(f);}
-function chatOpen(uid,ad){CHATother=uid;CHATname=ad;renderChatRoom();}
-function chatBack(){CHATother=null;if(CHATsub){try{CHATsub.unsubscribe();}catch(e){}CHATsub=null;}renderChat();chatUpdateBadge();}
+function chatOpen(uid,ad){CHATother=uid;CHATname=ad;CHATreply=null;renderChatRoom();}
+function chatBack(){CHATother=null;CHATreply=null;if(CHATsub){try{CHATsub.unsubscribe();}catch(e){}CHATsub=null;}renderChat();chatUpdateBadge();}
 function renderChatRoom(){var v=$('v-chat');if(!v)return;
- v.innerHTML='<div class="chathead"><button class="chatbackbtn" onclick="chatBack()">‹</button><div class="chatav">'+esc(chatInitials(CHATname))+'</div><div><b>'+esc(CHATname||'İşçi')+'</b></div></div>'
+ v.innerHTML='<div class="chathead"><button class="chatbackbtn" onclick="chatBack()">‹</button><div class="chatav" style="cursor:pointer" onclick="chatProfile()">'+esc(chatInitials(CHATname))+'</div><div style="cursor:pointer" onclick="chatProfile()"><b>'+esc(CHATname||'İşçi')+'</b><div class="muted small">profilə bax ›</div></div></div>'
   +'<div id="chatMsgs" class="chatmsgs"><p class="status"><span class="spin"></span></p></div>'
-  +'<div class="chatinput"><input id="chatText" placeholder="Mesaj yazın…" onkeydown="if(event.key===\'Enter\')chatSend()"><button class="chatsend" onclick="chatSend()">➤</button></div>';
+  +'<div id="chatReplyBar"></div>'
+  +'<div class="chatinput"><button class="chatattach" onclick="chatPickImage()">📎</button><input type="file" id="chatFile" accept="image/*" style="display:none" onchange="chatUploadImage(this.files[0])"><input id="chatText" placeholder="Mesaj yazın…" onkeydown="if(event.key===\'Enter\')chatSend()"><button class="chatsend" onclick="chatSend()">➤</button></div>';
  chatLoadMsgs();chatSubscribe();
 }
-function chatLoadMsgs(){run(sb.rpc('msg_open',{p_other:CHATother})).then(function(rows){chatDrawMsgs(rows||[]);}).catch(err);}
+function chatLoadMsgs(){run(sb.rpc('msg_open',{p_other:CHATother})).then(function(rows){CHATmsgs=rows||[];chatDrawMsgs(CHATmsgs);}).catch(err);}
 function chatDrawMsgs(rows){var el=$('chatMsgs');if(!el)return;
- el.innerHTML=rows.length?rows.map(function(m){return '<div class="msg '+(m.mine?'mine':'their')+'">'+esc(m.body)+'<span class="msgt">'+new Date(m.at).toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'})+'</span></div>';}).join(''):'<div class="hint" style="text-align:center;padding:20px">İlk mesajı yazın 👋</div>';
+ el.innerHTML=rows.length?rows.map(function(m){
+  var rep=m.reply?'<div class="msgreply">'+(m.reply.image?'📷 Şəkil':esc((m.reply.body||'').slice(0,50)))+'</div>':'';
+  var img=m.image?'<img class="msgimg" src="'+esc(m.image)+'" onclick="chatViewImage(\''+esc(m.image)+'\')">':'';
+  var react=m.reaction?'<span class="msgreact">'+esc(m.reaction)+'</span>':'';
+  return '<div class="msg '+(m.mine?'mine':'their')+'" id="msg'+m.id+'" ontouchstart="chatTouchStart('+m.id+')" ontouchend="chatTouchEnd()" oncontextmenu="event.preventDefault();chatMsgMenu('+m.id+')" ondblclick="chatQuickLike('+m.id+')">'
+   +rep+img+(m.body?'<span class="msgbody">'+esc(m.body)+'</span>':'')+'<span class="msgt">'+new Date(m.at).toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'})+'</span>'+react+'</div>';
+ }).join(''):'<div class="hint" style="text-align:center;padding:20px">İlk mesajı yazın 👋</div>';
  el.scrollTop=el.scrollHeight;
 }
-function chatSend(){var el=$('chatText');if(!el)return;var t=el.value.trim();if(!t)return;el.value='';
- run(sb.from('office_messages').insert({receiver:CHATother,body:t})).then(function(){chatLoadMsgs();}).catch(function(e){toast('Göndərilmədi: '+(e.message||e));});
+/* uzun basma / sağ klik → menyu */
+var _chatHold=null;
+function chatTouchStart(id){_chatHold=setTimeout(function(){chatMsgMenu(id);},500);}
+function chatTouchEnd(){if(_chatHold)clearTimeout(_chatHold);}
+function chatMsgMenu(id){var m=CHATmsgs.find(function(x){return x.id===id;});if(!m)return;
+ var html='<div class="mhead"><h3>Mesaj</h3><button class="x" onclick="closeModal()">×</button></div>'
+  +'<div class="chatreacts">'+['👍','❤️','😂','😮','😢','🙏'].map(function(e){return '<button onclick="chatReact('+id+',\''+e+'\')">'+e+'</button>';}).join('')+'</div>'
+  +'<button class="btn ghost" style="width:100%;margin-top:10px" onclick="chatSetReply('+id+')">↩︎ Yanıt ver</button>'
+  +(m.reaction?'<button class="btn ghost" style="width:100%;margin-top:8px" onclick="chatReact('+id+',null)">Reaksiyanı sil</button>':'');
+ modal(html);
 }
+function chatQuickLike(id){chatReact(id,'👍');}
+function chatReact(id,emoji){run(sb.from('office_messages').update({reaction:emoji}).eq('id',id)).then(function(){closeModal&&closeModal();chatLoadMsgs();}).catch(function(e){toast(e.message);});}
+function chatSetReply(id){var m=CHATmsgs.find(function(x){return x.id===id;});if(!m)return;CHATreply=m;closeModal();
+ $('chatReplyBar').innerHTML='<div class="replybar"><span>↩︎ '+(m.image?'📷 Şəkil':esc((m.body||'').slice(0,40)))+'</span><button onclick="chatCancelReply()">×</button></div>';$('chatText').focus();}
+function chatCancelReply(){CHATreply=null;$('chatReplyBar').innerHTML='';}
+function chatSend(){var el=$('chatText');if(!el)return;var t=el.value.trim();if(!t)return;el.value='';
+ var rec={receiver:CHATother,body:t};if(CHATreply)rec.reply_to=CHATreply.id;
+ run(sb.from('office_messages').insert(rec)).then(function(){chatCancelReply();chatLoadMsgs();}).catch(function(e){toast('Göndərilmədi: '+(e.message||e));});
+}
+function chatPickImage(){var f=$('chatFile');if(f){f.value='';f.click();}}
+function chatUploadImage(file){if(!file)return;if(file.size>5*1024*1024){toast('Şəkil 5MB-dan kiçik olmalıdır');return;}
+ toast('Şəkil yüklənir…');var ext=(file.name.split('.').pop()||'jpg').toLowerCase();var path=Date.now()+'_'+Math.random().toString(36).slice(2,8)+'.'+ext;
+ sb.storage.from('chat').upload(path,file,{contentType:file.type}).then(function(r){
+  if(r.error)throw r.error;var url=sb.storage.from('chat').getPublicUrl(path).data.publicUrl;
+  var rec={receiver:CHATother,body:'',image_url:url};if(CHATreply)rec.reply_to=CHATreply.id;
+  return run(sb.from('office_messages').insert(rec)).then(function(){chatCancelReply();chatLoadMsgs();});
+ }).catch(function(e){toast('Şəkil göndərilmədi: '+(e.message||e));});
+}
+function chatViewImage(url){modal('<div class="mhead"><h3>Şəkil</h3><button class="x" onclick="closeModal()">×</button></div><img src="'+esc(url)+'" style="width:100%;border-radius:12px"><a href="'+esc(url)+'" target="_blank" class="btn ghost" style="width:100%;margin-top:8px;text-align:center;display:block">Tam ölçüdə aç</a>');}
+function chatProfile(){run(sb.rpc('msg_profile',{p_uid:CHATother})).then(function(p){p=p||{};
+ var html='<div class="mhead"><h3>Profil</h3><button class="x" onclick="closeModal()">×</button></div>'
+  +'<div style="text-align:center;padding:10px 0"><div class="chatav" style="width:72px;height:72px;font-size:24px;margin:0 auto 12px">'+esc(chatInitials(p.ad||CHATname))+'</div><h3 style="margin:0">'+esc(p.ad||CHATname)+'</h3><div class="muted">'+esc(p.vezife||'')+'</div></div>'
+  +'<div class="card" style="margin-top:10px">'
+  +(p.sobe?'<div class="row sp" style="padding:7px 0"><span class="muted">Şöbə</span><b>'+esc(p.sobe)+'</b></div>':'')
+  +(p.telefon?'<div class="row sp" style="padding:7px 0;border-top:1px solid var(--line)"><span class="muted">Telefon</span><a href="tel:'+esc(p.telefon)+'">'+esc(p.telefon)+'</a></div>':'')
+  +(p.rehber?'<div class="row sp" style="padding:7px 0;border-top:1px solid var(--line)"><span class="muted">Rəhbər</span><b>'+esc(p.rehber)+'</b></div>':'')
+  +(p.ad_gunu?'<div class="row sp" style="padding:7px 0;border-top:1px solid var(--line)"><span class="muted">Ad günü</span><b>'+esc(p.ad_gunu)+'</b></div>':'')
+  +'</div>';
+ modal(html);
+}).catch(err);}
 function chatSubscribe(){if(CHATsub){try{CHATsub.unsubscribe();}catch(e){}}
- try{CHATsub=sb.channel('chat-'+CHATother).on('postgres_changes',{event:'INSERT',schema:'public',table:'office_messages'},function(p){
-  var m=p.new;if(!m)return;if((m.sender===CHATother)||(m.receiver===CHATother)){chatLoadMsgs();}
+ try{CHATsub=sb.channel('chat-'+CHATother).on('postgres_changes',{event:'*',schema:'public',table:'office_messages'},function(p){
+  var m=p.new||p.old;if(!m)return;if((m.sender===CHATother)||(m.receiver===CHATother)||(m.sender&&m.receiver)){chatLoadMsgs();}
  }).subscribe();}catch(e){}
 }
-function chatUpdateBadge(){run(sb.rpc('msg_unread')).then(function(n){var b=document.querySelector('#tabs button[data-v=\"chat\"]');if(!b)return;b.innerHTML='💬 Çat'+(n>0?' <span class="tabbadge">'+n+'</span>':'');}).catch(function(){});}
+function chatUpdateBadge(){run(sb.rpc('msg_unread')).then(function(n){var b=document.querySelector('#tabs button[data-v="chat"]');if(!b)return;b.innerHTML='💬 Çat'+(n>0?' <span class="tabbadge">'+n+'</span>':'');}).catch(function(){});}
+
 
 /* ---------- 🔔 Xatırlatma bölməsi ---------- */
 var RMTMPL=[],RMFORGOT=[];
