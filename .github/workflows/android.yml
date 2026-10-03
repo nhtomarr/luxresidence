@@ -3,6 +3,8 @@ on:
   push:
     paths: ['mobile/**', '.github/workflows/android.yml']
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -59,3 +61,15 @@ jobs:
           name: bas-ofis-play-aab
           path: mobile/out/*.aab
           if-no-files-found: ignore
+      - name: Birbaşa yükləmə linki (Release)
+        if: github.ref == 'refs/heads/main'
+        working-directory: mobile
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          A=$(ls out/*release*.apk out/*.apk 2>/dev/null | head -1)
+          [ -z "$A" ] && exit 0
+          cp "$A" out/bas-ofis.apk
+          V=$(node -p "require('./package.json').version")
+          gh release delete android-latest -y --cleanup-tag -R ${{ github.repository }} || true
+          gh release create android-latest out/bas-ofis.apk -R ${{ github.repository }} --title "Baş Ofis $V (son versiya)" --notes "Avtomatik yığım ${{ github.run_number }}" --latest
