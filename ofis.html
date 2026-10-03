@@ -4562,12 +4562,14 @@ function cmDel(cid){if(!confirm('Şərh silinsin?'))return;run(sb.rpc('comment_d
 <style>
 .mbox{max-height:min(92vh,92dvh)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
 .mbox::before{z-index:2}
+#mbox .mhead{touch-action:none}
+#mbox{position:relative}#mbox:after{content:'';position:absolute;left:0;right:0;top:0;height:22px;touch-action:none}
 </style>
 <script>
 /* ---- pəncərəni (sheet) aşağı çəkib bağlamaq ---- */
 (function(){var mb=$('mbox'),y0=null,dy=0,drag=false;if(!mb)return;
  var innerScrolled=function(t){for(var e=t;e&&e!==mb;e=e.parentNode){if(e.nodeType===1&&e.scrollHeight>e.clientHeight+2&&getComputedStyle(e).overflowY!=='visible'&&e.scrollTop>0)return true;}return false;};
- mb.addEventListener('touchstart',function(e){if(window.innerWidth>760||e.touches.length>1)return;var t=e.target;if(t.closest('input,textarea,select,.socar,.fpfl,.soseg,.s3hl'))return;if(mb.scrollTop>0||innerScrolled(t))return;y0=e.touches[0].clientY;dy=0;drag=false;},{passive:true});
+ mb.addEventListener('touchstart',function(e){if(window.innerWidth>760||e.touches.length>1)return;var t=e.target,zone=e.touches[0].clientY-mb.getBoundingClientRect().top<70||!!t.closest('.mhead');if(!zone){if(t.closest('input,textarea,select,.socar,.fpfl,.soseg,.s3hl'))return;if(mb.scrollTop>0||innerScrolled(t))return;}else if(t.closest('button.x'))return;y0=e.touches[0].clientY;dy=0;drag=zone;if(zone){mb.style.transition='none';}},{passive:true});
  mb.addEventListener('touchmove',function(e){if(y0==null)return;dy=e.touches[0].clientY-y0;if(dy<=0){if(drag){mb.style.transform='';}y0=dy<-6?null:y0;return;}if(!drag&&dy>8)drag=true;if(drag){if(e.cancelable)e.preventDefault();mb.style.transition='none';mb.style.transform='translateY('+dy+'px)';$('modal').style.background='rgba(0,0,0,'+Math.max(0,.32-dy/900)+')';}},{passive:false});
  mb.addEventListener('touchend',function(){if(y0==null)return;y0=null;if(!drag)return;drag=false;mb.style.transition='transform .22s ease';$('modal').style.background='';
   if(dy>110){mb.style.transform='translateY(110%)';setTimeout(function(){mb.style.transition='';mb.style.transform='';closeModal();},200);}else{mb.style.transform='';setTimeout(function(){mb.style.transition='';},230);}},{passive:true});
