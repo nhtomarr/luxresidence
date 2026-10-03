@@ -4692,5 +4692,29 @@ var _voiceHtml10=voiceHtml;voiceHtml=function(m){return _voiceHtml10(m).replace(
 function vSpeed(b,id){VSPD=VSPD===1?1.5:VSPD===1.5?2:1;try{localStorage.setItem('vspd',VSPD);}catch(e){}document.querySelectorAll('.igvsp').forEach(function(x){x.textContent=VSPD+'×';});if(_vAudio)_vAudio.playbackRate=VSPD;}
 var _voicePlay10=voicePlay;voicePlay=function(id,url){_voicePlay10(id,url);if(_vAudio)_vAudio.playbackRate=VSPD;};
 </script>
+<style>
+@keyframes swl{from{transform:translateX(-35%);opacity:.3}to{transform:none;opacity:1}}@keyframes swr{from{transform:translateX(35%);opacity:.3}to{transform:none;opacity:1}}.swin-l{animation:swl .3s ease}.swin-r{animation:swr .3s ease}
+#v-chat,#v-feed{will-change:auto}
+</style>
+<script>
+/* ---- Instagram jesti: Çat ↔ Lent sürüşdürmə, çat otağında kənardan geri ---- */
+(function(){var S=null;
+ var busy=function(){return document.body.classList.contains('incall')||$('modal').classList.contains('on')||document.querySelector('.pg.on,#igSV,#mvw,#igReel,#stEd,#s4wr,#s4quiz,#igCtx,.s3over')||(typeof CHAT_SEL!=='undefined'&&CHAT_SEL);};
+ var ctx=function(){var c=$('v-chat'),f=$('v-feed');if(c&&c.classList.contains('on'))return CHATother?'room':'list';if(f&&f.classList.contains('on'))return 'feed';return null;};
+ var hscroll='.socar,.igstories,.soseg,.sugl,.s3hl,.pfbd,.fpfl,.sochips,.igvc,video,input,textarea,.igboards,.s4opts,.sorpick';
+ document.addEventListener('touchstart',function(e){S=null;if(e.touches.length>1||busy())return;var k=ctx();if(!k)return;var t=e.touches[0];
+  if(k==='room'){if(t.clientX>28)return;}else if(e.target.closest(hscroll))return;
+  var el=k==='room'?document.querySelector('.igroom'):$(k==='feed'?'v-feed':'v-chat');if(!el)return;S={k:k,x:t.clientX,y:t.clientY,dx:0,on:false,el:el};},{passive:true});
+ document.addEventListener('touchmove',function(e){if(!S)return;var t=e.touches[0];S.dx=t.clientX-S.x;var dy=t.clientY-S.y;
+  if(!S.on){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(S.dx)){S=null;return;}if(Math.abs(S.dx)>14&&Math.abs(S.dx)>Math.abs(dy)*1.4){
+    if(S.k==='feed'&&S.dx>0){S=null;return;}if(S.k==='room'&&S.dx<0){S=null;return;}S.on=true;S.el.style.transition='none';}}
+  if(S.on){if(e.cancelable)e.preventDefault();var d=S.dx;S.el.style.transform='translateX('+d+'px)';S.el.style.opacity=String(Math.max(.4,1-Math.abs(d)/700));}},{passive:false});
+ document.addEventListener('touchend',function(){if(!S)return;var s=S;S=null;if(!s.on)return;var el=s.el,ok=Math.abs(s.dx)>90;
+  el.style.transition='transform .2s ease,opacity .2s ease';
+  if(!ok){el.style.transform='';el.style.opacity='';setTimeout(function(){el.style.transition='';},220);return;}
+  var dir=s.dx>0?1:-1;el.style.transform='translateX('+(dir*110)+'%)';el.style.opacity='0';try{navigator.vibrate&&navigator.vibrate(8);}catch(e){}
+  setTimeout(function(){el.style.transition='';el.style.transform='';el.style.opacity='';
+   if(s.k==='room'){chatBack();return;}var to=s.k==='feed'?'chat':'feed';show(to);var n=$('v-'+to);if(n){n.classList.remove('swin-l','swin-r');void n.offsetWidth;n.classList.add(dir>0?'swin-l':'swin-r');setTimeout(function(){n.classList.remove('swin-l','swin-r');},320);}},190);},{passive:true});})();
+</script>
 </body>
 </html>
