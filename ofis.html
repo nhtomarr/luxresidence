@@ -1101,8 +1101,9 @@ function callCleanup(){if(!CALL)return;var c=CALL;CALL=null;callTone(null);try{n
  var el=$('callUI');if(el)el.remove();document.body.classList.remove('incall');if(CHATother)setTimeout(function(){chatLoadMsgs(true);},700);}
 function callSetStatus(t){if(CALL)CALL.status=t;var e=$('callSt');if(e)e.textContent=t;}
 function callAttachLocal(){var v=$('callLocal');if(v&&CALL&&CALL.local){v.srcObject=CALL.local;v.muted=true;v.play&&v.play().catch(function(){});}}
-function callAttachRemote(){if(!CALL||!CALL.remote)return;var a=$('callAudio');if(a){a.srcObject=CALL.remote;a.play&&a.play().catch(function(){});}var v=$('callRemote');if(v){v.srcObject=CALL.remote;v.play&&v.play().catch(function(){});}}
+function callAttachRemote(){if(!CALL||!CALL.remote)return;var a=$('callAudio');if(a){a.srcObject=CALL.remote;callApplySink(a);a.play&&a.play().catch(function(){});}var v=$('callRemote');if(v){v.srcObject=CALL.remote;v.play&&v.play().catch(function(){});}}
 var CI={
+ spk:'<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>',
  mic:'<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
  micoff:'<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 9v2a3 3 0 0 0 5 2.2M15 10V6a3 3 0 0 0-5.7-1.3M5 11a7 7 0 0 0 11.5 5.3M19 11a7 7 0 0 1-.6 2.8M12 18v3M3 3l18 18"/></svg>',
  cam:'<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3z"/></svg>',
@@ -1116,16 +1117,31 @@ function callUI(re){if(!CALL)return;var el=$('callUI');if(!el){el=document.creat
  document.body.classList.add('incall');var c=CALL,vid=c.kind==='video',live=c.state==='live'||c.state==='conn';
  var big=chatAva(c.name,c.photo,112);
  var h='<div class="cbg">'+(c.photo?'<img src="'+AVA_BASE+esc(c.photo)+'">':'')+'</div>';
- if(vid)h+='<video id="callRemote" class="crem'+(c.state==='live'&&!c.remoteCamOff?' on':'')+'" autoplay playsinline></video><video id="callLocal" class="cloc'+(c.state==='in'?' full':'')+(c.camOff?' off':'')+'" autoplay playsinline muted></video>';
+ if(vid)h+='<video id="callRemote" class="crem'+(c.state==='live'&&!c.remoteCamOff?' on':'')+'" autoplay playsinline muted></video><video id="callLocal" class="cloc'+(c.state==='in'?' full':'')+(c.camOff?' off':'')+'" autoplay playsinline muted></video>';
  h+='<audio id="callAudio" autoplay playsinline></audio>';
  h+='<div class="ctop'+(vid&&c.state==='live'&&!c.remoteCamOff?' mini':'')+'">'+big+'<div class="cname">'+esc(c.name||'')+'</div><div class="cst" id="callSt">'+esc(c.status||'')+'</div></div>';
  if(c.state==='in'){h+='<div class="cbtns in"><div><button class="cb red" onclick="callDecline()">'+CI.end+'</button><span>Rədd et</span></div><div><button class="cb green pulse" onclick="callAccept()">'+(vid?CI.vacc:CI.acc)+'</button><span>Qəbul et</span></div></div>';}
  else{h+='<div class="cbtns">'
+  +'<button class="cb glass'+(c.speaker?' act':'')+'" onclick="callSpeaker()" title="Dinamik">'+CI.spk+'</button>'
   +'<button class="cb glass'+(c.muted?' act':'')+'" onclick="callMute()">'+(c.muted?CI.micoff:CI.mic)+'</button>'
   +(vid?'<button class="cb glass'+(c.camOff?' act':'')+'" onclick="callCam()">'+(c.camOff?CI.camoff:CI.cam)+'</button><button class="cb glass" onclick="callFlip()">'+CI.flip+'</button>':'')
   +'<button class="cb red" onclick="callHang()">'+CI.end+'</button></div>';}
  el.className=vid?'video':'audio';el.innerHTML=h;callAttachLocal();callAttachRemote();
 }
+
+/* səs çıxışı: səsli zəngdə qulaqlıq (earpiece), videoda dinamik */
+function callOuts(){if(!navigator.mediaDevices||!navigator.mediaDevices.enumerateDevices)return Promise.resolve([]);return navigator.mediaDevices.enumerateDevices().then(function(d){return d.filter(function(x){return x.kind==='audiooutput';});}).catch(function(){return [];});}
+function callPickSink(outs,speaker){var ear=/earpiece|receiver|handset|phone|qulaq|telefon/i,spk=/speaker|dinamik|hoparl|loud/i;
+ var f=outs.find(function(o){return (speaker?spk:ear).test(o.label||'');});if(f)return f.deviceId;
+ if(!speaker){var nd=outs.find(function(o){return o.deviceId!=='default'&&!spk.test(o.label||'')&&!/bluetooth|headset|usb|wired/i.test(o.label||'');});return nd?nd.deviceId:null;}
+ return 'default';}
+function callApplySink(a){if(!CALL||!a||typeof a.setSinkId!=='function')return;if(CALL.speaker==null)CALL.speaker=(CALL.kind==='video');
+ callOuts().then(function(outs){if(!CALL)return;CALL.outs=outs;var id=callPickSink(outs,CALL.speaker);if(id&&a.sinkId!==id)a.setSinkId(id).catch(function(){});});}
+function callSpeaker(){if(!CALL)return;var a=$('callAudio');
+ if(!a||typeof a.setSinkId!=='function'){toast('Bu brauzer səs çıxışını dəyişməyə icazə vermir');return;}
+ CALL.speaker=!CALL.speaker;callOuts().then(function(outs){var id=callPickSink(outs,CALL.speaker);
+  if(!id||outs.length<2){CALL.speaker=!CALL.speaker;toast('Telefon brauzeri qulaqlıq/dinamik seçiminə icazə vermir');callUI(true);return;}
+  a.setSinkId(id).then(function(){toast(CALL.speaker?'🔊 Dinamik':'📱 Qulaqlıq');}).catch(function(){toast('Səs çıxışı dəyişmədi');});callUI(true);});}
 function callMute(){if(!CALL||!CALL.local)return;CALL.muted=!CALL.muted;CALL.local.getAudioTracks().forEach(function(t){t.enabled=!CALL.muted;});callUI(true);}
 function callCam(){if(!CALL||!CALL.local)return;CALL.camOff=!CALL.camOff;CALL.local.getVideoTracks().forEach(function(t){t.enabled=!CALL.camOff;});callSend({t:'cam',on:!CALL.camOff});callUI(true);}
 function callFlip(){if(!CALL||CALL.kind!=='video'||!CALL.local)return;var f=CALL.facing==='user'?'environment':'user';
