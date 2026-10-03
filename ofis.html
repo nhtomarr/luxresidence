@@ -72,7 +72,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
 .mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.mhead h3{margin:0;font-size:19px}
 .x{width:34px;height:34px;border-radius:50%;border:none;background:#f1f5f9;font-size:18px}
 .cm{border-top:1px solid var(--line);padding:10px 0}.cm b{font-size:13px}.cm p{font-size:14px;white-space:pre-line}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#0f172a;color:#fff;border-radius:99px;padding:11px 18px;font-weight:600;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:200;max-width:92vw;text-align:center}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#0f172a;color:#fff;border-radius:99px;padding:11px 18px;font-weight:600;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:500;max-width:92vw;text-align:center}
 .toast.on{opacity:1}
 .qrwrap{position:fixed;inset:0;background:#0f172a;color:#fff;z-index:150;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:20px}
 .qrwrap.on{display:flex}.qrwrap #qrBox{background:#fff;padding:18px;border-radius:20px}.qrwrap h1{font-size:28px}.qrwrap p{color:#94a3b8}
@@ -1095,7 +1095,7 @@ function callSig(m){if(!CALL)return;
  else if(m.t==='cam'){CALL.remoteCamOff=!m.on;callUI(true);}
 }
 function callTick(){if(!CALL||!CALL.t0)return;var s=Math.floor((Date.now()-CALL.t0)/1000);callSetStatus(Math.floor(s/60)+':'+String(s%60).padStart(2,'0'));}
-function callCleanup(){if(!CALL)return;var c=CALL;CALL=null;callTone(null);try{navigator.vibrate&&navigator.vibrate(0);}catch(e){}
+function callCleanup(){if(!CALL)return;var c=CALL;CALL=null;try{var NA=callNA();NA&&NA.stop().catch(function(){});}catch(e){}callTone(null);try{navigator.vibrate&&navigator.vibrate(0);}catch(e){}
  clearTimeout(c.ringT);clearTimeout(c.readyT);clearTimeout(c.dropT);clearTimeout(c.sigT);clearTimeout(c.connT);clearInterval(c.tick);
  try{c.local&&c.local.getTracks().forEach(function(t){t.stop();});}catch(e){}try{c.pc&&c.pc.close();}catch(e){}
  var el=$('callUI');if(el)el.remove();document.body.classList.remove('incall');if(CHATother)setTimeout(function(){chatLoadMsgs(true);},700);}
@@ -1135,12 +1135,14 @@ function callPickSink(outs,speaker){var ear=/earpiece|receiver|handset|phone|qul
  var f=outs.find(function(o){return (speaker?spk:ear).test(o.label||'');});if(f)return f.deviceId;
  if(!speaker){var nd=outs.find(function(o){return o.deviceId!=='default'&&!spk.test(o.label||'')&&!/bluetooth|headset|usb|wired/i.test(o.label||'');});return nd?nd.deviceId:null;}
  return 'default';}
-function callApplySink(a){if(!CALL||!a||typeof a.setSinkId!=='function')return;if(CALL.speaker==null)CALL.speaker=(CALL.kind==='video');
+function callNA(){try{var C=window.Capacitor;if(!C||!C.isNativePlatform||!C.isNativePlatform())return null;return (C.Plugins&&C.Plugins.CallAudio)||null;}catch(e){return null;}}
+function callNativeRoute(){var P=callNA();if(!P||!CALL)return false;if(CALL.speaker==null)CALL.speaker=(CALL.kind==='video');try{P.start({speaker:!!CALL.speaker}).catch(function(){});}catch(e){}return true;}
+function callApplySink(a){if(callNativeRoute())return;if(!CALL||!a||typeof a.setSinkId!=='function')return;if(CALL.speaker==null)CALL.speaker=(CALL.kind==='video');
  callOuts().then(function(outs){if(!CALL)return;CALL.outs=outs;var id=callPickSink(outs,CALL.speaker);if(id&&a.sinkId!==id)a.setSinkId(id).catch(function(){});});}
-function callSpeaker(){if(!CALL)return;var a=$('callAudio');
- if(!a||typeof a.setSinkId!=='function'){toast('Bu brauzer səs çıxışını dəyişməyə icazə vermir');return;}
+function callSpeaker(){if(!CALL)return;if(callNA()){CALL.speaker=!CALL.speaker;callNativeRoute();toast(CALL.speaker?'🔊 Dinamik':'📱 Qulaqlıq');callUI(true);return;}var a=$('callAudio');
+ if(!a||typeof a.setSinkId!=='function'){toast('Brauzerdə qulaqlıq seçimi yoxdur — Baş Ofis tətbiqində (APK) işləyir');return;}
  CALL.speaker=!CALL.speaker;callOuts().then(function(outs){var id=callPickSink(outs,CALL.speaker);
-  if(!id||outs.length<2){CALL.speaker=!CALL.speaker;toast('Telefon brauzeri qulaqlıq/dinamik seçiminə icazə vermir');callUI(true);return;}
+  if(!id||outs.length<2){CALL.speaker=!CALL.speaker;toast('Brauzerdə qulaqlıq seçimi yoxdur — Baş Ofis tətbiqində (APK) işləyir');callUI(true);return;}
   a.setSinkId(id).then(function(){toast(CALL.speaker?'🔊 Dinamik':'📱 Qulaqlıq');}).catch(function(){toast('Səs çıxışı dəyişmədi');});callUI(true);});}
 function callMute(){if(!CALL||!CALL.local)return;CALL.muted=!CALL.muted;CALL.local.getAudioTracks().forEach(function(t){t.enabled=!CALL.muted;});callUI(true);}
 function callCam(){if(!CALL||!CALL.local)return;CALL.camOff=!CALL.camOff;CALL.local.getVideoTracks().forEach(function(t){t.enabled=!CALL.camOff;});callSend({t:'cam',on:!CALL.camOff});callUI(true);}
