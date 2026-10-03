@@ -212,3 +212,12 @@ Frontend ofis.html sonunda ayrıca `<style>`+`<script>` bloku ("SOSİAL v3"). Ba
 - Elanlar tabı (MGR): oxumayanlar + `ann_remind`.
 - 4 okt: Bazarça interfeysdən silindi (ofis-v58); `office_market` cədvəli və `mk_*` RPC-lər bazada qalır.
 - 4 okt: emoji ikonlar xətti SVG ikonlarla əvəz edildi (ofis.html sonunda 'UI İKONLARI' bloku: MutationObserver emoji→SVG, istifadəçi məzmunu — mesaj, post, reaksiya — toxunulmur; `uiIcon(name)`). Salamlama saat 00–05 üçün düzəldildi. ofis-v59.
+
+## YENİLƏNMƏ — 4 oktyabr 2026: Sosial v4 (10 funksiya, ofis-v60)
+- Xal: ümumi hesablama `_pts_calc(uid,t0,t1)` (+ `office_pts_bonus`), səviyyə `_lvl`, `lvl_map`. `points_board`-a bonus əlavə edildi.
+- 🎁 Xal mağazası: `office_rewards`, `office_redeems`, `shop_state/buy/decide/reward_save` (rəhbər təsdiqi, rədd → xal qaytarılır). Lent → Komanda → kart.
+- 🔥 Seriya: `streak_state` (vaxtında gəliş + günün sualı, həftəsonu qırmır), 7/30/100 nişan+bonus `social_daily4`.
+- 🏆 Şöbələr liqası: `league_state`, `_league_close` (B.e. cron `social_weekly2`). DİQQƏT: hazırda hamı 1 şöbədədir (Mərkəzi ofis) — liqa üçün şöbələr ayrılmalıdır.
+- 🎮 Əyləncə seqmenti: canlı viktorina (`office_quiz*`, `quiz_*`, 20 san/sual, deep link ?quiz=), səsli otaqlar (WebRTC mesh, `office_room*`, `room_*`, ?room=), "Bu kimdir?" (`guess_next/answer`, gündə 10, +3), anonim kompliment (`comp_*`, həftədə 1, moderasiya).
+- 🎉 Satış: `lux_contracts` insert trigger `contract_sale_t` → Lent post (kind sale) + push; klientdə konfetti.
+- 📊 Wrapped: `wrapped(month)`, Lentdə 25-dən 5-nə banner, ayın 1-i push, Lentdə şəkil kimi paylaşma.
