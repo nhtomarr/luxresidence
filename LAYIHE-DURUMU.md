@@ -235,3 +235,4 @@ Frontend ofis.html sonunda ayrıca `<style>`+`<script>` bloku ("SOSİAL v3"). Ba
 - 4 okt (ofis-v71): önə çıxanlar baxıcısı yenidən yazıldı (`hlView` → toxun/saxla/aşağı sürüşdür bağla, geri düyməsi, sahibə 'Fəaliyyət · N' baxanlar — `hl_meta(id)` media_url ilə hekayəni tapır). Səhifələrdə (post/profil/kanal) yana sürüşdürmə → geri (pgPop).
 - 4 okt (ofis-v72): öz postunda IG zolağı '👁 N · Statistikanı gör' + 'Hekayədə paylaş' (media ilə düymələr arasında); _post_json 'views' (yalnız müəllifə).
 - 4 okt (ofis-v73): Şərhlər pəncərəsi IG üslubu — mərkəzdə başlıq, sağda ♡+say, 'Cavab ver', cavablar yığılır ('— N cavaba bax'), 'Müəllif' nişanı, altda emoji zolağı + avatarlı 'X üçün şərh yaz…' sahəsi.
+- 4 okt (ofis-v74): önə çıxanı basıb saxla → Bax / Adını dəyiş (`hl_rename`) / Sil. Paylaşım IG kimi: pəncərə dərhal bağlanır, yuxarıda miniatür + real faizli rəngli yükləmə xətti (XHR storage upload, `upXhr`, `upBar`), xəta olsa 'Yenidən'. Post və hekayə üçün.

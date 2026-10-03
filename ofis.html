@@ -5073,5 +5073,60 @@ var _cmReply18=cmReply;cmReply=function(pid,ad){_cmOpen[pid]=true;_cmReply18(pid
 var _feedComment18=feedComment;feedComment=function(id){var i=$('fcB');if(!i||!i.value.trim())return;_feedComment18(id);};
 var _closeModal18=closeModal;closeModal=function(){var m=$('mbox');if(m)m.classList.remove('cmsheet');_closeModal18();};
 </script>
+<style>
+#upBar{position:fixed;left:0;right:0;top:0;z-index:95;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.08);padding-top:env(safe-area-inset-top,0px);transform:translateY(-110%);transition:transform .25s ease}
+#upBar.on{transform:none}@media(min-width:760px){#upBar{left:50%;width:min(640px,100%);transform:translate(-50%,-110%);border-radius:0 0 14px 14px}#upBar.on{transform:translate(-50%,0)}}
+.upi{display:flex;align-items:center;gap:10px;padding:10px 14px}.upi img,.upi>span{width:40px;height:40px;border-radius:6px;object-fit:cover;flex:none;background:#eef2ff;display:grid;place-items:center;font-weight:800;color:#4f46e5}
+.upi b{flex:1;font-size:.9rem;font-weight:600}.upi em{font-style:normal;color:#8e8e8e;font-size:.8rem}.upi em button{border:none;background:#0a84ff;color:#fff;border-radius:8px;padding:5px 10px;font-weight:600}
+.upl{display:block;height:3px;background:#efefef}.upl s{display:block;height:100%;width:0;background:linear-gradient(90deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5);transition:width .3s ease;text-decoration:none}
+#upBar.ok .upl s{background:#22c55e}#upBar.bad .upl s{background:#ef4444;width:100%!important}#upBar.bad b{color:#b91c1c}
+.s3over .igmenu{justify-content:flex-start;gap:10px}
+.pfhl button{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+</style>
+<script>
+/* ---- Önə çıxanı basıb saxla → menyu ---- */
+document.addEventListener('contextmenu',function(e){var b=e.target.closest&&e.target.closest('.pg .pfhl button');if(b){e.preventDefault();}},true);
+(function(){var t=null,fired=false;
+ document.addEventListener('touchstart',function(e){var b=e.target.closest&&e.target.closest('.pg .pfhl button');if(!b||!window._profX||!window._profX._me)return;var i=Array.prototype.indexOf.call(b.parentNode.querySelectorAll('button[onclick^="hlView"]'),b);if(i<0)return;fired=false;
+  t=setTimeout(function(){fired=true;try{navigator.vibrate&&navigator.vibrate(15);}catch(x){}hlAct(i);},480);},{passive:true});
+ var cl=function(){clearTimeout(t);};document.addEventListener('touchmove',cl,{passive:true});document.addEventListener('touchend',function(e){cl();if(fired){fired=false;e.preventDefault();}},{passive:false});
+ document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('.pg .pfhl button')&&window._hlBlock&&Date.now()-window._hlBlock<700){e.stopPropagation();e.preventDefault();}},true);})();
+function hlAct(i){window._hlBlock=Date.now();var h=(window._profX.hl||[])[i];if(!h)return;var d=ovl('<div class="cmq">'+esc(h.title)+' · '+h.items.length+' hekayə</div><button class="igmenu" data-a="v">▶️ Bax</button><button class="igmenu" data-a="r">✏️ Adını dəyiş</button><button class="igmenu" style="color:#ed4956" data-a="d">🗑 Önə çıxanı sil</button><button class="igmenu" data-a="x">Ləğv et</button>');
+ d.querySelectorAll('[data-a]').forEach(function(b){b.onclick=function(){var a=b.dataset.a;d.remove();if(a==='v')hlView(i);
+  else if(a==='r'){var n=prompt('Yeni ad',h.title);if(n&&n.trim())run(sb.rpc('hl_rename',{p_id:h.id,p_title:n})).then(function(){socProfile(ME.user_id);}).catch(err);}
+  else if(a==='d'){if(confirm('"'+h.title+'" silinsin? Hekayələrin arxivdə qalır.'))run(sb.rpc('hl_delete',{p_id:h.id})).then(function(){toast('Silindi');socProfile(ME.user_id);}).catch(err);}};});}
+
+/* ---- Instagram kimi paylaşım zolağı (real yükləmə faizi) ---- */
+var SBURL='https://avqchschbbltnnasabdm.supabase.co',SBKEY=null;
+function upXhr(file,prefix,onp){return imgCompress(file,prefix==='story'?1920:1600,.82).then(function(f){return sb.auth.getSession().then(function(s){var tok=s&&s.data&&s.data.session&&s.data.session.access_token;
+ var ext=((f.name||'').split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,6)||'bin',path=prefix+'/'+Date.now()+'_'+Math.random().toString(36).slice(2,8)+'.'+ext;
+ if(!tok||!SBKEY)return _chatUpload8(f,prefix).then(function(u){onp&&onp(f.size,f.size);return u;});
+ return new Promise(function(res,rej){var x=new XMLHttpRequest();x.open('POST',SBURL+'/storage/v1/object/chat/'+path);x.setRequestHeader('Authorization','Bearer '+tok);x.setRequestHeader('apikey',SBKEY);x.setRequestHeader('x-upsert','false');x.setRequestHeader('Content-Type',f.type||'application/octet-stream');
+  x.upload.onprogress=function(e){if(e.lengthComputable&&onp)onp(e.loaded,e.total);};x.onload=function(){if(x.status>=200&&x.status<300){onp&&onp(f.size,f.size);res(SBURL+'/storage/v1/object/public/chat/'+path);}else _chatUpload8(f,prefix).then(res,rej);};x.onerror=function(){_chatUpload8(f,prefix).then(res,rej);};x.send(f);});});});}
+try{var _k=(sb&&sb.supabaseKey)||null;SBKEY=_k;}catch(e){}
+setTimeout(function(){try{SBKEY=SBKEY||(sb&&(sb.supabaseKey||(sb.rest&&sb.rest.headers&&sb.rest.headers.apikey)));}catch(e){}},3000);
+function upBar(thumb,label){var o=$('upBar');if(o)o.remove();o=document.createElement('div');o.id='upBar';o.innerHTML='<div class="upi">'+(thumb?'<img src="'+esc(thumb)+'">':'<span>Aa</span>')+'<b id="upL">'+esc(label||'Paylaşılır…')+'</b><em id="upP"></em></div><i class="upl"><s id="upS"></s></i>';document.body.appendChild(o);requestAnimationFrame(function(){o.classList.add('on');});
+ var c={set:function(p){var s=$('upS'),e=$('upP');if(s)s.style.width=Math.max(4,Math.min(100,p))+'%';if(e)e.textContent=Math.round(p)+'%';},
+  done:function(ok,msg,retry){var l=$('upL'),e=$('upP'),s=$('upS');if(!o.isConnected)return;if(ok){if(s)s.style.width='100%';if(l)l.textContent='✓ '+(msg||'Paylaşıldı');if(e)e.textContent='';o.classList.add('ok');setTimeout(function(){o.classList.remove('on');setTimeout(function(){o.remove();},250);},1600);}
+   else{o.classList.add('bad');if(l)l.textContent=msg||'Alınmadı';if(e)e.innerHTML=retry?'<button>Yenidən</button>':'<button>✕</button>';var b=e&&e.querySelector('button');if(b)b.onclick=function(){o.remove();if(retry)retry();};}}};c.set(3);return c;}
+/* post */
+feedPost=function(){var c;try{c=fpCollect();}catch(e){toast(e.message);return;}if(_fpWhen)return draftSave(true);if(!c.b&&!_fpMedia.length&&!c.poll){toast('Mətn, şəkil və ya sorğu əlavə edin');return;}
+ var S={b:c.b,poll:c.poll,media:_fpMedia.slice(),club:_fpClub,chal:_fpChal,ment:mentionIds(c.b),T:(_fpTags||[]).slice(),P:_fpPlace,C:_fpCollab,draft:_fpDraft,ar:_fpAR,fl:_fpFL};
+ var f0=S.media.find(function(f){return f.url?f.kind!=='video':/^image/.test(f.type);});var th=f0?(f0.url||URL.createObjectURL(f0)):null;closeModal();
+ var v=$('v-feed');if(!v||!v.classList.contains('on'))show('feed');else if(FMODE!=='all'&&FMODE!=='club'&&FMODE!=='challenge')feedMode('all');window.scrollTo({top:0,behavior:'smooth'});
+ var go=function(){var bar=upBar(th,'Paylaşılır…'),tot=S.media.reduce(function(a,f){return a+(f.url?0:f.size||1);},0)||1,done={};
+  var prog=function(k,l){done[k]=l;var s=0;Object.keys(done).forEach(function(z){s+=done[z];});bar.set(5+90*s/tot);};
+  Promise.all(S.media.map(function(f,i){if(f.url)return Promise.resolve({url:f.url,kind:f.kind||'image'});_fpAR=S.ar;_fpFL=S.fl;return fpProcess(f).then(function(g){return upXhr(g,'post',function(l,t){prog(i,l*(f.size||1)/(t||1));}).then(function(u){return {url:u,kind:/^video/.test(f.type)?'video':'image'};});});}))
+  .then(function(media){bar.set(96);return run(sb.rpc('post_add3',{p_body:S.b,p_media:media.length?media:null,p_poll:S.poll,p_club:S.club,p_mentions:S.ment,p_shared:null,p_challenge:S.chal}));})
+  .then(function(pid){if(pid&&(S.T.length||S.P||S.C))return run(sb.rpc('post_meta',{p_id:pid,p_tags:S.T.length?S.T:null,p_place:S.P,p_collab:S.C?S.C.uid:null}));})
+  .then(function(){bar.done(true);if(S.draft)sb.rpc('draft_delete',{p_id:S.draft}).then(function(){},function(){});FEED=[];if(FMODE==='team')teamRender();else feedLoad();})
+  .catch(function(e){bar.done(false,'Paylaşılmadı: '+((e&&e.message)||e),go);});};go();};
+/* hekayə */
+stShare=function(){var S=_st;if(!S)return;var th=S.vid?null:S.u,lay=S.layers.slice(),stk=S.stk,aud=S.aud,ment=(S.ment||[]).slice(),vid=S.vid;
+ var g=$('stGo');g.disabled=true;g.textContent='Hazırlanır…';stCompose().then(function(f){var thumb=vid?null:URL.createObjectURL(f);_st={u:S.u};stEdClose();
+  var go=function(){var bar=upBar(thumb,'Hekayən paylaşılır…'),url0;upXhr(f,'story',function(l,t){bar.set(5+90*l/(t||1));}).then(function(url){url0=url;bar.set(96);var cap=vid&&lay.length?lay.map(function(l){return l.t;}).join(' · '):null;return run(sb.rpc('story_add3',{p_url:url,p_kind:vid?'video':'image',p_caption:cap,p_sticker:stk,p_audience:aud}));})
+   .then(function(){ment.forEach(function(u){sb.rpc('msg_send',{p_to:u,p_group:null,p_body:'📸 Səni hekayəsində qeyd etdi',p_kind:'story_mention',p_image:vid?null:url0,p_file_url:vid?url0:null}).then(function(){},function(){});});bar.done(true,aud==='cf'?'Yaxın dostlarla paylaşıldı':'Hekayən paylaşıldı');storyLoad();})
+   .catch(function(e){bar.done(false,'Alınmadı: '+((e&&e.message)||e),go);});};go();}).catch(function(e){g.disabled=false;g.textContent='Hekayən ➜';toast(e.message||e);});};
+</script>
 </body>
 </html>
