@@ -221,3 +221,4 @@ Frontend ofis.html sonunda ayrıca `<style>`+`<script>` bloku ("SOSİAL v3"). Ba
 - 🎮 Əyləncə seqmenti: canlı viktorina (`office_quiz*`, `quiz_*`, 20 san/sual, deep link ?quiz=), səsli otaqlar (WebRTC mesh, `office_room*`, `room_*`, ?room=), "Bu kimdir?" (`guess_next/answer`, gündə 10, +3), anonim kompliment (`comp_*`, həftədə 1, moderasiya).
 - 🎉 Satış: `lux_contracts` insert trigger `contract_sale_t` → Lent post (kind sale) + push; klientdə konfetti.
 - 📊 Wrapped: `wrapped(month)`, Lentdə 25-dən 5-nə banner, ayın 1-i push, Lentdə şəkil kimi paylaşma.
+- 4 okt: Hekayə baxıcısı Instagram üslubunda yenidən yazıldı (ofis-v61): canlı saniyə sayğacı (`stoAgo`), basıb saxla = pauza, yuxarı sürüşdür = baxanlar (öz) / cavab (başqası), aşağı sürüşdür = bağla, sağ/sol sürüşdürmə, cavab mesajı + ürək, ⋯ menyu. Baza: `_storyShow0` əvəz edildi.

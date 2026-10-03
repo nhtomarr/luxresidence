@@ -3674,7 +3674,7 @@ function svg(k){var f=/\*$/.test(k),c=(k.split('#')[1]||'');k=k.replace(/[*]|#.*
 window.uiIcon=function(n){return P[n]?svg(n):'';};
 var keys=Object.keys(M).sort(function(a,b){return b.length-a.length;});
 var RX=new RegExp('('+keys.map(function(k){return k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}).join('|')+')\\uFE0F?','g');
-var SKIP='.msgbody,.igm,.igpb,.igcm .cmb>div,.sorbar,.sorsum,.msgreact,.svr1,.svcap,.soce,.s3ce,.iggrp,.igst,.chatlast,.iglast,.igrep,.igpin,.soshared,.somoment p,.s3mem p,.s3qa,.s3my,.s3q p,.s3ansb p,.s3ann p,.sopoll,.svstk,.svbar,#igCtx,.igreacts,.chatreacts,.mood,.moodpick,.sochips,.fpchal,.s3th,.sorpick,.igvoice,.sotag,.svfoot,.sorx,.no-ic,[contenteditable]';
+var SKIP='.svvr,.msgbody,.igm,.igpb,.igcm .cmb>div,.sorbar,.sorsum,.msgreact,.svr1,.svcap,.soce,.s3ce,.iggrp,.igst,.chatlast,.iglast,.igrep,.igpin,.soshared,.somoment p,.s3mem p,.s3qa,.s3my,.s3q p,.s3ansb p,.s3ann p,.sopoll,.svstk,.svbar,#igCtx,.igreacts,.chatreacts,.mood,.moodpick,.sochips,.fpchal,.s3th,.sorpick,.igvoice,.sotag,.svfoot,.sorx,.no-ic,[contenteditable]';
 var NOTAG={SCRIPT:1,STYLE:1,TEXTAREA:1,INPUT:1,SELECT:1,OPTION:1,svg:1,SVG:1,TITLE:1,CODE:1,PRE:1};
 function fix(root){if(!root)return;if(root.nodeType===3){one(root);return;}if(root.nodeType!==1||NOTAG[root.nodeName])return;
  var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),l=[],n;while((n=w.nextNode())){RX.lastIndex=0;if(RX.test(n.nodeValue))l.push(n);}l.forEach(one);}
@@ -3967,6 +3967,94 @@ socProfile=function(uid){_socProfile4(uid);if(!uid||uid==='undefined')return;var
 (function s4Init(){var go=function(){if(typeof ME==='undefined'||!ME||!ME.user_id||typeof sb==='undefined'){setTimeout(go,1500);return;}lvlLoad();
  var q=new URLSearchParams(location.search),k=['quiz','room','comp','wrapped'].find(function(x){return q.get(x);});if(!k)return;var v=q.get(k);try{history.replaceState(history.state,'',location.pathname);}catch(e){}
  setTimeout(function(){if(k==='quiz')quizOpen(v);else if(k==='room'){show('feed');feedMode('fun');}else if(k==='comp'){show('feed');feedMode('fun');}else if(k==='wrapped'){show('feed');wrappedOpen(v);}},900);};setTimeout(go,1700);})();
+</script>
+<style>
+/* ===== hekayə baxıcısı v2 ===== */
+#igSV{z-index:700;background:#000;display:block;touch-action:none;transition:background .2s}
+#igSV .svstage{position:absolute;left:0;right:0;top:env(safe-area-inset-top,0px);bottom:calc(64px + env(safe-area-inset-bottom,0px));border-radius:14px;overflow:hidden;background:#111;will-change:transform}
+@media(min-width:600px){#igSV .svstage{left:50%;width:min(440px,100%);transform:translateX(-50%)}}
+#igSV .svmedia{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#igSV .svmedia img,#igSV .svmedia video{width:100%;height:100%;object-fit:contain;-webkit-user-drag:none;pointer-events:none}
+#igSV .svshade{position:absolute;left:0;right:0;top:0;height:110px;background:linear-gradient(rgba(0,0,0,.45),transparent);pointer-events:none}
+#igSV .svbars{top:8px}
+#igSV .svhead{top:20px;left:12px;right:8px}
+#igSV .svhead b{font-size:.92rem;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:45vw}
+#igSV .svhead small{font-size:.85rem;opacity:.7}
+#igSV .svhead button{background:none;border:none;color:#fff;font-size:1.35rem;padding:4px 6px}
+#igSV .svhead .svmore{margin-left:auto;font-size:1.5rem;letter-spacing:1px}
+#igSV .svhead .svmore+.svx{margin-left:0}
+#igSV .svx{margin-left:auto}
+.svps{display:none;font-size:.7rem;opacity:.8}.svps.on{display:inline}
+#igSV.held .svhead,#igSV.held .svbars,#igSV.held .svbot,#igSV.held .svcap{opacity:0;transition:opacity .2s}
+#igSV .svcap{bottom:24px}
+#igSV .svl,#igSV .svr,#igSV .svfoot{display:none}
+.svbot{position:absolute;left:0;right:0;bottom:env(safe-area-inset-bottom,0px);height:64px;display:flex;align-items:center;gap:10px;padding:0 12px;z-index:4}
+.svbot input{flex:1;background:transparent;border:1px solid rgba(255,255,255,.55);color:#fff;border-radius:99px;padding:11px 16px;font-size:.95rem;outline:none}
+#igSV .svbot input{background:transparent!important;color:#fff!important;border:1px solid rgba(255,255,255,.55)!important;box-shadow:none!important;-webkit-text-fill-color:#fff}
+.svbot input::placeholder{color:rgba(255,255,255,.75)}
+.svhrt,.svsend{background:none;border:none;color:#fff;font-size:1.7rem;width:40px;height:40px;display:grid;place-items:center;padding:0}
+.svsend{font-size:1.35rem}.svhrt.on{color:#ff3040;animation:svpop .35s}
+@keyframes svpop{50%{transform:scale(1.35)}}
+.svbot.me{justify-content:space-around}
+.svact{background:none;border:none;color:#fff;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.72rem;min-width:70px}
+.svact b{font-size:1.3rem;line-height:22px;font-weight:400}
+.svfaces{display:flex;height:22px}.svfaces>*{margin-left:-7px;border:1.5px solid #000;border-radius:50%}.svfaces>*:first-child{margin-left:0}
+.svfaces:empty:before{content:'👁';font-size:1.1rem}
+.svsheet{position:absolute;left:0;right:0;bottom:0;height:62%;background:#fff;color:#0a0a0a;border-radius:20px 20px 0 0;padding:8px 14px 14px;z-index:8;transform:translateY(100%);transition:transform .25s ease;display:flex;flex-direction:column}
+.svsheet.on{transform:translateY(0)}.svsheet #svVl{flex:1;overflow-y:auto;margin-top:6px}
+.svgrab{width:38px;height:5px;border-radius:9px;background:#d1d1d6;margin:0 auto 8px}
+.svvr{font-size:1.3rem}
+.svmenu{position:absolute;inset:0;z-index:9}.svmbg{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.svmb{position:absolute;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));background:#fff;border-radius:16px;overflow:hidden}
+.svmb button{display:block;width:100%;border:none;background:#fff;padding:15px;font-size:1rem;border-bottom:1px solid #eee;color:#0a0a0a}.svmb button.red{color:#ed4956;font-weight:600}.svmb button:last-child{border:none;font-weight:600}
+.svbig{position:absolute;left:50%;top:45%;font-size:5rem;transform:translate(-50%,-50%);animation:svbig .9s ease forwards;z-index:6;pointer-events:none}
+@keyframes svbig{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}30%{transform:translate(-50%,-50%) scale(1.2);opacity:1}100%{transform:translate(-50%,-80%) scale(1);opacity:0}}
+#igSV .svstk{z-index:5}
+.svsheet{touch-action:pan-y}
+</style>
+<script>
+/* ===================== HEKAYƏ BAXICISI (Instagram üslubu) ===================== */
+function stoAgo(iso){var s=Math.max(0,Math.floor((Date.now()-new Date(iso).getTime())/1000));if(s<60)return s+' san';var m=Math.floor(s/60);if(m<60)return m+' dəq';var h=Math.floor(m/60);if(h<24)return h+' saat';return Math.floor(h/24)+' gün';}
+_storyShow0=function(){if(!_sv)return;var u=CHAT_STORIES[_sv.ui],it=u&&u.items[_sv.ii];if(!it){storyClose();return;}var el=$('igSV');clearInterval(_sv.t);
+ _sv.el=0;_sv.paused=false;_sv.dur=5000;_sv.last=Date.now();
+ var face=u.me?((typeof EMP!=='undefined'&&EMP&&EMP.photo)||u.photo):u.photo;
+ el.innerHTML='<div class="svstage" id="svStage">'
+  +'<div class="svmedia">'+(it.kind==='video'?'<video id="svm" src="'+esc(it.url)+'" autoplay playsinline></video>':'<img id="svm" src="'+esc(it.url)+'">')+'</div>'
+  +'<div class="svshade"></div>'
+  +'<div class="svbars">'+u.items.map(function(x,i){return '<i><b style="width:'+(i<_sv.ii?100:0)+'%"'+(i===_sv.ii?' id="svb"':'')+'></b></i>';}).join('')+'</div>'
+  +'<div class="svhead">'+chatAva(u.ad,face,34)+'<b onclick="storyClose();socProfile(\''+u.uid+'\')">'+esc(u.me?'Sənin hekayən':u.ad)+'</b><small id="svAgo">'+stoAgo(it.at)+'</small><span class="svps" id="svPs">❚❚</span>'
+  +(u.me?'<button class="svmore" onclick="svMenu(\''+it.id+'\')">⋯</button>':'')+'<button class="svx" onclick="storyClose()">✕</button></div>'
+  +(it.cap?'<div class="svcap">'+esc(it.cap)+'</div>':'')+'</div>'
+  +(u.me?'<div class="svbot me"><button class="svact" onclick="svSheet(\''+it.id+'\')"><span class="svfaces" id="svFaces"></span><span>Fəaliyyət'+(it.views?' · '+it.views:'')+'</span></button><button class="svact" onclick="storyPick()"><b>＋</b><span>Yeni</span></button><button class="svact" onclick="svMenu(\''+it.id+'\')"><b>⋯</b><span>Daha çox</span></button></div>'
+   :'<div class="svbot"><input id="svRe" placeholder="'+esc((u.ad||'').split(' ')[0])+' adlı istifadəçiyə cavab…" onfocus="svPause(true)" onblur="setTimeout(function(){if(document.activeElement!==$(\'svRe\'))svPause(false)},150)" onkeydown="if(event.key===\'Enter\')svReply()"><button class="svhrt" id="svHrt" onclick="svLike(this)">♡</button><button class="svsend" onclick="svReply()">➤</button></div>');
+ if(!u.me&&!it.seen){it.seen=true;sb.rpc('story_view',{p_id:it.id}).then(function(){},function(){});}
+ var m=$('svm');if(it.kind==='video'&&m){m.onloadedmetadata=function(){_sv&&(_sv.dur=Math.min(60000,(m.duration||5)*1000));};m.onwaiting=function(){if(_sv)_sv.buf=true;};m.onplaying=function(){if(_sv)_sv.buf=false;};}
+ if(u.me&&it.views)run(sb.rpc('story_viewers',{p_id:it.id})).then(function(r){var f=$('svFaces');if(f)f.innerHTML=(r||[]).slice(0,3).map(function(v){return chatAva(v.ad,v.photo,22);}).join('');}).catch(function(){});
+ svGesture();
+ _sv.t=setInterval(function(){if(!_sv)return;var now=Date.now(),d=now-_sv.last;_sv.last=now;if(!_sv.paused&&!_sv.buf)_sv.el+=d;var p=_sv.el/_sv.dur,b=$('svb');if(b)b.style.width=Math.min(100,p*100)+'%';
+  var a=$('svAgo');if(a&&(now/1000|0)!==_sv.sec){_sv.sec=now/1000|0;a.textContent=stoAgo(it.at);}if(p>=1)storyNav(1);},40);};
+function svPause(on){if(!_sv)return;_sv.paused=on;var v=$('svm');if(v&&v.tagName==='VIDEO'){if(on)v.pause();else v.play().catch(function(){});}var p=$('svPs');if(p)p.classList.toggle('on',on);var s=document.querySelector('#igSV');if(s)s.classList.toggle('held',on&&!_sv.input);}
+function svGesture(){var st=$('svStage'),root=$('igSV');if(!st||root._g)return;root._g=1;var g=null;
+ var skip=function(t){return t.closest('.svhead,.svbot,.svstk,.svlist,.svsheet,input,button,a,.svmenu');};
+ root.addEventListener('pointerdown',function(e){if(!_sv||skip(e.target))return;g={x:e.clientX,y:e.clientY,t:Date.now(),dy:0,dx:0,hold:false};g.h=setTimeout(function(){if(g){g.hold=true;svPause(true);}},220);});
+ root.addEventListener('pointermove',function(e){if(!g)return;g.dx=e.clientX-g.x;g.dy=e.clientY-g.y;if(Math.abs(g.dy)>12&&Math.abs(g.dy)>Math.abs(g.dx)){clearTimeout(g.h);var s=$('svStage');if(s&&g.dy>0){s.style.transition='none';s.style.transform='translateY('+g.dy+'px) scale('+Math.max(.85,1-g.dy/1500)+')';root.style.background='rgba(0,0,0,'+Math.max(.2,1-g.dy/500)+')';}}});
+ var end=function(e){if(!g)return;var G=g;g=null;clearTimeout(G.h);var s=$('svStage');
+  if(G.dy>90&&Math.abs(G.dy)>Math.abs(G.dx)){if(s){s.style.transition='transform .2s,opacity .2s';s.style.transform='translateY(100%) scale(.8)';s.style.opacity='0';}setTimeout(storyClose,180);return;}
+  if(s){s.style.transition='transform .2s';s.style.transform='';root.style.background='';}
+  if(G.dy<-70&&Math.abs(G.dy)>Math.abs(G.dx)){var u=_sv&&CHAT_STORIES[_sv.ui],it=u&&u.items[_sv.ii];if(u&&u.me)svSheet(it.id);else{var i=$('svRe');if(i)i.focus();}return;}
+  if(G.hold){svPause(false);return;}
+  if(Math.abs(G.dx)>60){storyNav(G.dx<0?1:-1);return;}
+  if(Date.now()-G.t<300)storyNav(G.x<innerWidth*.33?-1:1);};
+ root.addEventListener('pointerup',end);root.addEventListener('pointercancel',function(){if(g){clearTimeout(g.h);if(g.hold)svPause(false);var s=$('svStage');if(s){s.style.transform='';root.style.background='';}g=null;}});}
+function svSheet(id){_sv&&(_sv.input=true);svPause(true);var root=$('igSV');var old=root.querySelector('.svsheet');if(old)old.remove();var d=document.createElement('div');d.className='svsheet';d.innerHTML='<div class="svgrab"></div><div class="row sp"><b>👁 Baxanlar</b><button class="igtxt" onclick="svSheetClose()">Bağla</button></div><div id="svVl"><p class="status"><span class="spin"></span></p></div>';root.appendChild(d);requestAnimationFrame(function(){d.classList.add('on');});
+ var y0=null;d.addEventListener('touchstart',function(e){if(d.querySelector('#svVl').scrollTop<=0)y0=e.touches[0].clientY;},{passive:true});d.addEventListener('touchmove',function(e){if(y0==null)return;var dy=e.touches[0].clientY-y0;if(dy>0)d.style.transform='translateY('+dy+'px)';},{passive:true});d.addEventListener('touchend',function(e){if(y0==null)return;var dy=(e.changedTouches[0].clientY-y0);y0=null;if(dy>80)svSheetClose();else d.style.transform='';});
+ run(sb.rpc('story_viewers',{p_id:id})).then(function(r){r=r||[];var l=$('svVl');if(!l)return;l.innerHTML=r.length?r.map(function(v){return '<div class="igrow" onclick="storyClose();socProfile(\''+v.uid+'\')">'+chatAva(v.ad,v.photo,44)+'<div class="igmeta"><div class="igname">'+esc(v.ad)+'</div><div class="iglast">'+stoAgo(v.at)+' əvvəl</div></div>'+(v.r?'<span class="svvr">'+esc(v.r)+'</span>':'')+'</div>';}).join(''):'<p class="hint" style="text-align:center;padding:20px">Hələ baxan yoxdur</p>';}).catch(err);}
+function svSheetClose(){var d=document.querySelector('#igSV .svsheet');if(d){d.classList.remove('on');d.style.transform='';setTimeout(function(){d.remove();},220);}if(_sv)_sv.input=false;svPause(false);}
+function svMenu(id){_sv&&(_sv.input=true);svPause(true);var root=$('igSV'),d=document.createElement('div');d.className='svmenu';d.innerHTML='<div class="svmbg" onclick="this.parentNode.remove();if(_sv)_sv.input=false;svPause(false)"></div><div class="svmb"><button onclick="svSheet(\''+id+'\');this.closest(\'.svmenu\').remove()">👁 Baxanlar</button><button onclick="this.closest(\'.svmenu\').remove();storyClose();if(typeof hlNew===\'function\')hlNew()">⭐ Önə çıxanlara əlavə et</button><button class="red" onclick="storyDel(\''+id+'\')">🗑 Hekayəni sil</button><button onclick="this.closest(\'.svmenu\').remove();if(_sv)_sv.input=false;svPause(false)">Ləğv et</button></div>';root.appendChild(d);}
+function svLike(b){var on=!b.classList.contains('on');b.classList.toggle('on',on);b.textContent=on?'♥':'♡';if(on){try{navigator.vibrate&&navigator.vibrate(15);}catch(e){}var h=document.createElement('span');h.className='svbig';h.textContent='❤️';$('igSV').appendChild(h);setTimeout(function(){h.remove();},900);storyReact('❤️');}}
+function svReply(){var i=$('svRe');var t=i&&i.value.trim();if(!t||!_sv)return;var u=CHAT_STORIES[_sv.ui],it=u.items[_sv.ii];i.value='';i.blur();
+ run(sb.rpc('msg_send',{p_to:u.uid,p_group:null,p_body:'↩︎ Hekayənə cavab: '+t,p_kind:'text',p_image:it.kind==='image'?it.url:null})).then(function(){toast('Göndərildi');}).catch(err);}
+var _storyDel5=storyDel;storyDel=function(id){var m=document.querySelector('#igSV .svmenu');if(m)m.remove();_storyDel5(id);};
 </script>
 </body>
 </html>
