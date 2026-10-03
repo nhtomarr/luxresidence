@@ -550,6 +550,20 @@ body.incall{overflow:hidden}
 #callUI .cb.glass{background:rgba(255,255,255,.18)}#callUI .cb.glass.act{background:#fff;color:#111}
 #callUI .pulse{animation:cpulse 1.4s infinite}
 @keyframes cpulse{0%{box-shadow:0 0 0 0 rgba(52,199,89,.6)}70%{box-shadow:0 0 0 18px rgba(52,199,89,0)}100%{box-shadow:0 0 0 0 rgba(52,199,89,0)}}
+
+.igchips{display:flex;gap:8px;margin:-6px 0 12px}
+.igchip{border:1px solid #dbdbdb;background:#fff;color:#0a0a0a;border-radius:18px;padding:6px 14px;font-size:.88rem;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.igchip.on{background:#0a0a0a;color:#fff;border-color:#0a0a0a}
+.igchip span{background:#3b5bfd;color:#fff;border-radius:10px;font-size:.72rem;padding:1px 7px}
+.igtxt{border:none;background:none;color:#0095f6;font-weight:600;font-size:.95rem;padding:6px 8px}
+.igselh{display:flex;align-items:center;gap:6px}.igselh b{font-size:1.1rem}.igselh .igicon{font-size:1.2rem;width:36px;height:36px}
+.igrow.sel{background:rgba(59,91,253,.08)}
+.igchk{width:24px;height:24px;border-radius:50%;border:2px solid #c7c7c7;flex-shrink:0;display:grid;place-items:center;color:#fff;font-size:14px;font-weight:700;margin-right:4px}
+.igchk.on{background:#3b5bfd;border-color:#3b5bfd}
+#igSelBar{position:fixed;left:0;right:0;bottom:0;z-index:70;display:flex;justify-content:space-around;gap:6px;background:#fff;border-top:1px solid #efefef;padding:10px 10px calc(10px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 16px rgba(0,0,0,.06)}
+#igSelBar button{flex:1;border:none;background:#efefef;color:#0a0a0a;font-weight:600;border-radius:12px;padding:12px 6px;font-size:.88rem}
+#igSelBar button.del{background:#ffe9e8;color:#ed4956}
+#igSelBar button:disabled{opacity:.4}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -787,7 +801,7 @@ function start(){$('app').style.display='';var _bl=document.getElementById('boot
  setInterval(tick,1000);tick();
  loadAll().then(function(){setTimeout(function(){iosSheetShow(false);},2500);if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');(function(){var def=new URLSearchParams(location.search).get('qr')&&MGR?'set':((OWNER||(ME.is_admin&&!EMP))?'boss':'today');var saved='';try{saved=sessionStorage.getItem('ofis_tab')||'';}catch(e){}var allowed=tabs.map(function(t){return t[0];});show(saved&&allowed.indexOf(saved)>=0?saved:def);})();if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
 }
-function show(v){if(v!=='chat'&&typeof chatFull==='function')chatFull(false);try{sessionStorage.setItem('ofis_tab',v);}catch(e){}document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});var ab=document.querySelector('#tabs button.on');if(ab&&ab.scrollIntoView)try{ab.scrollIntoView({block:'nearest',inline:'center'});}catch(e){}
+function show(v){if(v!=='chat'&&typeof chatFull==='function'){chatFull(false);CHAT_SEL=null;var _b=document.getElementById('igSelBar');if(_b)_b.remove();}try{sessionStorage.setItem('ofis_tab',v);}catch(e){}document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});var ab=document.querySelector('#tabs button.on');if(ab&&ab.scrollIntoView)try{ab.scrollIntoView({block:'nearest',inline:'center'});}catch(e){}
  if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss'){if(OWNER)renderOwner();else renderBoss();}if(v==='asst')renderAsst();if(v==='oprofil')renderOProfil();if(v==='remind')renderRemind();if(v==='chat')renderChat();if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();if(v==='dir'){dirFilters();var db=$('dirBar');if(db)db.style.display='';renderDir();}if(v==='docs')renderDocs();if(v==='me')renderMe();window.scrollTo(0,0);}
 function tick(){var n=new Date();$('tClock').textContent=n.toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit',second:'2-digit'});$('tDate').textContent=n.toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});}
 function loadAll(){return Promise.all([
@@ -901,28 +915,52 @@ function chatAgo(iso){if(!iso)return '';var s=(Date.now()-new Date(iso).getTime(
  if(s<60)return 'indi';if(s<3600)return Math.floor(s/60)+'d';if(s<86400)return Math.floor(s/3600)+'s';if(s<604800)return Math.floor(s/86400)+'g';return Math.floor(s/604800)+'h';}
 function renderChat(){var v=$('v-chat');if(!v)return;
  if(CHATother){renderChatRoom();return;}
- v.innerHTML='<div class="ig"><div class="igtop"><h2>Çat</h2><button class="igicon" onclick="chatNew()" title="Yeni mesaj">'+IGI.edit+'</button></div>'
+ CHAT_SEL=null;v.innerHTML='<div class="ig"><div class="igtop" id="igTop"></div>'
   +'<label class="igsearch">'+IGI.search+'<input id="igQ" placeholder="Axtar" oninput="chatDrawThreads(CHAT_THREADS)"></label>'
-  +'<div class="igsec">Mesajlar</div>'
+  +'<div class="igchips" id="igChips"></div>'
   +'<div id="chatThreads"><p class="status"><span class="spin"></span>Yüklənir…</p></div></div>';
  run(sb.rpc('msg_threads')).then(function(rows){CHAT_THREADS=rows||[];chatDrawThreads(CHAT_THREADS);}).catch(err);
 }
 function chatInitials(n){return (n||'?').split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase();}
 function chatArg(s){return esc(s||'').replace(/\x27/g,"\\x27");}
-function chatDrawThreads(rows){var el=$('chatThreads');if(!el)return;
+var CHAT_SEL=null,CHAT_FILTER='all',_lpT=null,_lpFired=false;
+function chatTopBar(){var t=$('igTop');if(!t)return;
+ if(CHAT_SEL){var n=CHAT_SEL.size,vis=chatVisible(),all=vis.length>0&&vis.every(function(x){return CHAT_SEL.has(x.other);});
+  t.innerHTML='<div class="igselh"><button class="igicon" onclick="chatSelEnd()">✕</button><b>'+(n?n+' seçildi':'Söhbət seçin')+'</b></div><button class="igtxt" onclick="chatSelAll()">'+(all?'Heç birini':'Hamısını seç')+'</button>';}
+ else t.innerHTML='<h2>Çat</h2><div style="display:flex;align-items:center;gap:4px">'+(CHAT_THREADS.length?'<button class="igtxt" onclick="chatSelStart()">Seç</button>':'')+'<button class="igicon" onclick="chatNew()" title="Yeni mesaj">'+IGI.edit+'</button></div>';
+ var c=$('igChips');if(c){var un=CHAT_THREADS.filter(function(x){return x.oxunmamis>0;}).length;
+  c.innerHTML='<button class="igchip'+(CHAT_FILTER==='all'?' on':'')+'" onclick="chatFilter(\'all\')">Hamısı</button><button class="igchip'+(CHAT_FILTER==='unread'?' on':'')+'" onclick="chatFilter(\'unread\')">Oxunmamış'+(un?' <span>'+un+'</span>':'')+'</button>';}
+ var bar=$('igSelBar');
+ if(CHAT_SEL){if(!bar){bar=document.createElement('div');bar.id='igSelBar';document.body.appendChild(bar);}var d=!CHAT_SEL.size;
+  bar.innerHTML='<button '+(d?'disabled':'')+' onclick="chatBulk(\'read\')">Oxunmuş et</button><button '+(d?'disabled':'')+' onclick="chatBulk(\'unread\')">Oxunmamış et</button><button class="del" '+(d?'disabled':'')+' onclick="chatBulk(\'delete\')">Sil</button>';}
+ else if(bar)bar.remove();}
+function chatVisible(){var q=(($('igQ')||{}).value||'').toLowerCase();return CHAT_THREADS.filter(function(t){return (!q||(t.ad||'').toLowerCase().indexOf(q)>=0)&&(CHAT_FILTER!=='unread'||t.oxunmamis>0);});}
+function chatFilter(f){CHAT_FILTER=f;chatDrawThreads(CHAT_THREADS);}
+function chatSelStart(uid){CHAT_SEL=new Set();if(uid)CHAT_SEL.add(uid);try{navigator.vibrate&&navigator.vibrate(25);}catch(e){}chatDrawThreads(CHAT_THREADS);}
+function chatSelEnd(){CHAT_SEL=null;chatDrawThreads(CHAT_THREADS);}
+function chatSelAll(){var vis=chatVisible(),all=vis.length>0&&vis.every(function(x){return CHAT_SEL.has(x.other);});vis.forEach(function(x){if(all)CHAT_SEL.delete(x.other);else CHAT_SEL.add(x.other);});chatDrawThreads(CHAT_THREADS);}
+function chatRowTap(uid,ad){if(_lpFired){_lpFired=false;return;}if(CHAT_SEL){if(CHAT_SEL.has(uid))CHAT_SEL.delete(uid);else CHAT_SEL.add(uid);chatDrawThreads(CHAT_THREADS);return;}chatOpen(uid,ad);}
+function chatRowDown(uid){clearTimeout(_lpT);_lpFired=false;_lpT=setTimeout(function(){_lpFired=true;if(!CHAT_SEL)chatSelStart(uid);else{CHAT_SEL.add(uid);chatDrawThreads(CHAT_THREADS);}},500);}
+function chatRowUp(){clearTimeout(_lpT);}
+function chatBulk(a){if(!CHAT_SEL||!CHAT_SEL.size)return;var ids=Array.from(CHAT_SEL),n=ids.length;
+ if(a==='delete'&&!confirm(n+' söhbət silinsin?\n\nSöhbət yalnız səndə silinir, qarşı tərəfdə qalır. Yeni mesaj gəlsə, söhbət yenidən görünəcək.'))return;
+ run(sb.rpc('msg_bulk',{p_others:ids,p_action:a})).then(function(){toast(a==='delete'?n+' söhbət silindi':a==='read'?'Oxunmuş edildi':'Oxunmamış edildi');CHAT_SEL=null;
+  return run(sb.rpc('msg_threads'));}).then(function(r){CHAT_THREADS=r||[];chatDrawThreads(CHAT_THREADS);livePoll();}).catch(err);}
+function chatDrawThreads(rows){var el=$('chatThreads');if(!el)return;chatTopBar();
  var q=(($('igQ')||{}).value||'').toLowerCase();
  if(!rows.length){el.innerHTML='<div class="igempty"><div class="igemptyic">'+IGI.edit+'</div><b>Mesajlarınız</b><div>Komandadan kiməsə yazın</div><button class="igbtn" onclick="chatNew()">Mesaj göndər</button></div>';return;}
- rows=rows.filter(function(t){return !q||(t.ad||'').toLowerCase().indexOf(q)>=0;});
+ rows=chatVisible();
  el.innerHTML=rows.map(function(t){CHAT_PH[t.other]=t.photo||null;CHAT_SUB[t.other]=t.vezife||'';
   var un=t.oxunmamis>0,last;
   if(un)last=t.oxunmamis>1?t.oxunmamis+' yeni mesaj':(t.son_sekil?'Şəkil göndərdi':esc((t.son_mesaj||'').slice(0,60)));
   else if(t.son_mine&&t.son_goruldu)last='Görüldü';
   else last=(t.son_mine?'Siz: ':'')+(t.son_sekil?'Şəkil':esc((t.son_mesaj||'').slice(0,60)));
-  return '<div class="igrow'+(un?' un':'')+'" onclick="chatOpen(\''+t.other+'\',\''+chatArg(t.ad)+'\')">'
+  var sel=CHAT_SEL&&CHAT_SEL.has(t.other);
+  return '<div class="igrow'+(un?' un':'')+(sel?' sel':'')+'" onclick="chatRowTap(\''+t.other+'\',\''+chatArg(t.ad)+'\')" ontouchstart="chatRowDown(\''+t.other+'\')" ontouchend="chatRowUp()" ontouchmove="chatRowUp()" oncontextmenu="event.preventDefault();_lpFired=false;if(!CHAT_SEL)chatSelStart(\''+t.other+'\')">'
    +chatAva(t.ad,t.photo,56)
    +'<div class="igmeta"><div class="igname">'+esc(t.ad||'İşçi')+'</div><div class="iglast"><span class="iglt">'+last+'</span><span class="igago">&nbsp;· '+chatAgo(t.son)+'</span></div></div>'
-   +(un?'<span class="igdot"></span>':'')+'</div>';
- }).join('')||'<p class="hint" style="padding:14px">Tapılmadı</p>';
+   +(CHAT_SEL?'<span class="igchk'+(sel?' on':'')+'">'+(sel?'✓':'')+'</span>':(un?'<span class="igdot"></span>':''))+'</div>';
+ }).join('')||'<p class="hint" style="padding:14px">'+(CHAT_FILTER==='unread'?'Oxunmamış mesaj yoxdur':'Tapılmadı')+'</p>';
 }
 function chatTime(iso){if(!iso)return '';var d=new Date(iso),now=new Date();if(d.toDateString()===now.toDateString())return d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'});return d.toLocaleDateString('az-AZ',{day:'2-digit',month:'2-digit'});}
 function chatNew(){run(sb.rpc('msg_contacts')).then(function(list){
@@ -935,7 +973,7 @@ function chatNew(){run(sb.rpc('msg_contacts')).then(function(list){
 function chatContactsHtml(list){return list.map(function(c){CHAT_PH[c.uid]=c.photo||null;CHAT_SUB[c.uid]=c.vezife||'';
  return '<div class="igrow" onclick="closeModal();chatOpen(\''+c.uid+'\',\''+chatArg(c.ad)+'\')">'+chatAva(c.ad,c.photo,48)+'<div class="igmeta"><div class="igname">'+esc(c.ad)+'</div><div class="iglast">'+esc(c.vezife||'')+'</div></div></div>';}).join('')||'<p class="hint">İşçi tapılmadı</p>';}
 function chatFilterContacts(q){q=(q||'').toLowerCase();var f=(window.CHAT_CONTACTS||[]).filter(function(c){return (c.ad||'').toLowerCase().indexOf(q)>=0||(c.vezife||'').toLowerCase().indexOf(q)>=0;});$('chatContacts').innerHTML=chatContactsHtml(f);}
-function chatOpen(uid,ad){try{if(!(history.state&&history.state.igchat))history.pushState({igchat:1},'');}catch(e){}CHATother=uid;CHATname=ad;CHATreply=null;renderChatRoom();}
+function chatOpen(uid,ad){CHAT_SEL=null;var _b=$('igSelBar');if(_b)_b.remove();try{if(!(history.state&&history.state.igchat))history.pushState({igchat:1},'');}catch(e){}CHATother=uid;CHATname=ad;CHATreply=null;renderChatRoom();}
 window.addEventListener('popstate',function(){if(CHATother)chatBack(true);});
 function chatBack(fromPop){if(!fromPop&&history.state&&history.state.igchat){history.back();return;}chatFull(false);CHATother=null;CHATreply=null;if(CHATsub){try{CHATsub.unsubscribe();}catch(e){}CHATsub=null;}renderChat();chatUpdateBadge();}
 function renderChatRoom(){var v=$('v-chat');if(!v)return;var ph=CHAT_PH[CHATother],sub=CHAT_SUB[CHATother]||'';
