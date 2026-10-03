@@ -564,6 +564,11 @@ body.incall{overflow:hidden}
 #igSelBar button{flex:1;border:none;background:#efefef;color:#0a0a0a;font-weight:600;border-radius:12px;padding:12px 6px;font-size:.88rem}
 #igSelBar button.del{background:#ffe9e8;color:#ed4956}
 #igSelBar button:disabled{opacity:.4}
+
+.igavw{position:relative;display:inline-flex;flex-shrink:0}
+.igon{position:absolute;right:1px;bottom:1px;border-radius:50%;background:#2ecc4a;border:2.5px solid #fff;display:none;box-sizing:border-box}
+.igon.on{display:block}
+.igsub.live{color:#2b9348}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -898,8 +903,8 @@ function asstHi(){var h=new Date().getHours();return h<6?'Gecəniz xeyrə':h<12?
 function ocount(tbl,col,val){return run(sb.from(tbl).select('id',{count:'exact',head:true}).eq(col,val)).then(function(r){return r.count||0;}).catch(function(){return 0;});}
 /* ---------- 💬 Komanda çatı ---------- */
 var CHATother=null,CHATname='',CHATsub=null,CHATreply=null,CHATmsgs=[];
-var CHAT_PH={},CHAT_SUB={},CHAT_THREADS=[];
-function chatAva(name,photo,sz){sz=sz||56;var b='https://avqchschbbltnnasabdm.supabase.co/storage/v1/object/public/avatars/';
+var CHAT_PH={},CHAT_SUB={},CHAT_THREADS=[],PRES={};
+function chatAva(name,photo,sz,uid){if(uid){var pr=PRES[uid];return '<span class="igavw" data-pu="'+esc(uid)+'">'+chatAva(name,photo,sz)+'<i class="igon'+(pr&&pr.on?' on':'')+'" style="width:'+Math.max(10,Math.round(sz*.26))+'px;height:'+Math.max(10,Math.round(sz*.26))+'px"></i></span>';}sz=sz||56;var b='https://avqchschbbltnnasabdm.supabase.co/storage/v1/object/public/avatars/';
  if(photo)return '<img class="igava" src="'+b+esc(photo)+'" alt="" loading="lazy" style="width:'+sz+'px;height:'+sz+'px">';
  return '<span class="igava igini" style="width:'+sz+'px;height:'+sz+'px;font-size:'+Math.round(sz*.36)+'px">'+esc(chatInitials(name))+'</span>';}
 var IGI={
@@ -919,7 +924,7 @@ function renderChat(){var v=$('v-chat');if(!v)return;
   +'<label class="igsearch">'+IGI.search+'<input id="igQ" placeholder="Axtar" oninput="chatDrawThreads(CHAT_THREADS)"></label>'
   +'<div class="igchips" id="igChips"></div>'
   +'<div id="chatThreads"><p class="status"><span class="spin"></span>Yüklənir…</p></div></div>';
- run(sb.rpc('msg_threads')).then(function(rows){CHAT_THREADS=rows||[];chatDrawThreads(CHAT_THREADS);}).catch(err);
+ run(sb.rpc('msg_threads')).then(function(rows){CHAT_THREADS=rows||[];chatDrawThreads(CHAT_THREADS);presRefresh();}).catch(err);
 }
 function chatInitials(n){return (n||'?').split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase();}
 function chatArg(s){return esc(s||'').replace(/\x27/g,"\\x27");}
@@ -957,7 +962,7 @@ function chatDrawThreads(rows){var el=$('chatThreads');if(!el)return;chatTopBar(
   else last=(t.son_mine?'Siz: ':'')+(t.son_sekil?'Şəkil':esc((t.son_mesaj||'').slice(0,60)));
   var sel=CHAT_SEL&&CHAT_SEL.has(t.other);
   return '<div class="igrow'+(un?' un':'')+(sel?' sel':'')+'" onclick="chatRowTap(\''+t.other+'\',\''+chatArg(t.ad)+'\')" ontouchstart="chatRowDown(\''+t.other+'\')" ontouchend="chatRowUp()" ontouchmove="chatRowUp()" oncontextmenu="event.preventDefault();_lpFired=false;if(!CHAT_SEL)chatSelStart(\''+t.other+'\')">'
-   +chatAva(t.ad,t.photo,56)
+   +chatAva(t.ad,t.photo,56,t.other)
    +'<div class="igmeta"><div class="igname">'+esc(t.ad||'İşçi')+'</div><div class="iglast"><span class="iglt">'+last+'</span><span class="igago">&nbsp;· '+chatAgo(t.son)+'</span></div></div>'
    +(CHAT_SEL?'<span class="igchk'+(sel?' on':'')+'">'+(sel?'✓':'')+'</span>':(un?'<span class="igdot"></span>':''))+'</div>';
  }).join('')||'<p class="hint" style="padding:14px">'+(CHAT_FILTER==='unread'?'Oxunmamış mesaj yoxdur':'Tapılmadı')+'</p>';
@@ -967,26 +972,26 @@ function chatNew(){run(sb.rpc('msg_contacts')).then(function(list){
   var html='<div class="mhead"><h3>Yeni mesaj</h3><button class="x" onclick="closeModal()">×</button></div>'
    +'<label class="igsearch" style="margin:0 0 10px">'+IGI.search+'<input id="chatSearch" placeholder="Axtar" oninput="chatFilterContacts(this.value)"></label>'
    +'<div id="chatContacts" style="max-height:55vh;overflow-y:auto">'+chatContactsHtml(list)+'</div>';
-  window.CHAT_CONTACTS=list;modal(html);
+  window.CHAT_CONTACTS=list;modal(html);presRefresh();
  }).catch(err);
 }
 function chatContactsHtml(list){return list.map(function(c){CHAT_PH[c.uid]=c.photo||null;CHAT_SUB[c.uid]=c.vezife||'';
- return '<div class="igrow" onclick="closeModal();chatOpen(\''+c.uid+'\',\''+chatArg(c.ad)+'\')">'+chatAva(c.ad,c.photo,48)+'<div class="igmeta"><div class="igname">'+esc(c.ad)+'</div><div class="iglast">'+esc(c.vezife||'')+'</div></div></div>';}).join('')||'<p class="hint">İşçi tapılmadı</p>';}
+ return '<div class="igrow" onclick="closeModal();chatOpen(\''+c.uid+'\',\''+chatArg(c.ad)+'\')">'+chatAva(c.ad,c.photo,48,c.uid)+'<div class="igmeta"><div class="igname">'+esc(c.ad)+'</div><div class="iglast">'+esc(c.vezife||'')+'</div></div></div>';}).join('')||'<p class="hint">İşçi tapılmadı</p>';}
 function chatFilterContacts(q){q=(q||'').toLowerCase();var f=(window.CHAT_CONTACTS||[]).filter(function(c){return (c.ad||'').toLowerCase().indexOf(q)>=0||(c.vezife||'').toLowerCase().indexOf(q)>=0;});$('chatContacts').innerHTML=chatContactsHtml(f);}
 function chatOpen(uid,ad){CHAT_SEL=null;var _b=$('igSelBar');if(_b)_b.remove();try{if(!(history.state&&history.state.igchat))history.pushState({igchat:1},'');}catch(e){}CHATother=uid;CHATname=ad;CHATreply=null;renderChatRoom();}
 window.addEventListener('popstate',function(){if(CHATother)chatBack(true);});
 function chatBack(fromPop){if(!fromPop&&history.state&&history.state.igchat){history.back();return;}chatFull(false);CHATother=null;CHATreply=null;if(CHATsub){try{CHATsub.unsubscribe();}catch(e){}CHATsub=null;}renderChat();chatUpdateBadge();}
 function renderChatRoom(){var v=$('v-chat');if(!v)return;var ph=CHAT_PH[CHATother],sub=CHAT_SUB[CHATother]||'';
  v.innerHTML='<div class="ig igroom"><div class="ighead"><button class="igicon" onclick="chatBack()">'+IGI.back+'</button>'
-  +'<div class="igwho" onclick="chatProfile()">'+chatAva(CHATname,ph,40)+'<div><div class="igname">'+esc(CHATname||'İşçi')+'</div>'+(sub?'<div class="igsub">'+esc(sub)+'</div>':'')+'</div></div>'
+  +'<div class="igwho" onclick="chatProfile()">'+chatAva(CHATname,ph,40,CHATother)+'<div><div class="igname">'+esc(CHATname||'İşçi')+'</div><div class="igsub'+(presText(CHATother)==='Aktivdir'?' live':'')+'" id="igSub">'+esc(presText(CHATother)||sub)+'</div></div></div>'
   +'<button class="igicon" onclick="callStart(\'audio\')" title="Səsli zəng">'+IGI.phone+'</button><button class="igicon" onclick="callStart(\'video\')" title="Video zəng">'+IGI.video+'</button></div>'
   +'<div id="chatMsgs" class="igmsgs"><p class="status"><span class="spin"></span></p></div>'
   +'<div id="chatReplyBar"></div>'
   +'<div class="igbar"><button class="igcam" onclick="chatPickImage()">'+IGI.cam+'</button><input type="file" id="chatFile" accept="image/*" style="display:none" onchange="chatUploadImage(this.files[0])">'
   +'<input id="chatText" placeholder="Mesaj..." autocomplete="off" oninput="chatTyping()" onkeydown="if(event.key===\'Enter\')chatSend()">'
   +'<button class="igicon igimg" id="igImg" onclick="chatPickImage()">'+IGI.img+'</button><button class="igsend" id="igSend" onclick="chatSend()" style="display:none">Göndər</button></div></div>';
- chatFull(true);chatLoadMsgs();chatSubscribe();
- if(!CHAT_PH.hasOwnProperty(CHATother)||sub==='')run(sb.rpc('msg_profile',{p_uid:CHATother})).then(function(p){if(!p||CHATother==null)return;CHAT_PH[CHATother]=p.photo||null;CHAT_SUB[CHATother]=p.vezife||'';var w=document.querySelector('.igwho');if(w)w.innerHTML=chatAva(CHATname,p.photo,40)+'<div><div class="igname">'+esc(CHATname||'İşçi')+'</div>'+(p.vezife?'<div class="igsub">'+esc(p.vezife)+'</div>':'')+'</div>';}).catch(function(){});
+ chatFull(true);chatLoadMsgs();chatSubscribe();presRefresh();
+ if(!CHAT_PH.hasOwnProperty(CHATother)||sub==='')run(sb.rpc('msg_profile',{p_uid:CHATother})).then(function(p){if(!p||CHATother==null)return;CHAT_PH[CHATother]=p.photo||null;CHAT_SUB[CHATother]=p.vezife||'';var w=document.querySelector('.igwho');if(w)w.innerHTML=chatAva(CHATname,p.photo,40,CHATother)+'<div><div class="igname">'+esc(CHATname||'İşçi')+'</div><div class="igsub" id="igSub">'+esc(presText(CHATother)||p.vezife||'')+'</div></div>';}).catch(function(){});
 }
 function chatFit(){var r=document.querySelector('.igroom');if(!r)return;var vv=window.visualViewport;
  if(vv){r.style.height=vv.height+'px';r.style.top=vv.offsetTop+'px';}else{r.style.height=window.innerHeight+'px';r.style.top='0px';}
@@ -1028,7 +1033,7 @@ function chatGlobalInit(){if(LIVE.started||!ME||!ME.user_id)return;LIVE.started=
  LIVE.poll=setInterval(function(){if(document.visibilityState==='visible')livePoll();},LIVE.ok?20000:6000);
  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'){livePoll(true);if(!LIVE.ok)liveSubscribe();}});
  window.addEventListener('online',function(){livePoll(true);liveSubscribe();});
- livePoll(true);liveDeepLink();
+ livePoll(true);liveDeepLink();presInit();
 }
 function liveSubscribe(){var u=ME.user_id;if(LIVE.ch){try{sb.removeChannel(LIVE.ch);}catch(e){}LIVE.ch=null;}
  try{LIVE.ch=sb.channel('me-'+u)
@@ -1069,6 +1074,23 @@ function liveDeepLink(){var q=new URLSearchParams(location.search),c=q.get('chat
  if(c){chatWho(c).then(function(p){show('chat');CHAT_PH[c]=p.photo||null;CHAT_SUB[c]=p.vezife||'';chatOpen(c,p.ad||'');});}
  if(k){run(sb.rpc('call_get',{p_id:k})).then(function(r){if(r&&r.status==='ringing'&&r.callee===ME.user_id)callIncoming(r);}).catch(function(){});}
 }
+
+
+/* ---------- ONLAYN STATUS ---------- */
+var _presT=null,_presPing=null;
+function presPing(on){try{sb.rpc('msg_ping',{p_online:!!on}).then(function(){},function(){});}catch(e){}}
+function presInit(){presPing(document.visibilityState==='visible');
+ _presPing=setInterval(function(){if(document.visibilityState==='visible')presPing(true);},40000);
+ document.addEventListener('visibilitychange',function(){presPing(document.visibilityState==='visible');if(document.visibilityState==='visible')presRefresh();});
+ window.addEventListener('pagehide',function(){presPing(false);});
+ _presT=setInterval(function(){var v=$('v-chat');if(document.visibilityState==='visible'&&v&&v.classList.contains('on'))presRefresh();},30000);}
+function presRefresh(){var ids={};(CHAT_THREADS||[]).forEach(function(t){ids[t.other]=1;});(window.CHAT_CONTACTS||[]).forEach(function(c){ids[c.uid]=1;});if(CHATother)ids[CHATother]=1;
+ var arr=Object.keys(ids);if(!arr.length)return;
+ run(sb.rpc('msg_presence',{p_uids:arr})).then(function(m){PRES=m||{};presApply();}).catch(function(){});}
+function presText(uid){var p=PRES[uid];if(!p||!p.seen)return '';if(p.on)return 'Aktivdir';
+ var s=(Date.now()-new Date(p.seen).getTime())/1000;if(s<3600)return Math.max(1,Math.floor(s/60))+' dəq əvvəl aktiv idi';if(s<86400)return Math.floor(s/3600)+' saat əvvəl aktiv idi';if(s<7*86400)return Math.floor(s/86400)+' gün əvvəl aktiv idi';return '';}
+function presApply(){document.querySelectorAll('[data-pu]').forEach(function(el){var p=PRES[el.getAttribute('data-pu')];var d=el.querySelector('.igon');if(d)d.classList.toggle('on',!!(p&&p.on));});
+ var sub=$('igSub');if(sub&&CHATother){var t=presText(CHATother);sub.textContent=t||CHAT_SUB[CHATother]||'';sub.classList.toggle('live',t==='Aktivdir');}}
 
 /* ---------- ZƏNG ---------- */
 var CALL=null,_ICE=null,_ICEt=0;
