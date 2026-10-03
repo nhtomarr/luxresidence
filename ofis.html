@@ -5181,5 +5181,30 @@ var _fpPrev19=fpPrev;fpPrev=function(){_fpPrev19();cpSync();};
 var _fpWhenToggle19=fpWhenToggle;fpWhenToggle=function(){_fpWhenToggle19();var w=$('fpW');if(w)w.onchange=cpSync;var t=$('fpWT');if(t){var x=t.querySelector('.cpt');if(x)x.textContent='Paylaşım vaxtı';}};
 var _closeModal19=closeModal;closeModal=function(){var m=$('mbox');if(m)m.classList.remove('cpsheet');_closeModal19();};
 </script>
+<style>
+#mbox.pmsheet{padding:22px 14px calc(14px + env(safe-area-inset-bottom,0px))!important}
+.pmtop{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.pmq{border:none;background:#fff;border-radius:16px;padding:14px 6px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.8rem;font-weight:600;color:#0a0a0a;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.pmq span{width:46px;height:46px;border-radius:50%;border:1.5px solid #0a0a0a;display:grid;place-items:center}.pmq span .ui-ic{width:22px;height:22px}.pmq.on span{background:#0a0a0a;color:#fff}
+.pmg{background:#fff;border-radius:16px;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.pmr{width:100%;display:flex;align-items:center;gap:14px;border:none;background:none;padding:14px 16px;font-size:.95rem;color:#0a0a0a;text-align:left;border-bottom:.5px solid #efefef}.pmr:last-child{border-bottom:none}
+.pmr .ui-ic{width:22px;height:22px;flex:none}.pmr.red{color:#ed4956}.pmr:active{background:#f5f5f5}
+.igmenu{justify-content:flex-start!important;gap:12px}.igmenu small{margin-left:auto}
+</style>
+<script>
+/* ---- Post menyusu: səliqəli, Instagram üslubu ---- */
+feedMenu=function(id){var p=FEED.find(function(x){return x.id===id;})||{},mine=p.mine&&p.kind==='post',I=function(n){return typeof uiIcon==='function'?uiIcon(n):'';};
+ var q=function(ic,t,fn,on){return '<button class="pmq'+(on?' on':'')+'" onclick="closeModal();'+fn+'"><span>'+ic+'</span>'+t+'</button>';};
+ var r=function(ic,t,fn,cls){return '<button class="pmr'+(cls?' '+cls:'')+'" onclick="'+fn+'">'+ic+'<span>'+t+'</span></button>';};
+ var h='<div class="pmtop">'+q(I('bookmark'),p.saved?'Saxlanılıb':'Saxla','postSave(\''+id+'\','+(!p.saved)+')',p.saved)+q(I('nav'),'Göndər','postShare(\''+id+'\')')+q(I('plus'),'Hekayəyə','postToStory(\''+id+'\')')+'</div><div class="pmg">';
+ if(mine){h+=r(I('chart'),'Statistika','closeModal();postStats(\''+id+'\')')+r(I('pen'),'Redaktə et','postEdit(\''+id+'\')')+r(I('pin'),p.ppin?'Profildən sabiti götür':'Profildə sabitlə','ppin(\''+id+'\','+(!p.ppin)+')')+'</div><div class="pmg">'
+   +r(I('box'),p.archived?'Profilə qaytar':'Arxivlə','postSet(\''+id+'\',\'archived\','+(!p.archived)+')')+r(I('heart'),p.hidelk?'Reaksiya sayını göstər':'Reaksiya sayını gizlət','postSet(\''+id+'\',\'hidelk\','+(!p.hidelk)+')')+r(I('msg'),p.nocm?'Şərhləri aç':'Şərhləri söndür','postSet(\''+id+'\',\'nocm\','+(!p.nocm)+')');}
+ else{var a=p.author||{};if(a.uid)h+=r(I('user'),'Profilə keç','closeModal();socProfile(\''+a.uid+'\')')+r(I('star'),'Favorilərə əlavə et','relSet(\''+a.uid+'\',{p_fav:true})')+r(I('belloff'),'Postlarını səssizləşdir','relSet(\''+a.uid+'\',{p_mp:true})');
+  if(SOC_MOD)h+=r(I('chart'),'Statistika','closeModal();postStats(\''+id+'\')');}
+ if(typeof MGR!=='undefined'&&MGR)h+=r(I('pin'),p.pinned?'Lentdə sabiti götür':'Lentin yuxarısına sabitlə','feedPin(\''+id+'\','+(!p.pinned)+')');
+ h+='</div><div class="pmg">'+(mine||(typeof MGR!=='undefined'&&MGR)?r(I('trash'),'Sil','feedDel(\''+id+'\')','red'):'')+(!mine?r(I('flag'),'Şikayət et','repOpen(\'post\',\''+id+'\')','red'):'')+'</div>';
+ modal('<div class="pmh"></div>'+h.replace(/<div class="pmg"><\/div>/g,''));$('mbox').classList.add('pmsheet');};
+var _closeModal20=closeModal;closeModal=function(){var m=$('mbox');if(m)m.classList.remove('pmsheet');_closeModal20();};
+</script>
 </body>
 </html>
