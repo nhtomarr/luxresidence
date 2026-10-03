@@ -4575,5 +4575,14 @@ function cmDel(cid){if(!confirm('Şərh silinsin?'))return;run(sb.rpc('comment_d
   if(dy>110){mb.style.transform='translateY(110%)';setTimeout(function(){mb.style.transition='';mb.style.transform='';closeModal();},200);}else{mb.style.transform='';setTimeout(function(){mb.style.transition='';},230);}},{passive:true});
  $('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});})();
 </script>
+<style>
+#chatMsgs .igline.their>:first-child:not(.igsp){cursor:pointer}
+</style>
+<script>
+/* ---- çatda avatar / başlıq → profil ---- */
+document.addEventListener('click',function(e){var box=e.target.closest&&e.target.closest('#chatMsgs');if(!box)return;var line=e.target.closest('.igline.their');if(!line)return;var av=line.firstElementChild;if(!av||!(av===e.target||av.contains(e.target))||av.classList.contains('igsp'))return;
+ var id=+line.dataset.id,m=(CHATmsgs||[]).find(function(x){return x.id===id;});var uid=CHATgroup?(m&&m.sender):CHATother;if(uid){e.stopPropagation();socProfile(uid);}},true);
+chatProfile=function(){if(CHATother&&!CHATgroup)socProfile(CHATother);};
+</script>
 </body>
 </html>

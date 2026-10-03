@@ -228,3 +228,4 @@ Frontend ofis.html sonunda ayrıca `<style>`+`<script>` bloku ("SOSİAL v3"). Ba
 - Qalan: ofis.html-in modullara bölünməsi, qaranlıq rejim, GIF, qruplarda "kim gördü", şəkildə insan işarələmə, hekayə musiqisi, repo private.
 - 4 okt (ofis-v65): bütün pəncərələr (sheet) aşağı çəkilərək və ya boş fona toxunaraq bağlanır; mbox sürüşdürmə düzəldi.
 - 4 okt: Statistika düzəlişi — baxış/əhatə artıq `_pv(post)` ilə hesablanır (baxış ∪ reaksiya ∪ şərh ∪ saxlama, müəllif xaric). post_insights və soc_insights yeniləndi.
+- 4 okt (ofis-v67): çatda qarşı tərəfin avatarına və başlıqdakı ada toxunanda profil səhifəsi açılır (qrupda — mesajı yazanın profili).
