@@ -472,7 +472,7 @@ a.back,.back{border-radius:99px}
  <main>
   <!-- BU GÜN -->
   <section class="view" id="v-today">
-   <div class="hello-e" id="tHello"></div><div id="tPw"></div><div class="qa" id="tQuick"></div>
+   <div class="hello-e" id="tHello"></div><div id="workdayNote"></div><div id="tPw"></div><div class="qa" id="tQuick"></div>
    <div class="card checkcard"><div class="row" style="justify-content:space-between;align-items:flex-start">
     <div><div class="muted small" id="tDate"></div><div class="clock" id="tClock">--:--</div><div id="tStatus" class="muted"></div></div>
     <div class="row" id="tBtns"></div></div>
@@ -664,7 +664,7 @@ function loadAll(){return Promise.all([
 
 /* ---------- BU GÜN / check-in ---------- */
 var MYDAY=null;
-function renderToday(){document.body.classList.toggle('simple',!!SIMPLE);renderOwnerTasksForEmp();renderHomeExtras();renderPwBanner();renderPushCards();$('noEmp').style.display=(EMP||MGR)?'none':'';var ck=document.querySelector('.checkcard');if(ck)ck.style.display=(!EMP&&MGR)?'none':'';renderTgCard();renderHrBoxes();renderTodayAnn();
+function renderToday(){document.body.classList.toggle('simple',!!SIMPLE);renderOwnerTasksForEmp();renderHomeExtras();renderPwBanner();renderPushCards();$('noEmp').style.display=(EMP||MGR)?'none':'';var _wn=document.getElementById('workdayNote');if(_wn)_wn.innerHTML=workdayNote();var ck=document.querySelector('.checkcard');if(ck)ck.style.display=(!EMP&&MGR)?'none':'';renderTgCard();renderHrBoxes();renderTodayAnn();
  var my=TASKS.filter(function(t){return EMP&&t.assignee_id===EMP.id&&t.status!=='done'&&!t.from_owner;}).sort(function(a,b){return String(a.due||'9')<String(b.due||'9')?-1:1;});
  $('tMyTasks').innerHTML=my.length?my.map(taskRow).join(''):'<div class="empty">Açıq tapşırığınız yoxdur 🎉</div>';
  if(!EMP){$('tStatus').textContent='';$('tBtns').innerHTML='';$('tStats').innerHTML='';return;}
@@ -1701,6 +1701,8 @@ function renderDay(){var d=$('dDay').value||today();Promise.all([run(sb.from('of
  renderDay._att=att;hydrateSelfies($('dayTbl'));}).catch(err);}
 function editAtt(eid,d){var a=(renderDay._att||[]).find(function(x){return x.employee_id===eid;})||{};function t(ts){return ts?hm(ts):'';}
  modal('<div class="mhead"><h3>'+esc(empName(eid))+' · '+d+'</h3><button class="x" onclick="closeModal()">×</button></div><div class="grid g2"><div class="field"><label>Gəliş</label><input id="eIn" type="time" value="'+t(a.check_in)+'"></div><div class="field"><label>Çıxış</label><input id="eOut" type="time" value="'+t(a.check_out)+'"></div></div><div class="field"><label>Qeyd (məs: icazəli, xəstə, ezamiyyət)</label><input id="eNote" value="'+esc(a.note||'')+'"></div><button class="btn" onclick="saveAtt('+eid+',\''+d+'\')">Yadda saxla</button>');}
+function isWorkdayToday(){var wd=(CFG&&CFG.work_days)||[1,2,3,4,5];var dow=((new Date().getDay()+6)%7)+1;/*1=B.e..7=Baz*/return wd.indexOf(dow)>=0;}
+function workdayNote(){if(isWorkdayToday())return '';return '<div class="card" style="background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;text-align:center;padding:14px;margin-bottom:12px">🏠 <b>Bu gün iş günü deyil</b><div class="small" style="margin-top:3px;opacity:.85">Baş Ofis bağlıdır · xoş istirahət</div></div>';}
 function dayHours(e,d){var s2=e.schedule&&e.schedule[String(isoDow(d))];return s2?s2:[String(e.work_start).slice(0,5),String(e.work_end).slice(0,5)];}
 function bakuTs(d,t){return t?new Date(d+'T'+t+':00+04:00').toISOString():null;}
 function saveAtt(eid,d){var e=EMPS.find(function(x){return x.id===eid;}),ci=$('eIn').value,co=$('eOut').value;var g=(CFG&&CFG.grace_min)||0;
