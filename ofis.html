@@ -5422,5 +5422,24 @@ function pgRefresh(pg){var k=pg.dataset.key||'',v=k.split(':')[1];
   if(ind){var i=ind;ind=null;if(go){i.style.transform='translate(-50%,90px)';i.style.opacity='1';setTimeout(function(){i.remove();},900);}else i.remove();}
   if(go){try{navigator.vibrate&&navigator.vibrate(10);}catch(x){}pgRefresh(s.pg);}},{passive:true});})();
 </script>
+<style>
+.pfbd{display:none!important}
+.bdlv{display:flex;align-items:center;gap:12px;background:#f5f5f7;border-radius:16px;padding:12px;margin-bottom:12px}.bdlv>b{width:48px;height:48px;border-radius:50%;border:3px solid var(--lc);display:grid;place-items:center;font-size:1.2rem;flex:none}
+.bdlv div{flex:1}.bdlv strong{display:block}.bdlv small{color:#6e6e73;font-size:.75rem}
+.bdg{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bdc{background:#fff;border:1px solid #efefef;border-radius:16px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px}
+.bdc span{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#fef3c7,#fde68a);display:grid;place-items:center;font-size:1.5rem;color:#92400e}.bdc span .ui-ic{width:26px;height:26px}.bdc b{font-size:.86rem}.bdc small{font-size:.72rem;color:#8e8e8e}
+</style>
+<script>
+/* ---- Nişanlar: profildə gizli, səviyyə yazısına toxunanda açılır ---- */
+var BDESC={first_post:'İlk postunu paylaşdığın üçün',creator:'Çoxlu post paylaşan yaradıcı',kudos5:'5 və daha çox təşəkkür aldığın üçün',punctual:'İşə mütəmadi vaxtında gəldiyin üçün',year1:'Komandada 1 ili tamamladığın üçün',popular:'Postların çox reaksiya topladığı üçün',streak7:'7 gün ardıcıl seriya',streak30:'30 gün ardıcıl seriya',streak100:'100 gün ardıcıl seriya'};
+function bdDesc(c){if(BDESC[c])return BDESC[c];if(/^eom_/.test(c))return 'Komandanın səsverməsi ilə ayın işçisi seçildin';if(/^chal_/.test(c))return 'Çağırışda qalib oldun';if(/^quiz_/.test(c))return 'Canlı viktorinada 1-ci yer';if(/^league_/.test(c))return 'Şöbən həftənin liqa qalibi oldu';if(/^star_/.test(c))return 'Ayın ulduzu seçildin';return '';}
+var _socProfile21=socProfile;socProfile=function(uid){_socProfile21(uid);if(!uid||uid==='undefined')return;var n=0;(function go(){var t=pgTop(),lv=t&&t.dataset.key==='prof:'+uid&&t.querySelector('.pflv');if(!lv||!window._prof){if(n++<50)setTimeout(go,100);return;}
+ var bd=t.querySelector('.pfbd');if(bd)bd.remove();if(lv.dataset.b)return;lv.dataset.b=1;var c=(window._prof.badges||[]).length;if(c)lv.insertAdjacentHTML('beforeend',' · 🏅'+c);lv.style.cursor='pointer';lv.onclick=function(e){e.stopPropagation();bdOpen(uid);};})();};
+function bdOpen(uid){var p=window._prof||{},b=p.badges||[],me=uid===ME.user_id,LN=['Yeni','Fəal','Təcrübəli','Ulduz','Əfsanə'],lv=(typeof LVL!=='undefined'&&LVL[uid])||0;
+ modal('<div class="mhead"><h3>🏅 Nişanlar və səviyyə</h3><button class="x" onclick="closeModal()">×</button></div>'
+  +'<div class="bdlv" style="--lc:'+(typeof LVLC!=='undefined'?LVLC[lv]:'#94a3b8')+'"><b>'+(lv+1)+'</b><div><strong>'+LN[lv]+'</strong><small>Səviyyə xal toplandıqca artır: post, şərh, təşəkkür, vaxtında gəliş, oyunlar</small></div>'+(me?'<button class="btn sm ghost" onclick="closeModal();show(\'feed\');feedMode(\'shop\')">Xallarım</button>':'')+'</div>'
+  +(b.length?'<div class="bdg">'+b.map(function(c){var i=badgeInfo(c);return '<div class="bdc"><span>'+i[0]+'</span><b>'+esc(i[1])+'</b><small>'+esc(bdDesc(c))+'</small></div>';}).join('')+'</div>'
+   :'<div class="pfempty">'+(me?'Hələ nişanın yoxdur.<br><small>İlk postunu paylaş, vaxtında gəl, çağırışlara qatıl — nişanlar avtomatik gələcək.</small>':'Hələ nişan yoxdur')+'</div>'));}
+</script>
 </body>
 </html>
