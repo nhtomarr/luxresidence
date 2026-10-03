@@ -636,6 +636,22 @@ body.incall{overflow:hidden}
 .igpi{width:100%;max-height:70vh;object-fit:cover;display:block}
 .igpa{display:flex;gap:4px;padding:6px 8px;border-top:1px solid #f2f2f2}.igpa button{border:none;background:none;padding:8px 10px;font-size:.92rem;border-radius:10px}.igpa button:active{background:#f5f5f5}
 .igcm{display:flex;gap:10px;padding:8px 0;font-size:.9rem}.igcm small{display:block;color:#8e8e8e;font-size:.72rem;margin-top:2px}
+
+#igCtx{position:fixed;inset:0;z-index:300;font-family:-apple-system,"SF Pro Text",Roboto,Inter,sans-serif;-webkit-user-select:none;user-select:none}
+#igCtx .cxbg{position:absolute;inset:0;background:rgba(0,0,0,.25);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);opacity:0;transition:opacity .15s}
+#igCtx.on .cxbg{opacity:1}
+#igCtx .cxmsg{position:absolute;overflow:hidden;transform:scale(.96);transition:transform .15s;display:flex}
+#igCtx.on .cxmsg{transform:scale(1)}
+#igCtx .cxmsg .igm{margin:0;max-width:100%}
+#igCtx .cxre{position:absolute;display:flex;gap:2px;background:#fff;border-radius:30px;padding:6px 8px;box-shadow:0 6px 24px rgba(0,0,0,.18);transform:translateY(8px) scale(.9);opacity:0;transition:.18s}
+#igCtx.on .cxre{transform:none;opacity:1}
+#igCtx .cxre button{border:none;background:none;font-size:1.7rem;width:42px;height:42px;border-radius:50%;padding:0;transition:transform .1s}
+#igCtx .cxre button:active{transform:scale(1.3)}#igCtx .cxre button.on{background:#efefef}
+#igCtx .cxmenu{position:absolute;min-width:220px;background:rgba(255,255,255,.97);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.18);overflow:hidden;transform:translateY(-6px) scale(.95);opacity:0;transition:.18s;transform-origin:top}
+#igCtx.on .cxmenu{transform:none;opacity:1}
+#igCtx .cxmenu button{display:flex;justify-content:space-between;align-items:center;width:100%;border:none;background:none;padding:12px 16px;font-size:.98rem;color:#0a0a0a;border-bottom:1px solid #f0f0f0}
+#igCtx .cxmenu button:last-child{border-bottom:none}#igCtx .cxmenu button.del{color:#ed4956}
+#igCtx .cxmenu i{font-style:normal}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -1093,6 +1109,7 @@ function backHome(){var b=document.querySelector('#tabs button');return b?b.data
 function backCur(){var b=document.querySelector('#tabs button.on');return b?b.dataset.v:backHome();}
 function backAct(){ // true = idarə olundu, false = tətbiqdən çıx
  if(typeof CALL!=='undefined'&&CALL)return true;
+ if(typeof chatCtxClose==='function'&&chatCtxClose())return true;
  var md=$('modal');if(md&&md.classList.contains('on')){closeModal();return true;}
 
  if(typeof CHAT_SEL!=='undefined'&&CHAT_SEL){chatSelEnd();return true;}
@@ -2529,16 +2546,26 @@ function chatQuickLike(id){var b=$('msg'+id);if(b){var h=document.createElement(
 function chatReact(id,emoji){var m=CHATmsgs.find(function(x){return x.id===id;});if(m&&m.reaction===emoji)emoji=null;
  run(sb.from('office_messages').update({reaction:emoji}).eq('id',id)).then(function(){closeModal&&closeModal();chatLoadMsgs(true);}).catch(function(e){toast(e.message);});}
 function chatMsgMenu(id){var m=CHATmsgs.find(function(x){return x.id===id;});if(!m||m.deleted)return;var fresh=Date.now()-new Date(m.at).getTime()<15*60000;
- var html='<div class="mhead"><h3>Mesaj</h3><button class="x" onclick="closeModal()">×</button></div>'
-  +'<div class="chatreacts">'+['❤️','👍','😂','😮','😢','🙏','🔥'].map(function(e){return '<button onclick="chatReact('+id+',\''+e+'\')">'+e+'</button>';}).join('')+'</div>'
-  +'<button class="igmenu" onclick="chatSetReply('+id+')">↩︎ Cavab ver</button>'
-  +(m.body&&m.kind==='text'?'<button class="igmenu" onclick="chatCopy('+id+')">📋 Kopyala</button>':'')
-  +'<button class="igmenu" onclick="chatStar('+id+','+(!m.star)+')">'+(m.star?'☆ Ulduzu götür':'⭐ Ulduzla')+'</button>'
-  +'<button class="igmenu" onclick="chatPin('+id+','+(!m.pinned)+')">'+(m.pinned?'📌 Sabitdən çıxar':'📌 Sabitlə')+'</button>'
-  +(m.mine&&fresh&&m.kind==='text'&&!/^(📞|🎥) /.test(m.body||'')?'<button class="igmenu" onclick="chatEdit('+id+')">✏️ Redaktə et</button>':'')
-  +(m.mine&&fresh?'<button class="igmenu" style="color:#ed4956" onclick="chatUnsend('+id+')">🗑️ Hamıdan sil</button>':'')
-  +(m.mine&&!fresh?'<div class="hint" style="margin-top:6px">Redaktə və hamıdan silmə ilk 15 dəqiqə ərzində mümkündür</div>':'');
- modal(html);}
+ var bub=$('msg'+id);if(!bub)return;try{navigator.vibrate&&navigator.vibrate(18);}catch(e){}
+ var r=bub.getBoundingClientRect(),vh=window.innerHeight,vw=window.innerWidth;
+ var acts=[['↩︎','Cavab ver','chatSetReply('+id+')']];
+ if(m.body&&m.kind==='text')acts.push(['📋','Kopyala','chatCopy('+id+')']);
+ acts.push([m.star?'☆':'⭐',m.star?'Ulduzu götür':'Ulduzla','chatStar('+id+','+(!m.star)+')']);
+ acts.push(['📌',m.pinned?'Sabitdən çıxar':'Sabitlə','chatPin('+id+','+(!m.pinned)+')']);
+ if(m.mine&&fresh&&m.kind==='text'&&!/^(📞|🎥) /.test(m.body||''))acts.push(['✏️','Redaktə et','chatEdit('+id+')']);
+ if(m.mine&&fresh)acts.push(['🗑️','Hamıdan sil','chatUnsend('+id+')','del']);
+ var menuH=acts.length*48+16,reH=56,gap=8,bh=Math.min(r.height,vh*0.4);
+ var top=r.top;var need=reH+gap+bh+gap+menuH;var minTop=reH+gap+16,maxTop=vh-menuH-gap-bh-16;
+ if(top<minTop)top=minTop;if(top>maxTop)top=Math.max(minTop,maxTop);
+ var o=document.createElement('div');o.id='igCtx';
+ var side=m.mine?'right:'+Math.max(10,vw-r.right)+'px':'left:'+Math.max(10,r.left)+'px';
+ o.innerHTML='<div class="cxbg" onclick="chatCtxClose()"></div>'
+  +'<div class="cxre" style="top:'+(top-reH-gap)+'px;'+(m.mine?'right:10px':'left:10px')+'">'+['❤️','😂','😮','😢','🙏','👍','🔥'].map(function(e){return '<button class="'+(m.reaction===e?'on':'')+'" onclick="chatCtxClose();chatReact('+id+',\''+e+'\')">'+e+'</button>';}).join('')+'</div>'
+  +'<div class="cxmsg ig" style="top:'+top+'px;'+side+';width:'+r.width+'px;max-height:'+bh+'px"></div>'
+  +'<div class="cxmenu" style="top:'+(top+bh+gap)+'px;'+(m.mine?'right:10px':'left:10px')+'">'+acts.map(function(a){return '<button class="'+(a[3]||'')+'" onclick="chatCtxClose();'+a[2]+'"><span>'+a[1]+'</span><i>'+a[0]+'</i></button>';}).join('')+'</div>';
+ var cl=bub.cloneNode(true);cl.removeAttribute('id');cl.removeAttribute('ontouchstart');cl.removeAttribute('ontouchend');cl.removeAttribute('ontouchmove');cl.removeAttribute('ondblclick');cl.removeAttribute('oncontextmenu');cl.removeAttribute('onclick');
+ o.querySelector('.cxmsg').appendChild(cl);document.body.appendChild(o);requestAnimationFrame(function(){o.classList.add('on');});}
+function chatCtxClose(){var o=$('igCtx');if(!o)return false;o.classList.remove('on');setTimeout(function(){o.remove();},150);return true;}
 function chatCopy(id){var m=CHATmsgs.find(function(x){return x.id===id;});try{navigator.clipboard.writeText(m.body);toast('Kopyalandı');}catch(e){}closeModal();}
 function chatStar(id,on){run(sb.rpc('msg_star',{p_id:id,p_on:on})).then(function(){closeModal();toast(on?'⭐ Ulduzlandı':'Ulduz götürüldü');chatLoadMsgs(true);}).catch(err);}
 function chatPin(id,on){run(sb.rpc('msg_pin',{p_id:id,p_on:on})).then(function(){closeModal();toast(on?'📌 Sabitləndi':'Sabitdən çıxarıldı');chatLoadMsgs(true);}).catch(err);}
