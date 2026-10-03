@@ -4026,7 +4026,7 @@ _storyShow0=function(){if(!_sv)return;var u=CHAT_STORIES[_sv.ui],it=u&&u.items[_
   +(u.me?'<button class="svmore" onclick="svMenu(\''+it.id+'\')">⋯</button>':'')+'<button class="svx" onclick="storyClose()">✕</button></div>'
   +(it.cap?'<div class="svcap">'+esc(it.cap)+'</div>':'')+'</div>'
   +(u.me?'<div class="svbot me"><button class="svact" onclick="svSheet(\''+it.id+'\')"><span class="svfaces" id="svFaces"></span><span>Fəaliyyət'+(it.views?' · '+it.views:'')+'</span></button><button class="svact" onclick="storyPick()"><b>＋</b><span>Yeni</span></button><button class="svact" onclick="svMenu(\''+it.id+'\')"><b>⋯</b><span>Daha çox</span></button></div>'
-   :'<div class="svbot"><input id="svRe" placeholder="'+esc((u.ad||'').split(' ')[0])+' adlı istifadəçiyə cavab…" onfocus="svPause(true)" onblur="setTimeout(function(){if(document.activeElement!==$(\'svRe\'))svPause(false)},150)" onkeydown="if(event.key===\'Enter\')svReply()"><button class="svhrt" id="svHrt" onclick="svLike(this)">♡</button><button class="svsend" onclick="svReply()">➤</button></div>');
+   :'<div class="svbot"><input id="svRe" placeholder="'+esc((u.ad||'').split(' ')[0])+' adlı istifadəçiyə cavab…" onfocus="svType(true)" onblur="setTimeout(function(){if(document.activeElement!==$(\'svRe\'))svType(false)},150)" onkeydown="if(event.key===\'Enter\')svReply()"><button class="svhrt" id="svHrt" onclick="svLike(this)">♡</button><button class="svsend" onclick="svReply()">➤</button></div>');
  if(!u.me&&!it.seen){it.seen=true;sb.rpc('story_view',{p_id:it.id}).then(function(){},function(){});}
  var m=$('svm');if(it.kind==='video'&&m){m.onloadedmetadata=function(){_sv&&(_sv.dur=Math.min(60000,(m.duration||5)*1000));};m.onwaiting=function(){if(_sv)_sv.buf=true;};m.onplaying=function(){if(_sv)_sv.buf=false;};}
  if(u.me&&it.views)run(sb.rpc('story_viewers',{p_id:it.id})).then(function(r){var f=$('svFaces');if(f)f.innerHTML=(r||[]).slice(0,3).map(function(v){return chatAva(v.ad,v.photo,22);}).join('');}).catch(function(){});
@@ -4055,6 +4055,75 @@ function svLike(b){var on=!b.classList.contains('on');b.classList.toggle('on',on
 function svReply(){var i=$('svRe');var t=i&&i.value.trim();if(!t||!_sv)return;var u=CHAT_STORIES[_sv.ui],it=u.items[_sv.ii];i.value='';i.blur();
  run(sb.rpc('msg_send',{p_to:u.uid,p_group:null,p_body:'↩︎ Hekayənə cavab: '+t,p_kind:'text',p_image:it.kind==='image'?it.url:null})).then(function(){toast('Göndərildi');}).catch(err);}
 var _storyDel5=storyDel;storyDel=function(id){var m=document.querySelector('#igSV .svmenu');if(m)m.remove();_storyDel5(id);};
+</script>
+<style>
+/* ===== Lent: Instagram üslubu ===== */
+.igpost.ig2{background:#fff!important;border:none!important;border-radius:0!important;box-shadow:none!important;margin:0 -14px 6px!important;overflow:visible}
+@media(min-width:700px){.igpost.ig2{margin:0 0 16px!important;border:1px solid #efefef!important;border-radius:14px!important;overflow:hidden}}
+.sopostm .igpost.ig2{margin:0!important}
+.igpost.ig2.sys{background:linear-gradient(135deg,#fff7ed,#fdf2f8)!important}.igpost.ig2.kud{background:linear-gradient(135deg,#f0fdf4,#eff6ff)!important;padding-bottom:4px}
+.ig2 .igph{padding:10px 12px;gap:10px}.ig2 .igph b{font-size:.9rem;font-weight:600}.ig2 .igph small{font-size:.74rem}.ig2 .igph small:empty{display:none}
+.ig2 .igmo{color:#0a0a0a}
+.igra{display:inline-flex;border-radius:50%;cursor:pointer;flex:none}
+.igra.ring{padding:2px;background:conic-gradient(from 210deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5,#feda75)}.igra.ring.seen{background:#dbdbdb}.igra.ring.cf{background:#22c55e}
+.igra.ring>*{border:2px solid #fff;border-radius:50%}
+.igmw{position:relative;background:#000}
+.ig2 .igpi{width:100%;max-height:none;aspect-ratio:4/5;object-fit:cover;display:block;background:#f2f2f2}
+.ig2 .socar>*{max-height:none;aspect-ratio:4/5;object-fit:cover}
+.ig2 .sodots{margin-top:6px}
+.igmut{position:absolute;right:10px;bottom:10px;width:30px;height:30px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:#fff;font-size:.8rem;display:grid;place-items:center;z-index:2}
+.igbig{padding:4px 14px 10px;font-size:1.02rem;line-height:1.45;word-break:break-word;white-space:pre-line}.igbig.xl{font-size:1.35rem;font-weight:600;line-height:1.3}
+.igact{display:flex;align-items:center;gap:2px;padding:6px 6px 2px}
+.igact button{border:none;background:none;display:flex;align-items:center;gap:5px;padding:6px 7px;color:#0a0a0a;font-weight:600;font-size:.92rem}
+.igact button span{font-size:.9rem}.igact .igbm{margin-left:auto}.igact button:active svg{transform:scale(.88)}
+.igme{font-size:1.45rem;line-height:26px}
+.iglk{padding:2px 14px;font-size:.88rem}
+.igcap{padding:2px 14px;font-size:.92rem;line-height:1.4;word-break:break-word;white-space:pre-line}.igcap b{font-weight:600;cursor:pointer}
+.igcml{display:block;padding:3px 14px;color:#737373;font-size:.88rem;cursor:pointer}
+.igwhen{padding:3px 14px 12px;color:#8e8e8e;font-size:.72rem}
+.ig2 .sopoll,.ig2 .soshared{margin:0 12px 8px}
+.ig2 .igkb{margin:0 12px 6px}
+#igSV.typing .svstage{filter:brightness(.45);transition:filter .2s}#igSV.typing .svhead,#igSV.typing .svbars{opacity:.5}
+</style>
+<script>
+/* ===================== LENT: Instagram üslubu ===================== */
+function igSvg(p,fill){return '<svg viewBox="0 0 24 24" width="26" height="26" fill="'+(fill||'none')+'" stroke="'+(fill&&fill!=='none'?fill:'currentColor')+'" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';}
+var IGP={heart:'<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',cm:'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/>',rp:'<path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',snd:'<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',bm:'<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>',more:'<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>'};
+function igNum(n){n=+n||0;return n>=1000?(Math.round(n/100)/10+'B').replace('.',','):String(n);}
+function igRing(uid,ad,photo,sz){var i=(typeof CHAT_STORIES!=='undefined'?CHAT_STORIES:[]).findIndex(function(u){return u.uid===uid;});if(i<0)return '<span class="igra" onclick="socProfile(\''+uid+'\')">'+chatAva(ad,photo,sz)+'</span>';var u=CHAT_STORIES[i];
+ return '<span class="igra ring'+(u.unseen?'':' seen')+(u.cf?' cf':'')+'" onclick="event.stopPropagation();storyOpen('+i+')">'+chatAva(ad,photo,sz)+'</span>';}
+_postCard0=function(p){var a=p.author,r=p.ref,isK=p.kind==='kudos',sys=p.kind==='birthday'||p.kind==='welcome'||p.kind==='anniv';
+ var title=p.kind==='birthday'?'🎂 Ad günü':p.kind==='welcome'?'👋 Yeni həmkar':p.kind==='anniv'?'🎉 İş ildönümü':'';var who=sys?r:a,uid=who&&who.uid;
+ var sub=(p.club?esc(p.club.emoji+' '+p.club.name):'')+(p.pinned?(p.club?' · ':'')+'Sabitlənib':'');
+ var head='<div class="igph">'+igRing(uid,who&&who.ad,who&&who.photo,34)+'<div onclick="socProfile(\''+uid+'\')"><b>'+(sys?title+' · '+esc(r&&r.ad||''):esc(a&&a.ad||'')+(isK&&r?' <span class="muted">→</span> '+esc(r.ad):''))+'</b><small>'+sub+'</small></div>'
+  +(!isK?'<button class="igicon igmo" onclick="feedMenu(\''+p.id+'\')">'+igSvg(IGP.more,'currentColor')+'</button>':'')+'</div>';
+ var badge=isK&&typeof BADGES!=='undefined'&&BADGES[p.badge]?'<div class="igkb">'+BADGES[p.badge][0]+' '+BADGES[p.badge][1]+'</div>':'';
+ var hasM=p.media&&p.media.length||p.image,media='';
+ if(p.media&&p.media.length)media=mediaHtml(p);else if(p.image)media='<img class="igpi" src="'+esc(p.image)+'" ondblclick="feedReact(\''+p.id+'\',\'❤️\',true)">';
+ var vid=/<video/.test(media);if(vid)media=media.replace(/ controls/g,'').replace(/<video /g,'<video muted loop playsinline data-ap="1" ');
+ if(media)media='<div class="igmw" ondblclick="feedReact(\''+p.id+'\',\'❤️\',true)">'+media+(vid?'<button class="igmut" onclick="event.stopPropagation();igMute(this)">🔇</button>':'')+'</div>';
+ var poll=p.poll?pollHtml(p):'';
+ var shared=p.shared?'<div class="soshared" onclick="postOpen(\''+p.shared.id+'\')">'+(p.shared.image?'<img src="'+esc(p.shared.image)+'">':'')+'<div><b>'+esc(p.shared.author&&p.shared.author.ad||'')+'</b><p>'+esc(p.shared.body||'')+'</p></div></div>':'';
+ var big=!hasM&&!poll&&!shared&&p.body&&!isK?'<div class="igbig'+(p.body.length<90?' xl':'')+'">'+socText(p.body)+'</div>':'';
+ var rs=p.reacts?Object.keys(p.reacts).sort(function(x,y){return p.reacts[y]-p.reacts[x];}).slice(0,3).join(''):'';
+ var hrt=p.my==='❤️'?igSvg(IGP.heart,'#ff3040'):p.my?'<span class="igme">'+esc(p.my)+'</span>':igSvg(IGP.heart);
+ var acts=isK?'':'<div class="igact"><button class="sorx'+(p.my?' on':'')+'" data-id="'+p.id+'" onclick="feedReact(\''+p.id+'\',\''+(p.my?'':'❤️')+'\')" oncontextmenu="event.preventDefault();reactPick(\''+p.id+'\',this)" ontouchstart="reactHold(\''+p.id+'\',this)" ontouchend="reactHoldEnd()" ontouchmove="reactHoldEnd()">'+hrt+(p.likes?'<span>'+igNum(p.likes)+'</span>':'')+'</button>'
+  +'<button onclick="feedComments(\''+p.id+'\')">'+igSvg(IGP.cm)+(p.comments?'<span>'+igNum(p.comments)+'</span>':'')+'</button>'
+  +'<button onclick="postRepost(\''+p.id+'\')">'+igSvg(IGP.rp)+'</button><button onclick="postShare(\''+p.id+'\')">'+igSvg(IGP.snd)+'</button>'
+  +(p.kind==='birthday'&&r&&r.uid!==ME.user_id?'<button class="igbm" onclick="show(\'chat\');chatOpen(\''+r.uid+'\',\''+chatArg(r.ad)+'\')">🎉</button>':'<button class="igbm sosave'+(p.saved?' on':'')+'" onclick="postSave(\''+p.id+'\','+(!p.saved)+')">'+igSvg(IGP.bm,p.saved?'currentColor':'none')+'</button>')+'</div>';
+ var likes=!isK&&p.likes&&rs?'<div class="iglk">'+rs+' <b>'+p.likes+' reaksiya</b></div>':'';
+ var cap=p.body&&!big?'<div class="igcap">'+(sys?'':'<b onclick="socProfile(\''+(a&&a.uid)+'\')">'+esc(a&&a.ad||'')+'</b> ')+socText(p.body)+'</div>':'';
+ var cms=!isK&&p.comments?'<a class="igcml" onclick="feedComments(\''+p.id+'\')">Bütün '+p.comments+' şərhə bax</a>':'';
+ return '<div class="igpost'+(sys?' sys':'')+' ig2'+(isK?' kud':'')+'" id="post'+p.id+'">'+head+badge+big+media+poll+shared+acts+likes+cap+cms+'<div class="igwhen">'+chatAgo(p.at)+'</div></div>';};
+function igMute(b){var v=b.parentNode.querySelector('video');if(!v)return;var on=v.muted;document.querySelectorAll('.igmw video').forEach(function(x){if(x!==v){x.muted=true;var bb=x.closest('.igmw').querySelector('.igmut');if(bb)bb.textContent='🔇';}});v.muted=!on;b.textContent=v.muted?'🔇':'🔊';if(!v.muted)v.play().catch(function(){});}
+var _vio=null;function igAutoplay(){if(!('IntersectionObserver' in window))return;if(!_vio)_vio=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting&&e.intersectionRatio>.6)v.play().catch(function(){});else v.pause();});},{threshold:[0,.6,1]});
+ document.querySelectorAll('video[data-ap]').forEach(function(v){if(!v._o){v._o=1;_vio.observe(v);}});}
+var _feedDraw6=feedDraw;feedDraw=function(){_feedDraw6();igAutoplay();};
+var _postRedraw6=postRedraw;postRedraw=function(p){_postRedraw6(p);igAutoplay();};
+
+function svType(on){if(!_sv)return;_sv.input=on;svPause(on);var r=$('igSV');if(r)r.classList.toggle('typing',on);svVV();}
+function svVV(){var r=$('igSV'),vv=window.visualViewport;if(!r)return;if(vv&&r.classList.contains('typing')){r.style.height=vv.height+'px';r.style.top=vv.offsetTop+'px';r.style.bottom='auto';}else{r.style.height='';r.style.top='';r.style.bottom='';}}
+if(window.visualViewport){visualViewport.addEventListener('resize',svVV);visualViewport.addEventListener('scroll',svVV);}
 </script>
 </body>
 </html>

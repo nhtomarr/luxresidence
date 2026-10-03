@@ -222,3 +222,4 @@ Frontend ofis.html sonunda ayrıca `<style>`+`<script>` bloku ("SOSİAL v3"). Ba
 - 🎉 Satış: `lux_contracts` insert trigger `contract_sale_t` → Lent post (kind sale) + push; klientdə konfetti.
 - 📊 Wrapped: `wrapped(month)`, Lentdə 25-dən 5-nə banner, ayın 1-i push, Lentdə şəkil kimi paylaşma.
 - 4 okt: Hekayə baxıcısı Instagram üslubunda yenidən yazıldı (ofis-v61): canlı saniyə sayğacı (`stoAgo`), basıb saxla = pauza, yuxarı sürüşdür = baxanlar (öz) / cavab (başqası), aşağı sürüşdür = bağla, sağ/sol sürüşdürmə, cavab mesajı + ürək, ⋯ menyu. Baza: `_storyShow0` əvəz edildi.
+- 4 okt: Lent Instagram üslubunda (ofis-v62): kənardan-kənara post, 4:5 media, ♡/💬/🔁/➤ sayları ilə + 🔖, altyazı, 'Bütün N şərhə bax', avatar ətrafında hekayə halqası, videolar səssiz avtomatik oynayır (🔇/🔊). Base `_postCard0` əvəz edildi. Hekayə cavab sahəsi klaviatura açılanda gizlənirdi — düzəldildi (`svType`, visualViewport).
