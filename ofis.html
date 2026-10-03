@@ -3674,7 +3674,7 @@ function svg(k){var f=/\*$/.test(k),c=(k.split('#')[1]||'');k=k.replace(/[*]|#.*
 window.uiIcon=function(n){return P[n]?svg(n):'';};
 var keys=Object.keys(M).sort(function(a,b){return b.length-a.length;});
 var RX=new RegExp('('+keys.map(function(k){return k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}).join('|')+')\\uFE0F?','g');
-var SKIP='.cmemo,.stcol,.svvr,.msgbody,.igm,.igpb,.igcm .cmb>div,.sorbar,.sorsum,.msgreact,.svr1,.svcap,.soce,.s3ce,.iggrp,.igst,.chatlast,.iglast,.igrep,.igpin,.soshared,.somoment p,.s3mem p,.s3qa,.s3my,.s3q p,.s3ansb p,.s3ann p,.sopoll,.svstk,.svbar,#igCtx,.igreacts,.chatreacts,.mood,.moodpick,.sochips,.fpchal,.s3th,.sorpick,.igvoice,.sotag,.svfoot,.sorx,.no-ic,[contenteditable]';
+var SKIP='.svqe,.lkav,.lkt,.cmemo,.stcol,.svvr,.msgbody,.igm,.igpb,.igcm .cmb>div,.sorbar,.sorsum,.msgreact,.svr1,.svcap,.soce,.s3ce,.iggrp,.igst,.chatlast,.iglast,.igrep,.igpin,.soshared,.somoment p,.s3mem p,.s3qa,.s3my,.s3q p,.s3ansb p,.s3ann p,.sopoll,.svstk,.svbar,#igCtx,.igreacts,.chatreacts,.mood,.moodpick,.sochips,.fpchal,.s3th,.sorpick,.igvoice,.sotag,.svfoot,.sorx,.no-ic,[contenteditable]';
 var NOTAG={SCRIPT:1,STYLE:1,TEXTAREA:1,INPUT:1,SELECT:1,OPTION:1,svg:1,SVG:1,TITLE:1,CODE:1,PRE:1};
 function fix(root){if(!root)return;if(root.nodeType===3){one(root);return;}if(root.nodeType!==1||NOTAG[root.nodeName])return;
  var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),l=[],n;while((n=w.nextNode())){RX.lastIndex=0;if(RX.test(n.nodeValue))l.push(n);}l.forEach(one);}
@@ -4583,6 +4583,114 @@ function cmDel(cid){if(!confirm('Şərh silinsin?'))return;run(sb.rpc('comment_d
 document.addEventListener('click',function(e){var box=e.target.closest&&e.target.closest('#chatMsgs');if(!box)return;var line=e.target.closest('.igline.their');if(!line)return;var av=line.firstElementChild;if(!av||!(av===e.target||av.contains(e.target))||av.classList.contains('igsp'))return;
  var id=+line.dataset.id,m=(CHATmsgs||[]).find(function(x){return x.id===id;});var uid=CHATgroup?(m&&m.sender):CHATother;if(uid){e.stopPropagation();socProfile(uid);}},true);
 chatProfile=function(){if(CHATother&&!CHATgroup)socProfile(CHATother);};
+</script>
+<style>
+/* ===== IG +10 ===== */
+.iglk{cursor:pointer}.igoff{padding:2px 14px;color:#8e8e8e;font-size:.82rem}
+.igarc{background:#fef3c7;color:#92400e;font-size:.78rem;padding:6px 12px}
+.lkav{position:relative;flex:none;cursor:pointer}.lkav i{position:absolute;right:-4px;bottom:-4px;font-style:normal;font-size:.95rem;background:#fff;border-radius:50%;width:22px;height:22px;display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.lkt button{font-size:.85rem}
+.pfmu{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:.8rem;color:#3c3c43}.pfmu b{cursor:pointer}
+.mufc{display:flex}.mufc>*{margin-left:-6px;border:1.5px solid #fff;border-radius:50%}.mufc>*:first-child{margin-left:0}
+.qrc{display:flex;flex-direction:column;align-items:center}
+.qrbox{background:linear-gradient(135deg,#f5f3ff,#fdf2f8);border-radius:24px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:14px;box-shadow:0 10px 30px -12px rgba(124,58,237,.4)}
+.qrbox #qrI{background:#fff;padding:12px;border-radius:16px}.qrbox #qrI img,.qrbox #qrI canvas{display:block}
+.qrn{font-weight:800;letter-spacing:.06em;color:#7c3aed}
+.sugg{background:#fff;margin:0 -14px 6px;padding:12px 0 14px}@media(min-width:700px){.sugg{margin:0 0 16px;border-radius:14px;border:1px solid #efefef}}
+.sugg>.row{padding:0 14px 10px}.sugg>.row b{font-size:.92rem}
+.sugl{display:flex;gap:10px;overflow-x:auto;padding:0 14px;scrollbar-width:none;scroll-snap-type:x mandatory}.sugl::-webkit-scrollbar{display:none}
+.sugc{flex:0 0 150px;scroll-snap-align:start;border:1px solid #efefef;border-radius:14px;padding:16px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;text-align:center;transition:.2s}
+.sugc b{font-size:.84rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px;cursor:pointer}.sugc small{font-size:.72rem;color:#8e8e8e;min-height:1.2em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
+.sugc .btn{width:100%;margin-top:6px}.sgx{position:absolute;right:6px;top:4px;border:none;background:none;color:#8e8e8e;font-size:.9rem}
+.caught{display:flex;flex-direction:column;align-items:center;gap:2px;padding:26px 10px 18px;text-align:center;position:relative}
+.caught span{width:52px;height:52px;border-radius:50%;background:conic-gradient(from 210deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5,#feda75);color:#fff;display:grid;place-items:center;font-size:1.5rem;margin-bottom:6px;box-shadow:inset 0 0 0 3px #fff,0 0 0 1px #eee}
+.caught b{font-size:1rem}.caught small{color:#8e8e8e;font-size:.8rem}.caught i{font-style:normal;color:#8e8e8e;font-size:.75rem;margin-top:14px;padding-top:14px;border-top:1px solid #e5e5e5;width:100%}
+.svpst{position:absolute;left:50%;bottom:90px;transform:translateX(-50%);z-index:5;border:none;background:#fff;color:#0a0a0a;font-weight:700;border-radius:14px;padding:12px 20px;box-shadow:0 8px 24px rgba(0,0,0,.35);font-size:.95rem;max-width:80%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.svqe{position:absolute;left:0;right:0;bottom:calc(70px + env(safe-area-inset-bottom,0px));z-index:6;text-align:center;padding:10px}
+.svqe small{display:block;color:rgba(255,255,255,.8);font-size:.75rem;margin-bottom:8px}.svqe div{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:320px;margin:0 auto}
+.svqe button{border:none;background:none;font-size:2.2rem;transition:transform .15s}.svqe button:active{transform:scale(1.3)}
+.igvsp{border:none;background:rgba(0,0,0,.12);color:inherit;border-radius:99px;font-size:.7rem;font-weight:700;padding:2px 7px;margin-left:6px;flex:none}
+.igm.mine .igvsp{background:rgba(255,255,255,.25)}
+</style>
+<script>
+/* ===================== IG +10 ===================== */
+/* 1. Bəyənənlər siyahısı · 6. bəyənmə sayını gizlət / şərhləri söndür (kartda) */
+var _postCard10=_postCard0;
+_postCard0=function(p){var h=_postCard10(p);if(p.kind==='kudos')return h;
+ if(p.hidelk&&!p.mine){h=h.replace(/(<button class="sorx[^"]*"[^>]*>(?:<svg[\s\S]*?<\/svg>|<span class="igme">[^<]*<\/span>))<span>[^<]*<\/span>/,'$1').replace(/<div class="iglk">[\s\S]*?<\/div>/,'');}
+ else h=h.replace('<div class="iglk">','<div class="iglk" onclick="postLikers(\''+p.id+'\')">');
+ if(p.nocm){h=h.replace(/<button onclick="feedComments\('[^']+'\)">[\s\S]*?<\/button>/,'').replace(/<a class="igcml"[\s\S]*?<\/a>/,'');h=h.replace('<div class="igwhen">','<div class="igoff">Şərhlər söndürülüb</div><div class="igwhen">');}
+ if(p.edited)h=h.replace(/(<div class="igwhen">[^<]*)/,'$1 · redaktə edilib');
+ if(p.archived)h=h.replace('<div class="igph">','<div class="igarc">🗄 Arxivdədir — yalnız sən görürsən</div><div class="igph">');
+ return h;};
+function postLikers(id){run(sb.rpc('post_likers',{p_id:id})).then(function(l){l=l||[];var by={};l.forEach(function(x){by[x.e]=(by[x.e]||0)+1;});window._lk=l;
+ modal('<div class="mhead"><h3>Reaksiyalar</h3><button class="x" onclick="closeModal()">×</button></div><div class="soseg s3sub lkt"><button class="on" onclick="lkF(this,\'\')">Hamısı '+l.length+'</button>'+Object.keys(by).map(function(e){return '<button onclick="lkF(this,\''+e+'\')">'+e+' '+by[e]+'</button>';}).join('')+'</div><div id="lkL" style="max-height:60vh;overflow-y:auto"></div>');lkF(null,'');}).catch(err);}
+function lkF(b,e){if(b)Array.prototype.forEach.call(b.parentNode.children,function(x){x.classList.toggle('on',x===b);});var l=(window._lk||[]).filter(function(x){return !e||x.e===e;});
+ $('lkL').innerHTML=l.length?l.map(function(u){return '<div class="igrow"><span class="lkav" onclick="socProfile(\''+u.uid+'\')">'+chatAva(u.ad,u.photo,44)+'<i>'+esc(u.e)+'</i></span><div class="igmeta" onclick="socProfile(\''+u.uid+'\')"><div class="igname">'+esc(u.ad)+'</div><div class="iglast">'+chatAgo(u.at)+'</div></div>'+(u.uid!==ME.user_id?'<button class="btn sm'+(u.ifollow?' ghost':'')+'" onclick="socFollow2(\''+u.uid+'\','+(!u.ifollow)+',this)">'+(u.ifollow?'İzləyirsən':'İzlə')+'</button>':'')+'</div>';}).join(''):'<div class="pfempty">Hələ reaksiya yoxdur</div>';}
+
+/* 5-6. Post ayarları: arxiv, şərhlər, bəyənmə sayı */
+var _feedMenu10=feedMenu;feedMenu=function(id){_feedMenu10(id);var p=FEED.find(function(x){return x.id===id;})||{};var mb=$('mbox');if(!mb||!p.mine||p.kind!=='post')return;
+ var ref=mb.querySelector('.igmenu[style*="ed4956"]');var h='<button class="igmenu" onclick="postSet(\''+id+'\',\'archived\','+(!p.archived)+')">'+(p.archived?'🗄 Profilə qaytar':'🗄 Arxivlə')+'</button>'
+  +'<button class="igmenu" onclick="postSet(\''+id+'\',\'nocm\','+(!p.nocm)+')">'+(p.nocm?'💬 Şərhləri aç':'💬 Şərhləri söndür')+'</button>'
+  +'<button class="igmenu" onclick="postSet(\''+id+'\',\'hidelk\','+(!p.hidelk)+')">'+(p.hidelk?'❤️ Reaksiya sayını göstər':'❤️ Reaksiya sayını gizlət')+'</button>';
+ if(ref)ref.insertAdjacentHTML('beforebegin',h);else mb.insertAdjacentHTML('beforeend',h);};
+function postSet(id,k,v){var a={p_id:id,p_archived:null,p_no_comments:null,p_hide_likes:null};a[k==='archived'?'p_archived':k==='nocm'?'p_no_comments':'p_hide_likes']=v;
+ run(sb.rpc('post_settings',a)).then(function(){closeModal();var p=FEED.find(function(x){return x.id===id;});if(p)p[k]=v;
+  if(k==='archived'&&v){var e=$('post'+id);if(e&&!e.closest('.pg'))e.remove();toast('🗄 Arxivləndi. Profil → ☰ → Arxiv');}else{if(p)postRedraw(p);toast(k==='nocm'?(v?'Şərhlər söndürüldü':'Şərhlər açıldı'):k==='hidelk'?(v?'Reaksiya sayı gizlədildi':'Reaksiya sayı görünür'):'Profilə qaytarıldı');}}).catch(err);}
+function archiveOpen(){var pg=pgPush(pgHead('🗄 Arxiv')+'<div class="pgc"><p class="hint" style="margin:10px 0">Arxivdəki postları yalnız sən görürsən. Postu açıb "⋯" → "Profilə qaytar".</p><div id="pfGrid" class="pfgrid"></div></div>','archive');
+ run(sb.rpc('feed2',{p_mode:'archive',p_arg:null,p_before:null})).then(function(l){l=l||[];l.forEach(function(q){var i=FEED.findIndex(function(y){return y.id===q.id;});if(i>=0)FEED[i]=q;else FEED.push(q);});pfGrid(l,'Arxiv boşdur');}).catch(err);}
+
+/* 2. Ümumi izləyicilər · 10. QR kod (profil) */
+var _socProfile10=socProfile;socProfile=function(uid){_socProfile10(uid);if(!uid||uid==='undefined')return;var n=0;(function go(){var t=pgTop(),inf=t&&t.dataset.key==='prof:'+uid&&t.querySelector('.pfinfo');if(!inf){if(n++<50)setTimeout(go,100);return;}if(inf.querySelector('.pfmu'))return;
+ var bt=t.querySelector('.pfbt');if(bt&&!bt.querySelector('.qrb'))bt.insertAdjacentHTML('beforeend','<button class="btn ghost sq qrb" onclick="qrOpen(\''+uid+'\')" title="QR kod">▦</button>');
+ if(uid===ME.user_id)return;inf.insertAdjacentHTML('beforeend','<div class="pfmu"></div>');run(sb.rpc('soc_mutuals',{p_uid:uid})).then(function(m){var d=inf.querySelector('.pfmu');if(!d||!m||!m.n)return;
+  d.innerHTML='<span class="mufc">'+m.top.map(function(u){return chatAva(u.ad,u.photo,20);}).join('')+'</span><span>İzləyir: '+m.top.map(function(u){return '<b onclick="socProfile(\''+u.uid+'\')">'+esc(u.ad.split(' ')[0])+'</b>';}).join(', ')+(m.n>m.top.length?' və '+(m.n-m.top.length)+' nəfər':'')+'</span>';}).catch(function(){});})();};
+var _pfMenu10=pfMenu;pfMenu=function(uid){_pfMenu10(uid);if(uid)return;var mb=$('mbox'),f=mb&&mb.querySelector('.igmenu');if(f)f.insertAdjacentHTML('afterend','<button class="igmenu" onclick="closeModal();archiveOpen()">🗄 Arxiv</button><button class="igmenu" onclick="closeModal();qrOpen(ME.user_id)">▦ QR kod</button>');};
+function qrOpen(uid){var p=window._prof||{},url='https://ofis.pilothayat.az/?u='+uid;
+ modal('<div class="mhead"><h3>QR kod</h3><button class="x" onclick="closeModal()">×</button></div><div class="qrc"><div class="qrbox"><div id="qrI"></div><div class="qrn">'+esc((p.ad||'').toUpperCase())+'</div></div><div class="row" style="gap:8px;margin-top:14px"><button class="btn ghost" style="flex:1" onclick="qrShare(\''+url+'\')">↗︎ Paylaş</button><button class="btn ghost" style="flex:1" onclick="qrCopy(\''+url+'\')">🔗 Linki kopyala</button></div><p class="hint" style="text-align:center">Kamera ilə skan edəndə profil açılır</p></div>');
+ setTimeout(function(){try{new QRCode($('qrI'),{text:url,width:220,height:220,colorDark:'#7c3aed',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});}catch(e){$('qrI').textContent=url;}},50);}
+function qrShare(u){if(navigator.share)navigator.share({title:'Baş Ofis profili',url:u}).catch(function(){});else qrCopy(u);}
+function qrCopy(u){try{navigator.clipboard.writeText(u).then(function(){toast('🔗 Link kopyalandı');});}catch(e){prompt('Link:',u);}}
+(function(){var q=new URLSearchParams(location.search),u=q.get('u');if(!u)return;var go=function(){if(typeof ME==='undefined'||!ME||!sb){setTimeout(go,800);return;}try{history.replaceState(history.state,'',location.pathname);}catch(e){}setTimeout(function(){socProfile(u);},900);};setTimeout(go,1500);})();
+
+/* 3. Sizin üçün təkliflər · 4. Hamısını gördün */
+var SUGG=null,SUGX={};try{SUGX=JSON.parse(localStorage.getItem('sugx')||'{}');}catch(e){}
+var _feedDraw10=feedDraw;feedDraw=function(){_feedDraw10();if(FMODE!=='all')return;s10caught();var el=$('igPosts');if(!el||$('sugg'))return;var posts=el.querySelectorAll(':scope>.igpost');if(posts.length<2)return;var at=posts[Math.min(2,posts.length-1)];
+ var draw=function(){var l=(SUGG||[]).filter(function(u){return !u.ifollow&&u.uid!==ME.user_id&&!SUGX[u.uid];}).slice(0,12);if(l.length<1||$('sugg'))return;
+  at.insertAdjacentHTML('afterend','<div id="sugg" class="sugg"><div class="row sp"><b>Sizin üçün təkliflər</b><a class="igtxt" onclick="show(\'feed\');feedMode(\'explore\')">Hamısı</a></div><div class="sugl">'+l.map(function(u){return '<div class="sugc" id="sg'+u.uid+'"><button class="sgx" onclick="sugHide(\''+u.uid+'\')">✕</button><span onclick="socProfile(\''+u.uid+'\')">'+chatAva(u.ad,u.photo,76)+'</span><b onclick="socProfile(\''+u.uid+'\')">'+esc(u.ad)+'</b><small>'+esc(u.vezife||(u.new?'Yeni həmkar':'Komandadan'))+'</small><button class="btn sm" onclick="sugFollow(\''+u.uid+'\',this)">İzlə</button></div>';}).join('')+'</div></div>');};
+ if(SUGG)draw();else run(sb.rpc('soc_explore')).then(function(x){SUGG=(x&&x.people)||[];draw();}).catch(function(){});};
+function sugHide(uid){SUGX[uid]=1;try{localStorage.setItem('sugx',JSON.stringify(SUGX));}catch(e){}var c=$('sg'+uid);if(c){c.style.transform='scale(.8)';c.style.opacity='0';setTimeout(function(){c.remove();var l=document.querySelector('#sugg .sugl');if(l&&!l.children.length)$('sugg').remove();},200);}}
+function sugFollow(uid,b){b.disabled=true;run(sb.rpc('soc_follow',{p_uid:uid,p_on:true})).then(function(){b.textContent='İzləyirsən';b.classList.add('ghost');var s=(SUGG||[]).find(function(u){return u.uid===uid;});if(s)s.ifollow=true;}).catch(err);}
+function s10caught(){var el=$('igPosts');if(!el||$('caught'))return;var lim=Date.now()-3*86400000,ps=el.querySelectorAll(':scope>.igpost'),first=null,newer=0;
+ Array.prototype.forEach.call(ps,function(n){var p=FEED.find(function(x){return 'post'+x.id===n.id;});if(!p||p.pinned)return;if(new Date(p.at)>=lim)newer++;else if(!first)first=n;});
+ if(first&&newer>0)first.insertAdjacentHTML('beforebegin','<div id="caught" class="caught"><span>✓</span><b>Hamısını gördün</b><small>Son 3 gündə paylaşılan bütün postlara baxdın</small><i>Köhnə postlar</i></div>');}
+var _feedMore10=feedMore;feedMore=function(){_feedMore10();setTimeout(s10caught,1500);};
+
+/* 7. Postu hekayəyə paylaş */
+var _postShare10=postShare;postShare=function(id){_postShare10(id);var n=0;(function go(){var mb=$('mbox'),f=mb&&mb.querySelector('.igmenu');if(!f){if(n++<30)setTimeout(go,100);return;}if(mb.querySelector('.p2s'))return;f.insertAdjacentHTML('afterend','<button class="igmenu p2s" onclick="closeModal();postToStory(\''+id+'\')">➕ Hekayənə əlavə et</button>');})();};
+function postToStory(id){var p=FEED.find(function(x){return x.id===id;});if(!p)return;var a=p.author||p.ref||{},m=p.media&&p.media.find(function(x){return x.kind!=='video';}),img=m?m.url:p.image;toast('Hazırlanır…');
+ var c=document.createElement('canvas');c.width=1080;c.height=1920;var x=c.getContext('2d'),g=x.createLinearGradient(0,0,1080,1920);g.addColorStop(0,'#4f46e5');g.addColorStop(1,'#db2777');x.fillStyle=g;x.fillRect(0,0,1080,1920);
+ var card=function(im){var cw=820,ix=130,iy=420,ih=im?Math.min(1025,cw*im.naturalHeight/im.naturalWidth):0,ch=ih+(im?230:520);x.fillStyle='#fff';x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=50;if(x.roundRect){x.beginPath();x.roundRect(ix,iy,cw,ch,36);x.fill();}else x.fillRect(ix,iy,cw,ch);x.shadowBlur=0;
+  x.fillStyle='#0a0a0a';x.font='700 40px Inter,system-ui,sans-serif';x.fillText(a.ad||'Baş Ofis',ix+40,iy+75);
+  if(im){x.save();x.beginPath();x.rect(ix,iy+110,cw,ih);x.clip();var s=Math.max(cw/im.naturalWidth,ih/im.naturalHeight);x.drawImage(im,ix+(cw-im.naturalWidth*s)/2,iy+110+(ih-im.naturalHeight*s)/2,im.naturalWidth*s,im.naturalHeight*s);x.restore();}
+  x.fillStyle='#262626';x.font='400 36px Inter,system-ui,sans-serif';var t=(p.body||'').replace(/\s+/g,' '),y=iy+110+ih+(im?70:60),line='',lines=0;t.split(' ').forEach(function(w){if(lines>=(im?1:7))return;if(x.measureText(line+w).width>cw-80){x.fillText(line,ix+40,y);y+=50;line='';lines++;}line+=w+' ';});if(lines<(im?1:7)&&line)x.fillText(line.length>60&&im?line.slice(0,58)+'…':line,ix+40,y);
+  c.toBlob(function(b){var f=new File([b],'post.jpg',{type:'image/jpeg'});chatUpload(f,'story').then(function(u){return run(sb.rpc('story_add3',{p_url:u,p_kind:'image',p_caption:null,p_sticker:{type:'post',id:id,q:'Posta bax'},p_audience:'all'}));}).then(function(){toast('Hekayənə əlavə edildi');if(typeof storyLoad==='function')storyLoad();}).catch(err);},'image/jpeg',.9);};
+ if(img){var im=new Image();im.crossOrigin='anonymous';im.onload=function(){try{var t=document.createElement('canvas');t.width=t.height=2;t.getContext('2d').drawImage(im,0,0,2,2);t.toDataURL();card(im);}catch(e){card(null);}};im.onerror=function(){card(null);};im.src=img+(img.indexOf('?')<0?'?cors=1':'');}else card(null);}
+/* 8. Hekayə: post və link stikerləri, sürətli emoji */
+var _storyShow10=storyShow;storyShow=function(){_storyShow10();if(!_sv)return;var it=CHAT_STORIES[_sv.ui]&&CHAT_STORIES[_sv.ui].items[_sv.ii];if(!it||!it.st)return;var s=it.st;if(s.type!=='post'&&s.type!=='link')return;
+ var old=document.querySelector('#igSV .svstk');if(old)old.remove();var d=document.createElement('button');d.className='svpst';
+ if(s.type==='post'){d.innerHTML='Posta bax ›';d.onclick=function(e){e.stopPropagation();storyClose();postOpen(s.id);};}else{d.innerHTML='🔗 '+esc(s.t||s.url.replace(/^https?:\/\//,'').slice(0,28));d.onclick=function(e){e.stopPropagation();svPause(true);window.open(s.url,'_blank');};}
+ var st=$('svStage');(st||$('igSV')).appendChild(d);};
+var _stStk10=stStk;stStk=function(){_stStk10();var p=document.querySelector('#stPanel .fptools');if(p&&!p.querySelector('.stlk'))p.insertAdjacentHTML('afterbegin','<button class="btn ghost sm stlk" onclick="stLink()">🔗 Link</button>');};
+function stLink(){var u=prompt('Link (https://...)','https://');if(!u||!/^https?:\/\/\S+\.\S+/.test(u)){if(u)toast('Düzgün link yazın');return;}var t=prompt('Stikerdə görünən yazı (istəyə görə)','')||'';_st.stk={type:'link',url:u,t:t.slice(0,40),q:t||u};$('stPanel').innerHTML='<div class="stchip">🔗 '+esc(t||u)+' <a onclick="_st.stk=null;this.parentNode.remove()">✕</a></div>';}
+var _svType10=svType;svType=function(on){_svType10(on);var r=$('igSV');if(!r)return;var q=r.querySelector('.svqe');if(on&&!q){r.insertAdjacentHTML('beforeend','<div class="svqe"><small>Sürətli reaksiyalar</small><div>'+['😂','😮','😍','😢','👏','🔥','🎉','💯'].map(function(e){return '<button onmousedown="event.preventDefault()" onclick="svQuick(\''+e+'\')">'+e+'</button>';}).join('')+'</div></div>');}else if(!on&&q)q.remove();};
+function svQuick(e){storyReact(e);var r=$('igSV');var h=document.createElement('span');h.className='svbig';h.textContent=e;r.appendChild(h);setTimeout(function(){h.remove();},900);var i=$('svRe');if(i)i.blur();}
+
+/* 9. Səsli mesaj sürəti */
+var VSPD=1;try{VSPD=+localStorage.getItem('vspd')||1;}catch(e){}
+var _voiceHtml10=voiceHtml;voiceHtml=function(m){return _voiceHtml10(m).replace(/<\/div>$/,'<button class="igvsp" onclick="event.stopPropagation();vSpeed(this,'+m.id+')">'+VSPD+'×</button></div>');};
+function vSpeed(b,id){VSPD=VSPD===1?1.5:VSPD===1.5?2:1;try{localStorage.setItem('vspd',VSPD);}catch(e){}document.querySelectorAll('.igvsp').forEach(function(x){x.textContent=VSPD+'×';});if(_vAudio)_vAudio.playbackRate=VSPD;}
+var _voicePlay10=voicePlay;voicePlay=function(id,url){_voicePlay10(id,url);if(_vAudio)_vAudio.playbackRate=VSPD;};
 </script>
 </body>
 </html>
