@@ -978,9 +978,8 @@ function chatNew(){run(sb.rpc('msg_contacts')).then(function(list){
 function chatContactsHtml(list){return list.map(function(c){CHAT_PH[c.uid]=c.photo||null;CHAT_SUB[c.uid]=c.vezife||'';
  return '<div class="igrow" onclick="closeModal();chatOpen(\''+c.uid+'\',\''+chatArg(c.ad)+'\')">'+chatAva(c.ad,c.photo,48,c.uid)+'<div class="igmeta"><div class="igname">'+esc(c.ad)+'</div><div class="iglast">'+esc(c.vezife||'')+'</div></div></div>';}).join('')||'<p class="hint">İşçi tapılmadı</p>';}
 function chatFilterContacts(q){q=(q||'').toLowerCase();var f=(window.CHAT_CONTACTS||[]).filter(function(c){return (c.ad||'').toLowerCase().indexOf(q)>=0||(c.vezife||'').toLowerCase().indexOf(q)>=0;});$('chatContacts').innerHTML=chatContactsHtml(f);}
-function chatOpen(uid,ad){CHAT_SEL=null;var _b=$('igSelBar');if(_b)_b.remove();try{if(!(history.state&&history.state.igchat))history.pushState({igchat:1},'');}catch(e){}CHATother=uid;CHATname=ad;CHATreply=null;renderChatRoom();}
-window.addEventListener('popstate',function(){if(CHATother)chatBack(true);});
-function chatBack(fromPop){if(!fromPop&&history.state&&history.state.igchat){history.back();return;}chatFull(false);CHATother=null;CHATreply=null;if(CHATsub){try{CHATsub.unsubscribe();}catch(e){}CHATsub=null;}renderChat();chatUpdateBadge();}
+function chatOpen(uid,ad){CHAT_SEL=null;var _b=$('igSelBar');if(_b)_b.remove();CHATother=uid;CHATname=ad;CHATreply=null;renderChatRoom();}
+function chatBack(){chatFull(false);CHATother=null;CHATreply=null;if(CHATsub){try{CHATsub.unsubscribe();}catch(e){}CHATsub=null;}renderChat();chatUpdateBadge();}
 function renderChatRoom(){var v=$('v-chat');if(!v)return;var ph=CHAT_PH[CHATother],sub=CHAT_SUB[CHATother]||'';
  v.innerHTML='<div class="ig igroom"><div class="ighead"><button class="igicon" onclick="chatBack()">'+IGI.back+'</button>'
   +'<div class="igwho" onclick="chatProfile()">'+chatAva(CHATname,ph,40,CHATother)+'<div><div class="igname">'+esc(CHATname||'İşçi')+'</div><div class="igsub'+(presText(CHATother)==='Aktivdir'?' live':'')+'" id="igSub">'+esc(presText(CHATother)||sub)+'</div></div></div>'
@@ -1033,7 +1032,7 @@ function chatGlobalInit(){if(LIVE.started||!ME||!ME.user_id)return;LIVE.started=
  LIVE.poll=setInterval(function(){if(document.visibilityState==='visible')livePoll();},LIVE.ok?20000:6000);
  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'){livePoll(true);if(!LIVE.ok)liveSubscribe();}});
  window.addEventListener('online',function(){livePoll(true);liveSubscribe();});
- livePoll(true);liveDeepLink();presInit();
+ livePoll(true);liveDeepLink();presInit();try{backInit();}catch(e){}
 }
 function liveSubscribe(){var u=ME.user_id;if(LIVE.ch){try{sb.removeChannel(LIVE.ch);}catch(e){}LIVE.ch=null;}
  try{LIVE.ch=sb.channel('me-'+u)
@@ -1075,6 +1074,26 @@ function liveDeepLink(){var q=new URLSearchParams(location.search),c=q.get('chat
  if(k){run(sb.rpc('call_get',{p_id:k})).then(function(r){if(r&&r.status==='ringing'&&r.callee===ME.user_id)callIncoming(r);}).catch(function(){});}
 }
 
+
+
+/* ===== GERİ DÜYMƏSİ: pəncərə → söhbət → bölmə → ana səhifə → "çıxmaq üçün təkrar toxun" ===== */
+var _backT=0;
+function backHome(){var b=document.querySelector('#tabs button');return b?b.dataset.v:'today';}
+function backCur(){var b=document.querySelector('#tabs button.on');return b?b.dataset.v:backHome();}
+function backAct(){ // true = idarə olundu, false = tətbiqdən çıx
+ if(typeof CALL!=='undefined'&&CALL)return true;
+ var md=$('modal');if(md&&md.classList.contains('on')){closeModal();return true;}
+
+ if(typeof CHAT_SEL!=='undefined'&&CHAT_SEL){chatSelEnd();return true;}
+ if(typeof CHATother!=='undefined'&&CHATother){chatBack();return true;}
+ if(backCur()!==backHome()){show(backHome());try{window.scrollTo(0,0);}catch(e){}return true;}
+ if(Date.now()-_backT<2000)return false;
+ _backT=Date.now();toast('Çıxmaq üçün təkrar toxun');return true;}
+function backInit(){
+ if(isNative()){try{var A=window.Capacitor.Plugins.App;if(A&&A.addListener){A.addListener('backButton',function(){if(!backAct()){try{A.exitApp();}catch(e){}}});return;}}catch(e){}}
+ try{history.replaceState({bo:0},'');history.pushState({bo:1},'');}catch(e){}
+ window.addEventListener('popstate',function(){if(backAct()){try{history.pushState({bo:1},'');}catch(e){}}else{try{history.back();}catch(e){}}});
+}
 
 /* ---------- ONLAYN STATUS ---------- */
 var _presT=null,_presPing=null;
