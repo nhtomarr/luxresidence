@@ -480,12 +480,15 @@ a.back,.back{border-radius:99px}
 .igemptyic{width:80px;height:80px;border:2px solid #0a0a0a;border-radius:50%;display:grid;place-items:center;color:#0a0a0a;margin-bottom:8px}
 .igbtn{margin-top:10px;background:#0095f6;color:#fff;border:none;border-radius:10px;padding:9px 18px;font-weight:600}
 /* otaq */
-.igroom{display:flex;flex-direction:column;height:calc(100dvh - 200px);min-height:420px}
-.ighead{display:flex;align-items:center;gap:8px;padding:2px 0 10px;border-bottom:1px solid #efefef}
+.igroom{display:flex;flex-direction:column;position:fixed;left:0;right:0;top:0;height:100dvh;z-index:60;background:#fff;padding:calc(8px + env(safe-area-inset-top,0px)) 12px calc(8px + env(safe-area-inset-bottom,0px));box-sizing:border-box;overscroll-behavior:none}
+@media(min-width:760px){.igroom{left:50%;width:min(720px,100%);transform:translateX(-50%);box-shadow:0 0 30px rgba(0,0,0,.12)}}
+body.igfull{overflow:hidden}
+.ighead{display:flex;align-items:center;gap:8px;padding:2px 0 10px;border-bottom:1px solid #efefef;flex-shrink:0}
 .igwho{flex:1;display:flex;align-items:center;gap:10px;cursor:pointer;min-width:0}
 .igwho .igname{font-weight:700}
 .igsub{font-size:.8rem;color:#737373;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.igmsgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;padding:10px 2px 6px;overscroll-behavior:contain}
+.igmsgs{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;padding:10px 2px 6px;overscroll-behavior:contain}
+.igmsgs>:first-child{margin-top:auto}
 .igtime{align-self:center;font-size:.74rem;color:#737373;font-weight:600;margin:14px 0 8px}
 .igline{display:flex;align-items:flex-end;gap:8px;margin-top:2px}
 .igline.mine{justify-content:flex-end}
@@ -508,7 +511,7 @@ a.back,.back{border-radius:99px}
 .igintro{display:flex;flex-direction:column;align-items:center;gap:4px;padding:30px 0;color:#737373;text-align:center}
 .igintro b{color:#0a0a0a;font-size:1.15rem;margin-top:8px}
 .igintro span{margin-top:12px}
-.igbar{display:flex;align-items:center;gap:6px;background:var(--igg);border-radius:30px;padding:5px 8px 5px 5px;margin-top:6px;margin-bottom:env(safe-area-inset-bottom,0)}
+.igbar{display:flex;align-items:center;gap:6px;background:var(--igg);border-radius:30px;padding:5px 8px 5px 5px;margin-top:6px;flex-shrink:0}
 .igcam{width:42px;height:42px;border-radius:50%;border:none;background:#3b6cf6;display:grid;place-items:center;flex-shrink:0}
 .igbar input[type=text],.igbar #chatText{flex:1;border:none;background:none;outline:none;font-size:1rem;padding:10px 4px;min-width:0;color:#0a0a0a}
 .igsend{border:none;background:none;color:var(--igp);font-weight:700;font-size:1rem;padding:8px 10px}
@@ -751,7 +754,7 @@ function start(){$('app').style.display='';var _bl=document.getElementById('boot
  setInterval(tick,1000);tick();
  loadAll().then(function(){setTimeout(function(){iosSheetShow(false);},2500);if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');(function(){var def=new URLSearchParams(location.search).get('qr')&&MGR?'set':((OWNER||(ME.is_admin&&!EMP))?'boss':'today');var saved='';try{saved=sessionStorage.getItem('ofis_tab')||'';}catch(e){}var allowed=tabs.map(function(t){return t[0];});show(saved&&allowed.indexOf(saved)>=0?saved:def);})();if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
 }
-function show(v){try{sessionStorage.setItem('ofis_tab',v);}catch(e){}document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});var ab=document.querySelector('#tabs button.on');if(ab&&ab.scrollIntoView)try{ab.scrollIntoView({block:'nearest',inline:'center'});}catch(e){}
+function show(v){if(v!=='chat'&&typeof chatFull==='function')chatFull(false);try{sessionStorage.setItem('ofis_tab',v);}catch(e){}document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});var ab=document.querySelector('#tabs button.on');if(ab&&ab.scrollIntoView)try{ab.scrollIntoView({block:'nearest',inline:'center'});}catch(e){}
  if(v==='today')renderToday();if(v==='panel')renderPanel();if(v==='tasks')renderKanban();if(v==='team'){renderDay();renderMonth();}if(v==='staff')renderStaff();if(v==='set')renderSet();if(v==='leave')renderLeave();if(v==='boss'){if(OWNER)renderOwner();else renderBoss();}if(v==='asst')renderAsst();if(v==='oprofil')renderOProfil();if(v==='remind')renderRemind();if(v==='chat')renderChat();if(v==='plans')renderPlans();if(v==='leads')renderLeads();if(v==='news')renderNews();if(v==='cal')renderCal();if(v==='dir'){dirFilters();var db=$('dirBar');if(db)db.style.display='';renderDir();}if(v==='docs')renderDocs();if(v==='me')renderMe();window.scrollTo(0,0);}
 function tick(){var n=new Date();$('tClock').textContent=n.toLocaleTimeString('az-AZ',{timeZone:TZ,hour:'2-digit',minute:'2-digit',second:'2-digit'});$('tDate').textContent=n.toLocaleDateString('az-AZ',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});}
 function loadAll(){return Promise.all([
@@ -898,8 +901,9 @@ function chatNew(){run(sb.rpc('msg_contacts')).then(function(list){
 function chatContactsHtml(list){return list.map(function(c){CHAT_PH[c.uid]=c.photo||null;CHAT_SUB[c.uid]=c.vezife||'';
  return '<div class="igrow" onclick="closeModal();chatOpen(\''+c.uid+'\',\''+chatArg(c.ad)+'\')">'+chatAva(c.ad,c.photo,48)+'<div class="igmeta"><div class="igname">'+esc(c.ad)+'</div><div class="iglast">'+esc(c.vezife||'')+'</div></div></div>';}).join('')||'<p class="hint">İşçi tapılmadı</p>';}
 function chatFilterContacts(q){q=(q||'').toLowerCase();var f=(window.CHAT_CONTACTS||[]).filter(function(c){return (c.ad||'').toLowerCase().indexOf(q)>=0||(c.vezife||'').toLowerCase().indexOf(q)>=0;});$('chatContacts').innerHTML=chatContactsHtml(f);}
-function chatOpen(uid,ad){CHATother=uid;CHATname=ad;CHATreply=null;renderChatRoom();}
-function chatBack(){CHATother=null;CHATreply=null;if(CHATsub){try{CHATsub.unsubscribe();}catch(e){}CHATsub=null;}renderChat();chatUpdateBadge();}
+function chatOpen(uid,ad){try{if(!(history.state&&history.state.igchat))history.pushState({igchat:1},'');}catch(e){}CHATother=uid;CHATname=ad;CHATreply=null;renderChatRoom();}
+window.addEventListener('popstate',function(){if(CHATother)chatBack(true);});
+function chatBack(fromPop){if(!fromPop&&history.state&&history.state.igchat){history.back();return;}chatFull(false);CHATother=null;CHATreply=null;if(CHATsub){try{CHATsub.unsubscribe();}catch(e){}CHATsub=null;}renderChat();chatUpdateBadge();}
 function renderChatRoom(){var v=$('v-chat');if(!v)return;var ph=CHAT_PH[CHATother],sub=CHAT_SUB[CHATother]||'';
  v.innerHTML='<div class="ig igroom"><div class="ighead"><button class="igicon" onclick="chatBack()">'+IGI.back+'</button>'
   +'<div class="igwho" onclick="chatProfile()">'+chatAva(CHATname,ph,40)+'<div><div class="igname">'+esc(CHATname||'İşçi')+'</div>'+(sub?'<div class="igsub">'+esc(sub)+'</div>':'')+'</div></div>'
@@ -909,9 +913,16 @@ function renderChatRoom(){var v=$('v-chat');if(!v)return;var ph=CHAT_PH[CHATothe
   +'<div class="igbar"><button class="igcam" onclick="chatPickImage()">'+IGI.cam+'</button><input type="file" id="chatFile" accept="image/*" style="display:none" onchange="chatUploadImage(this.files[0])">'
   +'<input id="chatText" placeholder="Mesaj..." autocomplete="off" oninput="chatTyping()" onkeydown="if(event.key===\'Enter\')chatSend()">'
   +'<button class="igicon igimg" id="igImg" onclick="chatPickImage()">'+IGI.img+'</button><button class="igsend" id="igSend" onclick="chatSend()" style="display:none">Göndər</button></div></div>';
- chatLoadMsgs();chatSubscribe();
+ chatFull(true);chatLoadMsgs();chatSubscribe();
  if(!CHAT_PH.hasOwnProperty(CHATother)||sub==='')run(sb.rpc('msg_profile',{p_uid:CHATother})).then(function(p){if(!p||CHATother==null)return;CHAT_PH[CHATother]=p.photo||null;CHAT_SUB[CHATother]=p.vezife||'';var w=document.querySelector('.igwho');if(w)w.innerHTML=chatAva(CHATname,p.photo,40)+'<div><div class="igname">'+esc(CHATname||'İşçi')+'</div>'+(p.vezife?'<div class="igsub">'+esc(p.vezife)+'</div>':'')+'</div>';if(p.telefon){var c=$('igCall');if(c){c.style.display='';c.onclick=function(){location.href='tel:'+p.telefon;};}}}).catch(function(){});
 }
+function chatFit(){var r=document.querySelector('.igroom');if(!r)return;var vv=window.visualViewport;
+ if(vv){r.style.height=vv.height+'px';r.style.top=vv.offsetTop+'px';}else{r.style.height=window.innerHeight+'px';r.style.top='0px';}
+ var m=$('chatMsgs');if(m&&m._stick!==false)m.scrollTop=m.scrollHeight;}
+function chatFull(on){document.body.classList.toggle('igfull',!!on);var vv=window.visualViewport;
+ if(on){if(!window._chatFitOn){window._chatFitOn=true;if(vv){vv.addEventListener('resize',chatFit);vv.addEventListener('scroll',chatFit);}window.addEventListener('resize',chatFit);}chatFit();
+  var m=$('chatMsgs');if(m)m.addEventListener('scroll',function(){m._stick=(m.scrollHeight-m.scrollTop-m.clientHeight)<80;});}
+ else if(window._chatFitOn){window._chatFitOn=false;if(vv){vv.removeEventListener('resize',chatFit);vv.removeEventListener('scroll',chatFit);}window.removeEventListener('resize',chatFit);}}
 function chatTyping(){var t=$('chatText'),has=t&&t.value.trim().length>0;var s=$('igSend'),i=$('igImg');if(s)s.style.display=has?'':'none';if(i)i.style.display=has?'none':'';}
 function chatLoadMsgs(){run(sb.rpc('msg_open',{p_other:CHATother})).then(function(rows){CHATmsgs=rows||[];chatDrawMsgs(CHATmsgs);}).catch(err);}
 function chatSep(d){var now=new Date(),y=new Date(now);y.setDate(now.getDate()-1);var hm=d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'});
