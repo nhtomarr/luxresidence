@@ -198,5 +198,15 @@
 **Dizayn:** "Gün işığı" iOS glass qatı (ofis.html sonundakı CSS + `glassInit`), Bakı vaxtına görə fon (`tod-*`), mobil alt dock (`#dock`), avatar → profil vərəqi, geri düyməsi məntiqi (`backAct`). Performans üçün kartlarda blur YOXDUR.
 **APK 2.0.0:** Capacitor 8 (API 36), imzalı release APK + Play AAB (secrets `ANDROID_KEYSTORE_*`, ehtiyat `office_secrets.android_upload_ks`), native `CallAudio` plugin (qulaqlıq/dinamik, yaxınlıq sensoru) `mobile/native/` + `capacitor:sync:after` hook. Birbaşa link: github.com/nhtomarr/luxresidence/releases/latest/download/bas-ofis.apk
 **Play Console:** şəxsi hesab "Pilot Hayat CRM" yaradılıb, şəxsiyyət yoxlanışı gözlənilir → sonra qapalı test (closed testing) ilə yalnız işçilərə.
-**SW versiyası:** ofis-v56.
+**SW versiyası:** ofis-v57.
 **Gözləyən:** repo public → private etmək; tokenləri rotate (GitHub PAT, TURN, cf_token); Play qapalı test qurulumu.
+
+
+## YENİLƏNMƏ — 4 oktyabr 2026: Sosial v3 (20 funksiya, ofis-v57)
+Frontend ofis.html sonunda ayrıca `<style>`+`<script>` bloku ("SOSİAL v3"). Backend RPC-lər artıq bazada idi.
+- Lent seqmentləri: 🏆 Komanda (`soc_digest`, `qotd_*`, `chal_*`, `eom_*`, `points_board`, `coffee_*`, `skill_search`), 🛍 Bazarça (`mk_*`), ❓ Suallar (`qa_*`), 🛡 Moderasiya (`rep_*`, `mod_*`, yalnız `_soc_mod`).
+- "Hamısı": qarşılama (`onb_state`), elan (`ann_feed`/`ann_read`), günün sualı, xatirələr (`soc_memories`).
+- Post: qaralama/planlı (`draft_*`, cron `social_tick`), çağırış (`post_add3`), statistika (`post_insights`, `post_seen`), şikayət.
+- Hekayə: yaxın dostlar (`story_add3`, `cf_*`), önə çıxanlar (`hl_*`, `story_archive`). Profil: `soc_profile_x` (bacarıq, mentor, cf).
+- Çat: video dairə (kind `vcircle`), 24 saat silinən mesaj/tema/ləqəb (`chat_style`, `chat_style_set`). `trg_msg_push`-a vcircle mətni əlavə edildi.
+- Elanlar tabı (MGR): oxumayanlar + `ann_remind`.

@@ -3144,5 +3144,443 @@ function glassInit(){meAvaInit();var mbx=$('meBox');if(mbx&&window.MutationObser
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',glassInit);else glassInit();
 
 </script>
+<style>
+/* ===== sosial v3 ===== */
+.s3n{background:#ff3b30;color:#fff;border-radius:99px;padding:0 6px;font-size:.7rem;margin-left:3px}
+.s3card{background:#fff;border:1px solid #efefef;border-radius:16px;padding:12px;margin-bottom:12px}
+.s3sub{margin:0 0 12px}
+.s3ann{background:linear-gradient(135deg,#eff6ff,#f5f3ff);border:1px solid #dbeafe;border-radius:16px;padding:12px;margin-bottom:12px}
+.s3ann p{white-space:pre-line;font-size:.9rem;margin:6px 0 10px;color:#334155}.s3ann small{color:#64748b}
+.s3mem{display:flex;gap:10px;align-items:center;background:linear-gradient(135deg,#fefce8,#ecfeff);border-radius:16px;padding:10px;margin-bottom:12px;cursor:pointer;position:relative;padding-top:26px}
+.s3mem>span{position:absolute;top:7px;left:12px;font-size:.72rem;font-weight:700;color:#a16207}
+.s3mem img{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:none}.s3mem p{font-size:.84rem;color:#475569;margin:2px 0 0}
+.s3onb{background:#fff;border:1px solid #c7d2fe;border-radius:16px;padding:12px;margin-bottom:12px}
+.s3bar{height:6px;background:#eef2ff;border-radius:9px;margin:8px 0;overflow:hidden}.s3bar i{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#22c55e);border-radius:9px}
+.s3step{display:flex;gap:8px;align-items:center;width:100%;border:none;background:none;text-align:left;padding:7px 2px;font-size:.9rem;color:var(--ink)}
+.s3step i{font-style:normal;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;border:1.5px solid #c7c7cc;font-size:.7rem;flex:none}
+.s3step.ok{color:#8e8e93;text-decoration:line-through}.s3step.ok i{background:#22c55e;border-color:#22c55e;color:#fff}
+.s3qotd{background:linear-gradient(135deg,#fdf4ff,#eef2ff);border-radius:16px;padding:12px;margin-bottom:12px;display:flex;flex-direction:column;gap:8px}
+.s3qotd small{font-size:.7rem;font-weight:700;color:#7c3aed;letter-spacing:.03em}.s3qotd>b{font-size:1.02rem}
+.s3my{font-size:.85rem;background:rgba(255,255,255,.7);border-radius:10px;padding:7px 10px;margin:4px 0}
+.s3qa{display:flex;gap:8px;align-items:flex-start;font-size:.86rem}.s3qa>div{background:#fff;border-radius:12px;padding:6px 10px;flex:1}
+.s3dig{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#fff;border:1px solid #efefef;border-radius:16px;padding:10px 12px;margin-bottom:12px;font-size:.82rem}
+.s3dig b{width:100%;font-size:.9rem}.s3dig span{background:rgba(118,118,128,.1);border-radius:99px;padding:3px 9px}
+.s3chal{display:flex;gap:12px;background:#fff;border:1px solid #efefef;border-radius:16px;padding:12px;margin-bottom:10px}.s3chal.done{opacity:.75}
+.s3ce{font-size:1.8rem;width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#fef3c7,#fde68a);display:grid;place-items:center;flex:none}
+.s3chal p{font-size:.86rem;color:#475569;margin:3px 0;white-space:pre-line}.s3chal small{color:#8e8e93;font-size:.76rem}
+.s3win{margin-top:6px;font-size:.86rem;background:#fef9c3;border-radius:10px;padding:5px 9px;display:inline-block}
+.s3res{margin-top:10px;border-top:1px dashed #e5e7eb;padding-top:8px}.s3res small{color:#8e8e93}
+.s3pts{display:flex;flex-wrap:wrap;gap:10px;background:linear-gradient(135deg,#1e293b,#334155);color:#fff;border-radius:16px;padding:14px;margin-bottom:8px}
+.s3pts>div:not(.s3pb){flex:1;text-align:center}.s3pts b{display:block;font-size:1.5rem}.s3pts small{opacity:.7;font-size:.75rem}
+.s3pb{width:100%;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.s3pb span{background:rgba(255,255,255,.12);border-radius:99px;padding:3px 9px;font-size:.78rem}
+.s3rk{width:26px;text-align:center;font-weight:700;color:#8e8e93}.s3me{background:#eff6ff}
+.s3help div{display:flex;justify-content:space-between;padding:8px 2px;border-bottom:1px solid #f2f2f2}
+.s3sw{display:flex;align-items:center;gap:10px;margin:10px 0;font-size:.92rem;cursor:pointer}
+.s3sw input{display:none}.s3sw span{width:42px;height:25px;border-radius:99px;background:#d1d1d6;position:relative;flex:none;transition:.2s}
+.s3sw span:after{content:'';position:absolute;top:2px;left:2px;width:21px;height:21px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.2s}
+.s3sw input:checked+span{background:#34c759}.s3sw input:checked+span:after{left:19px}
+.s3sk{font-size:.75rem;background:#eef2ff;color:#4338ca;border-radius:99px;padding:3px 9px;white-space:nowrap}
+.s3mk{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.s3mki{background:#fff;border:1px solid #efefef;border-radius:16px;overflow:hidden;display:flex;flex-direction:column}.s3mki.done{opacity:.6}
+.s3mki>img,.s3mkph{width:100%;aspect-ratio:4/3;object-fit:cover;background:#f5f5f7;display:grid;place-items:center;font-size:2.2rem}
+.s3mkb{padding:9px;display:flex;flex-direction:column;gap:3px}.s3mkb p{font-size:.8rem;color:#64748b;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.s3mkb small{font-size:.72rem;color:#8e8e93;cursor:pointer}.s3pr{font-weight:800;color:#16a34a}
+.s3pill{display:inline-block;font-size:.7rem;font-weight:700;border-radius:99px;padding:2px 8px;background:#f1f5f9;color:#475569;margin-right:4px;width:max-content}
+.s3pill.ksell{background:#dcfce7;color:#15803d}.s3pill.kgive{background:#fce7f3;color:#be185d}.s3pill.kwant{background:#e0f2fe;color:#0369a1}
+.s3q{background:#fff;border:1px solid #efefef;border-radius:16px;padding:12px;margin-bottom:10px}.s3q p{white-space:pre-line;font-size:.92rem}.s3q small{color:#8e8e93;font-size:.74rem}
+.s3vote{border:1px solid #e5e7eb;background:#fff;border-radius:12px;padding:6px 8px;display:flex;flex-direction:column;align-items:center;min-width:44px;font-size:1rem}
+.s3vote b{font-size:.8rem}.s3vote.on{background:#eff6ff;border-color:#93c5fd}
+.s3ansb{margin-top:8px;background:#f0fdf4;border-left:3px solid #22c55e;border-radius:8px;padding:7px 10px}
+.s3rpi{display:flex;gap:8px;margin:8px 0;background:#fafafa;border-radius:12px;padding:8px}.s3rpi p{font-size:.86rem;margin:2px 0}.s3rpi img{max-width:120px;border-radius:8px;margin-top:4px}
+.fpchal{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;font-size:.82rem}
+.fpchal button{border:1px solid #fcd34d;background:#fffbeb;border-radius:99px;padding:4px 10px;font-size:.8rem}.fpchal button.on{background:#f59e0b;color:#fff;border-color:#f59e0b}
+.fpwhen{margin-top:8px}
+.s3dr{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f2f2f2}.s3dr img,.s3dr video,.s3drp{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:none;background:#f5f5f7;display:grid;place-items:center;font-size:1.4rem}
+.s3dr p{font-size:.88rem}.s3dr small{font-size:.75rem;color:#8e8e93}
+.s3stat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 10px}.s3stat div{background:#f5f5f7;border-radius:14px;padding:12px 6px;text-align:center}
+.s3stat b{display:block;font-size:1.3rem}.s3stat small{font-size:.72rem;color:#6e6e73}
+.igring.cf{background:#22c55e!important}
+.svcf{background:#22c55e;color:#fff;font-size:.7rem;font-weight:700;border-radius:99px;padding:2px 8px;margin-left:6px}
+.s3aud{display:flex;gap:6px;align-items:center;margin-top:10px}.s3aud button{border:1px solid #e5e7eb;background:#fff;border-radius:99px;padding:6px 12px;font-size:.85rem}
+.s3aud button.on{background:#1d1d1f;color:#fff;border-color:#1d1d1f}.s3aud button[data-a=cf].on{background:#22c55e;border-color:#22c55e}.s3aud a{margin-left:auto}
+.s3over{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center}
+.s3sheet{background:#fff;width:min(560px,100%);border-radius:20px 20px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom,0px));max-height:85vh;overflow:auto}
+.s3cfb{border:none;background:#f2f2f7;width:38px;height:38px;border-radius:50%;font-size:1.1rem}.s3cfb.on{background:#dcfce7}
+.s3hl{display:flex;gap:14px;overflow-x:auto;padding:6px 14px 10px;scrollbar-width:none}.s3hl::-webkit-scrollbar{display:none}
+.s3hl button{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:4px;flex:none;width:64px}
+.s3hl small{font-size:.72rem;max-width:64px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#262626}
+.s3hlc{width:58px;height:58px;border-radius:50%;border:2px solid #dbdbdb;padding:2px;display:grid;place-items:center;overflow:hidden;background:#fafafa;font-size:1.2rem;box-sizing:border-box}
+.s3hlc img{width:100%;height:100%;border-radius:50%;object-fit:cover}.s3hlc.add{font-size:1.6rem;color:#8e8e93}
+.svhead .s3hlc{width:34px;height:34px;border:none;padding:0}
+.s3hlg button{position:relative}.s3hlg button i{position:absolute;top:5px;right:5px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.35);color:transparent;font-style:normal;display:grid;place-items:center;font-size:.75rem;border:2px solid #fff}
+.s3hlg button.on i{background:#0a84ff;color:#fff}.s3hlg button.on img,.s3hlg button.on video{opacity:.7}
+.s3hlg button small{position:absolute;left:4px;bottom:4px;color:#fff;font-size:.65rem;text-shadow:0 1px 2px #000}
+.s3skills{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 14px}
+.s3skills button{border:1px solid #c7d2fe;background:#eef2ff;color:#3730a3;border-radius:99px;padding:5px 11px;font-size:.82rem;font-weight:600}
+.s3skills button b{background:#fff;border-radius:99px;padding:0 6px;margin-left:3px;font-size:.72rem}.s3skills button.on{background:#4f46e5;color:#fff;border-color:#4f46e5}.s3skills button.on b{color:#4f46e5}
+.s3ment{text-align:center;font-size:.86rem;margin:6px 14px;color:#475569;cursor:pointer}
+.s3act{flex-wrap:wrap;justify-content:center}.s3on{background:#dcfce7!important;color:#15803d!important}
+.s3ni{width:40px;height:40px;border-radius:50%;background:#f2f2f7;display:grid;place-items:center;font-size:1.2rem}
+.s3annr{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:6px;align-items:flex-start}.s3annr summary{cursor:pointer;font-size:.85rem;font-weight:600}
+#s3eph{text-align:center;font-size:.76rem;background:#fef3c7;color:#92400e;border-radius:10px;padding:5px;margin:4px 0;cursor:pointer}
+.igm.vcm{background:none!important;padding:0!important;border:none!important}
+.igvc{position:relative;width:200px;height:200px;border-radius:50%;overflow:hidden;background:#000;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.igvc video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.igvc .vcp{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:2rem;text-shadow:0 2px 8px rgba(0,0,0,.6)}.igvc.on .vcp{display:none}
+.igvc small{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.5);color:#fff;border-radius:99px;padding:1px 8px;font-size:.72rem}
+#s3vc{position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:#fff}
+.s3vcr{position:relative;width:min(78vw,320px);aspect-ratio:1}.s3vcr video{width:100%;height:100%;border-radius:50%;object-fit:cover;transform:scaleX(-1)}
+.s3vcr svg{position:absolute;inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);transform:rotate(-90deg)}
+.s3vcr circle{fill:none;stroke:#ff3b30;stroke-width:2.5;stroke-dasharray:301.6;stroke-dashoffset:301.6;stroke-linecap:round}
+.s3vcb{display:flex;gap:40px}.s3vcb button{width:64px;height:64px;border-radius:50%;border:none;background:rgba(255,255,255,.18);color:#fff;font-size:1.5rem}.s3vcb button.go{background:#0a84ff}
+#s3vc small{opacity:.6}
+.s3th{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.s3th button{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:4px}
+.s3th span{width:52px;height:52px;border-radius:50%;border:2px solid #e5e7eb;display:grid;place-items:center}.s3th i{width:20px;height:20px;border-radius:50%}
+.s3th button.on span{border-color:#0a84ff;box-shadow:0 0 0 2px #0a84ff33}.s3th small{font-size:.72rem}
+.igroom.th-ocean .igmsgs{background:linear-gradient(180deg,#ecfeff,#e0f2fe)}.igroom.th-sunset .igmsgs{background:linear-gradient(180deg,#fff7ed,#ffe4e6)}
+.igroom.th-forest .igmsgs{background:linear-gradient(180deg,#f0fdf4,#ecfccb)}.igroom.th-lavender .igmsgs{background:linear-gradient(180deg,#f5f3ff,#fae8ff)}
+.igroom.th-rose .igmsgs{background:linear-gradient(180deg,#fff1f2,#fce7f3)}.igroom.th-night .igmsgs{background:linear-gradient(180deg,#1e1b4b,#0f172a)}
+.igroom[class*=th-] .igmsgs{border-radius:14px}.igroom.th-night .igtime,.igroom.th-night .igseen{color:#a5b4fc}.igroom.th-night .igsys{background:rgba(255,255,255,.1);color:#c7d2fe}
+.igroom.th-night .igm.their{background:#312e81;color:#fff;border-color:#312e81}
+</style>
+<script>
+/* ===================== SOSİAL v3: 20 yeni funksiya ===================== */
+var SOC_MOD=false,SOC_X=null,_fpDraft=null,_fpChal=null,_fpWhen=null,CHAT_STYLE=null,_repN=0,_mkKind='',_seenQ=[],_seenDone={},_seenIO=null;
+var CHAT_THEMES={'':['Standart','#6c3cf6','#fff'],ocean:['Okean','#0e7490','linear-gradient(180deg,#ecfeff,#e0f2fe)'],sunset:['Gün batımı','#ea580c','linear-gradient(180deg,#fff7ed,#ffe4e6)'],forest:['Meşə','#15803d','linear-gradient(180deg,#f0fdf4,#ecfccb)'],lavender:['Lavanda','#7c3aed','linear-gradient(180deg,#f5f3ff,#fae8ff)'],night:['Gecə','#6366f1','linear-gradient(180deg,#1e1b4b,#0f172a)'],rose:['Qızılgül','#e11d48','linear-gradient(180deg,#fff1f2,#fce7f3)']};
+function s3fmt(d){var x=new Date(d);return x.toLocaleString('az-AZ',{timeZone:'Asia/Baku',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}
+function s3date(d){var x=new Date(d);return x.toLocaleDateString('az-AZ',{timeZone:'Asia/Baku',day:'numeric',month:'long'});}
+function s3card(h,cls){return '<div class="s3card'+(cls?' '+cls:'')+'">'+h+'</div>';}
+function s3pick(title,cb,excludeMe){socContacts().then(function(l){window._s3cb=cb;var arr=(l||[]).filter(function(c){return !excludeMe||c.uid!==ME.user_id;});
+ modal('<div class="mhead"><h3>'+esc(title)+'</h3><button class="x" onclick="closeModal()">×</button></div><input id="s3q" placeholder="Axtar…" style="width:100%;margin-bottom:8px" oninput="s3pickF(this.value)"><div id="s3pl" style="max-height:55vh;overflow-y:auto">'+arr.map(function(c){return '<div class="igrow s3pi" data-n="'+esc((c.ad||'').toLowerCase())+'" onclick="window._s3cb(\''+c.uid+'\',\''+chatArg(c.ad)+'\')">'+chatAva(c.ad,c.photo,40)+'<div class="igmeta"><div class="igname">'+esc(c.ad)+'</div><div class="iglast">'+esc(c.vezife||'')+'</div></div></div>';}).join('')+'</div>');});}
+function s3pickF(q){q=(q||'').toLowerCase();Array.prototype.forEach.call(document.querySelectorAll('.s3pi'),function(e){e.style.display=e.dataset.n.indexOf(q)>=0?'':'none';});}
+
+/* ---- nişanlar ---- */
+var _badgeInfo0=badgeInfo;
+badgeInfo=function(c){if(/^eom_/.test(c))return ['🏆','Ayın işçisi '+c.slice(8,10)+'.'+c.slice(4,8)];if(/^chal_/.test(c))return ['🏁','Çağırış qalibi'];return _badgeInfo0(c);};
+
+/* ---- lent seqmentləri ---- */
+feedSeg=function(){var el=$('soSeg');if(!el)return;var s=[['all','Hamısı'],['following','İzlədiklərim'],['team','🏆 Komanda'],['market','🛍 Bazarça'],['qa','❓ Suallar'],['events','Tədbirlər'],['clubs','Klublar'],['albums','Albomlar'],['explore','Kəşf']];
+ if(SOC_MOD)s.push(['mod','🛡 Moderasiya'+(_repN?' <b class="s3n">'+_repN+'</b>':'')]);
+ el.innerHTML=s.map(function(x){return '<button class="'+(FMODE===x[0]||(x[0]==='clubs'&&FMODE==='club')||(x[0]==='team'&&FMODE==='challenge')?'on':'')+'" onclick="feedMode(\''+x[0]+'\')">'+x[1]+'</button>';}).join('');};
+var _feedMode0=feedMode;
+feedMode=function(m,arg){
+ if(['team','market','qa','mod','challenge'].indexOf(m)>=0){FMODE=m;FARG=arg||null;if(!$('soBody')){show('feed');return;}feedSeg();var b=$('soBody');b.innerHTML='<p class="status"><span class="spin"></span>Yüklənir…</p>';
+  if(m==='team')return teamRender();if(m==='market')return mkRender();if(m==='qa')return qaRender();if(m==='mod')return modRender();
+  if(m==='challenge'){b.innerHTML='<div class="sohdr" id="soChH"><button class="igicon" onclick="feedMode(\'team\')">'+IGI.back+'</button><h3>🏁 Çağırış</h3></div><div id="igPosts"><p class="status"><span class="spin"></span></p></div>';
+   run(sb.rpc('chal_list')).then(function(l){var c=(l||[]).find(function(x){return x.id===arg;});var h=$('soChH');if(c&&h){h.innerHTML='<button class="igicon" onclick="feedMode(\'team\')">'+IGI.back+'</button><h3>'+esc(c.emoji+' '+c.title)+'</h3>'+(c.active?'<button class="btn sm" onclick="feedCompose(null,\''+c.id+'\')">Qatıl</button>':'');}}).catch(function(){});feedLoad();}
+  return;}
+ _feedMode0(m,arg);
+ if(m==='all'){var c=document.querySelector('#soBody .igcompose');if(c&&!$('soX3')){c.insertAdjacentHTML('afterend','<div id="soX3"></div>');s3allExtras();}}};
+
+/* ---- "Hamısı" əlavələri: elan, xatirə, qarşılama, günün sualı ---- */
+function s3allExtras(){var box=$('soX3');if(!box)return;
+ Promise.all([run(sb.rpc('ann_feed')).catch(function(){return [];}),run(sb.rpc('soc_memories')).catch(function(){return [];}),run(sb.rpc('onb_state')).catch(function(){return null;}),run(sb.rpc('qotd_today')).catch(function(){return null;})]).then(function(r){
+  if(FMODE!=='all'||!$('soX3'))return;var h='',an=r[0]||[],mem=r[1]||[],onb=r[2],q=r[3];
+  if(onb)h+=onbHtml(onb);
+  an.forEach(function(a){h+='<div class="s3ann" id="ann'+a.id+'"><div class="row sp"><b>📢 '+(a.pinned?'📌 ':'')+esc(a.title)+'</b><small>'+chatAgo(a.at)+'</small></div><p>'+esc(a.body)+'</p><div class="row" style="gap:6px"><button class="btn sm" onclick="annOk('+a.id+')">✓ Oxudum</button><button class="btn sm ghost" onclick="show(\'news\')">Bütün elanlar</button></div></div>';});
+  if(q)h+='<div id="s3Q">'+qotdHtml(q,true)+'</div>';
+  mem.forEach(function(m){var p=m.post;if(!p)return;if(!FEED.find(function(x){return x.id===p.id;}))FEED.push(p);var img=p.media&&p.media[0]?p.media[0].url:p.image;
+   h+='<div class="s3mem" onclick="postOpen(\''+p.id+'\')"><span>🕰 Xatirə · '+esc(m.ago)+'</span>'+(img?'<img src="'+esc(img)+'">':'')+'<div><b>'+esc(p.kind==='post'?'Bu gün paylaşmışdın':'Bu gün')+'</b><p>'+esc((p.body||'').slice(0,100))+'</p></div></div>';});
+  $('soX3').innerHTML=h;}).catch(function(){});}
+function annOk(id){run(sb.rpc('ann_read',{p_id:id})).then(function(){var e=$('ann'+id);if(e)e.remove();if(typeof renderTodayAnn==='function')renderTodayAnn();toast('✓ Qeyd edildi');}).catch(err);}
+
+/* ---- qarşılama axını ---- */
+function onbHtml(o){var st=o.steps||[],ok=st.filter(function(s){return s.ok;}).length;if(ok===st.length)return '';
+ var act={photo:"show('me')",bio:"socProfile(ME.user_id);setTimeout(profEdit,1300)",skills:"socProfile(ME.user_id);setTimeout(profEdit,1300)",follow:"feedMode('explore')",post:"feedCompose()",story:"storyPick()",coffee:"coffeeSet(true)"};
+ return '<div class="s3onb"><div class="row sp"><b>👋 Xoş gəldin! İlk addımlar</b><small>'+ok+'/'+st.length+'</small></div><div class="s3bar"><i style="width:'+Math.round(ok*100/st.length)+'%"></i></div>'
+  +(o.mentor?'<div class="igrow" onclick="socProfile(\''+o.mentor.uid+'\')">'+chatAva(o.mentor.ad,o.mentor.photo,36)+'<div class="igmeta"><div class="igname">🧭 Mentorun: '+esc(o.mentor.ad)+'</div><div class="iglast">Sualın olsa, ona yaz</div></div><button class="btn sm ghost" onclick="event.stopPropagation();show(\'chat\');chatOpen(\''+o.mentor.uid+'\',\''+chatArg(o.mentor.ad)+'\')">Yaz</button></div>':'')
+  +st.map(function(s){return '<button class="s3step'+(s.ok?' ok':'')+'" onclick="'+(s.ok?'':act[s.k]||'')+'"><i>'+(s.ok?'✓':'○')+'</i>'+esc(s.t)+'</button>';}).join('')+'</div>';}
+
+/* ---- günün sualı ---- */
+function qotdHtml(q,mini){if(!q)return '';var h='<div class="s3qotd"><small>💭 GÜNÜN SUALI · '+q.n+' cavab</small><b>'+esc(q.q)+'</b>';
+ if(!q.my)h+='<div class="row" style="gap:6px"><input id="qtA" maxlength="300" placeholder="Cavabın… (cavab verəndən sonra başqalarınınkı açılır)" style="flex:1" onkeydown="if(event.key===\'Enter\')qotdSend()"><button class="btn sm" onclick="qotdSend()">Göndər</button></div>';
+ else h+='<p class="s3my">Sənin cavabın: '+esc(q.my)+'</p>';
+ var a=q.answers||[];if(a.length){var l=mini?a.slice(0,3):a;h+=l.map(function(x){return '<div class="s3qa">'+chatAva(x.ad,x.photo,28)+'<div><b>'+esc(x.ad)+'</b> '+esc(x.a)+'</div></div>';}).join('')+(mini&&a.length>3?'<button class="igtxt" onclick="feedMode(\'team\')">Bütün cavablar ('+a.length+') →</button>':'');}
+ return h+'</div>';}
+function qotdSend(){var i=$('qtA');var v=i&&i.value.trim();if(!v)return;run(sb.rpc('qotd_answer',{p_answer:v})).then(function(q){var b=$('s3Q');if(b)b.innerHTML=qotdHtml(q,FMODE==='all');toast('💭 Cavab göndərildi');}).catch(err);}
+function qotdSetUI(){var d=new Date(Date.now()+86400000).toISOString().slice(0,10);modal('<div class="mhead"><h3>💭 Günün sualını təyin et</h3><button class="x" onclick="closeModal()">×</button></div><div class="field"><label>Tarix</label><input id="qsD" type="date" value="'+d+'"></div><div class="field"><label>Sual</label><input id="qsQ" maxlength="200" placeholder="Bu həftə səni nə sevindirdi?"></div><p class="hint">Təyin edilməsə, sual bankından avtomatik seçilir.</p><button class="btn" style="width:100%" onclick="qotdSetGo()">Yadda saxla</button>');}
+function qotdSetGo(){var q=$('qsQ').value.trim();if(!q){toast('Sual yazın');return;}run(sb.rpc('qotd_set',{p_day:$('qsD').value,p_q:q})).then(function(){closeModal();toast('Təyin edildi');}).catch(err);}
+
+/* ---- KOMANDA bölməsi ---- */
+function teamRender(){var b=$('soBody');
+ Promise.all([run(sb.rpc('soc_digest')).catch(function(){return {};}),run(sb.rpc('qotd_today')).catch(function(){return null;}),run(sb.rpc('chal_list')).catch(function(){return [];}),run(sb.rpc('eom_state')).catch(function(){return null;}),run(sb.rpc('points_board')).catch(function(){return null;}),run(sb.rpc('coffee_state')).catch(function(){return null;})]).then(function(r){
+  if(FMODE!=='team')return;var d=r[0]||{},q=r[1],ch=r[2]||[],eo=r[3],pb=r[4],cf=r[5],h='';
+  h+='<div class="s3dig"><b>📬 Bu həftə</b><span>'+(d.posts||0)+' post</span><span>'+(d.stories||0)+' hekayə</span>'+(d.events?'<span>'+d.events+' tədbir</span>':'')+(d.bdays?'<span>🎂 '+d.bdays+'</span>':'')+(d.newbies?'<span>👋 '+d.newbies+' yeni</span>':'')+(d.chal?'<span>🏁 '+d.chal+' çağırış</span>':'')+'</div>';
+  if(q)h+='<div id="s3Q">'+qotdHtml(q,false)+'</div>';
+  if(SOC_MOD)h+='<button class="igtxt" style="margin:-4px 0 12px" onclick="qotdSetUI()">💭 Sabahın sualını təyin et</button>';
+  /* çağırışlar */
+  h+='<div class="igsec row sp"><span>🏁 Çağırışlar</span>'+(SOC_MOD?'<button class="btn sm" onclick="chalNew()">+ Yeni</button>':'')+'</div>';
+  h+=ch.length?ch.map(function(c){return '<div class="s3chal'+(c.active?'':' done')+'"><div class="s3ce">'+esc(c.emoji)+'</div><div style="flex:1;min-width:0"><b>'+esc(c.title)+'</b>'+(c.body?'<p>'+esc(c.body)+'</p>':'')
+   +'<small>'+(c.active?'Son gün: '+s3date(c.ends)+' · ':'Bitib · ')+c.n+' iştirakçı</small>'+(c.winner?'<div class="s3win">🏆 Qalib: <b onclick="socProfile(\''+c.winner.uid+'\')">'+esc(c.winner.ad)+'</b></div>':'')
+   +'<div class="soevf">'+(c.faces||[]).map(function(f){return chatAva(f.ad,f.photo,22);}).join('')+'</div>'
+   +'<div class="row" style="gap:6px;margin-top:8px;flex-wrap:wrap">'+(c.active?'<button class="btn sm" onclick="feedCompose(null,\''+c.id+'\')">'+(c.mine?'+ Daha bir post':'Qatıl')+'</button>':'')+'<button class="btn sm ghost" onclick="feedMode(\'challenge\',\''+c.id+'\')">Postlar</button>'+(SOC_MOD&&c.active?'<button class="btn sm ghost" onclick="chalClose(\''+c.id+'\')">Bitir və qalibi seç</button>':'')+'</div></div></div>';}).join(''):'<p class="hint">Aktiv çağırış yoxdur'+(SOC_MOD?' — ilkini sən başlat':'')+'.</p>';
+  /* ayın işçisi */
+  if(eo){h+='<div class="igsec">🏆 Ayın işçisi səsverməsi</div><div class="s3card">';
+   if(eo.last)h+='<div class="igrow" onclick="socProfile(\''+eo.last.uid+'\')">'+chatAva(eo.last.ad,eo.last.photo,44)+'<div class="igmeta"><div class="igname">🏆 '+esc(eo.last.ad)+'</div><div class="iglast">Keçən ayın işçisi</div></div></div>';
+   h+='<p class="small" style="margin:6px 0">Bu ay ən çox kim fərqləndi? Ayın 1-də nəticə Lentdə elan olunur. Səs gizlidir. <b>'+eo.total+'</b> səs verilib.</p>'
+    +(eo.my&&eo.my.nominee?'<div class="s3my">Sənin səsin: <b>'+esc(eo.my.nominee.ad)+'</b>'+(eo.my.reason?' — '+esc(eo.my.reason):'')+'</div><button class="btn sm ghost" onclick="eomPick()">Dəyiş</button>':'<button class="btn" style="width:100%" onclick="eomPick()">🗳 Səs ver</button>');
+   if(eo.results&&eo.results.length)h+='<div class="s3res"><small>Nəticələr (yalnız rəhbərlik görür)</small>'+eo.results.map(function(x,i){return '<div class="igrow">'+chatAva(x.ad,x.photo,32)+'<div class="igmeta"><div class="igname">'+(i+1)+'. '+esc(x.ad)+' · <b>'+x.n+'</b> səs</div>'+(x.reasons&&x.reasons.length?'<div class="iglast">'+esc(x.reasons.slice(0,2).join(' · '))+'</div>':'')+'</div></div>';}).join('')+'</div>';
+   h+='</div>';}
+  /* xallar */
+  if(pb){var me=pb.me||{},bb=me.b||{};h+='<div class="igsec row sp"><span>⭐ Xal cədvəli · bu ay</span><button class="igtxt" onclick="ptsHelp()">Necə hesablanır?</button></div>';
+   h+='<div class="s3pts"><div><b>'+(me.pts||0)+'</b><small>sənin xalın</small></div><div><b>#'+(me.rank||'–')+'</b><small>yerin</small></div><div class="s3pb">'+[['✍️',bb.posts],['💬',bb.cmts],['❤️',bb.reacts],['🙌',(bb.kgive||0)+(bb.kget||0)],['🕘',bb.ontime],['🏁',bb.chal],['💭',bb.qotd],['📸',bb.stories]].map(function(x){return '<span>'+x[0]+' '+(x[1]||0)+'</span>';}).join('')+'</div></div>';
+   h+=(pb.top||[]).map(function(u,i){return '<div class="igrow'+(u.uid===ME.user_id?' s3me':'')+'" onclick="socProfile(\''+u.uid+'\')"><span class="s3rk">'+(i<3?['🥇','🥈','🥉'][i]:i+1)+'</span>'+chatAva(u.ad,u.photo,36)+'<div class="igmeta"><div class="igname">'+esc(u.ad)+'</div></div><b>'+u.pts+'</b></div>';}).join('')||'<p class="hint">Bu ay hələ xal yoxdur.</p>';}
+  /* qəhvə */
+  if(cf){h+='<div class="igsec">☕ Qəhvə tanışlığı</div><div class="s3card"><p class="small">Hər bazar ertəsi təsadüfi bir həmkarla cütləşirsən — bir qəhvə iç, tanış ol. İştirakçı: <b>'+cf.n+'</b></p>'
+   +(cf.match&&cf.match.length?cf.match.map(function(u){return '<div class="igrow">'+chatAva(u.ad,u.photo,44)+'<div class="igmeta" onclick="socProfile(\''+u.uid+'\')"><div class="igname">Bu həftə: '+esc(u.ad)+'</div><div class="iglast">'+esc(u.vezife||'')+'</div></div><button class="btn sm" onclick="show(\'chat\');chatOpen(\''+u.uid+'\',\''+chatArg(u.ad)+'\')">☕ Yaz</button></div>';}).join(''):'')
+   +'<label class="s3sw"><input type="checkbox" '+(cf.on?'checked':'')+' onchange="coffeeSet(this.checked)"><span></span>İştirak edirəm</label>'+(SOC_MOD?'<button class="igtxt" onclick="coffeePairNow()">İndi cütləşdir (bu həftə üçün)</button>':'')+'</div>';}
+  /* bacarıqlar */
+  h+='<div class="igsec">🧠 Kim nə bilir?</div><div class="s3card"><input id="skS" placeholder="Bacarıq axtar: Excel, 3D, hüquq…" style="width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:12px" oninput="clearTimeout(window._skT);window._skT=setTimeout(skillFind,300)"><div id="skR"></div></div>';
+  b.innerHTML=h;skillFind();}).catch(err);}
+function ptsHelp(){modal('<div class="mhead"><h3>⭐ Xallar</h3><button class="x" onclick="closeModal()">×</button></div><div class="s3help"><div>✍️ Post <b>+5</b></div><div>💬 Şərh <b>+2</b></div><div>❤️ Postuna gələn reaksiya <b>+1</b></div><div>🙌 Təşəkkür göndərmək <b>+3</b>, almaq <b>+5</b></div><div>🕘 Vaxtında gəliş <b>+2</b></div><div>🏁 Çağırışa qatılmaq <b>+5</b></div><div>💭 Günün sualı <b>+2</b></div><div>📸 Hekayə <b>+2</b></div></div><p class="hint">Cədvəl hər ayın 1-də sıfırlanır.</p>');}
+function coffeeSet(on){run(sb.rpc('coffee_opt',{p_on:on})).then(function(){toast(on?'☕ Qoşuldun! Bazar ertəsi cütləşmə olacaq':'Qəhvə tanışlığından çıxdın');if(FMODE==='team')teamRender();else if(FMODE==='all')s3allExtras();}).catch(err);}
+function coffeePairNow(){if(!confirm('Bu həftə üçün indi cütləşdirilsin?'))return;run(sb.rpc('coffee_pair_now')).then(function(n){toast(n?n+' nəfər cütləşdirildi':'Bu həftə artıq cütləşdirilib və ya iştirakçı azdır');teamRender();}).catch(err);}
+function skillFind(){var q=($('skS')||{}).value||'';run(sb.rpc('skill_search',{p_q:q.trim()})).then(function(l){var el=$('skR');if(!el)return;l=l||[];
+ el.innerHTML=l.length?l.slice(0,15).map(function(u){return '<div class="igrow" onclick="socProfile(\''+u.uid+'\')">'+chatAva(u.ad,u.photo,36)+'<div class="igmeta"><div class="igname">'+esc(u.ad)+'</div><div class="iglast">'+esc(u.vezife||'')+'</div></div><span class="s3sk">'+esc(u.skill)+(u.n?' · '+u.n+'👍':'')+'</span></div>';}).join(''):'<p class="hint" style="margin-top:8px">'+(q?'Tapılmadı':'Hələ heç kim bacarıq əlavə etməyib. Profilində "Bacarıqlar" bölməsini doldur.')+'</p>';}).catch(function(){});}
+function chalNew(){var d=new Date(Date.now()+7*86400000).toISOString().slice(0,10);modal('<div class="mhead"><h3>🏁 Yeni çağırış</h3><button class="x" onclick="closeModal()">×</button></div><div class="row" style="gap:6px"><input id="chE" value="📸" maxlength="4" style="width:58px;text-align:center;font-size:1.3rem"><input id="chT" maxlength="100" placeholder="Ən yaxşı ofis fotosu" style="flex:1"></div><div class="field" style="margin-top:10px"><label>Şərtlər</label><textarea id="chB" maxlength="600" placeholder="Necə qatılmaq olar, qalib necə seçilir…"></textarea></div><div class="field"><label>Son gün</label><input id="chD" type="date" value="'+d+'"></div><p class="hint">Qalib — ən çox reaksiya toplayan post. Son gün bitəndə avtomatik seçilir.</p><button class="btn" style="width:100%" onclick="chalSave()">Başlat və Lentdə elan et</button>');}
+function chalSave(){var t=$('chT').value.trim();if(!t){toast('Ad yazın');return;}run(sb.rpc('chal_add',{p_title:t,p_body:$('chB').value.trim(),p_emoji:$('chE').value.trim(),p_ends:$('chD').value})).then(function(){closeModal();toast('🏁 Çağırış başladı');teamRender();}).catch(err);}
+function chalClose(id){if(!confirm('Çağırış bitirilsin? Ən çox reaksiya alan post qalib olacaq.'))return;run(sb.rpc('chal_close',{p_id:id})).then(function(){toast('🏆 Qalib elan edildi');teamRender();}).catch(err);}
+function eomPick(){s3pick('Ayın işçisi kim olsun?',function(uid,ad){modal('<div class="mhead"><h3>🗳 '+esc(ad)+'</h3><button class="x" onclick="closeModal()">×</button></div><div class="field"><label>Niyə? (istəyə görə)</label><textarea id="eoR" maxlength="300" placeholder="Bu ay layihəni vaxtında bitirdi…"></textarea></div><button class="btn" style="width:100%" onclick="eomGo(\''+uid+'\')">Səs ver</button>');},true);}
+function eomGo(uid){run(sb.rpc('eom_vote',{p_nominee:uid,p_reason:$('eoR').value.trim()||null})).then(function(){closeModal();toast('🗳 Səsin qeydə alındı');teamRender();}).catch(err);}
+
+/* ---- BAZARÇA ---- */
+function mkRender(){var b=$('soBody');run(sb.rpc('mk_list',{p_kind:_mkKind||null})).then(function(l){if(FMODE!=='market')return;l=l||[];var K={sell:['💰','Satıram'],give:['🎁','Verirəm'],want:['🔎','Axtarıram']};
+ b.innerHTML='<button class="btn" style="width:100%;margin-bottom:10px" onclick="mkNew()">+ Elan yerləşdir</button><div class="soseg s3sub">'+[['','Hamısı'],['sell','💰 Satıram'],['give','🎁 Verirəm'],['want','🔎 Axtarıram']].map(function(x){return '<button class="'+(_mkKind===x[0]?'on':'')+'" onclick="_mkKind=\''+x[0]+'\';mkRender()">'+x[1]+'</button>';}).join('')+'</div>'
+  +(l.length?'<div class="s3mk">'+l.map(function(m){var k=K[m.kind]||K.sell,img=m.media&&m.media[0]&&m.media[0].url;
+   return '<div class="s3mki'+(m.status==='done'?' done':'')+'">'+(img?'<img src="'+esc(img)+'" onclick="chatViewImage(\''+esc(img)+'\')">':'<div class="s3mkph">'+k[0]+'</div>')+'<div class="s3mkb"><span class="s3pill k'+m.kind+'">'+k[0]+' '+k[1]+'</span>'+(m.status==='done'?'<span class="s3pill">✓ Bitib</span>':'')
+    +'<b>'+esc(m.title)+'</b>'+(m.price!=null&&m.kind==='sell'?'<div class="s3pr">'+Number(m.price).toLocaleString('az-AZ')+' ₼</div>':'')+(m.body?'<p>'+esc(m.body)+'</p>':'')
+    +'<small onclick="socProfile(\''+m.author.uid+'\')">'+esc(m.author.ad)+' · '+chatAgo(m.at)+'</small><div class="row" style="gap:6px;margin-top:6px">'
+    +(m.mine?'<button class="btn sm ghost" onclick="mkStatus(\''+m.id+'\',\''+(m.status==='done'?'open':'done')+'\')">'+(m.status==='done'?'Yenidən aç':'✓ Bitdi')+'</button><button class="btn sm ghost" onclick="mkDel(\''+m.id+'\')">🗑</button>'
+     :'<button class="btn sm" onclick="show(\'chat\');chatOpen(\''+m.author.uid+'\',\''+chatArg(m.author.ad)+'\')">💬 Yaz</button><button class="btn sm ghost" onclick="repOpen(\'market\',\''+m.id+'\')">🚩</button>')+'</div></div></div>';}).join('')+'</div>'
+   :'<div class="igempty"><b>Hələ elan yoxdur</b><div>Lazımsız əşyanı ver, axtardığını tap</div></div>');}).catch(err);}
+var _mkImgs=[];
+function mkNew(){_mkImgs=[];modal('<div class="mhead"><h3>Yeni elan</h3><button class="x" onclick="closeModal()">×</button></div><div class="soseg s3sub" id="mkK">'+[['sell','💰 Satıram'],['give','🎁 Verirəm'],['want','🔎 Axtarıram']].map(function(x,i){return '<button data-k="'+x[0]+'" class="'+(i?'':'on')+'" onclick="Array.prototype.forEach.call(this.parentNode.children,function(b){b.classList.remove(\'on\')});this.classList.add(\'on\');$(\'mkPw\').style.display=this.dataset.k===\'sell\'?\'\':\'none\'">'+x[1]+'</button>';}).join('')+'</div>'
+ +'<div class="field"><label>Başlıq</label><input id="mkT" maxlength="100" placeholder="Uşaq velosipedi"></div><div class="field" id="mkPw"><label>Qiymət (₼)</label><input id="mkP" type="number" min="0" step="1"></div><div class="field"><label>Təsvir</label><textarea id="mkB" maxlength="1000"></textarea></div><button class="btn ghost" style="width:100%" onclick="mkPick()">📷 Şəkil (4-ə qədər)</button><div id="mkPv" class="fpprev"></div><button class="btn" id="mkGo" style="width:100%;margin-top:10px" onclick="mkSave()">Yerləşdir</button>');}
+function mkPick(){var i=document.createElement('input');i.type='file';i.accept='image/*';i.multiple=true;i.onchange=function(){Array.prototype.slice.call(i.files,0,4-_mkImgs.length).forEach(function(f){_mkImgs.push(f);});$('mkPv').innerHTML=_mkImgs.map(function(f,k){return '<span><img src="'+URL.createObjectURL(f)+'"><button onclick="_mkImgs.splice('+k+',1);this.parentNode.remove()">×</button></span>';}).join('');};i.click();}
+function mkSave(){var t=$('mkT').value.trim();if(!t){toast('Başlıq yazın');return;}var k=(document.querySelector('#mkK .on')||{dataset:{k:'sell'}}).dataset.k,p=$('mkP').value;var g=$('mkGo');g.disabled=true;g.textContent='Yüklənir…';
+ Promise.all(_mkImgs.map(function(f){return chatUpload(f,'market').then(function(u){return {url:u,kind:'image'};});})).then(function(md){return run(sb.rpc('mk_add',{p_kind:k,p_title:t,p_body:$('mkB').value.trim()||null,p_price:k==='sell'&&p!==''?Number(p):null,p_media:md.length?md:null}));}).then(function(){closeModal();toast('Elan yerləşdirildi');_mkKind='';mkRender();}).catch(function(e){g.disabled=false;g.textContent='Yerləşdir';toast(e.message||e);});}
+function mkStatus(id,s){run(sb.rpc('mk_status',{p_id:id,p_status:s})).then(mkRender).catch(err);}
+function mkDel(id){if(!confirm('Elan silinsin?'))return;run(sb.rpc('mk_delete',{p_id:id})).then(mkRender).catch(err);}
+
+/* ---- ANONİM SUALLAR ---- */
+function qaRender(){var b=$('soBody');run(sb.rpc('qa_list')).then(function(l){if(FMODE!=='qa')return;l=l||[];
+ b.innerHTML='<div class="s3card"><b>❓ Rəhbərliyə anonim sual / təklif</b><p class="small" style="margin:4px 0 8px">Adın heç kimə, rəhbərliyə də görünmür. Başqaları sualına 👍 verə bilər, cavab hamıya açıq paylaşılır.</p><textarea id="qaB" maxlength="1000" placeholder="Sualını və ya təklifini yaz…" style="width:100%"></textarea><button class="btn" style="width:100%;margin-top:8px" onclick="qaAsk()">Anonim göndər</button></div>'
+  +(l.length?l.map(function(q){return '<div class="s3q'+(q.answer?' ans':'')+'"><div class="row" style="gap:10px;align-items:flex-start"><button class="s3vote'+(q.my?' on':'')+'" onclick="qaVote('+q.id+','+(!q.my)+')">👍<b>'+q.votes+'</b></button><div style="flex:1;min-width:0"><p>'+esc(q.body)+'</p><small>Anonim · '+chatAgo(q.at)+'</small>'
+   +(q.answer?'<div class="s3ansb"><small>💬 '+esc(q.by?q.by.ad:'Rəhbərlik')+' cavab verdi · '+chatAgo(q.aat)+'</small><p>'+esc(q.answer)+'</p></div>':'')
+   +(SOC_MOD?'<div class="row" style="gap:6px;margin-top:6px"><button class="btn sm ghost" onclick="qaAns('+q.id+')">'+(q.answer?'Cavabı dəyiş':'Cavab ver')+'</button><button class="btn sm ghost" onclick="qaDel('+q.id+')">🗑</button></div>':'')+'</div></div></div>';}).join(''):'<div class="igempty"><b>Hələ sual yoxdur</b></div>');}).catch(err);}
+function qaAsk(){var v=$('qaB').value.trim();if(v.length<5){toast('Sual çox qısadır');return;}run(sb.rpc('qa_ask',{p_body:v})).then(function(){toast('✓ Anonim göndərildi');qaRender();}).catch(err);}
+function qaVote(id,on){run(sb.rpc('qa_vote',{p_id:id,p_on:on})).then(qaRender).catch(err);}
+function qaAns(id){var q=null;modal('<div class="mhead"><h3>Cavab</h3><button class="x" onclick="closeModal()">×</button></div><textarea id="qaA" style="width:100%;min-height:120px" maxlength="2000"></textarea><p class="hint">Cavab adınla hamıya görünəcək, səs verənlərə bildiriş gedəcək.</p><button class="btn" style="width:100%" onclick="qaAnsGo('+id+')">Paylaş</button>');}
+function qaAnsGo(id){run(sb.rpc('qa_answer',{p_id:id,p_answer:$('qaA').value})).then(function(){closeModal();qaRender();}).catch(err);}
+function qaDel(id){if(!confirm('Sual silinsin?'))return;run(sb.rpc('qa_delete',{p_id:id})).then(qaRender).catch(err);}
+
+/* ---- ŞİKAYƏT və MODERASİYA ---- */
+function repOpen(kind,target){var R=['Təhqiredici / kobud','Spam','Məxfi məlumat','Uyğunsuz şəkil','Digər'];
+ modal('<div class="mhead"><h3>🚩 Şikayət et</h3><button class="x" onclick="closeModal()">×</button></div><p class="small">Şikayətin anonimdir, yalnız rəhbərlik görür.</p><div class="sochips" style="justify-content:flex-start;margin:10px 0">'+R.map(function(r){return '<span onclick="Array.prototype.forEach.call(this.parentNode.children,function(x){x.classList.remove(\'on\')});this.classList.add(\'on\')">'+r+'</span>';}).join('')+'</div><textarea id="rpT" maxlength="300" placeholder="Əlavə qeyd (istəyə görə)" style="width:100%"></textarea><button class="btn" style="width:100%;margin-top:10px" onclick="repGo(\''+kind+'\',\''+target+'\')">Göndər</button>');}
+function repGo(k,t){var c=document.querySelector('#mbox .sochips .on'),r=[c?c.textContent:'',$('rpT').value.trim()].filter(Boolean).join(': ');if(!r){toast('Səbəb seçin');return;}run(sb.rpc('rep_add',{p_kind:k,p_target:t,p_reason:r})).then(function(){closeModal();toast('🚩 Şikayət göndərildi');}).catch(err);}
+function repCount(){if(!SOC_MOD)return;sb.rpc('rep_count').then(function(r){var n=r.data||0;if(n!==_repN){_repN=n;feedSeg();}},function(){});}
+function modRender(){var b=$('soBody');Promise.all([run(sb.rpc('rep_list')),run(sb.rpc('mod_mutes')).catch(function(){return [];})]).then(function(r){if(FMODE!=='mod')return;var l=r[0]||[],mu=r[1]||[];_repN=l.length;feedSeg();var KN={post:'Post',comment:'Şərh',user:'İstifadəçi',market:'Bazarça elanı'};
+ b.innerHTML='<div class="igsec">🛡 Açıq şikayətlər ('+l.length+')</div>'+(l.length?l.map(function(x){var it=x.item||{},a=it.author||{};
+  return '<div class="s3card s3rep"><div class="row sp"><span class="s3pill">'+(KN[x.kind]||x.kind)+'</span><small>'+chatAgo(x.at)+(x.n>1?' · <b>'+x.n+' şikayət</b>':'')+'</small></div><p class="small"><b>Səbəb:</b> '+esc(x.reason||'—')+'</p>'
+   +'<div class="s3rpi">'+chatAva(a.ad,a.photo,32)+'<div><b onclick="socProfile(\''+a.uid+'\')">'+esc(a.ad||'')+'</b>'+(it.body?'<p>'+esc(it.body)+'</p>':'')+(it.image?'<img src="'+esc(it.image)+'">':'')+(it.hidden?'<small>(artıq gizlədilib)</small>':'')+'</div></div>'
+   +(x.kind==='post'?'<button class="igtxt" onclick="postOpen(\''+x.target+'\')">Posta bax →</button>':'')
+   +'<div class="row" style="gap:6px;flex-wrap:wrap;margin-top:8px">'+(x.kind!=='user'?'<button class="btn sm" style="background:#ef4444" onclick="repAct('+x.id+',\'hide\')">'+(x.kind==='market'?'Sil':'Gizlət')+'</button>':'')+'<button class="btn sm ghost" onclick="repAct('+x.id+',\'mute1\')">🔇 1 gün</button><button class="btn sm ghost" onclick="repAct('+x.id+',\'mute7\')">🔇 7 gün</button><button class="btn sm ghost" onclick="repAct('+x.id+',\'dismiss\')">Rədd et</button></div></div>';}).join(''):'<p class="hint">Şikayət yoxdur 👍</p>')
+  +'<div class="igsec" style="margin-top:14px">🔇 Məhdudlaşdırılanlar</div>'+(mu.length?mu.map(function(u){return '<div class="igrow">'+chatAva(u.ad,u.photo,36)+'<div class="igmeta"><div class="igname">'+esc(u.ad)+'</div><div class="iglast">'+s3fmt(u.until)+' tarixinədək</div></div><button class="btn sm ghost" onclick="modUnmute(\''+u.uid+'\')">Aç</button></div>';}).join(''):'<p class="hint">Yoxdur</p>');}).catch(err);}
+function repAct(id,a){var t={hide:'Məzmun gizlədilsin?',mute1:'İstifadəçi 1 gün paylaşa bilməsin?',mute7:'İstifadəçi 7 gün paylaşa bilməsin?',dismiss:'Şikayət rədd edilsin?'};if(!confirm(t[a]))return;run(sb.rpc('rep_act',{p_id:id,p_action:a})).then(function(){toast('Edildi');modRender();}).catch(err);}
+function modUnmute(uid){run(sb.rpc('mod_unmute',{p_uid:uid})).then(modRender).catch(err);}
+
+/* ---- post kartı: çağırış və sistem növləri ---- */
+var _postCard0=postCard;
+postCard=function(p){var h;
+ if(p.kind==='chalwin'||p.kind==='eom'){h=_postCard0(Object.assign({},p,{kind:'welcome'}));h=h.replace('👋 Yeni həmkar',p.kind==='eom'?'🏆 Ayın işçisi':'🏆 Çağırış qalibi');}
+ else h=_postCard0(p);
+ if(p.chal)h=h.replace(/(<small>)/,'$1<a class="sotag" onclick="event.stopPropagation();feedMode(\'challenge\',\''+p.chal.id+'\')">'+esc(p.chal.emoji+' '+p.chal.title)+'</a> · ');
+ return h;};
+
+/* ---- baxış sayğacı (statistika üçün) ---- */
+function s3seenObs(){if(!('IntersectionObserver' in window))return;if(!_seenIO)_seenIO=new IntersectionObserver(function(es){es.forEach(function(e){var id=e.target.id.slice(4);if(!e.isIntersecting||_seenDone[id])return;_seenDone[id]=1;_seenQ.push(id);});},{threshold:.5});
+ Array.prototype.forEach.call(document.querySelectorAll('.igpost[id^="post"]'),function(el){var id=el.id.slice(4);if(/^[0-9a-f-]{36}$/.test(id)&&!_seenDone[id]){var p=FEED.find(function(x){return x.id===id;});if(p&&p.mine)return;_seenIO.observe(el);}});}
+setInterval(function(){if(!_seenQ.length)return;var ids=_seenQ.splice(0,50);sb.rpc('post_seen',{p_ids:ids}).then(function(){},function(){});},4000);
+var _feedDraw3=feedDraw;feedDraw=function(){_feedDraw3();s3seenObs();};
+
+/* ---- post menyusu: statistika + şikayət ---- */
+var _feedMenu0=feedMenu;
+feedMenu=function(id){_feedMenu0(id);var p=FEED.find(function(x){return x.id===id;})||{};var mb=$('mbox');if(!mb)return;
+ mb.insertAdjacentHTML('beforeend',(p.mine||SOC_MOD?'<button class="igmenu" onclick="postStats(\''+id+'\')">📊 Statistika</button>':'')+(!p.mine?'<button class="igmenu" onclick="repOpen(\'post\',\''+id+'\')">🚩 Şikayət et</button>':''));};
+function postStats(id){run(sb.rpc('post_insights',{p_id:id})).then(function(s){if(!s){toast('Statistika əlçatan deyil');return;}var rs=s.reacts||{};
+ modal('<div class="mhead"><h3>📊 Post statistikası</h3><button class="x" onclick="closeModal()">×</button></div><div class="s3stat"><div><b>'+s.views+'</b><small>baxış</small></div><div><b>'+s.reach+'%</b><small>komandaya çatıb</small></div><div><b>'+s.likes+'</b><small>reaksiya</small></div><div><b>'+s.comments+'</b><small>şərh</small></div><div><b>'+s.shares+'</b><small>paylaşma</small></div><div><b>'+s.saves+'</b><small>saxlanma</small></div></div>'
+ +(Object.keys(rs).length?'<div class="sochips">'+Object.keys(rs).map(function(e){return '<span>'+e+' '+rs[e]+'</span>';}).join('')+'</div>':'')+'<p class="hint" style="text-align:center">İlk 24 saatda: '+s.day1+' baxış</p>');}).catch(err);}
+
+/* ---- şərhlər (şikayət linki ilə) ---- */
+feedComments=function(id){_cParent=null;_ment={};run(sb.rpc('post_comments2',{p_id:id})).then(function(r){r=r||[];window._cmts=r;var top=r.filter(function(c){return !c.parent;}),kids=function(pid){return r.filter(function(c){return c.parent===pid;});};
+ var one=function(c,sub){return '<div class="igcm'+(sub?' sub':'')+'">'+chatAva(c.ad,c.photo,sub?26:32)+'<div class="cmb"><div><b onclick="socProfile(\''+c.uid+'\')">'+esc(c.ad)+'</b> '+socText(c.body)+'</div><small>'+chatAgo(c.at)+(c.likes?' · '+c.likes+' bəyənmə':'')+' · <a onclick="cmReply('+(c.parent||c.id)+',\''+chatArg(c.ad)+'\')">Cavab ver</a>'+(c.uid!==ME.user_id?' · <a onclick="repOpen(\'comment\',\''+c.id+'\')">Şikayət</a>':'')+'</small></div><button class="cmlk'+(c.liked?' on':'')+'" onclick="cmLike(\''+id+'\','+c.id+','+(!c.liked)+')">'+(c.liked?'❤️':'🤍')+'</button></div>';};
+ modal('<div class="mhead"><h3>Şərhlər</h3><button class="x" onclick="closeModal()">×</button></div><div style="max-height:55vh;overflow-y:auto">'+(top.length?top.map(function(c){return one(c)+kids(c.id).map(function(k){return one(k,1);}).join('');}).join(''):'<p class="hint">İlk şərhi sən yaz</p>')+'</div>'
+  +'<div id="cmTo" class="cmto"></div><div class="row" style="gap:6px;margin-top:8px;position:relative"><input id="fcB" placeholder="Şərh yaz… (@ ilə qeyd et)" style="flex:1" onkeydown="if(event.key===\'Enter\')feedComment(\''+id+'\')"><button class="btn" onclick="feedComment(\''+id+'\')">Göndər</button></div>');mentionBind($('fcB'));}).catch(err);};
+
+/* ---- POST YARATMA: qaralama, planlı paylaşım, çağırış ---- */
+fpPrev=function(){var el=$('fpPrev');if(!el)return;el.innerHTML=_fpMedia.map(function(f,i){var vid=f.url?f.kind==='video':/^video/.test(f.type),u=f.url||URL.createObjectURL(f);return '<span>'+(vid?'<video src="'+esc(u)+'" muted></video>':'<img src="'+esc(u)+'">')+'<button onclick="_fpMedia.splice('+i+',1);fpPrev()">×</button></span>';}).join('');};
+var _feedCompose0=feedCompose;
+feedCompose=function(club,chal){_fpDraft=null;_fpChal=chal||null;_fpWhen=null;_feedCompose0(club);var mb=$('mbox');if(!mb)return;
+ var h=mb.querySelector('.mhead .x');if(h)h.insertAdjacentHTML('beforebegin','<button class="igtxt" style="margin-left:auto;margin-right:8px" onclick="draftList()">📝 Qaralamalar</button>');
+ var tl=mb.querySelector('.fptools');if(tl)tl.insertAdjacentHTML('afterend','<div id="fpChal"></div><div id="fpWhen" class="fpwhen"></div>');
+ var go=$('fpGo');if(go)go.insertAdjacentHTML('afterend','<div class="row" style="gap:6px;margin-top:6px"><button class="btn ghost sm" style="flex:1" onclick="draftSave(false)">💾 Qaralama</button><button class="btn ghost sm" style="flex:1" id="fpWT" onclick="fpWhenToggle()">⏰ Vaxt seç</button></div>');
+ run(sb.rpc('chal_list')).then(function(l){var a=(l||[]).filter(function(c){return c.active;});var el=$('fpChal');if(!el||!a.length)return;
+  el.innerHTML='<div class="fpchal"><span>🏁 Çağırışa qat:</span>'+a.map(function(c){return '<button data-c="'+c.id+'" class="'+(_fpChal===c.id?'on':'')+'" onclick="_fpChal=_fpChal===\''+c.id+'\'?null:\''+c.id+'\';Array.prototype.forEach.call(this.parentNode.querySelectorAll(\'button\'),function(b){b.classList.toggle(\'on\',b.dataset.c===_fpChal)})">'+esc(c.emoji+' '+c.title)+'</button>';}).join('')+'</div>';}).catch(function(){});};
+function fpWhenToggle(){var el=$('fpWhen');if(!el)return;var wt=$('fpWT');if(el.innerHTML){el.innerHTML='';_fpWhen=null;var g=$('fpGo');if(g)g.textContent='Paylaş';if(wt)wt.textContent='⏰ Vaxt seç';return;}if(wt)wt.textContent='✕ İndi paylaş';
+ var bk=new Date(Date.now()+3600000).toLocaleString('sv-SE',{timeZone:'Asia/Baku'}).slice(0,16).replace(' ','T');
+ el.innerHTML='<label class="small">⏰ Paylaşım vaxtı (Bakı)</label><input type="datetime-local" id="fpW" value="'+bk+'" style="width:100%">';var g=$('fpGo');if(g)g.textContent='⏰ Planla';_fpWhen=1;}
+function fpWhenISO(){var v=($('fpW')||{}).value;if(!v)return null;return new Date(v+':00+04:00').toISOString();}
+function fpCollect(){var b=($('fpB').value||'').trim(),poll=null;
+ if(_fpPoll){var q=($('fpQ').value||'').trim(),opts=Array.prototype.map.call(document.querySelectorAll('.fpo'),function(x){return x.value.trim();}).filter(Boolean);if(q||opts.length){if(!q||opts.length<2)throw new Error('Sorğu üçün sual və ən azı 2 variant yazın');poll={q:q,opts:opts};}}
+ return {b:b,poll:poll};}
+function fpUploadAll(){return Promise.all(_fpMedia.map(function(f){if(f.url)return Promise.resolve({url:f.url,kind:f.kind||'image'});return chatUpload(f,'post').then(function(u){return {url:u,kind:/^video/.test(f.type)?'video':'image'};});}));}
+feedPost=function(){var c;try{c=fpCollect();}catch(e){toast(e.message);return;}if(_fpWhen)return draftSave(true);
+ if(!c.b&&!_fpMedia.length&&!c.poll){toast('Mətn, şəkil və ya sorğu əlavə edin');return;}var g=$('fpGo');g.disabled=true;g.textContent='Yüklənir…';
+ fpUploadAll().then(function(media){return run(sb.rpc('post_add3',{p_body:c.b,p_media:media.length?media:null,p_poll:c.poll,p_club:_fpClub,p_mentions:mentionIds(c.b),p_shared:null,p_challenge:_fpChal}));})
+ .then(function(){var d=_fpDraft;closeModal();toast('Paylaşıldı');if(d)sb.rpc('draft_delete',{p_id:d}).then(function(){},function(){});if(FMODE==='team')teamRender();else feedLoad();}).catch(function(e){g.disabled=false;g.textContent='Paylaş';toast(e.message||e);});};
+function draftSave(planned){var c;try{c=fpCollect();}catch(e){toast(e.message);return;}if(!c.b&&!_fpMedia.length&&!c.poll){toast('Qaralama boşdur');return;}
+ var when=planned?fpWhenISO():null;if(planned&&!when){toast('Vaxt seçin');return;}if(planned&&new Date(when)<new Date()){toast('Vaxt keçmişdədir');return;}
+ toast(planned?'⏰ Planlanır…':'💾 Saxlanılır…');
+ fpUploadAll().then(function(media){return run(sb.rpc('draft_save',{p_id:_fpDraft,p_body:c.b,p_media:media.length?media:null,p_poll:c.poll,p_club:_fpClub,p_mentions:mentionIds(c.b),p_challenge:_fpChal,p_publish_at:when}));})
+ .then(function(){closeModal();toast(planned?'⏰ '+s3fmt(when)+' tarixində paylaşılacaq':'💾 Qaralama saxlanıldı');}).catch(err);}
+function draftList(){run(sb.rpc('draft_list')).then(function(l){l=l||[];window._drafts=l;
+ modal('<div class="mhead"><h3>📝 Qaralamalar və planlılar</h3><button class="x" onclick="closeModal()">×</button></div>'+(l.length?l.map(function(d){var img=d.media&&d.media[0];
+  return '<div class="s3dr">'+(img?(img.kind==='video'?'<video src="'+esc(img.url)+'" muted></video>':'<img src="'+esc(img.url)+'">'):'<span class="s3drp">📝</span>')+'<div style="flex:1;min-width:0"><p>'+esc((d.body||(d.poll?'📊 '+d.poll.q:'(mətn yoxdur)')).slice(0,90))+'</p><small>'+(d.publish_at?'<b style="color:#0a84ff">⏰ '+s3fmt(d.publish_at)+'</b>':'Qaralama · '+chatAgo(d.at))+'</small>'
+   +'<div class="row" style="gap:6px;margin-top:6px"><button class="btn sm ghost" onclick="draftOpen(\''+d.id+'\')">Redaktə</button><button class="btn sm" onclick="draftPub(\''+d.id+'\')">İndi paylaş</button><button class="btn sm ghost" onclick="draftDel(\''+d.id+'\')">🗑</button></div></div></div>';}).join(''):'<p class="hint">Qaralama yoxdur. Post yazarkən "💾 Qaralama" və ya "⏰ Planla" seç.</p>'));}).catch(err);}
+function draftOpen(id){var d=(window._drafts||[]).find(function(x){return x.id===id;});if(!d)return;feedCompose(d.club,d.chal);_fpDraft=d.id;$('fpB').value=d.body||'';_fpMedia=(d.media||[]).slice();fpPrev();
+ if(d.poll){fpPollToggle();$('fpQ').value=d.poll.q||'';var o=d.poll.opts||[];for(var i=2;i<o.length;i++)fpAddOpt();Array.prototype.forEach.call(document.querySelectorAll('.fpo'),function(x,k){x.value=o[k]||'';});}
+ if(d.publish_at){fpWhenToggle();$('fpW').value=new Date(d.publish_at).toLocaleString('sv-SE',{timeZone:'Asia/Baku'}).slice(0,16).replace(' ','T');}}
+function draftPub(id){run(sb.rpc('draft_publish',{p_id:id})).then(function(){closeModal();toast('Paylaşıldı');feedLoad();}).catch(err);}
+function draftDel(id){if(!confirm('Qaralama silinsin?'))return;run(sb.rpc('draft_delete',{p_id:id})).then(draftList).catch(err);}
+
+/* ---- HEKAYƏ: yaxın dostlar + highlights ---- */
+var _storyDrawRow3=storyDrawRow;
+storyDrawRow=function(){_storyDrawRow3();var el=$('igStories');if(!el)return;var k=0;CHAT_STORIES.forEach(function(u){if(u.me)return;k++;if(u.cf){var r=el.children[k]&&el.children[k].querySelector('.igring');if(r)r.classList.add('cf');}});};
+var _storyShow3=storyShow;
+storyShow=function(){_storyShow3();if(!_sv)return;var it=CHAT_STORIES[_sv.ui]&&CHAT_STORIES[_sv.ui].items[_sv.ii];if(it&&it.cf){var h=document.querySelector('#igSV .svhead small');if(h)h.insertAdjacentHTML('afterend','<span class="svcf">⭐ Yaxın dostlar</span>');}};
+storyPick=function(){var i=document.createElement('input');i.type='file';i.accept='image/*,video/*';i.onchange=function(){var f=i.files[0];if(!f)return;if(f.size>25*1024*1024){toast('Fayl 25MB-dan kiçik olmalıdır');return;}_stoStk=null;window._stoAud='all';
+ var vid=/^video\//.test(f.type),u=URL.createObjectURL(f);
+ modal('<div class="mhead"><h3>Hekayə</h3><button class="x" onclick="closeModal()">×</button></div><div style="border-radius:14px;overflow:hidden;background:#000;max-height:42vh;display:flex;justify-content:center">'+(vid?'<video src="'+u+'" style="max-height:42vh;max-width:100%" autoplay muted loop playsinline></video>':'<img src="'+u+'" style="max-height:42vh;max-width:100%;object-fit:contain">')+'</div><input id="stoCap" placeholder="Yazı (istəyə görə)" maxlength="200" style="width:100%;margin-top:10px">'
+  +'<div class="fptools"><button class="btn ghost sm" onclick="stoStk(\'poll\')">📊 Sorğu stikeri</button><button class="btn ghost sm" onclick="stoStk(\'q\')">❓ Sual stikeri</button></div><div id="stoStkF"></div>'
+  +'<div class="s3aud"><button class="on" data-a="all" onclick="stoAud(this)">🌐 Hamı</button><button data-a="cf" onclick="stoAud(this)">⭐ Yaxın dostlar</button><a class="igtxt" onclick="cfManage()">Siyahı</a></div>'
+  +'<button class="btn" id="stoGo" style="width:100%;margin-top:10px">Paylaş · 24 saat</button>');
+ $('stoGo').onclick=function(){var st=null;if(_stoStk==='poll'){var q=$('skQ').value.trim(),a=$('skA').value.trim()||'Bəli',b=$('skB').value.trim()||'Xeyr';if(q)st={type:'poll',q:q,opts:[a,b]};}else if(_stoStk==='q'){var q2=$('skQ').value.trim();if(q2)st={type:'q',q:q2};}
+  this.disabled=true;this.textContent='Yüklənir…';chatUpload(f,'story').then(function(url){return run(sb.rpc('story_add3',{p_url:url,p_kind:vid?'video':'image',p_caption:$('stoCap').value.trim()||null,p_sticker:st,p_audience:window._stoAud}));}).then(function(){closeModal();toast(window._stoAud==='cf'?'⭐ Yaxın dostlarla paylaşıldı':'Hekayə paylaşıldı');storyLoad();}).catch(function(e){var g=$('stoGo');if(g){g.disabled=false;g.textContent='Paylaş · 24 saat';}toast('Alınmadı: '+(e.message||e));});};};i.click();};
+function stoAud(el){window._stoAud=el.dataset.a;Array.prototype.forEach.call(el.parentNode.querySelectorAll('button'),function(b){b.classList.toggle('on',b===el);});}
+function cfManage(){Promise.all([run(sb.rpc('cf_list')),socContacts()]).then(function(r){var on=r[0]||[],l=(r[1]||[]).filter(function(c){return c.uid!==ME.user_id;});
+ var box=document.createElement('div');box.className='s3over';box.innerHTML='<div class="s3sheet"><div class="mhead"><h3>⭐ Yaxın dostlar ('+on.length+')</h3><button class="x" onclick="this.closest(\'.s3over\').remove()">×</button></div><p class="hint">Bu siyahıdakılar "Yaxın dostlar" hekayələrini görür. Onlara bildiriş getmir.</p><div style="max-height:55vh;overflow-y:auto">'
+  +l.sort(function(a,b){return (on.indexOf(b.uid)>=0)-(on.indexOf(a.uid)>=0);}).map(function(c){var o=on.indexOf(c.uid)>=0;return '<div class="igrow">'+chatAva(c.ad,c.photo,40)+'<div class="igmeta"><div class="igname">'+esc(c.ad)+'</div></div><button class="s3cfb'+(o?' on':'')+'" onclick="cfSet(\''+c.uid+'\',!this.classList.contains(\'on\'),this)">'+(o?'⭐':'☆')+'</button></div>';}).join('')+'</div></div>';document.body.appendChild(box);}).catch(err);}
+function cfSet(uid,on,el){run(sb.rpc('cf_set',{p_uid:uid,p_on:on})).then(function(){if(el){el.classList.toggle('on',on);el.textContent=on?'⭐':'☆';el.setAttribute('onclick','cfSet(\''+uid+'\','+(!on)+',this)');}else{toast(on?'⭐ Yaxın dostlara əlavə edildi':'Yaxın dostlardan çıxarıldı');socProfile(uid);}}).catch(err);}
+function hlView(i){var h=(window._profX&&window._profX.hl||[])[i];if(!h||!h.items||!h.items.length)return;var k=0,t=null,el=document.createElement('div');el.id='igSV';document.body.appendChild(el);document.body.classList.add('incall');
+ var close=function(){clearInterval(t);el.remove();document.body.classList.remove('incall');};
+ var draw=function(){clearInterval(t);var it=h.items[k];if(!it){close();return;}
+  el.innerHTML='<div class="svbars">'+h.items.map(function(x,j){return '<i><b style="width:'+(j<k?100:0)+'%"'+(j===k?' id="svb"':'')+'></b></i>';}).join('')+'</div><div class="svhead"><span class="s3hlc">'+(h.items[0].kind==='video'?'🎬':'<img src="'+esc(h.items[0].url)+'">')+'</span><b>'+esc(h.title)+'</b><small>'+s3date(it.at)+'</small><button id="hlX">✕</button></div>'
+   +(it.kind==='video'?'<video id="svm" src="'+esc(it.url)+'" autoplay playsinline></video>':'<img id="svm" src="'+esc(it.url)+'">')+(it.cap?'<div class="svcap">'+esc(it.cap)+'</div>':'')+'<div class="svl"></div><div class="svr"></div>'
+   +(window._profX&&window._profX._me?'<div class="svfoot"><button id="hlDel">🗑️ Önə çıxanı sil</button></div>':'');
+  el.querySelector('#hlX').onclick=close;el.querySelector('.svl').onclick=function(){k=Math.max(0,k-1);draw();};el.querySelector('.svr').onclick=function(){k++;draw();};
+  var d=el.querySelector('#hlDel');if(d)d.onclick=function(){if(!confirm('"'+h.title+'" silinsin?'))return;run(sb.rpc('hl_delete',{p_id:h.id})).then(function(){close();socProfile(ME.user_id);}).catch(err);};
+  var dur=5000,m=el.querySelector('#svm');if(it.kind==='video'&&m)m.onloadedmetadata=function(){dur=Math.min(30000,(m.duration||5)*1000);};var t0=Date.now();
+  t=setInterval(function(){var b=$('svb');var p=(Date.now()-t0)/dur;if(b)b.style.width=Math.min(100,p*100)+'%';if(p>=1){k++;draw();}},50);};draw();}
+function hlNew(){run(sb.rpc('story_archive')).then(function(l){l=l||[];window._hlSel=[];if(!l.length){toast('Hələ hekayən yoxdur');return;}
+ modal('<div class="mhead"><h3>Yeni önə çıxan</h3><button class="x" onclick="closeModal()">×</button></div><input id="hlT" maxlength="30" placeholder="Ad: Novruz, Komanda, Layihə…" style="width:100%"><p class="hint">Hekayələri seç (arxivdən, son 1 il)</p><div class="sogrid s3hlg">'+l.map(function(s){return '<button data-id="'+s.id+'" onclick="var i=window._hlSel.indexOf(this.dataset.id);if(i<0)window._hlSel.push(this.dataset.id);else window._hlSel.splice(i,1);this.classList.toggle(\'on\',i<0)">'+(s.kind==='video'?'<video src="'+esc(s.url)+'" muted></video>':'<img src="'+esc(s.url)+'">')+'<i>✓</i><small>'+s3date(s.at)+'</small></button>';}).join('')+'</div><button class="btn" style="width:100%;margin-top:10px" onclick="hlSave()">Profilə əlavə et</button>');}).catch(err);}
+function hlSave(){if(!window._hlSel.length){toast('Ən azı 1 hekayə seçin');return;}run(sb.rpc('hl_add',{p_title:$('hlT').value.trim(),p_ids:window._hlSel})).then(function(){toast('⭐ Profilə əlavə edildi');socProfile(ME.user_id);}).catch(err);}
+
+/* ---- PROFİL: önə çıxanlar, bacarıqlar, mentor, yaxın dost, şikayət ---- */
+var _socProfile3=socProfile;
+socProfile=function(uid){if(!uid||uid==='undefined')return;window._profX=null;window._prof=null;_socProfile3(uid);
+ run(sb.rpc('soc_profile_x',{p_uid:uid})).then(function(x){if(!x)return;x._me=uid===ME.user_id;x._uid=uid;window._profX=x;var n=0;(function inj(){var pr=document.querySelector('#mbox .soprof');if(!pr||!window._prof){if(n++<40)setTimeout(inj,100);return;}if(pr.querySelector('#soPx'))return;
+  var me=x._me,h='<div id="soPx">';
+  if(x.hl.length||me)h+='<div class="s3hl">'+(me?'<button onclick="hlNew()"><span class="s3hlc add">+</span><small>Yeni</small></button>':'')+x.hl.map(function(H,i){var c=H.items&&H.items[0];return '<button onclick="hlView('+i+')"><span class="s3hlc">'+(c?(c.kind==='video'?'🎬':'<img src="'+esc(c.url)+'">'):'⭐')+'</span><small>'+esc(H.title)+'</small></button>';}).join('')+'</div>';
+  if(x.skills.length)h+='<div class="s3skills">'+x.skills.map(function(s){return '<button class="'+(s.my?'on':'')+'" '+(me?'':'onclick="skEnd(\''+uid+'\',\''+chatArg(s.s)+'\','+(!s.my)+')"')+'>'+esc(s.s)+(s.n?' <b>'+s.n+'</b>':'')+'</button>';}).join('')+(me?'':'<div class="hint" style="width:100%;text-align:center;margin-top:2px">Bacarığa toxun — təsdiqlə 👍</div>')+'</div>';
+  else if(me)h+='<button class="igtxt" style="display:block;margin:6px auto" onclick="profEdit()">🧠 Bacarıqlarını əlavə et</button>';
+  if(x.mentor)h+='<div class="s3ment" onclick="socProfile(\''+x.mentor.uid+'\')">🧭 Mentoru: <b>'+esc(x.mentor.ad)+'</b></div>';
+  if(x.mentees&&x.mentees.length)h+='<div class="s3ment">🧭 Mentordur: '+x.mentees.map(function(m){return '<b onclick="socProfile(\''+m.uid+'\')">'+esc(m.ad)+'</b>';}).join(', ')+'</div>';
+  h+='<div class="soact s3act">';
+  if(me)h+='<button class="btn ghost sm" onclick="cfManage()">⭐ Yaxın dostlar</button><button class="btn ghost sm" onclick="closeModal();feedCompose();setTimeout(draftList,200)">📝 Qaralamalar</button>';
+  else{h+='<button class="btn ghost sm'+(x.cf?' s3on':'')+'" onclick="cfSet(\''+uid+'\','+(!x.cf)+')">'+(x.cf?'⭐ Yaxın dostdur':'☆ Yaxın dost et')+'</button>';
+   if(x.mod&&x.newbie)h+='<button class="btn ghost sm" onclick="mentorPick(\''+uid+'\')">🧭 Mentor təyin et</button>';
+   h+='<button class="btn ghost sm" onclick="repOpen(\'user\',\''+uid+'\')">🚩</button>';}
+  h+='</div></div>';var g=pr.querySelector('.sogrid');if(g)g.insertAdjacentHTML('beforebegin',h);else pr.insertAdjacentHTML('beforeend',h);})();}).catch(function(){});};
+function skEnd(uid,s,on){run(sb.rpc('skill_endorse',{p_uid:uid,p_skill:s,p_on:on})).then(function(){toast(on?'👍 Təsdiqləndi':'Təsdiq geri alındı');socProfile(uid);}).catch(err);}
+function mentorPick(uid){s3pick('Mentor seç',function(m,ad){run(sb.rpc('mentor_set',{p_newbie:uid,p_mentor:m})).then(function(){toast('🧭 '+ad+' mentor təyin edildi');socProfile(uid);}).catch(err);},true);}
+var _profEdit3=profEdit;
+profEdit=function(){_profEdit3();var x=window._profX&&window._profX._me?window._profX:null;var mb=$('mbox');if(!mb)return;var btn=mb.querySelector('.btn:not(.ghost)');if(!btn)return;
+ var go=function(x){if(!$('peS'))btn.insertAdjacentHTML('beforebegin','<div class="field"><label>🧠 Bacarıqlar (vergüllə, 15-ə qədər)</label><input id="peS" value="'+esc((x&&x.skills||[]).map(function(s){return s.s;}).join(', '))+'" placeholder="Excel, AutoCAD, danışıqlar"></div><label class="s3sw"><input type="checkbox" id="peD" '+(!x||x.digest?'checked':'')+'><span></span>📬 Həftəlik xülasə bildirişi</label><label class="s3sw"><input type="checkbox" id="peC" '+(x&&x.coffee?'checked':'')+'><span></span>☕ Qəhvə tanışlığında iştirak</label>');};
+ if(x)go(x);else run(sb.rpc('soc_profile_x',{p_uid:ME.user_id})).then(function(r){go(r);window._peX=r;}).catch(function(){go(null);});};
+var _profSave3=profSave;
+profSave=function(){var s=$('peS'),d=$('peD'),c=$('peC');var x=window._profX&&window._profX._me?window._profX:window._peX;var jobs=[];
+ if(s){var sk=s.value.split(',').map(function(t){return t.trim();}).filter(Boolean).slice(0,15);jobs.push(run(sb.rpc('skill_set',{p_skills:sk})));}
+ if(d&&(!x||x.digest!==d.checked))jobs.push(run(sb.rpc('soc_prefs',{p_digest:d.checked})));
+ if(c&&(!x||x.coffee!==c.checked))jobs.push(run(sb.rpc('coffee_opt',{p_on:c.checked})));
+ Promise.all(jobs).then(function(){_profSave3();}).catch(err);};
+
+/* ---- BİLDİRİŞLƏR (yeni növlər) ---- */
+notifOpen=function(){run(sb.rpc('notif_list')).then(function(r){r=r||[];var ic={react:'❤️',comment:'💬',reply:'↩︎',mention:'@',follow:'👤',share:'🔁',clike:'❤️',event:'📅',story:'📸',mentor:'🧭',endorse:'🏅',qa:'❓',coffee:'☕',chal:'🏆',mod:'🛡',sched:'⏰'};
+ var go=function(n,a){if(n.post&&n.kind!=='story')return "postOpen('"+n.post+"')";if(n.kind==='follow'||n.kind==='endorse'||n.kind==='mentor')return "socProfile('"+a.uid+"')";if(n.kind==='event')return "feedMode('events')";if(n.kind==='qa')return "feedMode('qa')";if(n.kind==='coffee'||n.kind==='chal')return "feedMode('team')";return '';};
+ modal('<div class="mhead"><h3>Bildirişlər</h3><button class="x" onclick="closeModal()">×</button></div><div style="max-height:65vh;overflow-y:auto">'+(r.length?r.map(function(n){var a=n.actor||{};var sys=n.kind==='mod'||n.kind==='sched'||n.kind==='chal';
+  return '<div class="sonotif'+(n.read?'':' un')+'" onclick="closeModal();'+go(n,a)+'"><span class="soni">'+(sys?'<span class="s3ni">'+(ic[n.kind])+'</span>':chatAva(a.ad,a.photo,40))+'<i>'+(ic[n.kind]||'🔔')+'</i></span><div><b>'+esc(sys?'Baş Ofis':(a.ad||'Baş Ofis'))+'</b> '+esc(n.text)+'<small>'+chatAgo(n.at)+'</small></div></div>';}).join(''):'<p class="hint">Hələ bildiriş yoxdur</p>')+'</div>');
+ sb.rpc('notif_read_all').then(function(){NOTIF_N=0;notifCount();},function(){});}).catch(err);};
+
+/* ---- ELANLAR: kim oxumayıb + xatırlat (rəhbər) ---- */
+var _renderNews3=renderNews;
+renderNews=function(){_renderNews3();if(!MGR)return;var tries=0;(function wait(){var el=$('annList');if(!el||typeof ANN==='undefined'||!ANN.length||el.querySelectorAll('.card.ann').length!==ANN.length||el.querySelector('.s3annr')){if(tries++<30&&!(el&&el.querySelector('.s3annr')))setTimeout(wait,150);return;}var act=EMPS.filter(function(e){return e.active&&!e.demo;});
+ Array.prototype.forEach.call(el.querySelectorAll('.card.ann'),function(c,i){var a=ANN[i];if(!a||c.querySelector('.s3annr'))return;var rd=ANNR.filter(function(x){return x.ann_id===a.id;}).map(function(x){return x.employee_id;});var un=act.filter(function(e){return rd.indexOf(e.id)<0;});
+  c.insertAdjacentHTML('beforeend','<div class="s3annr">'+(un.length?'<details><summary>👁 Oxumayanlar: '+un.length+'</summary><div class="small">'+un.map(function(e){return esc(e.full_name);}).join(', ')+'</div></details><button class="btn sm ghost" onclick="annRemind('+a.id+',this)">🔔 Oxumayanlara xatırlat</button>':'<span class="small" style="color:#16a34a">✓ Hamı oxuyub</span>')+'</div>');});})();};
+function annRemind(id,el){el.disabled=true;run(sb.rpc('ann_remind',{p_id:id})).then(function(n){el.textContent='✓ '+n+' nəfərə göndərildi';}).catch(function(e){el.disabled=false;err(e);});}
+
+/* ---- ÇAT: video dairə, öz-özünə silinən, tema, ləqəb ---- */
+var _chatLastTxt3=chatLastTxt;chatLastTxt=function(t){if(t.son_kind==='vcircle')return '⭕ Video mesaj';return _chatLastTxt3(t);};
+var _chatMsgPreview3=chatMsgPreview;chatMsgPreview=function(m){if(m&&!m.deleted&&m.kind==='vcircle')return '⭕ Video mesaj';return _chatMsgPreview3(m);};
+var _renderChatRoom3=renderChatRoom;
+renderChatRoom=function(){CHAT_STYLE=null;_renderChatRoom3();var t=$('igTools');if(t)t.insertAdjacentHTML('afterbegin','<button class="igicon igimg" onclick="vcStart()" title="Video dairə">⭕</button>');
+ if(CHATgroup){var hd=document.querySelector('.igroom .ighead');if(hd)hd.insertAdjacentHTML('beforeend','<button class="igicon" onclick="chatStyleMenu()" title="Söhbət ayarları">🎨</button>');}
+ chatStyleLoad();};
+function chatStyleLoad(){var who=CHATother,g=CHATgroup;run(sb.rpc('chat_style',{p_other:g?null:who,p_group:g?who:null})).then(function(s){if(who!==CHATother)return;CHAT_STYLE=s||{};chatStyleApply();if(CHATmsgs&&CHATmsgs.length)chatDrawMsgs(CHATmsgs);}).catch(function(){});}
+function chatStyleApply(){var r=document.querySelector('.igroom');if(!r)return;var s=CHAT_STYLE||{},th=CHAT_THEMES[s.theme||'']||CHAT_THEMES[''];
+ Object.keys(CHAT_THEMES).forEach(function(k){if(k)r.classList.remove('th-'+k);});if(s.theme){r.classList.add('th-'+s.theme);r.style.setProperty('--igp',th[1]);}else r.style.removeProperty('--igp');
+ var b=$('s3eph');if(s.eph){if(!b){var p=$('igPinned');if(p)p.insertAdjacentHTML('beforebegin','<div id="s3eph" onclick="chatStyleMenu()">⏳ Öz-özünə silinən mesajlar aktivdir · 24 saat</div>');}}else if(b)b.remove();
+ if(!CHATgroup){var nk=s.nicks&&s.nicks[CHATother],n=document.querySelector('.igroom .igwho .igname');if(n&&nk&&!n.dataset.nk){n.dataset.nk=1;n.firstChild.textContent=nk;}}}
+var _chatDrawMsgs3=chatDrawMsgs;
+chatDrawMsgs=function(rows){var nk=(CHAT_STYLE&&CHAT_STYLE.nicks)||{};var rr=(rows||[]).map(function(m){if(CHATgroup&&m.from&&nk[m.sender])return Object.assign({},m,{from:Object.assign({},m.from,{ad:nk[m.sender]})});return m;});
+ _chatDrawMsgs3(rr);(rows||[]).forEach(function(m){var b=$('msg'+m.id);if(!b)return;
+  if(m.kind==='vcircle'&&!m.deleted&&m.file){b.classList.add('vcm');b.innerHTML='<div class="igvc" onclick="event.stopPropagation();vcPlay(this)"><video src="'+esc(m.file)+'#t=0.1" playsinline preload="metadata" muted></video><span class="vcp">▶︎</span><small>'+chatDur(m.dur)+'</small></div>'+(m.reaction?'<span class="msgreact">'+esc(m.reaction)+'</span>':'');}
+  if(m.exp&&!m.deleted){var line=b.parentNode;var mt=line.querySelector('.igmeta2');var tag='<span class="igstar" title="24 saata silinəcək">⏳</span>';if(mt)mt.insertAdjacentHTML('beforeend',tag);else b.insertAdjacentHTML('afterend','<div class="igmeta2">'+tag+'</div>');}});};
+function vcPlay(el){var v=el.querySelector('video');Array.prototype.forEach.call(document.querySelectorAll('.igvc video'),function(o){if(o!==v){o.pause();o.parentNode.classList.remove('on');}});
+ if(v.paused){v.muted=false;if(!el.classList.contains('on'))v.currentTime=0;el.classList.add('on');v.play().catch(function(){});v.onended=function(){el.classList.remove('on');};}else{v.pause();el.classList.remove('on');}}
+var _vc=null;
+function vcStart(){if(_vc)return;if(!navigator.mediaDevices||!window.MediaRecorder){toast('Bu cihaz video yazmağı dəstəkləmir');return;}
+ navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:480},height:{ideal:480}},audio:{echoCancellation:true,noiseSuppression:true}}).then(function(st){
+  var o=document.createElement('div');o.id='s3vc';o.innerHTML='<div class="s3vcr"><video autoplay playsinline muted></video><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48"/></svg></div><b id="s3vcT">0:00</b><div class="s3vcb"><button onclick="vcStop(true)">✕</button><button class="go" onclick="vcStop(false)">➤</button></div><small>Maksimum 60 saniyə</small>';document.body.appendChild(o);
+  var v=o.querySelector('video');v.srcObject=st;
+  var mt=['video/mp4;codecs=avc1,mp4a','video/mp4','video/webm;codecs=vp8,opus','video/webm'].find(function(t){try{return MediaRecorder.isTypeSupported(t);}catch(e){return false;}})||'';
+  var r=new MediaRecorder(st,mt?{mimeType:mt,videoBitsPerSecond:900000}:undefined),ch=[];r.ondataavailable=function(e){if(e.data&&e.data.size)ch.push(e.data);};r.start(500);
+  _vc={r:r,st:st,ch:ch,t0:Date.now(),mt:r.mimeType||mt||'video/webm',o:o};var c=o.querySelector('circle');
+  _vc.tick=setInterval(function(){if(!_vc)return;var s=(Date.now()-_vc.t0)/1000;var x=$('s3vcT');if(x)x.textContent=chatDur(s);if(c)c.style.strokeDashoffset=(301.6*(1-Math.min(1,s/60))).toFixed(1);if(s>=60)vcStop(false);},200);
+ }).catch(function(e){toast(callErrMsg(e));});}
+function vcStop(cancel){var R=_vc;if(!R)return;_vc=null;clearInterval(R.tick);var dur=(Date.now()-R.t0)/1000;
+ R.r.onstop=function(){R.st.getTracks().forEach(function(t){t.stop();});R.o.remove();if(cancel)return;if(dur<1){toast('Çox qısadır');return;}
+  var blob=new Blob(R.ch,{type:R.mt.split(';')[0]}),ext=/mp4/.test(R.mt)?'mp4':'webm',f=new File([blob],'dairə.'+ext,{type:blob.type});toast('⭕ Göndərilir…');
+  chatUpload(f,'vcircle').then(function(url){return chatSendRpc({kind:'vcircle',file:url,dur:Math.round(dur)});}).catch(function(e){toast('Göndərilmədi: '+(e.message||e));});};
+ try{R.r.stop();}catch(e){}}
+var _chatRoomMenu3=chatRoomMenu;
+chatRoomMenu=function(){_chatRoomMenu3();var mb=$('mbox');if(mb)mb.insertAdjacentHTML('beforeend','<button class="igmenu" onclick="chatStyleMenu()">🎨 Tema, ləqəb və ⏳ silinən mesajlar</button>');};
+function chatStyleMenu(){var s=CHAT_STYLE||{},nk=s.nicks||{};
+ var ppl=CHATgroup?run(sb.rpc('grp_info',{p_group:CHATother})).then(function(g){return (g&&g.members)||[];}):Promise.resolve([{uid:CHATother,ad:CHATname,photo:CHAT_PH[CHATother]},{uid:ME.user_id,ad:ME.full_name||'Mən',photo:(typeof EMP!=='undefined'&&EMP&&EMP.photo)||null}]);
+ ppl.then(function(l){window._csP=l;
+ modal('<div class="mhead"><h3>Söhbət ayarları</h3><button class="x" onclick="closeModal()">×</button></div>'
+  +'<label class="s3sw"><input type="checkbox" '+(s.eph?'checked':'')+' onchange="chatStyleSet(\'eph\',this.checked?\'1\':\'0\')"><span></span>⏳ Öz-özünə silinən mesajlar</label><p class="hint" style="margin-top:-4px">Aktiv olanda yeni mesajlar 24 saatdan sonra hər kəsdə silinir.'+(s.eph&&s.eph_by?' Aktiv edən: '+esc(s.eph_by.ad):'')+'</p>'
+  +'<div class="igsec">🎨 Tema</div><div class="s3th">'+Object.keys(CHAT_THEMES).map(function(k){var t=CHAT_THEMES[k];return '<button class="'+((s.theme||'')===k?'on':'')+'" onclick="chatStyleSet(\'theme\',\''+k+'\')"><span style="background:'+t[2]+'"><i style="background:'+t[1]+'"></i></span><small>'+t[0]+'</small></button>';}).join('')+'</div>'
+  +'<div class="igsec">🏷 Ləqəblər</div><div style="max-height:30vh;overflow-y:auto">'+l.map(function(u){return '<div class="igrow">'+chatAva(u.ad,u.photo,34)+'<div class="igmeta"><div class="igname">'+esc(u.ad)+'</div><div class="iglast">'+(nk[u.uid]?'🏷 '+esc(nk[u.uid]):'Ləqəb yoxdur')+'</div></div><button class="btn sm ghost" onclick="chatNick(\''+u.uid+'\')">Dəyiş</button></div>';}).join('')+'</div>');}).catch(err);}
+function chatNick(uid){var s=CHAT_STYLE||{},cur=(s.nicks||{})[uid]||'';var v=prompt('Ləqəb (boş qoysan silinəcək)',cur);if(v===null)return;chatStyleSet('nick',v,uid);}
+function chatStyleSet(f,v,target){run(sb.rpc('chat_style_set',{p_other:CHATgroup?null:CHATother,p_group:CHATgroup?CHATother:null,p_field:f,p_value:v,p_target:target||null})).then(function(s){CHAT_STYLE=s||{};
+ var n=document.querySelector('.igroom .igwho .igname');if(n){delete n.dataset.nk;if(!CHATgroup)n.firstChild.textContent=(s.nicks&&s.nicks[CHATother])||CHATname||'';}
+ chatStyleApply();window._chatSig=null;chatLoadMsgs(true);if($('modal').classList.contains('on'))chatStyleMenu();}).catch(err);}
+
+/* ---- başlanğıc ---- */
+(function soc3Init(){var go=function(){if(typeof ME==='undefined'||!ME||!ME.user_id||typeof sb==='undefined'){setTimeout(go,1500);return;}
+ run(sb.rpc('soc_profile_x',{p_uid:ME.user_id})).then(function(x){SOC_MOD=!!(x&&x.mod);if(SOC_MOD){repCount();setInterval(function(){if(document.visibilityState==='visible')repCount();},60000);}feedSeg();}).catch(function(){});
+ var q=new URLSearchParams(location.search);if(q.get('feed')){try{history.replaceState(history.state,'',location.pathname);}catch(e){}setTimeout(function(){show('feed');},700);}};setTimeout(go,1600);})();
+
+</script>
 </body>
 </html>
