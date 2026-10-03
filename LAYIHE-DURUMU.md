@@ -187,3 +187,16 @@
 - SQL funksiyalar: policy-dən əvvəl funksiya yarat.
 - Həssas əməliyyat (silmə) əvvəl təsdiq al.
 - Render/test üçün Playwright + stub luxAuth (CDN test mühitində bloklanır — jsdelivr real saytda işləyir).
+
+---
+
+## YENİLƏNMƏ — 3 oktyabr 2026 (bir çatda edilənlər)
+
+**Çat (Instagram üslubu):** siyahı + otaq tam ekran, klaviatura uyğun (visualViewport), canlı qat (realtime `me-<uid>` kanalı + 6 san polling), yuxarı banner, push (trigger `trg_msg_push`), seçim rejimi/toplu sil-oxunmuş, Oxunmamış/Qruplar filtri, onlayn status (`office_presence`, `msg_ping`, `msg_presence`), "yazır…" (`msg_typing`), səsli mesaj (MediaRecorder → `chat` bucket `voice/`), fayl (`file/`), sürüşdürüb cavab, ❤️ animasiya, IG kontekst menyusu (`#igCtx`), redaktə/hamıdan sil 15 dəq (`msg_edit`,`msg_unsend`), sabitlə/ulduz/səssiz, status (`status_set`), qruplar (`office_groups`, `office_group_members`, `grp_*`, şöbə qrupları gecə `grp_sync_depts`). Göndərmə: `msg_send` RPC. Siyahı: `msg_threads` (DM + qrup).
+**Zəng:** WebRTC, siqnal bazadan (`office_call_sig`, `call_sig`, `call_sig_get`), `office_calls`, `call_start/set/pending/get/diag`, edge `call-ice` (Cloudflare TURN — açarlar `office_secrets.turn_key_id/turn_key_token`). Push edge `office-push-one` (tag/url/important).
+**Sosial:** hekayələr (`office_stories`, stikerlər), Lent (`office_posts` + `feed2`, karusel `media`, sorğu `poll`, paylaşma `shared_from`, klub `club_id`), reaksiyalar (`office_post_likes.emoji`, `post_react`), zəncirli şərh (`post_comment2`, `comment_like`), bildirişlər (`office_notifs`, `_notify`, `notif_*`), profil/izləmə/nişan (`soc_profile`, `soc_follow`, `office_badges`, `social_badges_check`), tədbirlər (`office_soc_events`, `ev_*` — köhnə `office_events` təqvim cədvəlinə toxunulmayıb), klublar (`office_soc_clubs`), albomlar (`office_soc_albums`), kəşf (`soc_explore`), ad günləri (`bday_upcoming`). Gündəlik cron `office-social-daily` → `social_daily2()` (ad günü, ildönümü, nişanlar, ayın ulduzu).
+**Dizayn:** "Gün işığı" iOS glass qatı (ofis.html sonundakı CSS + `glassInit`), Bakı vaxtına görə fon (`tod-*`), mobil alt dock (`#dock`), avatar → profil vərəqi, geri düyməsi məntiqi (`backAct`). Performans üçün kartlarda blur YOXDUR.
+**APK 2.0.0:** Capacitor 8 (API 36), imzalı release APK + Play AAB (secrets `ANDROID_KEYSTORE_*`, ehtiyat `office_secrets.android_upload_ks`), native `CallAudio` plugin (qulaqlıq/dinamik, yaxınlıq sensoru) `mobile/native/` + `capacitor:sync:after` hook. Birbaşa link: github.com/nhtomarr/luxresidence/releases/latest/download/bas-ofis.apk
+**Play Console:** şəxsi hesab "Pilot Hayat CRM" yaradılıb, şəxsiyyət yoxlanışı gözlənilir → sonra qapalı test (closed testing) ilə yalnız işçilərə.
+**SW versiyası:** ofis-v56.
+**Gözləyən:** repo public → private etmək; tokenləri rotate (GitHub PAT, TURN, cf_token); Play qapalı test qurulumu.
