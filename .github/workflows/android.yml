@@ -1,4 +1,5 @@
 name: Android tətbiqi
+# Play Store: imzalı AAB yığımı növbəti mərhələdə əlavə olunacaq
 on:
   push:
     paths: ['mobile/**', '.github/workflows/android.yml']
