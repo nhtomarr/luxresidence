@@ -5013,7 +5013,7 @@ var _backAct16=backAct;backAct=function(){if(_hv){if(_hv.el.querySelector('.svsh
 
 /* ---- Səhifələrdə (post, profil, kanal…) yana sürüşdür → geri ---- */
 (function(){var S=null,hs='.socar,.igstories,.soseg,.sugl,.s3hl,.pfbd,.fpfl,.sochips,input,textarea,.igvc,.pftabs,.chr,.tgw,video';
- document.addEventListener('touchstart',function(e){S=null;var pg=e.target.closest&&e.target.closest('.pg.on');if(!pg||pg!==pgTop()||e.touches.length>1||$('modal').classList.contains('on')||e.target.closest(hs))return;var t=e.touches[0];S={pg:pg,x:t.clientX,y:t.clientY,dx:0,on:false};},{passive:true});
+ document.addEventListener('touchstart',function(e){S=null;var pg=e.target.closest&&e.target.closest('.pg.on');if(!pg||pg!==pgTop()||e.touches.length>1||$('modal').classList.contains('on'))return;var ex=e.target.closest(hs);if(ex){if(/INPUT|TEXTAREA|VIDEO/.test(ex.tagName)||ex.scrollWidth>ex.clientWidth+4)return;}var t=e.touches[0];S={pg:pg,x:t.clientX,y:t.clientY,dx:0,on:false};},{passive:true});
  document.addEventListener('touchmove',function(e){if(!S)return;var t=e.touches[0];S.dx=t.clientX-S.x;var dy=t.clientY-S.y;
   if(!S.on){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(S.dx)){S=null;return;}if(Math.abs(S.dx)>14&&Math.abs(S.dx)>Math.abs(dy)*1.3){S.on=true;S.pg.style.transition='none';}}
   if(S.on){if(e.cancelable)e.preventDefault();S.pg.style.transform='translateX('+S.dx+'px)';}},{passive:false});
