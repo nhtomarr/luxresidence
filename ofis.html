@@ -517,6 +517,39 @@ body.igfull{overflow:hidden}
 .igsend{border:none;background:none;color:var(--igp);font-weight:700;font-size:1rem;padding:8px 10px}
 .igroom .replybar{border-left-color:var(--igp);background:#f3f0ff;margin:6px 0 0}
 body.owner .ig{--igp:#6c3cf6}
+/* ===== canlı banner + zəng ===== */
+#igBanner{position:fixed;left:10px;right:10px;top:calc(8px + env(safe-area-inset-top,0px));z-index:250;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:18px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,.18);transform:translateY(-140%);transition:transform .3s cubic-bezier(.2,.9,.3,1.2);cursor:pointer;max-width:560px;margin:0 auto;font-family:-apple-system,"SF Pro Text",Roboto,Inter,sans-serif;-webkit-user-select:none;user-select:none}
+#igBanner.on{transform:translateY(0)}
+#igBanner .bnt{flex:1;min-width:0;display:flex;flex-direction:column}
+#igBanner .bnt b{font-size:.92rem;color:#0a0a0a}#igBanner .bnt span{font-size:.88rem;color:#444;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.igm.callm{display:flex;align-items:center;gap:10px;cursor:pointer}
+.igm.callm i{font-style:normal;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.08);font-size:15px}
+.igm.mine.callm i{background:rgba(255,255,255,.22)}
+.igm.callm small{display:block;font-size:.74rem;opacity:.7}
+body.incall{overflow:hidden}
+#callUI{position:fixed;inset:0;z-index:400;background:#111;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(48px + env(safe-area-inset-top,0px)) 20px calc(40px + env(safe-area-inset-bottom,0px));font-family:-apple-system,"SF Pro Text",Roboto,Inter,sans-serif;overflow:hidden;-webkit-user-select:none;user-select:none}
+#callUI .cbg{position:absolute;inset:0;background:linear-gradient(160deg,#3b2a6e,#141414 70%);z-index:0}
+#callUI .cbg img{width:100%;height:100%;object-fit:cover;filter:blur(40px) brightness(.45);transform:scale(1.2)}
+#callUI .ctop{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:6vh;transition:.3s}
+#callUI .ctop.mini{flex-direction:row;margin-top:0;align-self:flex-start;gap:10px}
+#callUI .ctop.mini .igava{width:36px!important;height:36px!important;font-size:13px!important}
+#callUI .ctop.mini .cname{font-size:1rem}
+#callUI .cname{font-size:1.6rem;font-weight:700;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+#callUI .cst{font-size:1rem;opacity:.85;font-variant-numeric:tabular-nums}
+#callUI .crem{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:0;transition:opacity .3s;background:#000}
+#callUI .crem.on{opacity:1}
+#callUI .cloc{position:absolute;z-index:3;right:14px;top:calc(14px + env(safe-area-inset-top,0px));width:104px;height:150px;object-fit:cover;border-radius:16px;background:#222;transform:scaleX(-1);box-shadow:0 4px 18px rgba(0,0,0,.4)}
+#callUI .cloc.full{inset:0;width:100%;height:100%;border-radius:0;z-index:1;opacity:.55;top:0;right:0}
+#callUI .cloc.off{opacity:0}
+#callUI .cbtns{position:relative;z-index:3;display:flex;gap:18px;align-items:center;justify-content:center;background:rgba(0,0,0,.28);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:12px 18px;border-radius:40px}
+#callUI .cbtns.in{background:none;backdrop-filter:none;width:100%;justify-content:space-around}
+#callUI .cbtns.in>div{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:.9rem}
+#callUI .cb{width:62px;height:62px;border-radius:50%;border:none;display:grid;place-items:center;color:#fff;cursor:pointer}
+#callUI .cb:active{transform:scale(.92)}
+#callUI .cb.red{background:#ff3b30}#callUI .cb.green{background:#34c759;width:70px;height:70px}#callUI .cbtns.in .cb.red{width:70px;height:70px}
+#callUI .cb.glass{background:rgba(255,255,255,.18)}#callUI .cb.glass.act{background:#fff;color:#111}
+#callUI .pulse{animation:cpulse 1.4s infinite}
+@keyframes cpulse{0%{box-shadow:0 0 0 0 rgba(52,199,89,.6)}70%{box-shadow:0 0 0 18px rgba(52,199,89,0)}100%{box-shadow:0 0 0 0 rgba(52,199,89,0)}}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -749,7 +782,7 @@ function start(){$('app').style.display='';var _bl=document.getElementById('boot
   if(SIMPLE)tabs=[['today','Bu gün'],['dir','Komanda']];if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}}
  document.body.classList.toggle('is-mgr',MGR);document.body.classList.toggle('owner',OWNER);
  $('tabs').innerHTML=tabs.map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');
- $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};if(typeof chatUpdateBadge==='function')setTimeout(chatUpdateBadge,800);
+ $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};if(typeof chatUpdateBadge==='function')setTimeout(chatUpdateBadge,800);setTimeout(function(){try{chatGlobalInit();}catch(e){}},1000);
  $('dDay').value=today();$('mMonth').value=today().slice(0,7);$('dDay').onchange=renderDay;$('mMonth').onchange=renderMonth;$('tkFilter').onchange=renderKanban;
  setInterval(tick,1000);tick();
  loadAll().then(function(){setTimeout(function(){iosSheetShow(false);},2500);if(!MGR&&EMP&&EMP.lead_rotation&&!document.querySelector('#tabs [data-v=leads]'))$('tabs').querySelector('[data-v=leave]').insertAdjacentHTML('beforebegin','<button data-v="leads">Müraciətlər</button>');var c=new URLSearchParams(location.search).get('c');(function(){var def=new URLSearchParams(location.search).get('qr')&&MGR?'set':((OWNER||(ME.is_admin&&!EMP))?'boss':'today');var saved='';try{saved=sessionStorage.getItem('ofis_tab')||'';}catch(e){}var allowed=tabs.map(function(t){return t[0];});show(saved&&allowed.indexOf(saved)>=0?saved:def);})();if(new URLSearchParams(location.search).get('qr')&&MGR)openQR();if(c)autoCheck(c);});
@@ -861,6 +894,7 @@ var IGI={
  search:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
  cam:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
  img:'<svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="1.6"/><path d="M21 15l-5-5-8 9"/></svg>',
+ video:'<svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2.5" y="6" width="13.5" height="12" rx="3"/><path d="M16 10.5l5.5-3.5v10L16 13.5z"/></svg>',
  phone:'<svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg>'
 };
 function chatAgo(iso){if(!iso)return '';var s=(Date.now()-new Date(iso).getTime())/1000;
@@ -907,14 +941,14 @@ function chatBack(fromPop){if(!fromPop&&history.state&&history.state.igchat){his
 function renderChatRoom(){var v=$('v-chat');if(!v)return;var ph=CHAT_PH[CHATother],sub=CHAT_SUB[CHATother]||'';
  v.innerHTML='<div class="ig igroom"><div class="ighead"><button class="igicon" onclick="chatBack()">'+IGI.back+'</button>'
   +'<div class="igwho" onclick="chatProfile()">'+chatAva(CHATname,ph,40)+'<div><div class="igname">'+esc(CHATname||'İşçi')+'</div>'+(sub?'<div class="igsub">'+esc(sub)+'</div>':'')+'</div></div>'
-  +'<button class="igicon" id="igCall" style="display:none">'+IGI.phone+'</button></div>'
+  +'<button class="igicon" onclick="callStart(\'audio\')" title="Səsli zəng">'+IGI.phone+'</button><button class="igicon" onclick="callStart(\'video\')" title="Video zəng">'+IGI.video+'</button></div>'
   +'<div id="chatMsgs" class="igmsgs"><p class="status"><span class="spin"></span></p></div>'
   +'<div id="chatReplyBar"></div>'
   +'<div class="igbar"><button class="igcam" onclick="chatPickImage()">'+IGI.cam+'</button><input type="file" id="chatFile" accept="image/*" style="display:none" onchange="chatUploadImage(this.files[0])">'
   +'<input id="chatText" placeholder="Mesaj..." autocomplete="off" oninput="chatTyping()" onkeydown="if(event.key===\'Enter\')chatSend()">'
   +'<button class="igicon igimg" id="igImg" onclick="chatPickImage()">'+IGI.img+'</button><button class="igsend" id="igSend" onclick="chatSend()" style="display:none">Göndər</button></div></div>';
  chatFull(true);chatLoadMsgs();chatSubscribe();
- if(!CHAT_PH.hasOwnProperty(CHATother)||sub==='')run(sb.rpc('msg_profile',{p_uid:CHATother})).then(function(p){if(!p||CHATother==null)return;CHAT_PH[CHATother]=p.photo||null;CHAT_SUB[CHATother]=p.vezife||'';var w=document.querySelector('.igwho');if(w)w.innerHTML=chatAva(CHATname,p.photo,40)+'<div><div class="igname">'+esc(CHATname||'İşçi')+'</div>'+(p.vezife?'<div class="igsub">'+esc(p.vezife)+'</div>':'')+'</div>';if(p.telefon){var c=$('igCall');if(c){c.style.display='';c.onclick=function(){location.href='tel:'+p.telefon;};}}}).catch(function(){});
+ if(!CHAT_PH.hasOwnProperty(CHATother)||sub==='')run(sb.rpc('msg_profile',{p_uid:CHATother})).then(function(p){if(!p||CHATother==null)return;CHAT_PH[CHATother]=p.photo||null;CHAT_SUB[CHATother]=p.vezife||'';var w=document.querySelector('.igwho');if(w)w.innerHTML=chatAva(CHATname,p.photo,40)+'<div><div class="igname">'+esc(CHATname||'İşçi')+'</div>'+(p.vezife?'<div class="igsub">'+esc(p.vezife)+'</div>':'')+'</div>';}).catch(function(){});
 }
 function chatFit(){var r=document.querySelector('.igroom');if(!r)return;var vv=window.visualViewport;
  if(vv){r.style.height=vv.height+'px';r.style.top=vv.offsetTop+'px';}else{r.style.height=window.innerHeight+'px';r.style.top='0px';}
@@ -924,7 +958,7 @@ function chatFull(on){document.body.classList.toggle('igfull',!!on);var vv=windo
   var m=$('chatMsgs');if(m)m.addEventListener('scroll',function(){m._stick=(m.scrollHeight-m.scrollTop-m.clientHeight)<80;});}
  else if(window._chatFitOn){window._chatFitOn=false;if(vv){vv.removeEventListener('resize',chatFit);vv.removeEventListener('scroll',chatFit);}window.removeEventListener('resize',chatFit);}}
 function chatTyping(){var t=$('chatText'),has=t&&t.value.trim().length>0;var s=$('igSend'),i=$('igImg');if(s)s.style.display=has?'':'none';if(i)i.style.display=has?'none':'';}
-function chatLoadMsgs(){run(sb.rpc('msg_open',{p_other:CHATother})).then(function(rows){CHATmsgs=rows||[];chatDrawMsgs(CHATmsgs);}).catch(err);}
+function chatLoadMsgs(quiet){var who=CHATother;run(sb.rpc('msg_open',{p_other:who})).then(function(rows){if(who!==CHATother)return;rows=rows||[];var sig=JSON.stringify(rows.map(function(m){return [m.id,m.read,m.reaction];}));if(quiet&&sig===window._chatSig)return;window._chatSig=sig;CHATmsgs=rows;chatDrawMsgs(CHATmsgs);if(quiet)livePoll();}).catch(quiet?function(){}:err);}
 function chatSep(d){var now=new Date(),y=new Date(now);y.setDate(now.getDate()-1);var hm=d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'});
  if(d.toDateString()===now.toDateString())return hm;if(d.toDateString()===y.toDateString())return 'Dünən '+hm;
  return d.toLocaleDateString('az-AZ',{day:'numeric',month:'long'})+' '+hm;}
@@ -939,13 +973,167 @@ function chatDrawMsgs(rows){var el=$('chatMsgs');if(!el)return;
   var rep=m.reply?'<div class="igrep">'+(m.reply.mine?'Sizə':'')+'<span>'+(m.reply.image?'📷 Şəkil':esc((m.reply.body||'').slice(0,60)))+'</span></div>':'';
   var img=m.image?'<img class="msgimg" src="'+esc(m.image)+'" onclick="event.stopPropagation();chatViewImage(\''+esc(m.image)+'\')">':'';
   var react=m.reaction?'<span class="msgreact">'+esc(m.reaction)+'</span>':'';
+  var cm=/^(📞|🎥) /.test(m.body||'');if(cm){var vk=m.body.indexOf('🎥')===0,miss=/Buraxılmış|rədd/.test(m.body);cls+=' callm';img='';rep='';}
   h+='<div class="igline '+(m.mine?'mine':'their')+'">'+(!m.mine?(endGrp?chatAva(CHATname,CHAT_PH[CHATother],28):'<span class="igsp"></span>'):'')
-   +'<div class="igcol">'+rep+'<div class="'+cls+'" id="msg'+m.id+'" title="'+t.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'})+'" ontouchstart="chatTouchStart('+m.id+')" ontouchend="chatTouchEnd()" ontouchmove="chatTouchEnd()" oncontextmenu="event.preventDefault();chatMsgMenu('+m.id+')" ondblclick="chatQuickLike('+m.id+')">'
-   +img+(m.body?'<span class="msgbody">'+esc(m.body)+'</span>':'')+react+'</div></div></div>';
+   +'<div class="igcol">'+rep+'<div class="'+cls+'" id="msg'+m.id+'" '+(cm?'onclick="callStart(\''+(vk?'video':'audio')+'\')" ':'')+'title="'+t.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'})+'" ontouchstart="chatTouchStart('+m.id+')" ontouchend="chatTouchEnd()" ontouchmove="chatTouchEnd()" oncontextmenu="event.preventDefault();chatMsgMenu('+m.id+')" ondblclick="chatQuickLike('+m.id+')">'
+   +(cm?'<i>'+(vk?'🎥':(miss?'↙︎':'📞'))+'</i><span class="msgbody">'+esc(m.body.replace(/^(📞|🎥) /,''))+'<small>'+(m.mine?'':'Yenidən zəng et')+'</small></span>':img+(m.body?'<span class="msgbody">'+esc(m.body)+'</span>':''))+react+'</div></div></div>';
   if(i===lastMineRead&&i===rows.length-1&&m.read)h+='<div class="igseen">Görüldü</div>';
  });
- el.innerHTML=h;el.scrollTop=el.scrollHeight;
+ var stick=el._stick!==false;el.innerHTML=h;if(stick)el.scrollTop=el.scrollHeight;
 }
+/* ===== CANLI ÇAT QATI + ZƏNG (WebRTC) ===== */
+var LIVE={ch:null,ok:false,poll:null,unread:-1,started:false};
+function chatGlobalInit(){if(LIVE.started||!ME||!ME.user_id)return;LIVE.started=true;
+ var go=function(){liveSubscribe();};
+ try{sb.auth.getSession().then(function(r){var t=r&&r.data&&r.data.session&&r.data.session.access_token;if(t&&sb.realtime&&sb.realtime.setAuth)sb.realtime.setAuth(t);go();}).catch(go);}catch(e){go();}
+ try{sb.auth.onAuthStateChange(function(ev,s){if(s&&s.access_token&&sb.realtime&&sb.realtime.setAuth)sb.realtime.setAuth(s.access_token);});}catch(e){}
+ LIVE.poll=setInterval(function(){if(document.visibilityState==='visible')livePoll();},LIVE.ok?20000:6000);
+ document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'){livePoll(true);if(!LIVE.ok)liveSubscribe();}});
+ window.addEventListener('online',function(){livePoll(true);liveSubscribe();});
+ livePoll(true);liveDeepLink();
+}
+function liveSubscribe(){var u=ME.user_id;if(LIVE.ch){try{sb.removeChannel(LIVE.ch);}catch(e){}LIVE.ch=null;}
+ try{LIVE.ch=sb.channel('me-'+u)
+  .on('postgres_changes',{event:'INSERT',schema:'public',table:'office_messages',filter:'receiver=eq.'+u},function(p){liveMsgIn(p.new);})
+  .on('postgres_changes',{event:'INSERT',schema:'public',table:'office_messages',filter:'sender=eq.'+u},function(p){liveMsgOut(p.new);})
+  .on('postgres_changes',{event:'UPDATE',schema:'public',table:'office_messages',filter:'sender=eq.'+u},function(p){if(CHATother&&p.new&&p.new.receiver===CHATother)chatLoadMsgs(true);})
+  .on('postgres_changes',{event:'UPDATE',schema:'public',table:'office_messages',filter:'receiver=eq.'+u},function(p){if(CHATother&&p.new&&p.new.sender===CHATother)chatLoadMsgs(true);})
+  .on('postgres_changes',{event:'INSERT',schema:'public',table:'office_calls',filter:'callee=eq.'+u},function(p){callIncoming(p.new);})
+  .on('postgres_changes',{event:'UPDATE',schema:'public',table:'office_calls',filter:'callee=eq.'+u},function(p){callRowUpdate(p.new);})
+  .on('postgres_changes',{event:'UPDATE',schema:'public',table:'office_calls',filter:'caller=eq.'+u},function(p){callRowUpdate(p.new);})
+  .subscribe(function(st){LIVE.ok=(st==='SUBSCRIBED');if(st==='CHANNEL_ERROR'||st==='TIMED_OUT'){setTimeout(liveSubscribe,5000);}});
+ }catch(e){LIVE.ok=false;}
+}
+function livePoll(force){
+ run(sb.rpc('msg_unread')).then(function(n){n=n||0;var ch=n!==LIVE.unread;var first=LIVE.unread<0;LIVE.unread=n;chatSetBadge(n);
+  if((ch&&!first)||force){liveRefreshViews();}}).catch(function(){});
+ if(!CALL)run(sb.rpc('call_pending')).then(function(c){if(c&&c.id&&!CALL)callIncoming(c);}).catch(function(){});
+}
+function liveRefreshViews(){var v=$('v-chat');if(!v||!v.classList.contains('on'))return;if(CHATother)chatLoadMsgs(true);else if($('chatThreads'))run(sb.rpc('msg_threads')).then(function(r){CHAT_THREADS=r||[];chatDrawThreads(CHAT_THREADS);}).catch(function(){});}
+function chatSetBadge(n){var b=document.querySelector('#tabs button[data-v="chat"]');if(!b)return;b.innerHTML='💬 Çat'+(n>0?' <span class="tabbadge">'+n+'</span>':'');}
+function liveMsgIn(m){if(!m)return;var inRoom=CHATother===m.sender&&$('v-chat')&&$('v-chat').classList.contains('on')&&document.visibilityState==='visible';
+ if(inRoom){chatLoadMsgs(true);}else{var b=m.body||'';if(!/^(📞|🎥)/.test(b))chatBanner(m.sender,m.image_url&&!b?'📷 Şəkil göndərdi':b);}
+ LIVE.unread=-2;livePoll(true);}
+function liveMsgOut(m){if(CHATother&&m&&m.receiver===CHATother)chatLoadMsgs(true);else liveRefreshViews();}
+function chatWho(uid){var t=(CHAT_THREADS||[]).find(function(x){return x.other===uid;})||((window.CHAT_CONTACTS||[]).find(function(x){return x.uid===uid;}));
+ if(t)return Promise.resolve({ad:t.ad,photo:t.photo,vezife:t.vezife});
+ return run(sb.rpc('msg_profile',{p_uid:uid})).then(function(p){return p||{};}).catch(function(){return {};});}
+var _bnT=null;
+function chatBanner(uid,text){chatWho(uid).then(function(p){var el=$('igBanner');if(!el){el=document.createElement('div');el.id='igBanner';document.body.appendChild(el);}
+ el.innerHTML=chatAva(p.ad,p.photo,40)+'<div class="bnt"><b>'+esc(p.ad||'Yeni mesaj')+'</b><span>'+esc(String(text||'').slice(0,90))+'</span></div>';
+ el.onclick=function(){el.classList.remove('on');show('chat');CHAT_PH[uid]=p.photo||null;CHAT_SUB[uid]=p.vezife||'';chatOpen(uid,p.ad||'');};
+ el.classList.add('on');try{navigator.vibrate&&navigator.vibrate(60);}catch(e){}chatBlip();
+ clearTimeout(_bnT);_bnT=setTimeout(function(){el.classList.remove('on');},4500);});}
+function chatBlip(){try{var C=window._actx||(window._actx=new (window.AudioContext||window.webkitAudioContext)());var o=C.createOscillator(),g=C.createGain();o.frequency.value=880;g.gain.setValueAtTime(.0001,C.currentTime);g.gain.exponentialRampToValueAtTime(.12,C.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,C.currentTime+.25);o.connect(g);g.connect(C.destination);o.start();o.stop(C.currentTime+.26);}catch(e){}}
+function liveDeepLink(){var q=new URLSearchParams(location.search),c=q.get('chat'),k=q.get('call');
+ if(c||k){try{history.replaceState(history.state,'',location.pathname);}catch(e){}}
+ if(c){chatWho(c).then(function(p){show('chat');CHAT_PH[c]=p.photo||null;CHAT_SUB[c]=p.vezife||'';chatOpen(c,p.ad||'');});}
+ if(k){run(sb.rpc('call_get',{p_id:k})).then(function(r){if(r&&r.status==='ringing'&&r.callee===ME.user_id)callIncoming(r);}).catch(function(){});}
+}
+
+/* ---------- ZƏNG ---------- */
+var CALL=null,_ICE=null,_ICEt=0;
+function callIce(){if(_ICE&&Date.now()-_ICEt<3000000)return Promise.resolve(_ICE);
+ return sb.functions.invoke('call-ice',{body:{}}).then(function(r){var s=(r&&r.data&&r.data.iceServers)||[{urls:['stun:stun.cloudflare.com:3478','stun:stun.l.google.com:19302']}];_ICE=s;_ICEt=Date.now();return s;}).catch(function(){return [{urls:['stun:stun.l.google.com:19302']}];});}
+function callMedia(kind,facing){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return Promise.reject(new Error('Bu cihaz zəngi dəstəkləmir'));
+ return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:kind==='video'?{facingMode:facing||'user',width:{ideal:720},height:{ideal:1280}}:false});}
+function callErrMsg(e){var n=e&&e.name;if(n==='NotAllowedError'||n==='SecurityError')return 'Mikrofon/kamera icazəsi verilməyib. Brauzer ayarlarından icazə verin.';if(n==='NotFoundError')return 'Mikrofon və ya kamera tapılmadı';return (e&&e.message)||'Zəng alınmadı';}
+function callStart(kind){if(CALL){toast('Artıq zəngdəsiniz');return;}if(!CHATother)return;var peer=CHATother,name=CHATname,photo=CHAT_PH[peer];
+ CALL={role:'caller',peer:peer,name:name,photo:photo,kind:kind,ice:[],state:'out',facing:'user'};callUI();callSetStatus('Zəng edilir…');callTone('back');
+ callMedia(kind).then(function(st){if(!CALL)return st.getTracks().forEach(function(t){t.stop();});CALL.local=st;callAttachLocal();
+  return run(sb.rpc('call_start',{p_callee:peer,p_kind:kind}));
+ }).then(function(r){if(!CALL||!r)return;if(r.busy){callSetStatus('Məşğuldur');callTone(null);setTimeout(function(){callCleanup();},2200);return;}
+  CALL.id=r.id;callJoin();CALL.ringT=setTimeout(function(){if(CALL&&CALL.state==='out'){callSetStatus('Cavab yoxdur');run(sb.rpc('call_set',{p_id:CALL.id,p_status:'missed'})).catch(function(){});setTimeout(callCleanup,1500);}},40000);
+ }).catch(function(e){toast(callErrMsg(e));callCleanup();});
+}
+function callIncoming(c){if(!c||c.status!=='ringing'||c.callee!==ME.user_id)return;if(CALL){if(CALL.id===c.id)return;return;}
+ if(Date.now()-new Date(c.created_at).getTime()>55000)return;
+ CALL={role:'callee',id:c.id,peer:c.caller,kind:c.kind,ice:[],state:'in',name:c.ad||'',photo:c.photo||null,facing:'user'};callUI();callSetStatus(c.kind==='video'?'Video zəng…':'Səsli zəng…');callTone('ring');
+ try{navigator.vibrate&&navigator.vibrate([400,200,400,200,400,200,400,200,400]);}catch(e){}
+ if(!c.ad)chatWho(c.caller).then(function(p){if(!CALL||CALL.id!==c.id)return;CALL.name=p.ad||'';CALL.photo=p.photo||null;callUI(true);});
+ CALL.ringT=setTimeout(function(){if(CALL&&CALL.state==='in')callCleanup();},45000);
+}
+function callAccept(){if(!CALL||CALL.state!=='in')return;CALL.state='conn';callTone(null);try{navigator.vibrate&&navigator.vibrate(0);}catch(e){}clearTimeout(CALL.ringT);callSetStatus('Qoşulur…');callUI(true);
+ callMedia(CALL.kind).then(function(st){if(!CALL)return st.getTracks().forEach(function(t){t.stop();});CALL.local=st;callAttachLocal();return run(sb.rpc('call_set',{p_id:CALL.id,p_status:'accepted'}));
+ }).then(function(r){if(!CALL)return;if(r&&r.status!=='accepted'){callSetStatus('Zəng bitib');setTimeout(callCleanup,1200);return;}callJoin();
+ }).catch(function(e){toast(callErrMsg(e));callHang();});
+}
+function callDecline(){if(!CALL)return;var id=CALL.id;run(sb.rpc('call_set',{p_id:id,p_status:'declined'})).catch(function(){});callSend({t:'bye'});callCleanup();}
+function callHang(){if(!CALL)return;var id=CALL.id;callSend({t:'bye'});if(id)run(sb.rpc('call_set',{p_id:id,p_status:'ended'})).then(function(){if(CHATother)chatLoadMsgs(true);}).catch(function(){});callSetStatus('Zəng bitdi');setTimeout(callCleanup,600);}
+function callRowUpdate(r){if(!CALL||!r||r.id!==CALL.id)return;
+ if(r.status==='accepted'&&CALL.role==='caller'&&CALL.state==='out'){CALL.state='conn';callTone(null);clearTimeout(CALL.ringT);callSetStatus('Qoşulur…');callUI(true);}
+ if(['declined','missed','cancelled','ended','busy'].indexOf(r.status)>=0){callSetStatus(r.status==='declined'?'Rədd edildi':r.status==='cancelled'?'Zəng ləğv edildi':r.status==='missed'?'Cavab yoxdur':'Zəng bitdi');callTone(null);setTimeout(callCleanup,1200);}
+}
+function callJoin(){var id=CALL.id;CALL.ch=sb.channel('call:'+id,{config:{broadcast:{self:false}}});
+ CALL.ch.on('broadcast',{event:'sig'},function(m){callSig(m.payload||{});}).subscribe(function(st){if(st!=='SUBSCRIBED'||!CALL)return;
+  if(CALL.role==='callee'){var n=0;var f=function(){if(!CALL||CALL.gotOffer||n++>12)return;callSend({t:'ready'});CALL.readyT=setTimeout(f,1500);};f();}
+ });}
+function callSend(o){try{if(CALL&&CALL.ch)CALL.ch.send({type:'broadcast',event:'sig',payload:o});}catch(e){}}
+function callPC(){return callIce().then(function(ice){if(!CALL)return null;if(CALL.pc)return CALL.pc;var pc=new RTCPeerConnection({iceServers:ice});CALL.pc=pc;
+ (CALL.local?CALL.local.getTracks():[]).forEach(function(t){pc.addTrack(t,CALL.local);});
+ pc.onicecandidate=function(e){if(e.candidate)callSend({t:'ice',c:e.candidate.toJSON?e.candidate.toJSON():e.candidate});};
+ pc.ontrack=function(e){var s=e.streams&&e.streams[0];if(!s){s=CALL.remote||new MediaStream();s.addTrack(e.track);}CALL.remote=s;callAttachRemote();};
+ pc.onconnectionstatechange=function(){if(!CALL)return;var s=pc.connectionState;
+  if(s==='connected'){clearTimeout(CALL.dropT);if(!CALL.t0){CALL.t0=Date.now();CALL.tick=setInterval(callTick,1000);}callTick();CALL.state='live';callUI(true);}
+  else if(s==='disconnected'){callSetStatus('Yenidən qoşulur…');clearTimeout(CALL.dropT);CALL.dropT=setTimeout(function(){if(CALL&&pc.connectionState!=='connected')callHang();},10000);}
+  else if(s==='failed'){toast('Bağlantı qurulmadı');callHang();}};
+ return pc;});}
+function callFlushIce(){var pc=CALL&&CALL.pc;if(!pc||!pc.remoteDescription)return;var q=CALL.ice;CALL.ice=[];q.forEach(function(c){pc.addIceCandidate(c).catch(function(){});});}
+function callSig(m){if(!CALL)return;
+ if(m.t==='ready'&&CALL.role==='caller'){if(CALL.offered)return;CALL.offered=true;CALL.state='conn';callTone(null);clearTimeout(CALL.ringT);callSetStatus('Qoşulur…');callUI(true);
+  callPC().then(function(pc){if(!pc)return;return pc.createOffer().then(function(o){return pc.setLocalDescription(o);}).then(function(){callSend({t:'offer',sdp:pc.localDescription});});}).catch(function(e){toast('Zəng xətası');callHang();});}
+ else if(m.t==='offer'&&CALL.role==='callee'){if(CALL.gotOffer)return;CALL.gotOffer=true;clearTimeout(CALL.readyT);
+  callPC().then(function(pc){if(!pc)return;return pc.setRemoteDescription(m.sdp).then(function(){callFlushIce();return pc.createAnswer();}).then(function(a){return pc.setLocalDescription(a);}).then(function(){callSend({t:'answer',sdp:pc.localDescription});});}).catch(function(){toast('Zəng xətası');callHang();});}
+ else if(m.t==='answer'&&CALL.role==='caller'){var pc=CALL.pc;if(pc&&pc.signalingState==='have-local-offer')pc.setRemoteDescription(m.sdp).then(callFlushIce).catch(function(){});}
+ else if(m.t==='ice'&&m.c){CALL.ice.push(m.c);callFlushIce();}
+ else if(m.t==='bye'){callSetStatus('Zəng bitdi');callTone(null);setTimeout(callCleanup,800);}
+ else if(m.t==='cam'){CALL.remoteCamOff=!m.on;callUI(true);}
+}
+function callTick(){if(!CALL||!CALL.t0)return;var s=Math.floor((Date.now()-CALL.t0)/1000);callSetStatus(Math.floor(s/60)+':'+String(s%60).padStart(2,'0'));}
+function callCleanup(){if(!CALL)return;var c=CALL;CALL=null;callTone(null);try{navigator.vibrate&&navigator.vibrate(0);}catch(e){}
+ clearTimeout(c.ringT);clearTimeout(c.readyT);clearTimeout(c.dropT);clearInterval(c.tick);
+ try{c.local&&c.local.getTracks().forEach(function(t){t.stop();});}catch(e){}try{c.pc&&c.pc.close();}catch(e){}try{c.ch&&sb.removeChannel(c.ch);}catch(e){}
+ var el=$('callUI');if(el)el.remove();document.body.classList.remove('incall');if(CHATother)setTimeout(function(){chatLoadMsgs(true);},700);}
+function callSetStatus(t){if(CALL)CALL.status=t;var e=$('callSt');if(e)e.textContent=t;}
+function callAttachLocal(){var v=$('callLocal');if(v&&CALL&&CALL.local){v.srcObject=CALL.local;v.muted=true;v.play&&v.play().catch(function(){});}}
+function callAttachRemote(){if(!CALL||!CALL.remote)return;var a=$('callAudio');if(a){a.srcObject=CALL.remote;a.play&&a.play().catch(function(){});}var v=$('callRemote');if(v){v.srcObject=CALL.remote;v.play&&v.play().catch(function(){});}}
+var CI={
+ mic:'<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+ micoff:'<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 9v2a3 3 0 0 0 5 2.2M15 10V6a3 3 0 0 0-5.7-1.3M5 11a7 7 0 0 0 11.5 5.3M19 11a7 7 0 0 1-.6 2.8M12 18v3M3 3l18 18"/></svg>',
+ cam:'<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3z"/></svg>',
+ camoff:'<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M16 16v1a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2M11 6h4a1 1 0 0 1 1 1v3l5-3v10M3 3l18 18"/></svg>',
+ flip:'<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><path d="M9 13a3 3 0 0 1 5-2.2M15 13a3 3 0 0 1-5 2.2M14 9v2h-2M10 17v-2h2"/></svg>',
+ end:'<svg viewBox="0 0 24 24" width="30" height="30" fill="#fff"><path d="M12 9c-2.6 0-5 .6-7.2 1.8-.8.4-1.2 1.3-1 2.2l.4 1.7c.2.8 1 1.3 1.8 1.1l2.7-.6c.7-.2 1.2-.8 1.2-1.5v-1.5c1.4-.4 2.8-.4 4.2 0v1.5c0 .7.5 1.3 1.2 1.5l2.7.6c.8.2 1.6-.3 1.8-1.1l.4-1.7c.2-.9-.2-1.8-1-2.2C17 9.6 14.6 9 12 9z"/></svg>',
+ acc:'<svg viewBox="0 0 24 24" width="30" height="30" fill="#fff"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg>',
+ vacc:'<svg viewBox="0 0 24 24" width="30" height="30" fill="#fff"><path d="M4 6h11a2 2 0 0 1 2 2v1.5l4-2.5v10l-4-2.5V16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg>'
+};
+function callUI(re){if(!CALL)return;var el=$('callUI');if(!el){el=document.createElement('div');el.id='callUI';document.body.appendChild(el);}
+ document.body.classList.add('incall');var c=CALL,vid=c.kind==='video',live=c.state==='live'||c.state==='conn';
+ var big=chatAva(c.name,c.photo,112);
+ var h='<div class="cbg">'+(c.photo?'<img src="'+AVA_BASE+esc(c.photo)+'">':'')+'</div>';
+ if(vid)h+='<video id="callRemote" class="crem'+(c.state==='live'&&!c.remoteCamOff?' on':'')+'" autoplay playsinline></video><video id="callLocal" class="cloc'+(c.state==='in'?' full':'')+(c.camOff?' off':'')+'" autoplay playsinline muted></video>';
+ h+='<audio id="callAudio" autoplay playsinline></audio>';
+ h+='<div class="ctop'+(vid&&c.state==='live'&&!c.remoteCamOff?' mini':'')+'">'+big+'<div class="cname">'+esc(c.name||'')+'</div><div class="cst" id="callSt">'+esc(c.status||'')+'</div></div>';
+ if(c.state==='in'){h+='<div class="cbtns in"><div><button class="cb red" onclick="callDecline()">'+CI.end+'</button><span>Rədd et</span></div><div><button class="cb green pulse" onclick="callAccept()">'+(vid?CI.vacc:CI.acc)+'</button><span>Qəbul et</span></div></div>';}
+ else{h+='<div class="cbtns">'
+  +'<button class="cb glass'+(c.muted?' act':'')+'" onclick="callMute()">'+(c.muted?CI.micoff:CI.mic)+'</button>'
+  +(vid?'<button class="cb glass'+(c.camOff?' act':'')+'" onclick="callCam()">'+(c.camOff?CI.camoff:CI.cam)+'</button><button class="cb glass" onclick="callFlip()">'+CI.flip+'</button>':'')
+  +'<button class="cb red" onclick="callHang()">'+CI.end+'</button></div>';}
+ el.className=vid?'video':'audio';el.innerHTML=h;callAttachLocal();callAttachRemote();
+}
+function callMute(){if(!CALL||!CALL.local)return;CALL.muted=!CALL.muted;CALL.local.getAudioTracks().forEach(function(t){t.enabled=!CALL.muted;});callUI(true);}
+function callCam(){if(!CALL||!CALL.local)return;CALL.camOff=!CALL.camOff;CALL.local.getVideoTracks().forEach(function(t){t.enabled=!CALL.camOff;});callSend({t:'cam',on:!CALL.camOff});callUI(true);}
+function callFlip(){if(!CALL||CALL.kind!=='video'||!CALL.local)return;var f=CALL.facing==='user'?'environment':'user';
+ navigator.mediaDevices.getUserMedia({video:{facingMode:f}}).then(function(s){var nt=s.getVideoTracks()[0];if(!CALL){nt.stop();return;}var old=CALL.local.getVideoTracks()[0];
+  if(CALL.pc){var snd=CALL.pc.getSenders().find(function(x){return x.track&&x.track.kind==='video';});if(snd)snd.replaceTrack(nt);}
+  if(old){CALL.local.removeTrack(old);old.stop();}CALL.local.addTrack(nt);CALL.facing=f;callAttachLocal();}).catch(function(){toast('Kamera dəyişmədi');});}
+var _tone=null;
+function callTone(kind){try{if(_tone){clearInterval(_tone.i);try{_tone.o.stop();}catch(e){}_tone=null;}if(!kind)return;
+ var C=window._actx||(window._actx=new (window.AudioContext||window.webkitAudioContext)());if(C.state==='suspended')C.resume();
+ var g=C.createGain();g.gain.value=0;g.connect(C.destination);var o=C.createOscillator();o.frequency.value=kind==='ring'?660:425;o.connect(g);o.start();
+ var beat=function(){var t=C.currentTime;if(kind==='ring'){[0,.45].forEach(function(d){g.gain.setValueAtTime(.18,t+d);g.gain.setValueAtTime(0,t+d+.35);});o.frequency.setValueAtTime(660,t);o.frequency.setValueAtTime(880,t+.45);}else{g.gain.setValueAtTime(.08,t);g.gain.setValueAtTime(0,t+1);}};
+ beat();_tone={o:o,i:setInterval(beat,kind==='ring'?2000:3500)};}catch(e){}}
+
 /* uzun basma / sağ klik → menyu */
 var _chatHold=null;
 function chatTouchStart(id){_chatHold=setTimeout(function(){chatMsgMenu(id);},500);}
@@ -987,12 +1175,8 @@ function chatProfile(){run(sb.rpc('msg_profile',{p_uid:CHATother})).then(functio
   +'</div>';
  modal(html);
 }).catch(err);}
-function chatSubscribe(){if(CHATsub){try{CHATsub.unsubscribe();}catch(e){}}
- try{CHATsub=sb.channel('chat-'+CHATother).on('postgres_changes',{event:'*',schema:'public',table:'office_messages'},function(p){
-  var m=p.new||p.old;if(!m)return;if((m.sender===CHATother)||(m.receiver===CHATother)||(m.sender&&m.receiver)){chatLoadMsgs();}
- }).subscribe();}catch(e){}
-}
-function chatUpdateBadge(){run(sb.rpc('msg_unread')).then(function(n){var b=document.querySelector('#tabs button[data-v="chat"]');if(!b)return;b.innerHTML='💬 Çat'+(n>0?' <span class="tabbadge">'+n+'</span>':'');}).catch(function(){});}
+function chatSubscribe(){/* qlobal canlı qat (chatGlobalInit) idarə edir */}
+function chatUpdateBadge(){if(typeof livePoll==='function')livePoll();}
 
 
 /* ---------- 🔔 Xatırlatma bölməsi ---------- */
