@@ -204,9 +204,10 @@
 
 ## YENİLƏNMƏ — 4 oktyabr 2026: Sosial v3 (20 funksiya, ofis-v57)
 Frontend ofis.html sonunda ayrıca `<style>`+`<script>` bloku ("SOSİAL v3"). Backend RPC-lər artıq bazada idi.
-- Lent seqmentləri: 🏆 Komanda (`soc_digest`, `qotd_*`, `chal_*`, `eom_*`, `points_board`, `coffee_*`, `skill_search`), 🛍 Bazarça (`mk_*`), ❓ Suallar (`qa_*`), 🛡 Moderasiya (`rep_*`, `mod_*`, yalnız `_soc_mod`).
+- Lent seqmentləri: 🏆 Komanda (`soc_digest`, `qotd_*`, `chal_*`, `eom_*`, `points_board`, `coffee_*`, `skill_search`), ❓ Suallar (`qa_*`), 🛡 Moderasiya (`rep_*`, `mod_*`, yalnız `_soc_mod`).
 - "Hamısı": qarşılama (`onb_state`), elan (`ann_feed`/`ann_read`), günün sualı, xatirələr (`soc_memories`).
 - Post: qaralama/planlı (`draft_*`, cron `social_tick`), çağırış (`post_add3`), statistika (`post_insights`, `post_seen`), şikayət.
 - Hekayə: yaxın dostlar (`story_add3`, `cf_*`), önə çıxanlar (`hl_*`, `story_archive`). Profil: `soc_profile_x` (bacarıq, mentor, cf).
 - Çat: video dairə (kind `vcircle`), 24 saat silinən mesaj/tema/ləqəb (`chat_style`, `chat_style_set`). `trg_msg_push`-a vcircle mətni əlavə edildi.
 - Elanlar tabı (MGR): oxumayanlar + `ann_remind`.
+- 4 okt: Bazarça interfeysdən silindi (ofis-v58); `office_market` cədvəli və `mk_*` RPC-lər bazada qalır.

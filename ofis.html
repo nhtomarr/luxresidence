@@ -3259,13 +3259,13 @@ var _badgeInfo0=badgeInfo;
 badgeInfo=function(c){if(/^eom_/.test(c))return ['🏆','Ayın işçisi '+c.slice(8,10)+'.'+c.slice(4,8)];if(/^chal_/.test(c))return ['🏁','Çağırış qalibi'];return _badgeInfo0(c);};
 
 /* ---- lent seqmentləri ---- */
-feedSeg=function(){var el=$('soSeg');if(!el)return;var s=[['all','Hamısı'],['following','İzlədiklərim'],['team','🏆 Komanda'],['market','🛍 Bazarça'],['qa','❓ Suallar'],['events','Tədbirlər'],['clubs','Klublar'],['albums','Albomlar'],['explore','Kəşf']];
+feedSeg=function(){var el=$('soSeg');if(!el)return;var s=[['all','Hamısı'],['following','İzlədiklərim'],['team','🏆 Komanda'],['qa','❓ Suallar'],['events','Tədbirlər'],['clubs','Klublar'],['albums','Albomlar'],['explore','Kəşf']];
  if(SOC_MOD)s.push(['mod','🛡 Moderasiya'+(_repN?' <b class="s3n">'+_repN+'</b>':'')]);
  el.innerHTML=s.map(function(x){return '<button class="'+(FMODE===x[0]||(x[0]==='clubs'&&FMODE==='club')||(x[0]==='team'&&FMODE==='challenge')?'on':'')+'" onclick="feedMode(\''+x[0]+'\')">'+x[1]+'</button>';}).join('');};
 var _feedMode0=feedMode;
 feedMode=function(m,arg){
- if(['team','market','qa','mod','challenge'].indexOf(m)>=0){FMODE=m;FARG=arg||null;if(!$('soBody')){show('feed');return;}feedSeg();var b=$('soBody');b.innerHTML='<p class="status"><span class="spin"></span>Yüklənir…</p>';
-  if(m==='team')return teamRender();if(m==='market')return mkRender();if(m==='qa')return qaRender();if(m==='mod')return modRender();
+ if(['team','qa','mod','challenge'].indexOf(m)>=0){FMODE=m;FARG=arg||null;if(!$('soBody')){show('feed');return;}feedSeg();var b=$('soBody');b.innerHTML='<p class="status"><span class="spin"></span>Yüklənir…</p>';
+  if(m==='team')return teamRender();if(m==='qa')return qaRender();if(m==='mod')return modRender();
   if(m==='challenge'){b.innerHTML='<div class="sohdr" id="soChH"><button class="igicon" onclick="feedMode(\'team\')">'+IGI.back+'</button><h3>🏁 Çağırış</h3></div><div id="igPosts"><p class="status"><span class="spin"></span></p></div>';
    run(sb.rpc('chal_list')).then(function(l){var c=(l||[]).find(function(x){return x.id===arg;});var h=$('soChH');if(c&&h){h.innerHTML='<button class="igicon" onclick="feedMode(\'team\')">'+IGI.back+'</button><h3>'+esc(c.emoji+' '+c.title)+'</h3>'+(c.active?'<button class="btn sm" onclick="feedCompose(null,\''+c.id+'\')">Qatıl</button>':'');}}).catch(function(){});feedLoad();}
   return;}
@@ -3342,25 +3342,6 @@ function chalSave(){var t=$('chT').value.trim();if(!t){toast('Ad yazın');return
 function chalClose(id){if(!confirm('Çağırış bitirilsin? Ən çox reaksiya alan post qalib olacaq.'))return;run(sb.rpc('chal_close',{p_id:id})).then(function(){toast('🏆 Qalib elan edildi');teamRender();}).catch(err);}
 function eomPick(){s3pick('Ayın işçisi kim olsun?',function(uid,ad){modal('<div class="mhead"><h3>🗳 '+esc(ad)+'</h3><button class="x" onclick="closeModal()">×</button></div><div class="field"><label>Niyə? (istəyə görə)</label><textarea id="eoR" maxlength="300" placeholder="Bu ay layihəni vaxtında bitirdi…"></textarea></div><button class="btn" style="width:100%" onclick="eomGo(\''+uid+'\')">Səs ver</button>');},true);}
 function eomGo(uid){run(sb.rpc('eom_vote',{p_nominee:uid,p_reason:$('eoR').value.trim()||null})).then(function(){closeModal();toast('🗳 Səsin qeydə alındı');teamRender();}).catch(err);}
-
-/* ---- BAZARÇA ---- */
-function mkRender(){var b=$('soBody');run(sb.rpc('mk_list',{p_kind:_mkKind||null})).then(function(l){if(FMODE!=='market')return;l=l||[];var K={sell:['💰','Satıram'],give:['🎁','Verirəm'],want:['🔎','Axtarıram']};
- b.innerHTML='<button class="btn" style="width:100%;margin-bottom:10px" onclick="mkNew()">+ Elan yerləşdir</button><div class="soseg s3sub">'+[['','Hamısı'],['sell','💰 Satıram'],['give','🎁 Verirəm'],['want','🔎 Axtarıram']].map(function(x){return '<button class="'+(_mkKind===x[0]?'on':'')+'" onclick="_mkKind=\''+x[0]+'\';mkRender()">'+x[1]+'</button>';}).join('')+'</div>'
-  +(l.length?'<div class="s3mk">'+l.map(function(m){var k=K[m.kind]||K.sell,img=m.media&&m.media[0]&&m.media[0].url;
-   return '<div class="s3mki'+(m.status==='done'?' done':'')+'">'+(img?'<img src="'+esc(img)+'" onclick="chatViewImage(\''+esc(img)+'\')">':'<div class="s3mkph">'+k[0]+'</div>')+'<div class="s3mkb"><span class="s3pill k'+m.kind+'">'+k[0]+' '+k[1]+'</span>'+(m.status==='done'?'<span class="s3pill">✓ Bitib</span>':'')
-    +'<b>'+esc(m.title)+'</b>'+(m.price!=null&&m.kind==='sell'?'<div class="s3pr">'+Number(m.price).toLocaleString('az-AZ')+' ₼</div>':'')+(m.body?'<p>'+esc(m.body)+'</p>':'')
-    +'<small onclick="socProfile(\''+m.author.uid+'\')">'+esc(m.author.ad)+' · '+chatAgo(m.at)+'</small><div class="row" style="gap:6px;margin-top:6px">'
-    +(m.mine?'<button class="btn sm ghost" onclick="mkStatus(\''+m.id+'\',\''+(m.status==='done'?'open':'done')+'\')">'+(m.status==='done'?'Yenidən aç':'✓ Bitdi')+'</button><button class="btn sm ghost" onclick="mkDel(\''+m.id+'\')">🗑</button>'
-     :'<button class="btn sm" onclick="show(\'chat\');chatOpen(\''+m.author.uid+'\',\''+chatArg(m.author.ad)+'\')">💬 Yaz</button><button class="btn sm ghost" onclick="repOpen(\'market\',\''+m.id+'\')">🚩</button>')+'</div></div></div>';}).join('')+'</div>'
-   :'<div class="igempty"><b>Hələ elan yoxdur</b><div>Lazımsız əşyanı ver, axtardığını tap</div></div>');}).catch(err);}
-var _mkImgs=[];
-function mkNew(){_mkImgs=[];modal('<div class="mhead"><h3>Yeni elan</h3><button class="x" onclick="closeModal()">×</button></div><div class="soseg s3sub" id="mkK">'+[['sell','💰 Satıram'],['give','🎁 Verirəm'],['want','🔎 Axtarıram']].map(function(x,i){return '<button data-k="'+x[0]+'" class="'+(i?'':'on')+'" onclick="Array.prototype.forEach.call(this.parentNode.children,function(b){b.classList.remove(\'on\')});this.classList.add(\'on\');$(\'mkPw\').style.display=this.dataset.k===\'sell\'?\'\':\'none\'">'+x[1]+'</button>';}).join('')+'</div>'
- +'<div class="field"><label>Başlıq</label><input id="mkT" maxlength="100" placeholder="Uşaq velosipedi"></div><div class="field" id="mkPw"><label>Qiymət (₼)</label><input id="mkP" type="number" min="0" step="1"></div><div class="field"><label>Təsvir</label><textarea id="mkB" maxlength="1000"></textarea></div><button class="btn ghost" style="width:100%" onclick="mkPick()">📷 Şəkil (4-ə qədər)</button><div id="mkPv" class="fpprev"></div><button class="btn" id="mkGo" style="width:100%;margin-top:10px" onclick="mkSave()">Yerləşdir</button>');}
-function mkPick(){var i=document.createElement('input');i.type='file';i.accept='image/*';i.multiple=true;i.onchange=function(){Array.prototype.slice.call(i.files,0,4-_mkImgs.length).forEach(function(f){_mkImgs.push(f);});$('mkPv').innerHTML=_mkImgs.map(function(f,k){return '<span><img src="'+URL.createObjectURL(f)+'"><button onclick="_mkImgs.splice('+k+',1);this.parentNode.remove()">×</button></span>';}).join('');};i.click();}
-function mkSave(){var t=$('mkT').value.trim();if(!t){toast('Başlıq yazın');return;}var k=(document.querySelector('#mkK .on')||{dataset:{k:'sell'}}).dataset.k,p=$('mkP').value;var g=$('mkGo');g.disabled=true;g.textContent='Yüklənir…';
- Promise.all(_mkImgs.map(function(f){return chatUpload(f,'market').then(function(u){return {url:u,kind:'image'};});})).then(function(md){return run(sb.rpc('mk_add',{p_kind:k,p_title:t,p_body:$('mkB').value.trim()||null,p_price:k==='sell'&&p!==''?Number(p):null,p_media:md.length?md:null}));}).then(function(){closeModal();toast('Elan yerləşdirildi');_mkKind='';mkRender();}).catch(function(e){g.disabled=false;g.textContent='Yerləşdir';toast(e.message||e);});}
-function mkStatus(id,s){run(sb.rpc('mk_status',{p_id:id,p_status:s})).then(mkRender).catch(err);}
-function mkDel(id){if(!confirm('Elan silinsin?'))return;run(sb.rpc('mk_delete',{p_id:id})).then(mkRender).catch(err);}
 
 /* ---- ANONİM SUALLAR ---- */
 function qaRender(){var b=$('soBody');run(sb.rpc('qa_list')).then(function(l){if(FMODE!=='qa')return;l=l||[];
