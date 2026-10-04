@@ -264,3 +264,4 @@ Versiya: ofis.html-də `?v=NN` və ofis-sw.js-də `C='ofis-vNN'` + `V='NN'` birl
 SW: /ofis əvvəlcə keşdən (dərhal açılış), arxa planda yenilənir; ofis-a/b/app.css/bg.js keşdən (versiya ilə), install-da əvvəlcədən keşlənir.
 XLSX (900 KB) artıq açılışda yüklənmir — yalnız 'Planlar' açılanda və ya Excel ixracında.
 DİQQƏT: ofis-b.js tək fayl olduğundan yuxarı səviyyədə `function X(){}` elanı bütün fayla hoist olunur — mövcud funksiyanı əvəz etmək üçün həmişə `X=function(){}` yaz, yeni ad seçərkən toqquşmaya bax (livePoll toqquşması: v70-dən bəri çat/bildiriş canlı yenilənməsini sındırmışdı, canlı yayımınkı lvPoll adlandırıldı).
+- 4 okt (ofis-v94): yuxarı 'Baş Ofis' başlığının şüşə (blur) görünüşü geri qaytarıldı (v91-də qeyri-şəffaf zolaq kimi görünürdü); blur yalnız bu başlıqda saxlanıldı.

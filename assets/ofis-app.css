@@ -1518,8 +1518,8 @@ html.dark .chatav,html.dark .igava:not(img){filter:none}
 
 
 /* ---- performans: bahalı effektlər söndürülür ---- */
-.top,.tabs,body.owner .tabs,.toast,#toast,#igCtx .cxbg,.ast-body,body.owner .card,body.owner .kpi{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
-.top{background:rgba(245,246,252,.96)!important}.tabs{background:rgba(245,246,252,.96)!important}.toast,#toast{background:rgba(28,28,30,.92)!important}#igCtx .cxbg{background:rgba(0,0,0,.4)!important}
+.tabs,body.owner .tabs,.toast,#toast,#igCtx .cxbg,.ast-body,body.owner .card,body.owner .kpi{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.tabs{background:rgba(245,246,252,.96)!important}.toast,#toast{background:rgba(28,28,30,.92)!important}#igCtx .cxbg{background:rgba(0,0,0,.4)!important}
 .momb.hot,.tdc.hot,.s4live,#gcBan{animation:none!important}
 .igpost.ig2{content-visibility:auto;contain-intrinsic-size:auto 640px}.sugg,#tdStrip{contain:layout paint}
 video{background:#111}.igmw video,.socar video{background:#111}
