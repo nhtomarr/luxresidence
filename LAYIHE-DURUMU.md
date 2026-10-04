@@ -249,3 +249,4 @@ Frontend ofis.html sonunda ayrıca `<style>`+`<script>` bloku ("SOSİAL v3"). Ba
 - 4 okt (ofis-v87): video sıxma `vidCompress` — 6 MB-dan böyük videolar yükləmədən əvvəl 720p (maks. tərəf 1280), ~1.8 Mbit/s MP4 (və ya WebM) yenidən kodlanır (canvas.captureStream + MediaRecorder, real vaxtda). Post, hekayə və çat videolarına aiddir; yükləmə zolağında 'Video sıxılır… %'. Test: 4 MB → 354 KB.
 - 4 okt (ofis-v88): Reels 🔖 saxla dərhal (optimistik): ikon dolur, 'Saxlanıldı' bildirişi, xəta olsa geri qaytarılır (`reelSave`).
 - 4 okt (ofis-v89): 'Həftənin anı' kartında video postun önizləməsi (əvvəl video URL <img>-də sınıq görünürdü).
+- 4 okt (ofis-v90): 'Həftənin anı' böyük kartı lentdən çıxdı, 'bu gün' kartları zolağına keçdi (fonunda postun şəkli; video olsa gradient + ikon).
