@@ -5519,5 +5519,17 @@ var _upXhr40=upXhr;upXhr=function(file,prefix,onp){if(!/^video\//.test(file.type
 var _chatUpload40=chatUpload;chatUpload=function(file,prefix){if(!/^video\//.test(file.type)||prefix==='vcircle'||file.size<VC_MIN)return _chatUpload40(file,prefix);var last=0;
  return vidCompress(file,function(p){var n=Math.round(p*100);if(n-last>=20){last=n;toast('🎬 Video sıxılır… '+n+'%');}}).then(function(f){return _chatUpload40(f,prefix);});};
 </script>
+<style>
+.rltoast{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);background:rgba(0,0,0,.7);color:#fff;padding:10px 16px;border-radius:14px;font-weight:600;font-size:.9rem;z-index:5;animation:s4in .2s;pointer-events:none}
+.rlside button.on svg{transform:scale(1.1)}
+</style>
+<script>
+/* ---- Reels: saxla düyməsi dərhal ---- */
+function reelSave(id,b){var p=FEED.find(function(x){return x.id===id;});if(!p)return;var on=!p.saved;p.saved=on;b.innerHTML=igSvg(IGP.bm,on?'#fff':'none');b.classList.toggle('on',on);try{navigator.vibrate&&navigator.vibrate(10);}catch(e){}
+ var t=document.createElement('div');t.className='rltoast';t.textContent=on?'🔖 Saxlanıldı':'Saxlanılanlardan çıxarıldı';(b.closest('section')||document.body).appendChild(t);setTimeout(function(){t.remove();},1300);
+ sb.rpc('post_save',{p_id:id,p_on:on}).then(function(r){if(r.error){p.saved=!on;b.innerHTML=igSvg(IGP.bm,!on?'#fff':'none');toast('Alınmadı');}else if(on&&typeof collSheet==='function')setTimeout(function(){collSheet(id);},700);},function(){p.saved=!on;b.innerHTML=igSvg(IGP.bm,!on?'#fff':'none');});}
+var _reelsTab41=reelsTab;reelsTab=function(){_reelsTab41();var n=0;(function go(){var w=$('rlW');if(!w||!w.querySelector('section')){if(n++<60)setTimeout(go,100);return;}
+ w.querySelectorAll('.rlside button[onclick^="postSave"]').forEach(function(b){var id=b.closest('section').dataset.id;b.removeAttribute('onclick');b.onclick=function(e){e.stopPropagation();reelSave(id,b);};});})();};
+</script>
 </body>
 </html>
