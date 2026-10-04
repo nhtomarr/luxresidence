@@ -2061,7 +2061,7 @@ var _reelsTab50=reelsTab;reelsTab=function(){_reelsTab50();var n=0;(function go(
 
 
 /* ---- Sorğu planlayıcısı: vacib sorğular (çat, lent) birinci, ikinci dərəcəlilər növbə ilə ---- */
-(function(){var LOW={verified_list:1,live_list:1,chat_pins:1,story_memories:1,soc_explore:1,ann_feed:1,onb_state:1,qotd_today:1,soc_memories:1,moment_state:1,rep_count:1,act_ping:1,soc_digest:1,points_board:1,streak_state:1,league_state:1,shop_state:1,chal_list:1,eom_state:1,quiz_list:1,room_list:1,comp_state:1,post_seen:1};
+(function(){var LOW={verified_list:1,live_list:1,chat_pins:1,story_memories:1,soc_explore:1,ann_feed:1,onb_state:1,qotd_today:1,soc_memories:1,moment_state:1,rep_count:1,act_ping:1,post_seen:1};
  var hi=0,lo=0,q=[],MAXLO=2;
  var pump=function(){while(q.length&&lo<MAXLO&&(hi===0||Date.now()-q[0].t>2500)){var j=q.shift();lo++;j.go();}};
  var wrap=function(){if(typeof sb==='undefined'||!sb||!sb.rpc||sb._rq){setTimeout(wrap,300);return;}sb._rq=1;var orig=sb.rpc.bind(sb);
