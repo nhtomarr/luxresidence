@@ -250,3 +250,4 @@ Frontend ofis.html sonunda ayrıca `<style>`+`<script>` bloku ("SOSİAL v3"). Ba
 - 4 okt (ofis-v88): Reels 🔖 saxla dərhal (optimistik): ikon dolur, 'Saxlanıldı' bildirişi, xəta olsa geri qaytarılır (`reelSave`).
 - 4 okt (ofis-v89): 'Həftənin anı' kartında video postun önizləməsi (əvvəl video URL <img>-də sınıq görünürdü).
 - 4 okt (ofis-v90): 'Həftənin anı' böyük kartı lentdən çıxdı, 'bu gün' kartları zolağına keçdi (fonunda postun şəkli; video olsa gradient + ikon).
+- 4 okt (ofis-v91) PERFORMANS: profilə görə render vaxtı (6x zəif CPU) 4.5 san → 2.8 san (-38%). Başlıq/tablar/toast/kontekst menyusundan backdrop-filter blur çıxarıldı (sürüşdürmədə hər kadr yenidən bulanıqlaşdırırdı), sonsuz box-shadow pulsasiyaları söndürüldü, lent postlarına content-visibility:auto. Video: posteri olmayan videolara şəffaf poster + tünd fon (boz fon/qara play ikonu yox), yeni yüklənən videolar üçün ilk kadrdan poster yaradılır (media.poster, `vidPoster`), Reels-də də.

@@ -4355,7 +4355,7 @@ chatUpload=function(file,prefix){return imgCompress(file,prefix==='story'?1920:p
 
 /* ---------- 2. LAZY YÜKLƏMƏ ---------- */
 (function(){var fx=function(r){if(!r||r.nodeType!==1)return;var l=r.tagName==='IMG'?[r]:r.querySelectorAll?r.querySelectorAll('img:not([loading])'):[];Array.prototype.forEach.call(l,function(i){if(!i.hasAttribute('loading')){i.setAttribute('loading','lazy');i.setAttribute('decoding','async');}});
-  var v=r.tagName==='VIDEO'?[r]:r.querySelectorAll?r.querySelectorAll('video:not([preload])'):[];Array.prototype.forEach.call(v,function(x){x.setAttribute('preload','metadata');});};
+  var v=r.tagName==='VIDEO'?[r]:r.querySelectorAll?r.querySelectorAll('video:not([preload])'):[];Array.prototype.forEach.call(v,function(x){x.setAttribute('preload','metadata');if(!x.getAttribute('poster'))x.setAttribute('poster','data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');});};
  new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(fx);});}).observe(document.body,{childList:true,subtree:true});fx(document.body);})();
 
 /* ---------- 3. SONSUZ LENT, SKELET, YUXARI ÇƏK-YENİLƏ ---------- */
@@ -5116,7 +5116,7 @@ feedPost=function(){var c;try{c=fpCollect();}catch(e){toast(e.message);return;}i
  var v=$('v-feed');if(!v||!v.classList.contains('on'))show('feed');else if(FMODE!=='all'&&FMODE!=='club'&&FMODE!=='challenge')feedMode('all');window.scrollTo({top:0,behavior:'smooth'});
  var go=function(){var bar=upBar(th,'Paylaşılır…'),tot=S.media.reduce(function(a,f){return a+(f.url?0:f.size||1);},0)||1,done={};
   var prog=function(k,l){done[k]=l;var s=0;Object.keys(done).forEach(function(z){s+=done[z];});bar.set(5+90*s/tot);};
-  Promise.all(S.media.map(function(f,i){if(f.url)return Promise.resolve({url:f.url,kind:f.kind||'image'});_fpAR=S.ar;_fpFL=S.fl;return fpProcess(f).then(function(g){return upXhr(g,'post',function(l,t){prog(i,l*(f.size||1)/(t||1));}).then(function(u){return {url:u,kind:/^video/.test(f.type)?'video':'image'};});});}))
+  Promise.all(S.media.map(function(f,i){if(f.url)return Promise.resolve({url:f.url,kind:f.kind||'image'});_fpAR=S.ar;_fpFL=S.fl;return fpProcess(f).then(function(g){return upXhr(g,'post',function(l,t){prog(i,l*(f.size||1)/(t||1));}).then(function(u){if(!/^video/.test(f.type))return {url:u,kind:'image'};return vidPoster(f).then(function(pb){if(!pb)return {url:u,kind:'video'};return _chatUpload8(new File([pb],'poster.jpg',{type:'image/jpeg'}),'post').then(function(pu){return {url:u,kind:'video',poster:pu};},function(){return {url:u,kind:'video'};});});});});}))
   .then(function(media){bar.set(96);return run(sb.rpc('post_add3',{p_body:S.b,p_media:media.length?media:null,p_poll:S.poll,p_club:S.club,p_mentions:S.ment,p_shared:null,p_challenge:S.chal}));})
   .then(function(pid){if(pid&&(S.T.length||S.P||S.C))return run(sb.rpc('post_meta',{p_id:pid,p_tags:S.T.length?S.T:null,p_place:S.P,p_collab:S.C?S.C.uid:null}));})
   .then(function(){bar.done(true);if(S.draft)sb.rpc('draft_delete',{p_id:S.draft}).then(function(){},function(){});FEED=[];if(FMODE==='team')teamRender();else feedLoad();})
@@ -5543,6 +5543,22 @@ momentLoad=function(){run(sb.rpc('soc_explore')).then(function(x){var el=$('soMo
  if(!FEED.some(function(y){return y.id===p.id;}))FEED.push(p);
  var th=src?(vid?'<div class="smth"><video src="'+esc(src)+'#t=0.1" muted playsinline preload="metadata"></video><i>▶</i></div>':'<div class="smth"><img src="'+esc(src)+'" onerror="this.parentNode.style.display=\'none\'"></div>'):'';
  el.innerHTML='<div class="somoment" onclick="postOpen(\''+p.id+'\')"><span>✨ Həftənin anı</span>'+th+'<div class="smtx"><b>'+esc(p.author&&p.author.ad||'')+'</b>'+(p.body?'<p>'+esc(p.body.slice(0,90))+'</p>':'')+'<small>'+(p.likes||0)+' reaksiya · '+(p.comments||0)+' şərh</small></div></div>';if(typeof tdCards==='function')setTimeout(tdCards,50);}).catch(function(){});};
+</script>
+<style>
+/* ---- performans: bahalı effektlər söndürülür ---- */
+.top,.tabs,body.owner .tabs,.toast,#toast,#igCtx .cxbg,.ast-body,body.owner .card,body.owner .kpi{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.top{background:rgba(245,246,252,.96)!important}.tabs{background:rgba(245,246,252,.96)!important}.toast,#toast{background:rgba(28,28,30,.92)!important}#igCtx .cxbg{background:rgba(0,0,0,.4)!important}
+.momb.hot,.tdc.hot,.s4live,#gcBan{animation:none!important}
+.igpost.ig2{content-visibility:auto;contain-intrinsic-size:auto 640px}.sugg,#tdStrip{contain:layout paint}
+video{background:#111}.igmw video,.socar video{background:#111}
+</style>
+<script>
+
+/* ---- performans: video posteri ---- */
+function vidPoster(file){return new Promise(function(res){var u=URL.createObjectURL(file),v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='auto';v.src=u;var done=function(b){URL.revokeObjectURL(u);res(b||null);};setTimeout(function(){done(null);},6000);
+ v.onloadeddata=function(){try{v.currentTime=Math.min(.3,(v.duration||1)/4);}catch(e){done(null);}};v.onseeked=function(){try{var s=Math.min(1,720/Math.max(v.videoWidth,v.videoHeight)),c=document.createElement('canvas');c.width=Math.round(v.videoWidth*s);c.height=Math.round(v.videoHeight*s);c.getContext('2d').drawImage(v,0,0,c.width,c.height);c.toBlob(function(b){done(b);},'image/jpeg',.75);}catch(e){done(null);}};v.onerror=function(){done(null);};});}
+var _postCard50=_postCard0;_postCard0=function(p){var h=_postCard50(p);(p.media||[]).forEach(function(m){if(m.kind==='video'&&m.poster)h=h.split('src="'+esc(m.url)+'"').join('src="'+esc(m.url)+'" poster="'+esc(m.poster)+'"');});return h;};
+var _reelsTab50=reelsTab;reelsTab=function(){_reelsTab50();var n=0;(function go(){var w=$('rlW');if(!w||!w.querySelector('section')){if(n++<60)setTimeout(go,100);return;}w.querySelectorAll('section').forEach(function(s){var p=FEED.find(function(x){return x.id===s.dataset.id;}),m=p&&(p.media||[]).find(function(x){return x.kind==='video';}),v=s.querySelector('video');if(v&&m&&m.poster)v.poster=m.poster;});})();};
 </script>
 </body>
 </html>
