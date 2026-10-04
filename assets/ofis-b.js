@@ -2085,3 +2085,35 @@ var _chatOpen99=chatOpen;chatOpen=function(a,b,c){window._chatAll=false;return _
 var _chatSearch99=chatSearch;chatSearch=function(){if(!window._chatAll)chatShowAll();_chatSearch99();};
 /* tema/ləqəb gələndə bütün çatı yenidən çəkmə (yalnız qrupda ləqəb varsa) */
 chatStyleLoad=function(){var who=CHATother,g=CHATgroup;run(sb.rpc('chat_style',{p_other:g?null:who,p_group:g?who:null})).then(function(s){if(who!==CHATother)return;CHAT_STYLE=s||{};chatStyleApply();if(g&&s&&s.nicks&&Object.keys(s.nicks).length&&CHATmsgs&&CHATmsgs.length){window._chatSig=null;chatDrawMsgs(CHATmsgs);}}).catch(function(){});};
+
+;/* ===== IG uyğunluğu: sürüşdür-geri hər yerdə, Kəşf şəbəkəsi, profil düymələri ===== */
+/* --- Kəşf: Instagram şəbəkəsi --- */
+exploreRender=function(){var b=$('soBody');if(!b)return;b.innerHTML='<div class="exg">'+Array.apply(null,Array(9)).map(function(){return '<i></i>';}).join('')+'</div>';
+ Promise.all([run(sb.rpc('soc_explore')),run(sb.rpc('feed2',{p_mode:'all',p_arg:null,p_before:null})).catch(function(){return [];})]).then(function(r){var x=r[0]||{},f=r[1]||[];if(FMODE!=='explore')return;var seen={},L=[];
+  (x.popular||[]).forEach(function(p){if(!seen[p.id]){seen[p.id]=1;L.push({id:p.id,img:p.img,vid:p.kind==='video'});}});
+  f.forEach(function(p){if(seen[p.id]||p.kind!=='post')return;var m=p.media&&p.media[0],src=m?m.url:p.image;if(!src)return;seen[p.id]=1;if(!FEED.some(function(y){return y.id===p.id;}))FEED.push(p);L.push({id:p.id,img:src,vid:m&&m.kind==='video',poster:m&&m.poster,multi:p.media&&p.media.length>1});});
+  var h='<div class="srch"><input id="srchI" placeholder="Axtar" oninput="clearTimeout(window._srT);window._srT=setTimeout(srchGo,280)"><div id="srchR"></div></div>'+(x.tags&&x.tags.length?'<div class="extags">'+x.tags.slice(0,10).map(function(t){return '<span onclick="feedMode(\'tag\',\''+esc(t)+'\')">#'+esc(t)+'</span>';}).join('')+'</div>':'');
+  h+=L.length?'<div class="exg">'+L.map(function(p,i){var tall=(i%10===2||i%10===5);return '<button class="'+(tall?'tall':'')+'" onclick="postOpen(\''+p.id+'\')">'+(p.vid?'<video src="'+esc(p.img)+'#t=0.1" muted playsinline preload="metadata"'+(p.poster?' poster="'+esc(p.poster)+'"':'')+'></video>':'<img src="'+esc(p.img)+'">')+(p.vid?'<i class="exi">▶</i>':p.multi?'<i class="exi">❐</i>':'')+'</button>';}).join('')+'</div>':'<div class="pfempty">Hələ şəkilli post yoxdur</div>';
+  b.innerHTML=h;var n=0;(function go(){var s=$('srchI');if(!s&&FMODE==='explore'&&n++<20){setTimeout(go,100);return;}})();}).catch(err);};
+/* --- Profil: İzlə | Mesaj | Əlaqə + ⋯ (IG biznes profili kimi) --- */
+var _socProfile70=socProfile;socProfile=function(uid){_socProfile70(uid);if(!uid||uid==='undefined'||uid===ME.user_id)return;var n=0;(function go(){var t=pgTop(),bt=t&&t.dataset.key==='prof:'+uid&&t.querySelector('.pfbt');var ct=t&&t.querySelector('.pfct');if(!bt||!ct){if(n++<60)setTimeout(go,100);return;}if(bt.dataset.ux)return;bt.dataset.ux=1;
+ var links=Array.prototype.map.call(ct.querySelectorAll('a'),function(a){return {h:a.getAttribute('href'),t:a.textContent.trim()};});ct.remove();
+ bt.querySelectorAll('.sq').forEach(function(x){x.remove();});if(links.length)bt.insertAdjacentHTML('beforeend','<button class="btn ghost" id="pfCt">Əlaqə</button>');var c=bt.querySelector('#pfCt');if(c)c.onclick=function(){var d=ovl('<div class="cmq">Əlaqə</div>'+links.map(function(l){return '<a class="igmenu" href="'+esc(l.h)+'"'+(/^https/.test(l.h)?' target="_blank" rel="noopener"':'')+'>'+esc(l.t)+'</a>';}).join('')+'<button class="igmenu" onclick="this.closest(\'.s3over\').remove()">Ləğv et</button>');};})();};
+var _pfMenu70=pfMenu;pfMenu=function(uid){_pfMenu70(uid);if(!uid)return;var mb=$('mbox'),f=mb&&mb.querySelector('.igmenu');if(f&&!mb.querySelector('.pfk'))f.insertAdjacentHTML('beforebegin','<button class="igmenu pfk" onclick="closeModal();var e=(typeof EMPS!==\'undefined\'?EMPS:[]).find(function(z){return z.user_id===\''+uid+'\'});if(e&&typeof openKudos===\'function\')openKudos(e.id)">🙌 Təşəkkür göndər</button><button class="igmenu" onclick="closeModal();qrOpen(\''+uid+'\')">▦ QR kod</button>');};
+/* --- Sürüşdür-geri: hər yerdə --- */
+(function(){var S=null,DOCK={today:1,chat:1,feed:1,tasks:1};
+ var ctx=function(x){if($('modal').classList.contains('on')||document.querySelector('.pg.on,.s3over,#igSV,#mvw,#stEd,#vrec,#gcV,#momCap,#s3vc,#igCtx'))return null;
+  if($('igReel'))return x<60?'ov':null;if($('s4quiz'))return x<60?'ov':null;if($('s4wr'))return null;if($('liveV'))return _lv&&!_lv.host&&x<60?'ov':null;
+  var v=document.querySelector('.view.on');if(!v)return null;var id=v.id.replace('v-','');
+  if(id==='chat')return CHATother&&x<70?'room':null;
+  if(id==='feed')return (FMODE&&['all','following','favs'].indexOf(FMODE)<0)?'sec':null;
+  if(!DOCK[id])return x<70?'view':null;return null;};
+ var hs='.socar,.igstories,.soseg,.sugl,.s3hl,.fpfl,.sochips,input,textarea,video,.tds,.extags,.rlw';
+ document.addEventListener('touchstart',function(e){S=null;if(e.touches.length>1)return;var t=e.touches[0],k=ctx(t.clientX);if(!k)return;if(k!=='ov'&&k!=='room'&&e.target.closest(hs))return;
+  var el=k==='ov'?($('igReel')||$('s4quiz')||$('liveV')):k==='room'?document.querySelector('.igroom'):document.querySelector('.view.on');S={k:k,x:t.clientX,y:t.clientY,dx:0,on:false,el:el};},{passive:true});
+ document.addEventListener('touchmove',function(e){if(!S)return;var t=e.touches[0];S.dx=t.clientX-S.x;var dy=t.clientY-S.y;
+  if(!S.on){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(S.dx)){S=null;return;}if(S.dx>14&&S.dx>Math.abs(dy)*1.3){S.on=true;if(S.el)S.el.style.transition='none';}else if(S.dx<-14){S=null;return;}}
+  if(S.on&&S.el){if(e.cancelable)e.preventDefault();S.el.style.transform='translateX('+Math.max(0,S.dx)+'px)';}},{passive:false});
+ document.addEventListener('touchend',function(){if(!S)return;var s=S;S=null;if(!s.on)return;var el=s.el,ok=s.dx>90;if(el){el.style.transition='transform .2s ease';el.style.transform=ok?'translateX(100%)':'';}
+  setTimeout(function(){if(el){el.style.transition='';el.style.transform='';}if(!ok)return;try{navigator.vibrate&&navigator.vibrate(8);}catch(x){}
+   if(s.k==='room')chatBack();else if(s.k==='sec')feedMode('all');else backAct();},ok?190:220);},{passive:true});})();

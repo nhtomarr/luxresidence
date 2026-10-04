@@ -1333,7 +1333,7 @@ html.dark .chatav,html.dark .igava:not(img){filter:none}
 .tgl:before{content:'';position:absolute;left:50%;top:-5px;margin-left:-5px;border:5px solid transparent;border-top:0;border-bottom-color:rgba(0,0,0,.78)}.tgl a{color:#fca5a5;margin-left:4px;cursor:pointer}
 .igtags{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .2s}.igmw.showtags .igtags{opacity:1;pointer-events:auto}.igtags .tgl{cursor:pointer}
 .igtagb{position:absolute;left:10px;bottom:10px;width:30px;height:30px;border-radius:50%;border:none;background:rgba(0,0,0,.65);color:#fff;font-size:.8rem;z-index:3}
-.igplace{color:#0a0a0a;font-weight:500}.igcol{background:#eef2ff;padding:10px 12px;font-size:.84rem}.igcol div{display:flex;gap:6px;margin-top:6px}
+.igplace{color:#0a0a0a;font-weight:500}.igpost .igcol{background:#eef2ff;padding:10px 12px;font-size:.84rem}.igpost .igcol div{display:flex;gap:6px;margin-top:6px}
 .pfpin{position:absolute;right:6px;top:6px;font-style:normal;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
 .s15{text-align:center;align-items:center}.aytl{font-size:.65rem;font-weight:800;letter-spacing:.08em;color:#7c3aed}
 .ayf{display:flex;align-items:center;gap:4px;justify-content:center;font-size:.78rem;color:#6e6e73}.ayf>*:not(span){margin-left:-6px;border:1.5px solid #fff;border-radius:50%}
@@ -1527,3 +1527,8 @@ video{background:#111}.igmw video,.socar video{background:#111}
 .igm.pcm{display:block!important;max-width:240px}.cpc{display:flex!important;flex-direction:column}.cpch{flex-direction:row!important}.cpch b{writing-mode:horizontal-tb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 .chmore{display:block;margin:6px auto 10px;border:none;background:rgba(118,118,128,.12);border-radius:99px;padding:7px 14px;font-size:.78rem;font-weight:600;color:#3c3c43}
+
+.extags{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -14px 10px;padding:0 14px}.extags::-webkit-scrollbar{display:none}.extags span{flex:none;border:1px solid #dbdbdb;border-radius:10px;padding:6px 12px;font-size:.84rem;font-weight:600;background:#fff}
+.exg{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:calc((100vw - 4px)/3);grid-auto-flow:dense;gap:2px;margin:0 -14px}@media(min-width:700px){.exg{grid-auto-rows:150px;margin:0}}
+.exg>i{background:#eee;animation:skp 1.2s infinite}.exg button{position:relative;border:none;padding:0;background:#efefef;overflow:hidden}.exg button.tall{grid-row:span 2}
+.exg img,.exg video{width:100%;height:100%;object-fit:cover;display:block}.exi{position:absolute;right:6px;top:6px;color:#fff;font-style:normal;text-shadow:0 1px 3px rgba(0,0,0,.6)}
