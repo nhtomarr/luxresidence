@@ -1,12 +1,14 @@
 // Baş Ofis — service worker: tətbiq qabığı keşi + telefon bildirişləri (Web Push)
-const C='ofis-v92';
-self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(['/ofis','/assets/ofis/icon-192.png']).catch(()=>{})));});
+const C='ofis-v93';const V='93';const AS=['/assets/ofis-app.css?v='+V,'/assets/ofis-a.js?v='+V,'/assets/ofis-b.js?v='+V,'/bg.js'];
+self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(['/ofis','/assets/ofis/icon-192.png'].concat(AS)).catch(()=>{})));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);
+ if(u.origin===location.origin&&(/^\/assets\/ofis-(app\.css|a\.js|b\.js)$/.test(u.pathname)||u.pathname==='/bg.js')){e.respondWith(caches.open(C).then(c=>c.match(r).then(m=>m||fetch(r).then(res=>{if(res&&res.ok)c.put(r,res.clone());return res;}))));return;}
  if(u.origin===location.origin&&(u.pathname==='/ofis'||u.pathname==='/ofis.html')){
   // network-first + 3 san timeout: şəbəkə yavaşsa dərhal keşdən göstər (ağ ekran olmasın)
   e.respondWith((async()=>{
    const cached=await caches.match('/ofis');
+   if(cached){e.waitUntil(fetch(r).then(res=>{if(res&&res.ok)return caches.open(C).then(c=>c.put('/ofis',res));}).catch(()=>{}));return cached;}
    try{
     const ctrl=new AbortController();
     const t=setTimeout(()=>ctrl.abort(),3000);

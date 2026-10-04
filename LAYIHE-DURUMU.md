@@ -252,3 +252,15 @@ Frontend ofis.html sonunda ayrıca `<style>`+`<script>` bloku ("SOSİAL v3"). Ba
 - 4 okt (ofis-v90): 'Həftənin anı' böyük kartı lentdən çıxdı, 'bu gün' kartları zolağına keçdi (fonunda postun şəkli; video olsa gradient + ikon).
 - 4 okt (ofis-v91) PERFORMANS: profilə görə render vaxtı (6x zəif CPU) 4.5 san → 2.8 san (-38%). Başlıq/tablar/toast/kontekst menyusundan backdrop-filter blur çıxarıldı (sürüşdürmədə hər kadr yenidən bulanıqlaşdırırdı), sonsuz box-shadow pulsasiyaları söndürüldü, lent postlarına content-visibility:auto. Video: posteri olmayan videolara şəffaf poster + tünd fon (boz fon/qara play ikonu yox), yeni yüklənən videolar üçün ilk kadrdan poster yaradılır (media.poster, `vidPoster`), Reels-də də.
 - 4 okt (ofis-v92): açılışda ~25 paralel RPC 6 bağlantı limitində növbəyə düşüb çatı 'Yüklənir…'də saxlayırdı → sorğu planlayıcısı (sb.rpc wrapper): çat/lent/post kimi vacib sorğular dərhal, ikinci dərəcəlilər (lvl_map, verified_list, live_list, note_list, moment_state və s.) vacib sorğu olmayanda maksimum 2 paralel. Bütün posterisiz videolara şəffaf poster (böyük qara play ikonu yox), profil şəbəkəsində video posteri.
+
+## ⚠️ YENİ FAYL QURULUŞU (4 okt, ofis-v93) — redaktə buradan
+ofis.html artıq ~16 KB-lıq qabıqdır (HTML markup). Kod ayrıca fayllardadır:
+- `assets/ofis-app.css` — bütün CSS (əvvəlki 27 <style> bloku, eyni sırada)
+- `assets/ofis-a.js` — əsas tətbiq (əvvəlki 1-ci inline skript: Bu gün, çat, tapşırıqlar, sosial v1…)
+- `bg.js` — (dəyişməyib)
+- `assets/ofis-b.js` — qalan hamısı (sosial v2…v4, IG funksiyaları, ikonlar, sürət yamaqları — əvvəlki 36 inline skript ardıcıl birləşdirilib)
+Hamısı `defer` ilə, sıra: qrcode → ofis-a → bg.js → ofis-b. Yeni kod ofis-b.js sonuna əlavə edilir.
+Versiya: ofis.html-də `?v=NN` və ofis-sw.js-də `C='ofis-vNN'` + `V='NN'` birlikdə artırılmalıdır.
+SW: /ofis əvvəlcə keşdən (dərhal açılış), arxa planda yenilənir; ofis-a/b/app.css/bg.js keşdən (versiya ilə), install-da əvvəlcədən keşlənir.
+XLSX (900 KB) artıq açılışda yüklənmir — yalnız 'Planlar' açılanda və ya Excel ixracında.
+DİQQƏT: ofis-b.js tək fayl olduğundan yuxarı səviyyədə `function X(){}` elanı bütün fayla hoist olunur — mövcud funksiyanı əvəz etmək üçün həmişə `X=function(){}` yaz, yeni ad seçərkən toqquşmaya bax (livePoll toqquşması: v70-dən bəri çat/bildiriş canlı yenilənməsini sındırmışdı, canlı yayımınkı lvPoll adlandırıldı).
