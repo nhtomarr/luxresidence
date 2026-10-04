@@ -5531,5 +5531,16 @@ function reelSave(id,b){var p=FEED.find(function(x){return x.id===id;});if(!p)re
 var _reelsTab41=reelsTab;reelsTab=function(){_reelsTab41();var n=0;(function go(){var w=$('rlW');if(!w||!w.querySelector('section')){if(n++<60)setTimeout(go,100);return;}
  w.querySelectorAll('.rlside button[onclick^="postSave"]').forEach(function(b){var id=b.closest('section').dataset.id;b.removeAttribute('onclick');b.onclick=function(e){e.stopPropagation();reelSave(id,b);};});})();};
 </script>
+<style>
+.somoment .smth{position:relative;width:64px;height:64px;border-radius:12px;overflow:hidden;flex:none;background:#eee}.somoment .smth img,.somoment .smth video{width:100%;height:100%;object-fit:cover;display:block}.somoment .smth i{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-style:normal;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.somoment>img{display:none}
+</style>
+<script>
+/* ---- "Həftənin anı": video postda da önizləmə ---- */
+momentLoad=function(){run(sb.rpc('soc_explore')).then(function(x){var el=$('soMoment');if(!el||!x||!x.moment||!(x.moment.likes>0))return;var p=x.moment,m=p.media&&p.media[0],src=m?m.url:p.image,vid=m&&m.kind==='video';
+ if(!FEED.some(function(y){return y.id===p.id;}))FEED.push(p);
+ var th=src?(vid?'<span class="smth"><video src="'+esc(src)+'#t=0.1" muted playsinline preload="metadata"></video><i>▶</i></span>':'<span class="smth"><img src="'+esc(src)+'" onerror="this.parentNode.style.display=\'none\'"></span>'):'';
+ el.innerHTML='<div class="somoment" onclick="postOpen(\''+p.id+'\')"><span>✨ Həftənin anı</span>'+th+'<div><b>'+esc(p.author&&p.author.ad||'')+'</b>'+(p.body?'<p>'+esc(p.body.slice(0,90))+'</p>':'')+'<small>'+(p.likes||0)+' reaksiya · '+(p.comments||0)+' şərh</small></div></div>';}).catch(function(){});};
+</script>
 </body>
 </html>
