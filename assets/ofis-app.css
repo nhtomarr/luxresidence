@@ -1525,3 +1525,5 @@ html.dark .chatav,html.dark .igava:not(img){filter:none}
 video{background:#111}.igmw video,.socar video{background:#111}
 
 .igm.pcm{display:block!important;max-width:240px}.cpc{display:flex!important;flex-direction:column}.cpch{flex-direction:row!important}.cpch b{writing-mode:horizontal-tb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.chmore{display:block;margin:6px auto 10px;border:none;background:rgba(118,118,128,.12);border-radius:99px;padding:7px 14px;font-size:.78rem;font-weight:600;color:#3c3c43}

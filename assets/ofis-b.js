@@ -2076,3 +2076,12 @@ var _pfGrid60=pfGrid;pfGrid=function(l,empty){_pfGrid60(l,empty);var g=pgTop()&&
  Array.prototype.forEach.call(g.children,function(c,i){var p=L[i],v=c.querySelector('video');if(!p||!v)return;var m=(p.media||[]).find(function(x){return x.kind==='video';});if(m&&m.poster)v.setAttribute('poster',m.poster);});};
 
 ;var _show93=show;show=function(v){_show93(v);if(v==='plans'&&!window.XLSX&&!window._xl){window._xl=1;var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.defer=true;document.head.appendChild(s);}};
+
+;
+/* ---- Çat: uzun söhbətdə ilk olaraq son 80 mesaj, yuxarıda "Əvvəlki mesajlar" ---- */
+var _chatDraw99=chatDrawMsgs;chatDrawMsgs=function(rows){rows=rows||[];if(!window._chatAll&&rows.length>80){_chatDraw99(rows.slice(-80));var el=$('chatMsgs');if(el&&!$('chMore'))el.insertAdjacentHTML('afterbegin','<button id="chMore" class="chmore" onclick="chatShowAll()">↑ Əvvəlki mesajlar ('+(rows.length-80)+')</button>');}else _chatDraw99(rows);};
+function chatShowAll(){var el=$('chatMsgs');var h=el?el.scrollHeight-el.scrollTop:0;window._chatAll=true;window._chatSig=null;chatDrawMsgs(CHATmsgs);if(el)el.scrollTop=el.scrollHeight-h;}
+var _chatOpen99=chatOpen;chatOpen=function(a,b,c){window._chatAll=false;return _chatOpen99(a,b,c);};
+var _chatSearch99=chatSearch;chatSearch=function(){if(!window._chatAll)chatShowAll();_chatSearch99();};
+/* tema/ləqəb gələndə bütün çatı yenidən çəkmə (yalnız qrupda ləqəb varsa) */
+chatStyleLoad=function(){var who=CHATother,g=CHATgroup;run(sb.rpc('chat_style',{p_other:g?null:who,p_group:g?who:null})).then(function(s){if(who!==CHATother)return;CHAT_STYLE=s||{};chatStyleApply();if(g&&s&&s.nicks&&Object.keys(s.nicks).length&&CHATmsgs&&CHATmsgs.length){window._chatSig=null;chatDrawMsgs(CHATmsgs);}}).catch(function(){});};

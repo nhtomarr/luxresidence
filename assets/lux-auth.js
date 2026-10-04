@@ -10,7 +10,10 @@ window.luxAuth=function(o){o=o||{};css();
  var REM=false,EM='';try{REM=localStorage.getItem('lux_remember')!=='0';EM=localStorage.getItem('lux_remember_email')||'';}catch(e){}
  f.remember.checked=true;if(EM)f.email.value=EM;
  loadLib(function(e){if(e){ov.style.visibility='';err.textContent='Serverə qoşulmaq mümkün olmadı';return;}
-  var sb=window.supabase.createClient(URL_,KEY);window.luxSb=sb;
+  /* asılı qalan sorğular tətbiqi dondurmasın: 25 san sonra kəs (yükləmə və AI funksiyaları xaric) */
+  var _tf=function(u,o){try{var url=String(u&&u.url||u),m=((o&&o.method)||'GET').toUpperCase();if(/\/functions\/v1\//.test(url)||(/\/storage\/v1\//.test(url)&&m!=='GET')||(o&&o.signal))return fetch(u,o);
+   var c=new AbortController(),t=setTimeout(function(){c.abort();},25000);o=Object.assign({},o||{},{signal:c.signal});return fetch(u,o).finally(function(){clearTimeout(t);});}catch(e){return fetch(u,o);}};
+  var sb=window.supabase.createClient(URL_,KEY,{global:{fetch:_tf}});window.luxSb=sb;
   function check(){return sb.auth.getUser().then(function(r){var u=r&&r.data&&r.data.user;if(!u)return null;return sb.from('lux_profiles').select('*').eq('user_id',u.id).maybeSingle().then(function(p){var me=p.data;if(!me||!me.active)throw new Error('Hesabınız aktiv deyil');var need=o.perms||(o.perm?[o.perm]:null);if(need&&!me.is_admin&&!need.some(function(x){return (me.perms||[]).indexOf(x)>=0;}))throw new Error('Bu bölməyə icazəniz yoxdur. Rəhbərə müraciət edin.');return me;});});}
   function ready(me){return sb.auth.getSession().then(function(r){var tok=r.data.session.access_token;ov.remove();
     var chip=document.createElement('div');chip.className='lux-me';chip.innerHTML='<span>'+(me.full_name||me.email).replace(/</g,'&lt;')+'</span><button type="button">Çıxış</button>';chip.querySelector('button').onclick=function(){sb.auth.signOut().then(function(){try{['lux_sales','lux_commercial','lux_garage'].forEach(function(k){localStorage.removeItem(k);});}catch(_){}location.reload();});};document.body.appendChild(chip);
