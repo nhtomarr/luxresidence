@@ -4355,6 +4355,7 @@ chatUpload=function(file,prefix){return imgCompress(file,prefix==='story'?1920:p
 
 /* ---------- 2. LAZY YÜKLƏMƏ ---------- */
 (function(){var fx=function(r){if(!r||r.nodeType!==1)return;var l=r.tagName==='IMG'?[r]:r.querySelectorAll?r.querySelectorAll('img:not([loading])'):[];Array.prototype.forEach.call(l,function(i){if(!i.hasAttribute('loading')){i.setAttribute('loading','lazy');i.setAttribute('decoding','async');}});
+  var pv=r.tagName==='VIDEO'?[r]:r.querySelectorAll?r.querySelectorAll('video:not([poster])'):[];Array.prototype.forEach.call(pv,function(x){if(!x.getAttribute('poster'))x.setAttribute('poster','data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');});
   var v=r.tagName==='VIDEO'?[r]:r.querySelectorAll?r.querySelectorAll('video:not([preload])'):[];Array.prototype.forEach.call(v,function(x){x.setAttribute('preload','metadata');if(!x.getAttribute('poster'))x.setAttribute('poster','data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');});};
  new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(fx);});}).observe(document.body,{childList:true,subtree:true});fx(document.body);})();
 
@@ -5559,6 +5560,22 @@ function vidPoster(file){return new Promise(function(res){var u=URL.createObject
  v.onloadeddata=function(){try{v.currentTime=Math.min(.3,(v.duration||1)/4);}catch(e){done(null);}};v.onseeked=function(){try{var s=Math.min(1,720/Math.max(v.videoWidth,v.videoHeight)),c=document.createElement('canvas');c.width=Math.round(v.videoWidth*s);c.height=Math.round(v.videoHeight*s);c.getContext('2d').drawImage(v,0,0,c.width,c.height);c.toBlob(function(b){done(b);},'image/jpeg',.75);}catch(e){done(null);}};v.onerror=function(){done(null);};});}
 var _postCard50=_postCard0;_postCard0=function(p){var h=_postCard50(p);(p.media||[]).forEach(function(m){if(m.kind==='video'&&m.poster)h=h.split('src="'+esc(m.url)+'"').join('src="'+esc(m.url)+'" poster="'+esc(m.poster)+'"');});return h;};
 var _reelsTab50=reelsTab;reelsTab=function(){_reelsTab50();var n=0;(function go(){var w=$('rlW');if(!w||!w.querySelector('section')){if(n++<60)setTimeout(go,100);return;}w.querySelectorAll('section').forEach(function(s){var p=FEED.find(function(x){return x.id===s.dataset.id;}),m=p&&(p.media||[]).find(function(x){return x.kind==='video';}),v=s.querySelector('video');if(v&&m&&m.poster)v.poster=m.poster;});})();};
+</script>
+<script>
+
+/* ---- Sorğu planlayıcısı: vacib sorğular (çat, lent) birinci, ikinci dərəcəlilər növbə ilə ---- */
+(function(){var LOW={lvl_map:1,verified_list:1,live_list:1,note_list:1,chat_pins:1,story_memories:1,soc_explore:1,ann_feed:1,onb_state:1,qotd_today:1,soc_memories:1,moment_state:1,rep_count:1,act_ping:1,grp_extra:1,coll_list:1,soc_profile_x:1,soc_digest:1,points_board:1,streak_state:1,league_state:1,shop_state:1,chal_list:1,eom_state:1,quiz_list:1,room_list:1,comp_state:1,msg_sched_list:1,gcall_active:1,soc_contact:1,soc_mutuals:1,post_seen:1,soc_rel:1,story_viewers:1,hl_meta:1,cd_state:1,addyours_count:1,my_activity:1};
+ var hi=0,lo=0,q=[],MAXLO=2;
+ var pump=function(){while(q.length&&lo<MAXLO&&(hi===0||Date.now()-q[0].t>2500)){var j=q.shift();lo++;j.go();}};
+ var wrap=function(){if(typeof sb==='undefined'||!sb||!sb.rpc||sb._rq){setTimeout(wrap,300);return;}sb._rq=1;var orig=sb.rpc.bind(sb);
+  sb.rpc=function(n,a,o){if(!LOW[n]){hi++;var pr=orig(n,a,o);return Promise.resolve(pr).then(function(r){hi--;pump();return r;},function(e){hi--;pump();throw e;});}
+   return new Promise(function(res,rej){q.push({t:Date.now(),go:function(){Promise.resolve(orig(n,a,o)).then(function(r){lo--;pump();res(r);},function(e){lo--;pump();rej(e);});}});pump();});};
+  setInterval(pump,500);};wrap();})();
+</script>
+<script>
+
+var _pfGrid60=pfGrid;pfGrid=function(l,empty){_pfGrid60(l,empty);var g=pgTop()&&pgTop().querySelector('#pfGrid');if(!g)return;var L=(l||[]).slice().sort(function(a,b){return (b.ppin?1:0)-(a.ppin?1:0);});
+ Array.prototype.forEach.call(g.children,function(c,i){var p=L[i],v=c.querySelector('video');if(!p||!v)return;var m=(p.media||[]).find(function(x){return x.kind==='video';});if(m&&m.poster)v.setAttribute('poster',m.poster);});};
 </script>
 </body>
 </html>
