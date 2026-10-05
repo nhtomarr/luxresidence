@@ -275,3 +275,4 @@ Anbar, mədaxil, məxaric, smeta (plan/fakt), hesabat. Supabase avqch… layihə
 RPC: `tk_catalog, tk_stock (orta çəkili qiymət), tk_dash, tk_moves_list, tk_move_save (məxaricdə qalıq yoxlaması, qiymət=orta), tk_smeta_view (fakt = obyektə məxaric, smeta maddəsi və ya materiala görə), tk_save, tk_delete, tk_demo_clear`.
 İcazələr (admin.html PERM_LIST): `tikinti` (rəhbər — hər şey, silmə, smeta), `tikinti_anbar` (anbardar — mədaxil/məxaric, baxış); is_admin və `sys` də girir. Admin panelində 'Tikinti ↗' linki.
 Nümunə məlumat (demo=true): Bina 4/5, 10 material, 3 təchizatçı, 12 smeta sətri, 7 əməliyyat — İcmalda 'Nümunələri sil'. Qaimə şəkilləri `chat` bucket-də `tikinti/` qovluğu. Smeta Excel idxalı: Bölmə · Ad · Vahid · Miqdar · Qiymət.
+- 5 okt: ⚡ Ofis anı tamamilə ləğv edildi (social_tick artıq _moment_tick çağırmır — gündəlik push yoxdur; Lentdə kart/banner, Bölmələrdə bölmə yoxdur). Cədvəllər (office_moments) toxunulmayıb.

@@ -2117,3 +2117,9 @@ var _pfMenu70=pfMenu;pfMenu=function(uid){_pfMenu70(uid);if(!uid)return;var mb=$
  document.addEventListener('touchend',function(){if(!S)return;var s=S;S=null;if(!s.on)return;var el=s.el,ok=s.dx>90;if(el){el.style.transition='transform .2s ease';el.style.transform=ok?'translateX(100%)':'';}
   setTimeout(function(){if(el){el.style.transition='';el.style.transform='';}if(!ok)return;try{navigator.vibrate&&navigator.vibrate(8);}catch(x){}
    if(s.k==='room')chatBack();else if(s.k==='sec')feedMode('all');else backAct();},ok?190:220);},{passive:true});})();
+
+;/* ---- Ofis anı ləğv edildi ---- */
+momBanner=function(){var b=$('momB');if(b)b.remove();};
+(function(){var i=SECT.findIndex(function(x){return x[0]==='moment';});if(i>=0)SECT.splice(i,1);})();
+var _feedMode101=feedMode;feedMode=function(m,a){if(m==='moment')m='all';_feedMode101(m,a);};
+momOpen=function(){};momCapture=function(){};
