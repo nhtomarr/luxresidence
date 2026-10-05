@@ -921,9 +921,9 @@ var _renderSet3=renderSet;renderSet=function(){_renderSet3();if(!ME.is_admin&&(M
   +'<label class="lbl">API ünvanı</label><input class="inp" id="smU" value="'+esc(c.url||'')+'" placeholder="https://provayder.az/api/send?login=...&password=...&to={phone}&text={text}&from={sender}">'
   +'<label class="lbl">API açarı (X-API-Key)</label><input class="inp" id="smK" type="password" autocomplete="off" placeholder="'+((c.headers||{})['X-API-Key']?'•••••••• saxlanılıb — dəyişmək üçün yenisini yazın':'1sms.az profilindən \'Tam açarı göstər\'')+'">'+'<details style="margin-top:6px"><summary class="small muted">Əlavə başlıqlar (JSON)</summary><input class="inp" id="smH" value="'+esc(JSON.stringify(Object.keys(c.headers||{}).filter(function(k){return k!=='X-API-Key';}).reduce(function(o,k){o[k]=c.headers[k];return o;},{})))+'"></details>'
   +'<label class="lbl">POST gövdəsi (JSON şablon)</label><textarea class="inp" id="smB" rows="2" placeholder=\'{"to":"{phone}","text":"{text}","from":"{sender}"}\'>'+esc(c.body||'')+'</textarea>'
-  +'<div class="row" style="margin-top:10px"><button class="btn" onclick="smsSave()">Yadda saxla</button></div></div>');}).catch(function(){});};
+  +'<label class="lbl">Akt təsdiqləndikdən sonra gedən SMS (boş qoysanız göndərilmir)</label><input class="inp" id="smA" maxlength="160" value="'+esc(c.after_text||'')+'">'+'<div class="row" style="margin-top:10px"><button class="btn" onclick="smsSave()">Yadda saxla</button></div></div>');}).catch(function(){});};
 function smsSave(){var h={};try{h=JSON.parse($('smH').value||'{}');}catch(e){toast('Başlıqlar düzgün JSON deyil');return;}var k=$('smK').value.trim();if(k)h['X-API-Key']=k;else if(window._smOldKey)h['X-API-Key']=window._smOldKey;
- sb.rpc('km_sms_config_set',{p:{enabled:$('smE').checked,method:$('smM').value,url:$('smU').value.trim(),headers:h,body:$('smB').value.trim(),sender:$('smS').value.trim()}}).then(function(r){if(r.error)throw r.error;toast('SMS ayarları saxlanıldı');}).catch(err);}
+ sb.rpc('km_sms_config_set',{p:{enabled:$('smE').checked,method:$('smM').value,url:$('smU').value.trim(),headers:h,body:$('smB').value.trim(),sender:$('smS').value.trim(),after_text:($('smA')||{}).value}}).then(function(r){if(r.error)throw r.error;toast('SMS ayarları saxlanıldı');}).catch(err);}
 </script>
 </body>
 </html>
