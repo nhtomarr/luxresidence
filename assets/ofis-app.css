@@ -1535,3 +1535,5 @@ video{background:#111}.igmw video,.socar video{background:#111}
 
 .afx{display:flex;align-items:center;gap:10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:10px 12px;margin:0 0 10px}.afx .afi{font-size:20px}.afx b{display:block;font-size:.9rem}.afx small{color:#6e6e73;font-size:.76rem}.afx .f1,.afr .f1{flex:1;min-width:0}
 .afm .afr{display:flex;align-items:center;gap:6px;padding:8px 0;border-top:1px solid rgba(0,0,0,.06)}.afm .afr b{font-size:.9rem}.afm .afr small{display:block;color:#6e6e73;font-size:.76rem}
+
+.afwait{background:rgba(255,255,255,.14);color:#fff;border-radius:99px;padding:12px 18px;font-weight:600;font-size:.95rem}
