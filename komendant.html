@@ -199,7 +199,8 @@ tr.click:hover td{background:rgba(255,255,255,.45)}
    <div class="card"><div class="bmap" id="uMap"></div></div>
    <div class="card tbl" id="uList" style="display:none"></div>
   </section>
-  <section class="view" id="v-pay">
+  <section class="view" id="v-hand"></section>
+   <section class="view" id="v-pay">
    <div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Ödənişlər</h2></div>
    <div class="bsel" id="paySub"></div>
    <div id="payBody"></div>
@@ -287,7 +288,7 @@ luxAuth({perms:['komendant','komendant_kassa','sakin'],title:'Komendantlıq',sub
 function start(){$('app').style.display='';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
  var nm=String(ME.full_name||ME.email||'?');$('meBox').innerHTML='<div class="meTxt"><b>'+esc(nm)+'</b><br>'+(ME.is_admin?'Admin':CASH?'Komendant · kassa':STAFF?'Komendant':'Sakin')+'</div><div class="ava" onclick="if(innerWidth<1000&&confirm(\'Çıxış edilsin?\'))$(\'outBtn\').click()">'+esc(nm.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase())+'</div>';
  $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href='/komendant';});};
- var tabs=STAFF?[['dash','Panel'],['units','Mənzillər'],['pay','Maliyyə'],['req','Müraciətlər'],['svc','Xidmətlər'],['tech','Texniki xidmət'],['comm','İcma'],['guard','Mühafizə'],['set','Ayarlar']]:[['home','Evim'],['rpay','Ödənişlər'],['rreq','Müraciətlər'],['rbook','Rezervasiya'],['rmeter','Sayğaclar'],['rguest','Qonaq və bağlama'],['rcomm','İcma'],['rinfo','Əlaqə']];
+ var tabs=STAFF?[['dash','Panel'],['units','Mənzillər'],['hand','Təhvil-təslim'],['pay','Maliyyə'],['req','Müraciətlər'],['svc','Xidmətlər'],['tech','Texniki xidmət'],['comm','İcma'],['guard','Mühafizə'],['set','Ayarlar']]:[['home','Evim'],['rpay','Ödənişlər'],['rreq','Müraciətlər'],['rbook','Rezervasiya'],['rmeter','Sayğaclar'],['rguest','Qonaq və bağlama'],['rcomm','İcma'],['rinfo','Əlaqə']];
  $('tabs').innerHTML=tabs.map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');
  $('tabs').onclick=function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);};
  if('serviceWorker' in navigator)navigator.serviceWorker.register('/ofis-sw.js',{scope:'/'}).catch(function(){});
@@ -296,7 +297,7 @@ function start(){$('app').style.display='';var chip=document.querySelector('.lux
   if(STAFF)return loadStaff().then(function(){show(_ksaved('dash'));});
   return loadRes().then(function(){show(_ksaved('home'));});});}
 function show(v){try{sessionStorage.setItem('komendant_tab',v);}catch(e){}document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});
- ({dash:renderDash,units:renderUnits,pay:renderPay,req:renderReq,ann:renderAnn,guard:renderGuard,set:renderSet,home:renderHome,rpay:renderRPay,rreq:renderRReq,rguest:renderRGuest,rinfo:renderRInfo,svc:renderSvc,tech:renderTech,comm:renderComm,rbook:renderRBook,rmeter:renderRMeter,rcomm:renderRComm}[v]||function(){})();window.scrollTo(0,0);}
+ ({dash:renderDash,units:renderUnits,hand:function(){renderHand();},pay:renderPay,req:renderReq,ann:renderAnn,guard:renderGuard,set:renderSet,home:renderHome,rpay:renderRPay,rreq:renderRReq,rguest:renderRGuest,rinfo:renderRInfo,svc:renderSvc,tech:renderTech,comm:renderComm,rbook:renderRBook,rmeter:renderRMeter,rcomm:renderRComm}[v]||function(){})();window.scrollTo(0,0);}
 
 /* ================= STAFF: məlumat ================= */
 function loadStaff(){return Promise.all([fetchAll('km_units','*'),fetchAll('km_unit_balance','unit_id,balance,charged,paid,last_paid'),run(sb.from('km_tariffs').select('*').order('sort'))]).then(function(r){ALL_UNITS=r[0];UNITS=r[0].filter(function(u){return SHOWN_ST.indexOf(u.status)>=0;});BAL={};r[1].forEach(function(b){BAL[b.unit_id]=b;});TAR=r[2]||[];}).catch(err);}
@@ -751,6 +752,67 @@ function renderRParcels(){var box=$('rsParcels');if(!box)return;run(sb.from('km_
 
 /* mühafizə linki ilə açılıbsa (?g=kod) */
 (function(){var g=new URLSearchParams(location.search).get('g');if(g){var t=setInterval(function(){if(STAFF&&UNITS.length){clearInterval(t);show('guard');guardCheck(false,g);}},300);setTimeout(function(){clearInterval(t);},15000);}})();
+</script>
+<style>.u.hu{background:#f6f1ec}.u.h-ok{background:#dcfce7}.u.h-rep{background:#fef3c7}.u.h-dim{opacity:.25}.u .hic{font-size:11px;min-height:14px;display:inline-block}.grid.g4{grid-template-columns:repeat(4,1fr)}@media(max-width:700px){.grid.g4{grid-template-columns:repeat(2,1fr)}}</style>
+<script>
+/* ===== TƏHVİL-TƏSLİM ===== */
+function HU(){return (typeof ALL_UNITS!=='undefined'&&ALL_UNITS.length)?ALL_UNITS:UNITS;}
+var HAND={},BINA_H=0,H_VIEW='map',H_F={cat:'',st:'',q:''};
+var HCAT={alici:['Alıcı','p-acc'],sakin:['Sakin','p-ok'],mtk:['MTK','p-mut'],fond:['Fond','p-warn'],barter:['Barter','p-bad']};
+function handLoad(){return run(sb.from('km_handover').select('*')).then(function(r){HAND={};(r||[]).forEach(function(h){HAND[h.unit_id]=h;});});}
+function renderHand(){var el=$('v-hand');if(!el)return;el.innerHTML='<div class="empty">Yüklənir…</div>';handLoad().then(handDraw).catch(err);}
+function hUnits(){return HU().filter(function(u){return u.bina===BINA_H&&u.kind!=='qeyri';});}
+function hMatch(u){var h=HAND[u.id]||{};if(H_F.cat&&(h.category||'')!==H_F.cat)return false;
+ if(H_F.st==='ok'&&!h.handed)return false;if(H_F.st==='no'&&h.handed)return false;if(H_F.st==='rep'&&!h.repair)return false;if(H_F.st==='key'&&!h.keys)return false;
+ if(H_F.q){var s=(u.number+' '+(h.person||'')+' '+(h.phone||'')+' '+(u.owner_name||'')).toLowerCase();if(s.indexOf(H_F.q)<0)return false;}return true;}
+function handDraw(){var el=$('v-hand');var bs=binas().filter(function(b){return HU().some(function(u){return u.bina===b&&HAND[u.id];});});if(!bs.length)bs=binas();if(bs.indexOf(BINA_H)<0)BINA_H=bs[0];
+ var us=hUnits(),n=us.length,H=us.map(function(u){return HAND[u.id]||{};});var cnt=function(f){return H.filter(f).length;};var hd=cnt(function(h){return h.handed;});
+ var cats={};H.forEach(function(h){var c=h.category||'—';cats[c]=(cats[c]||0)+1;});var fobs=0;H.forEach(function(h){fobs+=+h.fobs||0;});
+ var h='<div class="row sp" style="margin-bottom:10px"><h2 style="margin:0">Təhvil-təslim</h2><div class="row"><button class="btn ghost" onclick="handXlsx()">⬇ Excel</button></div></div>'
+  +'<div class="bsel">'+bs.map(function(b){return '<button class="'+(b===BINA_H?'on':'')+'" onclick="BINA_H='+b+';handDraw()">Bina '+b+'</button>';}).join('')+'</div>'
+  +'<div class="grid g4" style="margin-bottom:12px">'+[['Mənzil',n,''],['Təhvil verilib',hd,n?Math.round(hd*100/n)+'%':''],['Təmirə başlanılıb',cnt(function(x){return x.repair;}),''],['Açar verilib',cnt(function(x){return x.keys;}),''],['Sayğac',cnt(function(x){return x.meter;}),''],['Libetka',cnt(function(x){return x.libetka;}),''],['Lift breloku',fobs,'ədəd'],['Verilməyib',n-hd,'']].map(function(k){return '<div class="kpi"><b>'+k[1]+'</b><span>'+k[0]+'</span>'+(k[2]?'<small>'+k[2]+'</small>':'')+'</div>';}).join('')+'</div>'
+  +'<div class="row" style="margin-bottom:10px">'+Object.keys(HCAT).filter(function(c){return cats[c];}).map(function(c){return '<span class="pill '+HCAT[c][1]+'" style="cursor:pointer;'+(H_F.cat===c?'outline:2px solid currentColor':'')+'" onclick="H_F.cat=H_F.cat===\''+c+'\'?\'\':\''+c+'\';handDraw()">'+HCAT[c][0]+' · '+cats[c]+'</span>';}).join('')+'</div>'
+  +'<div class="row" style="margin-bottom:10px"><input class="inp" id="hQ" placeholder="Axtar: ad, telefon, mənzil №" value="'+esc(H_F.q)+'" style="flex:1;min-width:200px" oninput="H_F.q=this.value.trim().toLowerCase();clearTimeout(window._hq);window._hq=setTimeout(handBody,250)">'
+  +'<select class="inp" style="width:auto" onchange="H_F.st=this.value;handBody()">'+[['','Hamısı'],['ok','Təhvil verilib'],['no','Verilməyib'],['rep','Təmirdə'],['key','Açar verilib']].map(function(o){return '<option value="'+o[0]+'"'+(H_F.st===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('')+'</select>'
+  +'<div class="bsel" style="margin:0"><button class="'+(H_VIEW==='map'?'on':'')+'" onclick="H_VIEW=\'map\';handDraw()">Xəritə</button><button class="'+(H_VIEW==='list'?'on':'')+'" onclick="H_VIEW=\'list\';handDraw()">Siyahı</button></div></div>'
+  +'<div class="legend"><span><i style="background:#dcfce7"></i>təhvil verilib</span><span><i style="background:#fef3c7"></i>təmirdə</span><span><i style="background:#f1ece6"></i>verilməyib</span></div><div id="hBody"></div>';
+ el.innerHTML=h;handBody();}
+function handBody(){var b=$('hBody');if(!b)return;var us=hUnits();
+ if(H_VIEW==='map'){var fl={};us.forEach(function(u){(fl[u.floor]=fl[u.floor]||[]).push(u);});
+  b.innerHTML='<div class="card"><div class="bmap">'+Object.keys(fl).map(Number).sort(function(a,c){return c-a;}).map(function(f){return '<div class="flr"><b>'+f+'</b>'+fl[f].sort(function(a,c){return a.pos-c.pos;}).map(function(u){var h=HAND[u.id]||{},c=HCAT[h.category];
+   return '<div class="u hu'+(h.repair?' h-rep':h.handed?' h-ok':'')+(hMatch(u)?'':' h-dim')+'" onclick="hEdit('+u.id+')" title="'+esc(h.person||u.owner_name||'')+'"><b>'+esc(u.number)+'</b><span>'+esc(((h.person||'').split(' ')[0])||(c?c[0]:'—'))+'</span><br><span class="hic">'+(h.handed?'✓':'')+(h.keys?'🔑':'')+(h.repair?'🛠':'')+'</span></div>';}).join('')+'</div>';}).join('')+'</div></div>';return;}
+ var L=us.filter(hMatch).sort(function(a,c){return a.floor-c.floor||a.pos-c.pos;});var ck=function(id,k,v){return '<input type="checkbox" '+(v?'checked':'')+' onclick="event.stopPropagation()" onchange="hSet('+id+',\''+k+'\',this.checked)">';};
+ b.innerHTML='<div class="card tbl"><table><tr><th>Mənzil</th><th>Ad, soyad</th><th>Kateqoriya</th><th class="hide-m">m²</th><th>Təhvil</th><th>Açar</th><th class="hide-m">Sayğac</th><th class="hide-m">Libetka</th><th class="hide-m">Brelok</th><th>Təmir</th><th class="hide-m">Qeyd</th></tr>'
+  +L.map(function(u){var h=HAND[u.id]||{},c=HCAT[h.category];return '<tr class="click" onclick="hEdit('+u.id+')"><td><b>'+esc(u.number)+'</b></td><td>'+esc(h.person||u.owner_name||'—')+(h.phone?'<div class="muted small">'+esc(h.phone)+'</div>':'')+'</td><td>'+(c?'<span class="pill '+c[1]+'">'+c[0]+'</span>':'—')+'</td><td class="hide-m">'+(u.area||'')+'</td><td>'+ck(u.id,'handed',h.handed)+'</td><td>'+ck(u.id,'keys',h.keys)+'</td><td class="hide-m">'+ck(u.id,'meter',h.meter)+'</td><td class="hide-m">'+ck(u.id,'libetka',h.libetka)+'</td><td class="hide-m">'+(h.fobs||'')+'</td><td>'+ck(u.id,'repair',h.repair)+'</td><td class="hide-m small">'+esc(h.note||'')+'</td></tr>';}).join('')+'</table>'+(L.length?'':'<div class="empty">Tapılmadı</div>')+'</div>';}
+function hSave(id,patch){var h=HAND[id];var row=Object.assign({unit_id:id},patch);
+ return run(h?sb.from('km_handover').update(patch).eq('unit_id',id).select().single():sb.from('km_handover').insert(row).select().single()).then(function(r){HAND[id]=r;return r;});}
+function hSet(id,k,v){var p={};p[k]=v;if(k==='handed'&&v&&!(HAND[id]||{}).handed_at)p.handed_at=new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Baku'});
+ hSave(id,p).then(function(){toast('Yadda saxlanıldı');}).catch(function(e){err(e);handBody();});}
+function hEdit(id){var u=HU().find(function(x){return x.id===id;});if(!u)return;var h=HAND[id]||{category:'',fobs:0};
+ var cb=function(k,l){return '<label style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)"><input type="checkbox" id="h_'+k+'" '+(h[k]?'checked':'')+' style="width:20px;height:20px;accent-color:var(--acc)">'+l+'</label>';};
+ modal('<div class="mhead"><div><h3>'+unitLabel(u)+'</h3><div class="muted small">'+u.floor+'-cü mərtəbə · '+(u.area||'—')+' m²</div></div><button class="x" onclick="closeModal()">×</button></div>'
+  +'<div class="grid g2"><div><label class="lbl">Kateqoriya</label><select class="inp" id="h_category"><option value="">—</option>'+Object.keys(HCAT).map(function(c){return '<option value="'+c+'"'+(h.category===c?' selected':'')+'>'+HCAT[c][0]+'</option>';}).join('')+'</select></div>'
+  +'<div><label class="lbl">Təhvil tarixi</label><input class="inp" type="date" id="h_handed_at" value="'+(h.handed_at||'')+'"></div></div>'
+  +'<label class="lbl">Ad, soyad, ata adı</label><input class="inp" id="h_person" value="'+esc(h.person||u.owner_name||'')+'"><label class="lbl">Əlaqə nömrəsi</label><input class="inp" id="h_phone" value="'+esc(h.phone||u.owner_phone||'')+'">'
+  +'<div style="margin-top:8px">'+cb('handed','Təhvil-təslim edilib')+cb('keys','Açar təhvil verilib')+cb('meter','Sayğac')+cb('libetka','Libetka')+cb('repair','Təmirə başlanılıb')+'</div>'
+  +'<label class="lbl">Lift breloku (sayı)</label><input class="inp" type="number" min="0" id="h_fobs" value="'+(h.fobs||0)+'"><label class="lbl">Qeyd</label><textarea class="inp" id="h_note" rows="2">'+esc(h.note||'')+'</textarea>'
+  +'<div class="row" style="margin-top:14px"><button class="btn ghost" onclick="hAct('+id+')">🖨 Akt</button><span style="flex:1"></span><button class="btn ghost" onclick="closeModal()">Bağla</button><button class="btn" onclick="hEditSave('+id+')">Yadda saxla</button></div>'
+  +'<div id="hLog" class="small muted" style="margin-top:14px"></div>');
+ run(sb.from('km_handover_log').select('*').eq('unit_id',id).order('at',{ascending:false}).limit(15)).then(function(L){var e=$('hLog');if(!e||!L||!L.length)return;var NM={handed:'təhvil',keys:'açar',meter:'sayğac',libetka:'libetka',repair:'təmir',fobs:'brelok',note:'qeyd',person:'ad',phone:'telefon',category:'kateqoriya',handed_at:'tarix'};
+  e.innerHTML='<b style="color:var(--ink)">Tarixçə</b>'+L.map(function(l){var c=l.changes||{};var t=c['yaradıldı']?'qeyd yaradıldı':Object.keys(c).map(function(k){var v=c[k][1];return (NM[k]||k)+': '+(v===true?'✓':v===false?'✕':esc(String(v==null?'—':v)));}).join(', ');return '<div style="padding:4px 0">'+new Date(l.at).toLocaleString('az-AZ',{timeZone:TZ,day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})+' · '+esc(l.by_name||'')+' — '+t+'</div>';}).join('');}).catch(function(){});}
+function hEditSave(id){var g=function(k){return $('h_'+k);};var p={category:g('category').value||null,handed_at:g('handed_at').value||null,person:g('person').value.trim()||null,phone:g('phone').value.trim()||null,handed:g('handed').checked,keys:g('keys').checked,meter:g('meter').checked,libetka:g('libetka').checked,repair:g('repair').checked,fobs:+g('fobs').value||0,note:g('note').value.trim()||null};
+ if(p.handed&&!p.handed_at)p.handed_at=new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Baku'});
+ hSave(id,p).then(function(){closeModal();toast('Yadda saxlanıldı');handDraw();}).catch(err);}
+function hAct(id){var u=HU().find(function(x){return x.id===id;}),h=HAND[id]||{};var d=h.handed_at?h.handed_at.split('-').reverse().join('.'):'____________';var yn=function(v){return v?'Təhvil verildi':'—';};
+ printHtml('<div style="font-family:Georgia,serif;max-width:680px;margin:0 auto;padding:30px;color:#000"><h2 style="text-align:center;margin:0">TƏHVİL-TƏSLİM AKTI</h2><p style="text-align:center;margin:4px 0 24px">LUX Residence · Bina '+u.bina+'</p>'
+  +'<p>Tarix: <b>'+d+'</b></p><p>Bu akt ilə <b>Bina '+u.bina+', '+u.floor+'-cü mərtəbə, '+esc(u.number)+' nömrəli mənzil</b> ('+(u.area||'—')+' m²) aşağıdakı şəxsə təhvil verilir:</p>'
+  +'<p>Ad, soyad, ata adı: <b>'+esc(h.person||u.owner_name||'')+'</b></p><p>Əlaqə: '+esc(h.phone||u.owner_phone||'')+'</p>'
+  +'<table style="width:100%;border-collapse:collapse;margin:16px 0" border="1" cellpadding="8"><tr><th align="left">Təhvil verilən</th><th align="left">Vəziyyət</th></tr><tr><td>Mənzilin açarı</td><td>'+yn(h.keys)+'</td></tr><tr><td>Sayğac</td><td>'+yn(h.meter)+'</td></tr><tr><td>Libetka</td><td>'+yn(h.libetka)+'</td></tr><tr><td>Lift breloku</td><td>'+(h.fobs?h.fobs+' ədəd':'—')+'</td></tr></table>'
+  +(h.note?'<p>Qeyd: '+esc(h.note)+'</p>':'')+'<p>Mənzil təhvil alan tərəfindən baxılmış, iradı yoxdur.</p>'
+  +'<table style="width:100%;margin-top:50px"><tr><td>Təhvil verən:<br><br>_______________________<br><small>(komendantlıq)</small></td><td align="right">Təhvil alan:<br><br>_______________________<br><small>'+esc(h.person||'')+'</small></td></tr></table></div>');}
+function handXlsx(){var us=hUnits().sort(function(a,c){return a.floor-c.floor||a.pos-c.pos;});var R=[['№','Ad, soyad və ata adı','Əlaqə','Kateqoriya','Bina','Mərtəbə','Mənzil №','Sahə (m²)','Təhvil-təslim','Tarix','Açar','Sayğac','Libetka','Lift breloku','Təmir','Qeyd']];
+ us.forEach(function(u,i){var h=HAND[u.id]||{};R.push([i+1,h.person||u.owner_name||'',h.phone||'',(HCAT[h.category]||[''])[0],u.bina,u.floor,u.pos,u.area||'',h.handed?'OK':'',h.handed_at||'',h.keys?'OK':'',h.meter?'OK':'',h.libetka?'OK':'',h.fobs||'',h.repair?'Bəli':'',h.note||'']);});
+ xlsx(R,'tehvil-teslim-bina-'+BINA_H+'.xlsx');}
 </script>
 </body>
 </html>
