@@ -290,3 +290,4 @@ Nümunə məlumat (demo=true): Bina 4/5, 10 material, 3 təchizatçı, 12 smeta 
 - 5 okt: yeni icazə `komendant_akt` (aktları silmək), admin PERM_LIST-ə əlavə; Gültəkin Məmmədzadəyə verildi.
 - 5 okt (ofis-v102): çıxış kartı bu gün üçün: 'Hələ işdəyəm' (bu gün üçün gizlət, localStorage afx_stay) və 'Çıxmışam' (sorğu); gözləyən sorğunu işçi özü 'Ləğv et' edə bilər (`att_fix_cancel`). Nihat-ın səhv sorğusu silindi.
 - 5 okt (ofis-v103): bu gün üçün gözləyən çıxış sorğusu varsa 'Çıxışı qeyd et'/'Qısa çıxış' düymələri gizlənir, yerində '⏳ Çıxış HH:MM — sorğu təsdiq gözləyir'.
+- 5 okt: `_tg_user(uid,text)` — şəxsi Telegram (office_tg_links.chat_id / office_employees.tg_chat_id, office_secrets.tg_token). Çıxış sorğusu (rəhbərlərə), təsdiq/rədd (işçiyə) və 30 dəq xatırlatma artıq push + Telegram göndərir. Qeyd: əl ilə SQL ilə edilən təsdiqlər bildiriş göndərmir — həmişə att_fix_decide istifadə et.
