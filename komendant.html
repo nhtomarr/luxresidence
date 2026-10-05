@@ -888,5 +888,42 @@ var _hEdit2=hEdit;hEdit=function(id){_hEdit2(id);var b=document.querySelector('#
  run(sb.from('km_acts').select('id,no,act_date,person').eq('unit_id',id).order('created_at',{ascending:false})).then(function(L){if(!L||!L.length)return;window._uacts=L;var e=$('hLog');if(e)e.insertAdjacentHTML('beforebegin','<div style="margin-top:12px"><b>İmzalanmış aktlar</b>'+L.map(function(a){return '<div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>'+esc(a.no)+' · '+String(a.act_date).split('-').reverse().join('.')+'</span><a class="small" onclick="run(sb.from(\'km_acts\').select(\'*\').eq(\'id\','+a.id+').single()).then(actPrint)">🖨 Bax / çap</a></div>';}).join('')+'</div>');}).catch(function(){});};
 var _handDraw2=handDraw;handDraw=function(){_handDraw2();var x=document.querySelector('#v-hand button[onclick="handXlsx()"]');if(x&&!document.getElementById('actsBtn'))x.insertAdjacentHTML('beforebegin','<button class="btn ghost" id="actsBtn" onclick="actList()">📄 Aktlar</button>');};
 </script>
+<style>.otpbox{background:#fbf7f3;border:1px solid var(--line);border-radius:14px;padding:12px}.otpph{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-size:14px;background:#fff;cursor:pointer}.otpok{color:#166534;font-weight:700}.actp .otpp{border:1px solid #444;padding:8px 10px;font-size:12.5px;margin-top:14px}</style>
+<script>
+/* ===== SMS (OTP) təsdiqi ===== */
+function mph(p){p=String(p||'');return '+'+p.slice(0,3)+' '+p.slice(3,5)+' *** ** '+p.slice(-2);}
+function regPhones(id){var u=HU().find(function(x){return x.id===id;})||{},h=HAND[id]||{},L=[u.owner_phone,u.tenant_phone,h.phone].filter(function(x){return x&&String(x).replace(/\D/g,'').length>=9;});return L.filter(function(x,i){return L.indexOf(x)===i;});}
+var _actForm3=actForm;actForm=function(id){_actForm3(id);var n=0;(function go(){var g=$('aGo');if(!g){if(n++<20)setTimeout(go,60);return;}var ph=regPhones(id);_act.otp=null;
+ g.parentNode.insertAdjacentHTML('beforebegin','<h4 style="margin:16px 0 6px">📱 SMS təsdiqi</h4><div class="otpbox" id="otpB"><div class="small muted">Kod qeydiyyatdakı nömrəyə göndərilir'+(ph.length?':':' — bu mənzil üçün nömrə qeydə alınmayıb')+'</div>'
+  +'<div class="row" style="margin-top:6px">'+ph.map(function(p,i){return '<label class="otpph"><input type="radio" name="otpP" value="'+esc(p)+'"'+(i?'':' checked')+'>'+esc(p)+'</label>';}).join('')+'<label class="otpph"><input type="radio" name="otpP" value="__new"'+(ph.length?'':' checked')+'>Başqa nömrə</label></div>'
+  +'<input class="inp" id="otpN" placeholder="050 123 45 67" style="margin-top:6px;'+(ph.length?'display:none':'')+'" inputmode="tel">'
+  +'<div class="row" style="margin-top:8px"><button class="btn ghost" id="otpS" onclick="otpSend('+id+')">Kod göndər</button><span id="otpSt" class="small muted"></span></div>'
+  +'<div id="otpV" style="display:none;margin-top:8px"><div class="row"><input class="inp" id="otpC" placeholder="6 rəqəmli kod" inputmode="numeric" maxlength="6" style="max-width:160px;font-size:20px;letter-spacing:4px;text-align:center"><button class="btn" onclick="otpVerify()">Təsdiqlə</button></div><div id="otpT" class="small" style="margin-top:6px"></div></div>'
+  +'<label class="small muted" style="display:flex;gap:6px;align-items:center;margin-top:10px"><input type="checkbox" id="otpSkip"> Telefon yoxdur — SMS təsdiqi olmadan imzala (aktda qeyd olunacaq)</label></div>');
+ document.querySelectorAll('input[name=otpP]').forEach(function(r){r.onchange=function(){$('otpN').style.display=r.value==='__new'&&r.checked?'':'none';};});})();};
+function otpPhone(){var r=document.querySelector('input[name=otpP]:checked');return r&&r.value!=='__new'?r.value:($('otpN').value||'');}
+function otpSend(id){var b=$('otpS');b.disabled=true;$('otpSt').textContent='Göndərilir…';sb.rpc('km_otp_send',{p_unit:id,p_phone:otpPhone()}).then(function(r){b.disabled=false;if(r.error)throw r.error;var d=r.data;_act.otp={id:d.otp_id,phone:d.phone,ok:false};
+  $('otpSt').innerHTML=(d.registered?'':'<b style="color:var(--bad)">Diqqət: bu nömrə mənzilin qeydiyyatında yoxdur.</b> ')+'Kod '+mph(d.phone)+' nömrəsinə göndərildi';b.textContent='Yenidən göndər';
+  $('otpV').style.display='';$('otpT').innerHTML=d.test?'<span class="pill p-warn">TEST REJİMİ — SMS xidməti qoşulmayıb. Kod: <b>'+d.code+'</b></span>':'';var c=$('otpC');c.value='';c.focus();
+  var left=300;clearInterval(_act.ot);_act.ot=setInterval(function(){left--;var s=$('otpSt');if(!s||left<0){clearInterval(_act.ot);return;}if(left===0)s.innerHTML+=' · <b>vaxt bitdi</b>';},1000);})
+ .catch(function(e){b.disabled=false;$('otpSt').textContent='';err(e);});}
+function otpVerify(){if(!_act||!_act.otp)return;sb.rpc('km_otp_verify',{p_id:_act.otp.id,p_code:$('otpC').value}).then(function(r){if(r.error)throw r.error;_act.otp.ok=true;clearInterval(_act.ot);
+  $('otpB').innerHTML='<div class="otpok">✅ Telefonla təsdiqləndi: +'+mph(_act.otp.phone)+'</div>';}).catch(err);}
+var _actSave3=actSave;actSave=function(){if(!_act)return;var skip=$('otpSkip')&&$('otpSkip').checked;if(!(_act.otp&&_act.otp.ok)&&!skip){toast('Əvvəl SMS kodunu təsdiqləyin');var b=$('otpB');if(b)b.scrollIntoView({behavior:'smooth',block:'center'});return;}
+ var orig=sb.rpc.bind(sb);if(_act.otp&&_act.otp.ok){var oid=_act.otp.id;sb.rpc=function(n,a){if(n==='km_act_save'&&a&&a.p){a.p.otp_id=oid;sb.rpc=orig;}return orig(n,a);};}_actSave3();};
+var _actPrint3=actPrint;actPrint=function(a){_actPrint3(a);var pa=$('printArea'),t=pa&&pa.querySelector('.actp .as');if(!t)return;var ph=a.otp_phone?mph(a.otp_phone):'';
+ t.insertAdjacentHTML('beforebegin','<p class="otpp">'+(a.otp_verified_at?'✔ Təhvil alan aktı mobil telefonuna göndərilmiş birdəfəlik SMS kodu ilə təsdiqləyib: <b>'+ph+'</b> · '+new Date(a.otp_verified_at).toLocaleString('az-AZ',{timeZone:TZ,day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})+(a.otp_registered===false?' (nömrə qeydiyyatda deyildi)':'')+(a.otp_test?' · <i>test rejimi</i>':''):'SMS təsdiqi aparılmayıb.')+'</p>');};
+/* Ayarlar: SMS xidməti (admin) */
+var _renderSet3=renderSet;renderSet=function(){_renderSet3();if(!ME.is_admin&&(ME.perms||[]).indexOf('sys')<0)return;var v=$('v-set');if(!v||$('smsCard'))return;
+ sb.rpc('km_sms_config_get').then(function(r){var c=r.data||{};v.insertAdjacentHTML('beforeend','<div class="card" id="smsCard"><h3>📱 SMS xidməti (təhvil-təslim aktı üçün təsdiq kodu)</h3><p class="muted small">Yerli SMS provayderinin API məlumatları. {phone}, {text}, {sender} avtomatik doldurulur. Söndürülü olanda sistem test rejimində işləyir (kod ekranda görünür).</p>'
+  +'<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="smE" '+(c.enabled?'checked':'')+'> SMS göndərməni aktivləşdir</label>'
+  +'<div class="grid g2"><div><label class="lbl">Metod</label><select class="inp" id="smM"><option'+(c.method==='POST'?'':' selected')+'>GET</option><option'+(c.method==='POST'?' selected':'')+'>POST</option></select></div><div><label class="lbl">Göndərən adı</label><input class="inp" id="smS" value="'+esc(c.sender||'LUX Residence')+'"></div></div>'
+  +'<label class="lbl">API ünvanı</label><input class="inp" id="smU" value="'+esc(c.url||'')+'" placeholder="https://provayder.az/api/send?login=...&password=...&to={phone}&text={text}&from={sender}">'
+  +'<label class="lbl">Başlıqlar (JSON, məs. açar)</label><input class="inp" id="smH" value="'+esc(JSON.stringify(c.headers||{}))+'">'
+  +'<label class="lbl">POST gövdəsi (JSON şablon)</label><textarea class="inp" id="smB" rows="2" placeholder=\'{"to":"{phone}","text":"{text}","from":"{sender}"}\'>'+esc(c.body||'')+'</textarea>'
+  +'<div class="row" style="margin-top:10px"><button class="btn" onclick="smsSave()">Yadda saxla</button></div></div>');}).catch(function(){});};
+function smsSave(){var h={};try{h=JSON.parse($('smH').value||'{}');}catch(e){toast('Başlıqlar düzgün JSON deyil');return;}
+ sb.rpc('km_sms_config_set',{p:{enabled:$('smE').checked,method:$('smM').value,url:$('smU').value.trim(),headers:h,body:$('smB').value.trim(),sender:$('smS').value.trim()}}).then(function(r){if(r.error)throw r.error;toast('SMS ayarları saxlanıldı');}).catch(err);}
+</script>
 </body>
 </html>
