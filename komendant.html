@@ -925,5 +925,25 @@ var _renderSet3=renderSet;renderSet=function(){_renderSet3();if(!ME.is_admin&&(M
 function smsSave(){var h={};try{h=JSON.parse($('smH').value||'{}');}catch(e){toast('Başlıqlar düzgün JSON deyil');return;}var k=$('smK').value.trim();if(k)h['X-API-Key']=k;else if(window._smOldKey)h['X-API-Key']=window._smOldKey;
  sb.rpc('km_sms_config_set',{p:{enabled:$('smE').checked,method:$('smM').value,url:$('smU').value.trim(),headers:h,body:$('smB').value.trim(),sender:$('smS').value.trim(),after_text:($('smA')||{}).value}}).then(function(r){if(r.error)throw r.error;toast('SMS ayarları saxlanıldı');}).catch(err);}
 </script>
+<style>@keyframes shk{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}.mbox.shk{animation:shk .25s}</style>
+<script>
+/* ---- Təhvil-təslim: forma kilidi, MTK üçün birbaşa akt, məlumatların ötürülməsi ---- */
+/* 1) Akt və mənzil formaları yalnız ✕ ilə bağlanır (kənara toxunanda məlumat itmir) */
+window._mLock=false;
+$('modal').addEventListener('click',function(e){if(window._mLock&&e.target===$('modal')){e.stopImmediatePropagation();var b=$('mbox');if(b){b.classList.remove('shk');void b.offsetWidth;b.classList.add('shk');}}},true);
+var _closeModal4=closeModal;closeModal=function(){window._mLock=false;_closeModal4();};
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&window._mLock){e.stopImmediatePropagation();}},true);
+/* 2) Mənzil pəncərəsində yazılanlar akta düşsün */
+var _actForm4=actForm;actForm=function(id){var pre={};['person','phone','category'].forEach(function(k){var el=$('h_'+k);if(el&&el.value)pre[k]=el.value;});
+ if(Object.keys(pre).length){var h=HAND[id]=HAND[id]||{unit_id:id};if(pre.person)h.person=pre.person;if(pre.phone)h.phone=pre.phone;window._actCat=pre.category||null;}
+ _actForm4(id);window._mLock=true;
+ var n=0;(function go(){var p=$('a_person');if(!p){if(n++<20)setTimeout(go,50);return;}if(pre.person)p.value=pre.person;if(pre.phone)$('a_phone').value=pre.phone;
+  var h=HAND[id]||{},cur=window._actCat||h.category||'';var opt=Object.keys(HCAT).map(function(c){return '<option value="'+c+'"'+((cur==='mtk'?'alici':cur)===c?' selected':'')+'>'+HCAT[c][0]+'</option>';}).join('');
+  p.closest('.grid').insertAdjacentHTML('beforebegin','<div><label class="lbl">Kateqoriya (təhvildən sonra)</label><select class="inp" id="a_category"><option value="">—</option>'+opt+'</select>'+(cur==='mtk'?'<div class="small muted">MTK mənzili təhvil verilir — kateqoriya "Alıcı" kimi dəyişdiriləcək (lazım olsa başqasını seçin)</div>':'')+'</div>');})();};
+var _hEdit4=hEdit;hEdit=function(id){var h=HAND[id]||{};if(h.category==='mtk'&&!h.handed){actForm(id);return;}_hEdit4(id);window._mLock=true;};
+/* 3) Kateqoriya akt ilə birlikdə saxlanır */
+var _actSave4=actSave;actSave=function(){var c=($('a_category')||{}).value||'';if(_act){var orig=sb.rpc.bind(sb),done=false;sb.rpc=function(n,a){if(!done&&n==='km_act_save'&&a&&a.p){done=true;a.p.category=c;sb.rpc=orig;}return orig(n,a);};}_actSave4();};
+var _actDone4=actDone;actDone=function(a,r){window._mLock=false;_actDone4(a,r);};
+</script>
 </body>
 </html>
