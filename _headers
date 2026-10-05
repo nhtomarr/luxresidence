@@ -89,3 +89,8 @@
 
 /browser/*
   X-Robots-Tag: noindex
+
+/tikinti.html
+  X-Robots-Tag: noindex, nofollow
+/tikinti
+  X-Robots-Tag: noindex, nofollow

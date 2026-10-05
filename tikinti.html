@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8"><meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tikinti nəzarəti — anbar və smeta</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>">
+<meta name="theme-color" content="#efe6df"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Tikinti">
+<style>
+:root{--sf:-apple-system,BlinkMacSystemFont,'SF Pro Text','Inter',system-ui,sans-serif;--ink:#1d1611;--muted:#8a7a6f;--acc:#ba4d2c;--acc2:#9a3c20;--good:#1f7a4a;--warn:#b7791f;--bad:#b1381f;--card:rgba(255,255,255,.78);--line:#eadfd5}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:15px/1.45 var(--sf);-webkit-font-smoothing:antialiased;background:#efe6df url(/assets/km/bg.jpg) center/cover fixed no-repeat;padding:calc(14px + env(safe-area-inset-top,0px)) 12px calc(30px + env(safe-area-inset-bottom,0px))}
+.wrap{max-width:1100px;margin:6px auto 30px;padding:22px 24px 28px;border-radius:32px;background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);border:1px solid rgba(255,255,255,.8);box-shadow:0 40px 100px -50px rgba(90,40,20,.45)}
+@media(max-width:640px){.wrap{padding:16px 12px 22px;border-radius:24px}}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:14px}.top .lg{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#d0673f,#9a3c20);display:grid;place-items:center;color:#fff;font-size:22px;flex:none}
+.top h1{margin:0;font-size:21px;letter-spacing:-.02em}.top small{color:var(--muted);display:block;font-size:12.5px}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -4px 16px;padding:2px 4px}.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;border:none;background:rgba(255,255,255,.7);border-radius:99px;padding:9px 15px;font:600 14px var(--sf);color:var(--ink);cursor:pointer}
+.tabs button.on{background:var(--ink);color:#fff}
+.view{display:none}.view.on{display:block;animation:fi .2s ease}@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}@media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}.kpi b{font-size:18px}.kpis.k3{grid-template-columns:1fr 1fr}.kpis.k3 .kpi:last-child{grid-column:1/-1}}
+.kpi{background:var(--card);border-radius:18px;padding:14px}.kpi small{color:var(--muted);font-size:12px}.kpi b{display:block;font-size:22px;letter-spacing:-.02em;margin-top:2px}
+.card{background:var(--card);border-radius:20px;padding:16px;margin-bottom:12px}.card h3{margin:0 0 10px;font-size:16px;display:flex;align-items:center;gap:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.sp{justify-content:space-between}.f1{flex:1}
+.btn{border:none;background:var(--acc);color:#fff;border-radius:12px;padding:10px 16px;font:600 14px var(--sf);cursor:pointer;white-space:nowrap}.btn:active{transform:scale(.98)}
+.btn.g{background:rgba(29,22,17,.07);color:var(--ink)}.btn.s{padding:6px 11px;font-size:13px;border-radius:10px}.btn.r{background:#fbe7e2;color:var(--bad)}
+input,select,textarea{font:15px var(--sf);border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;color:var(--ink);width:100%}
+label.l{display:block;font-size:12.5px;color:var(--muted);margin:8px 0 4px}
+table{width:100%;border-collapse:collapse;font-size:14px}th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:8px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 8px;border-bottom:1px solid #f1e8e1;vertical-align:middle}tr.click{cursor:pointer}tr.click:hover td{background:rgba(186,77,44,.04)}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.tw{overflow-x:auto;margin:0 -4px}
+.pill{display:inline-block;border-radius:99px;padding:2px 9px;font-size:12px;font-weight:600}.pill.ok{background:#e3f4ea;color:var(--good)}.pill.lo{background:#fdf0dc;color:var(--warn)}.pill.no{background:#fbe7e2;color:var(--bad)}
+.bar{height:8px;border-radius:9px;background:#f1e8e1;overflow:hidden}.bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#d0673f,#ba4d2c)}.bar i.over{background:var(--bad)}
+.obj{margin-bottom:12px}.obj .row{font-size:14px;margin-bottom:5px}.muted{color:var(--muted)}.small{font-size:12.5px}
+.alert{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f1e8e1;font-size:14px}.alert:last-child{border:none}.alert i{font-style:normal;font-size:18px}
+.mv{border-bottom:1px solid #f1e8e1;padding:10px 0}.mv:last-child{border:none}.mv .h{display:flex;gap:10px;align-items:center;cursor:pointer}.mv .tag{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:800}
+.tag.in{background:#e3f4ea;color:var(--good)}.tag.out{background:#fdeee6;color:var(--acc2)}.mv .ls{display:none;margin:8px 0 0 44px;font-size:13.5px}.mv.op .ls{display:block}
+.empty{text-align:center;color:var(--muted);padding:26px 10px}
+.demo{background:#fff6e5;border:1px solid #f3d9a8;border-radius:16px;padding:10px 14px;margin-bottom:12px;font-size:13.5px}
+#md{position:fixed;inset:0;z-index:50;background:rgba(29,22,17,.4);display:none;align-items:flex-end;justify-content:center}#md.on{display:flex}
+#md .box{background:#fffcf9;width:min(640px,100%);max-height:92vh;overflow-y:auto;border-radius:24px 24px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px))}
+@media(min-width:700px){#md{align-items:center}#md .box{border-radius:24px}}
+#md h2{margin:0 0 6px;font-size:18px}.ln{display:grid;grid-template-columns:1fr 92px 92px 34px;gap:6px;margin-bottom:6px;align-items:center}.ln.o{grid-template-columns:1fr 100px 34px}.ln .x{border:none;background:#f6ece5;border-radius:10px;height:40px;cursor:pointer}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1d1611;color:#fff;padding:11px 18px;border-radius:14px;font-size:14px;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw}#toast.on{opacity:1}
+.mcard{display:none}@media(max-width:640px){.dtab{display:none}.mcard{display:block}.mc{background:var(--card);border-radius:16px;padding:12px;margin-bottom:8px}.mc .row{font-size:14px}}
+.sec td{background:rgba(186,77,44,.06);font-weight:700;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap" style="visibility:hidden">
+ <div class="top"><div class="lg">🏗️</div><div class="f1"><h1>Tikinti nəzarəti</h1><small>Anbar · mədaxil · məxaric · smeta</small></div></div>
+ <div class="tabs" id="tabs">
+  <button data-v="dash" class="on">İcmal</button><button data-v="stock">Anbar</button><button data-v="in">Mədaxil</button><button data-v="out">Məxaric</button><button data-v="smeta">Smeta</button><button data-v="rep">Hesabat</button>
+ </div>
+ <div class="view on" id="v-dash"></div>
+ <div class="view" id="v-stock"></div>
+ <div class="view" id="v-in"></div>
+ <div class="view" id="v-out"></div>
+ <div class="view" id="v-smeta"></div>
+ <div class="view" id="v-rep"></div>
+</div>
+<div id="md" onclick="if(event.target===this)mdClose()"><div class="box" id="mdb"></div></div>
+<div id="toast"></div>
+<script src="/assets/lux-auth.js?v=97"></script>
+<script>
+var sb=null,ME=null,CAT={objects:[],materials:[],suppliers:[],full:false},STOCK=[],CUR='dash',SM_OBJ=null;
+function $(i){return document.getElementById(i);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function fm(n,d){n=+n||0;return n.toLocaleString('az-AZ',{minimumFractionDigits:d==null?2:d,maximumFractionDigits:d==null?2:d});}
+function q(n){n=+n||0;return n.toLocaleString('az-AZ',{maximumFractionDigits:3});}
+function man(n){return fm(n)+'\u00a0₼';}
+function toast(t){var e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(function(){e.classList.remove('on');},2600);}
+function rpc(n,a){return sb.rpc(n,a||{}).then(function(r){if(r.error)throw r.error;return r.data;});}
+function err(e){toast((e&&e.message)||String(e));}
+function md(h){$('mdb').innerHTML=h;$('md').classList.add('on');}
+function mdClose(){$('md').classList.remove('on');}
+function today(){return new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Baku'});}
+function dt(d){if(!d)return '';var p=String(d).split('-');return p[2]+'.'+p[1]+'.'+p[0];}
+function matById(id){return CAT.materials.find(function(m){return m.id==id;})||{};}
+function stockOf(id){var s=STOCK.find(function(x){return x.id==id;});return s?+s.qty:0;}
+
+function loadCat(){return rpc('tk_catalog').then(function(c){CAT=c||CAT;}).then(function(){return rpc('tk_stock');}).then(function(s){STOCK=s||[];});}
+function show(v){CUR=v;document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v);});document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('on',x.id==='v-'+v);});
+ ({dash:renderDash,stock:renderStock,in:function(){renderMoves('in');},out:function(){renderMoves('out');},smeta:renderSmeta,rep:renderRep})[v]();}
+$('tabs').addEventListener('click',function(e){var b=e.target.closest('button');if(b)show(b.dataset.v);});
+
+/* ===== İCMAL ===== */
+function renderDash(){var el=$('v-dash');el.innerHTML='<div class="empty">Yüklənir…</div>';rpc('tk_dash').then(function(d){if(!d){el.innerHTML='<div class="empty">İcazə yoxdur</div>';return;}
+ var h=d.demo?'<div class="demo row sp"><span>ℹ️ Bunlar <b>nümunə məlumatlardır</b> — sistemi göstərmək üçün. Real istifadəyə başlayanda silin.</span>'+(d.full?'<button class="btn s g" onclick="demoClear()">Nümunələri sil</button>':'')+'</div>':'';
+ var pl=0,fc=0;(d.objects||[]).forEach(function(o){pl+=+o.plan;fc+=+o.fact;});
+ h+='<div class="kpis"><div class="kpi"><small>Anbardakı malın dəyəri</small><b>'+man(d.stock_value)+'</b></div><div class="kpi"><small>Smeta büdcəsi (cəmi)</small><b>'+man(pl)+'</b></div><div class="kpi"><small>Faktiki sərf</small><b>'+man(fc)+'</b><small>'+(pl?Math.round(fc*100/pl):0)+'% büdcədən</small></div><div class="kpi"><small>Bu ay mədaxil / məxaric</small><b style="font-size:17px">'+man(d.month_in)+'</b><small>məxaric: '+man(d.month_out)+'</small></div></div>';
+ h+='<div class="grid2"><div class="card"><h3>🏢 Obyektlər üzrə büdcə</h3>'+((d.objects||[]).map(function(o){var p=+o.plan?Math.round(o.fact*100/o.plan):0;return '<div class="obj"><div class="row sp"><b>'+esc(o.name)+'</b><span class="muted small">'+man(o.fact)+' / '+man(o.plan)+' · <b style="color:'+(p>100?'var(--bad)':'var(--ink)')+'">'+p+'%</b></span></div><div class="bar"><i class="'+(p>100?'over':'')+'" style="width:'+Math.min(100,p)+'%"></i></div></div>';}).join('')||'<div class="empty">Obyekt yoxdur</div>')+'</div>';
+ var al='';(d.over||[]).forEach(function(o){al+='<div class="alert"><i>🔴</i><div class="f1"><b>'+esc(o.name)+'</b> · '+esc(o.object)+'<div class="small muted">Smeta aşılıb: plan '+q(o.plan)+' '+esc(o.unit)+', sərf '+q(o.fact)+' '+esc(o.unit)+'</div></div></div>';});
+ (d.low||[]).forEach(function(m){al+='<div class="alert"><i>'+(+m.qty<=0?'⛔':'🟠')+'</i><div class="f1"><b>'+esc(m.name)+'</b><div class="small muted">Qalıq '+q(m.qty)+' '+esc(m.unit)+' · minimum '+q(m.min)+'</div></div><button class="btn s g" onclick="newMove(\'in\','+m.id+')">Mədaxil</button></div>';});
+ h+='<div class="card"><h3>⚠️ Diqqət tələb edənlər</h3>'+(al||'<div class="empty">Hər şey qaydasındadır ✓</div>')+'</div></div>';
+ h+='<div class="card"><div class="row sp"><h3>🕘 Son əməliyyatlar</h3><span class="row"><button class="btn s" onclick="newMove(\'in\')">+ Mədaxil</button><button class="btn s g" onclick="newMove(\'out\')">+ Məxaric</button></span></div>'+movesHtml(d.recent||[])+'</div>';
+ el.innerHTML=h;}).catch(err);}
+function demoClear(){if(!confirm('Bütün nümunə məlumatları (materiallar, obyektlər, smeta, əməliyyatlar) silinsin?'))return;rpc('tk_demo_clear').then(function(){toast('Nümunələr silindi');return loadCat();}).then(function(){show('dash');}).catch(err);}
+
+/* ===== ANBAR ===== */
+function renderStock(){var el=$('v-stock');var cats=[];STOCK.forEach(function(s){if(s.category&&cats.indexOf(s.category)<0)cats.push(s.category);});
+ el.innerHTML='<div class="row" style="margin-bottom:10px"><input id="sq" class="f1" placeholder="Material axtar…" oninput="drawStock()" style="min-width:160px;flex:1"><select id="sc" onchange="drawStock()" style="width:auto"><option value="">Bütün kateqoriyalar</option>'+cats.map(function(c){return '<option>'+esc(c)+'</option>';}).join('')+'</select><button class="btn" onclick="matEdit()">+ Material</button></div><div id="sl"></div>';drawStock();}
+function stPill(s){var qy=+s.qty,mn=+s.min;if(qy<=0)return '<span class="pill no">Yoxdur</span>';if(mn>0&&qy<=mn)return '<span class="pill lo">Azdır</span>';return '<span class="pill ok">Var</span>';}
+function drawStock(){var qs=($('sq').value||'').toLowerCase(),c=$('sc').value;var L=STOCK.filter(function(s){return s.active!==false&&(!qs||s.name.toLowerCase().indexOf(qs)>=0)&&(!c||s.category===c);});var tot=0;L.forEach(function(s){tot+=s.qty*s.avg;});
+ $('sl').innerHTML=L.length?'<div class="card dtab"><div class="tw"><table><tr><th>Material</th><th>Kateqoriya</th><th class="num">Qalıq</th><th class="num">Orta qiymət</th><th class="num">Dəyər</th><th>Vəziyyət</th></tr>'+L.map(function(s){return '<tr class="click" onclick="matEdit('+s.id+')"><td><b>'+esc(s.name)+'</b></td><td class="muted">'+esc(s.category||'—')+'</td><td class="num"><b>'+q(s.qty)+'</b> '+esc(s.unit)+'</td><td class="num">'+man(s.avg)+'</td><td class="num">'+man(s.qty*s.avg)+'</td><td>'+stPill(s)+'</td></tr>';}).join('')+'<tr><td colspan="4"><b>Cəmi</b></td><td class="num"><b>'+man(tot)+'</b></td><td></td></tr></table></div></div>'
+  +'<div class="mcard">'+L.map(function(s){return '<div class="mc" onclick="matEdit('+s.id+')"><div class="row sp"><b>'+esc(s.name)+'</b>'+stPill(s)+'</div><div class="row sp small muted"><span>Qalıq: <b style="color:var(--ink)">'+q(s.qty)+' '+esc(s.unit)+'</b></span><span>'+man(s.qty*s.avg)+'</span></div></div>';}).join('')+'<div class="mc row sp"><b>Cəmi dəyər</b><b>'+man(tot)+'</b></div></div>':'<div class="empty">Material tapılmadı</div>';}
+function matEdit(id){var m=id?CAT.materials.find(function(x){return x.id==id;}):{unit:'ədəd'};var s=STOCK.find(function(x){return x.id==id;});
+ md('<h2>'+(id?'Material':'Yeni material')+'</h2>'+(s?'<div class="small muted">Qalıq: <b>'+q(s.qty)+' '+esc(s.unit)+'</b> · daxil olub '+q(s.in)+' · sərf '+q(s.out)+'</div>':'')
+  +'<label class="l">Adı</label><input id="mN" value="'+esc(m.name||'')+'" placeholder="Sement M400"><div class="row"><div class="f1"><label class="l">Vahid</label><input id="mU" value="'+esc(m.unit||'')+'" list="units"></div><div class="f1"><label class="l">Kateqoriya</label><input id="mC" value="'+esc(m.category||'')+'" list="cats"></div></div>'
+  +'<label class="l">Minimal qalıq (bu həddən aşağı düşəndə xəbərdarlıq)</label><input id="mM" type="number" step="any" value="'+(m.min_qty||0)+'">'
+  +'<datalist id="units"><option>ədəd<option>kisə<option>ton<option>kq<option>m<option>m²<option>m³<option>litr<option>dəst<option>rulon</datalist><datalist id="cats">'+Array.from(new Set(CAT.materials.map(function(x){return x.category;}).filter(Boolean))).map(function(c){return '<option>'+esc(c);}).join('')+'</datalist>'
+  +'<div class="row" style="margin-top:14px">'+(id&&CAT.full?'<button class="btn r" onclick="delRow(\'materials\','+id+')">Sil</button>':'')+'<span class="f1"></span><button class="btn g" onclick="mdClose()">Bağla</button><button class="btn" onclick="matSave('+(id||'null')+')">Yadda saxla</button></div>');}
+function matSave(id){var n=$('mN').value.trim();if(!n){toast('Ad yazın');return;}rpc('tk_save',{p_table:'materials',p_row:{id:id,name:n,unit:$('mU').value.trim(),category:$('mC').value.trim(),min_qty:+$('mM').value||0}}).then(function(){mdClose();toast('Yadda saxlanıldı');return loadCat();}).then(function(){show(CUR);}).catch(err);}
+function delRow(t,id){if(!confirm('Silinsin?'))return;rpc('tk_delete',{p_table:t,p_id:id}).then(function(){mdClose();toast('Silindi');return loadCat();}).then(function(){show(CUR);}).catch(err);}
+
+/* ===== MƏDAXİL / MƏXARİC ===== */
+function movesHtml(L){return L.length?L.map(function(m){var ti=m.kind==='in'?'Mədaxil'+(m.supplier?' · '+esc(m.supplier):''):'Məxaric'+(m.object?' → '+esc(m.object):'')+(m.receiver?' · '+esc(m.receiver):'');
+  return '<div class="mv" id="mv'+m.id+'"><div class="h" onclick="this.parentNode.classList.toggle(\'op\')"><span class="tag '+m.kind+'">'+(m.kind==='in'?'↓':'↑')+'</span><div class="f1"><b>'+ti+'</b><div class="small muted">'+dt(m.date)+(m.doc_no?' · № '+esc(m.doc_no):'')+' · '+m.lines.length+' mal'+(m.by?' · '+esc(m.by):'')+'</div></div><b class="num">'+man(m.total)+'</b></div>'
+   +'<div class="ls">'+m.lines.map(function(l){return '<div class="row sp"><span>'+esc(l.mat)+'</span><span class="muted">'+q(l.qty)+' '+esc(l.unit)+' × '+man(l.price)+'</span></div>';}).join('')+(m.smeta?'<div class="small muted">Smeta maddəsi: '+esc(m.smeta)+'</div>':'')+(m.note?'<div class="small muted">Qeyd: '+esc(m.note)+'</div>':'')+(m.photo?'<a class="small" href="'+esc(m.photo)+'" target="_blank">📎 Qaimənin şəkli</a>':'')+(CAT.full?'<div style="margin-top:6px"><button class="btn s r" onclick="delMove('+m.id+')">Əməliyyatı sil</button></div>':'')+'</div></div>';}).join(''):'<div class="empty">Hələ əməliyyat yoxdur</div>';}
+function renderMoves(k){var el=$('v-'+k);el.innerHTML='<div class="row sp" style="margin-bottom:10px"><div class="muted small">'+(k==='in'?'Anbara daxil olan mallar (alış, qaimə)':'Anbardan obyektə / podratçıya buraxılan mallar')+'</div><button class="btn" onclick="newMove(\''+k+'\')">+ Yeni '+(k==='in'?'mədaxil':'məxaric')+'</button></div><div class="card" id="ml-'+k+'"><div class="empty">Yüklənir…</div></div>';
+ rpc('tk_moves_list',{p_kind:k,p_limit:200}).then(function(L){$('ml-'+k).innerHTML=movesHtml(L||[]);}).catch(err);}
+function delMove(id){if(!confirm('Bu əməliyyat silinsin? Qalıqlar yenidən hesablanacaq.'))return;rpc('tk_delete',{p_table:'moves',p_id:id}).then(function(){toast('Silindi');return loadCat();}).then(function(){show(CUR);}).catch(err);}
+var _ph=null;
+function matOpts(sel){return '<option value="">— material —</option>'+CAT.materials.filter(function(m){return m.active!==false;}).map(function(m){return '<option value="'+m.id+'"'+(m.id==sel?' selected':'')+'>'+esc(m.name)+' ('+esc(m.unit)+')</option>';}).join('');}
+function newMove(k,mat){_ph=null;var isIn=k==='in';
+ var h='<h2>'+(isIn?'Yeni mədaxil':'Yeni məxaric')+'</h2><div class="row"><div class="f1"><label class="l">Tarix</label><input id="vD" type="date" value="'+today()+'"></div><div class="f1"><label class="l">'+(isIn?'Qaimə №':'Sənəd №')+'</label><input id="vN" placeholder="istəyə görə"></div></div>';
+ if(isIn)h+='<label class="l">Təchizatçı</label><div class="row"><select id="vS" class="f1"><option value="">— seçin —</option>'+CAT.suppliers.map(function(s){return '<option value="'+s.id+'">'+esc(s.name)+'</option>';}).join('')+'</select><button class="btn g s" onclick="supNew()">+ Yeni</button></div>';
+ else h+='<label class="l">Obyekt</label><select id="vO" onchange="smOpts()"><option value="">— seçin —</option>'+CAT.objects.filter(function(o){return o.active!==false;}).map(function(o){return '<option value="'+o.id+'">'+esc(o.name)+'</option>';}).join('')+'</select><label class="l">Smeta maddəsi (istəyə görə)</label><select id="vSm"><option value="">— avtomatik (materiala görə) —</option></select><label class="l">Təhvil alan (podratçı / usta)</label><input id="vR" placeholder="Məs: Podratçı Əliyev R.">';
+ h+='<label class="l">Mallar</label><div id="vL"></div><button class="btn g s" onclick="addLn(\''+k+'\')">+ Mal əlavə et</button>'
+  +'<label class="l">Qeyd</label><input id="vNote" placeholder="istəyə görə">'+(isIn?'<label class="l">Qaimənin şəkli</label><input type="file" accept="image/*,application/pdf" onchange="_ph=this.files[0]">':'')
+  +'<div class="row sp" style="margin-top:12px"><b id="vT">Cəmi: 0,00 ₼</b><span class="row"><button class="btn g" onclick="mdClose()">Ləğv</button><button class="btn" id="vGo" onclick="saveMove(\''+k+'\')">Yadda saxla</button></span></div>';
+ md(h);addLn(k,mat);}
+function addLn(k,mat){var d=document.createElement('div');d.className='ln'+(k==='out'?' o':'');d.innerHTML='<select onchange="lnInfo(this)">'+matOpts(mat)+'</select><input type="number" step="any" placeholder="Miqdar" oninput="calcT()">'+(k==='in'?'<input type="number" step="any" placeholder="Qiymət" oninput="calcT()">':'')+'<button class="x" onclick="this.parentNode.remove();calcT()">✕</button><div class="small muted" style="grid-column:1/-1;margin-top:-2px"></div>';$('vL').appendChild(d);lnInfo(d.querySelector('select'));}
+function lnInfo(s){var d=s.parentNode,inf=d.lastElementChild,m=matById(s.value);var st=STOCK.find(function(x){return x.id==s.value;});inf.textContent=s.value?('Anbarda: '+q(st?st.qty:0)+' '+(m.unit||'')+(st&&+st.avg?' · orta qiymət '+man(st.avg):'')):'';calcT();}
+function calcT(){var t=0,isOut=!!document.querySelector('#vL .ln.o');document.querySelectorAll('#vL .ln').forEach(function(d){var s=d.querySelector('select').value,ins=d.querySelectorAll('input'),qy=+ins[0].value||0,pr=isOut?((STOCK.find(function(x){return x.id==s;})||{}).avg||0):(+(ins[1]&&ins[1].value)||0);t+=qy*pr;});var e=$('vT');if(e)e.textContent='Cəmi: '+man(t)+(isOut?' (orta qiymətlə)':'');}
+function smOpts(){var o=$('vO').value,s=$('vSm');s.innerHTML='<option value="">— avtomatik (materiala görə) —</option>';if(!o)return;rpc('tk_smeta_view',{p_object:+o}).then(function(L){s.innerHTML+=(L||[]).map(function(r){return '<option value="'+r.id+'">'+esc((r.section?r.section+' · ':'')+r.name)+'</option>';}).join('');});}
+function supNew(){var n=prompt('Təchizatçının adı');if(!n)return;rpc('tk_save',{p_table:'suppliers',p_row:{name:n}}).then(function(id){CAT.suppliers.push({id:id,name:n});var s=$('vS');s.insertAdjacentHTML('beforeend','<option value="'+id+'">'+esc(n)+'</option>');s.value=id;}).catch(err);}
+function saveMove(k){var lines=[];var bad=false;document.querySelectorAll('#vL .ln').forEach(function(d){var s=d.querySelector('select').value,ins=d.querySelectorAll('input'),qy=+ins[0].value||0;if(!s&&!qy)return;if(!s||!qy){bad=true;return;}lines.push({material_id:+s,qty:qy,price:k==='in'?(+ins[1].value||0):null});});
+ if(bad||!lines.length){toast('Hər sətirdə material və miqdar olmalıdır');return;}
+ if(k==='out'&&!$('vO').value){toast('Obyekti seçin');return;}
+ var head={date:$('vD').value,doc_no:$('vN').value.trim(),note:$('vNote').value.trim()};if(k==='in')head.supplier_id=$('vS').value;else{head.object_id=$('vO').value;head.smeta_id=$('vSm').value;head.receiver=$('vR').value.trim();}
+ var g=$('vGo');g.disabled=true;g.textContent='Saxlanılır…';
+ var up=_ph?sb.storage.from('chat').upload('tikinti/'+Date.now()+'_'+(_ph.name||'qaime').replace(/[^\w.]/g,'_'),_ph).then(function(r){if(r.error)throw r.error;return sb.storage.from('chat').getPublicUrl(r.data.path).data.publicUrl;}):Promise.resolve(null);
+ up.then(function(u){if(u)head.photo_url=u;return rpc('tk_move_save',{p_kind:k,p_head:head,p_lines:lines});}).then(function(){mdClose();toast(k==='in'?'Mədaxil qeydə alındı':'Məxaric qeydə alındı');return loadCat();}).then(function(){show(CUR==='dash'?'dash':k);}).catch(function(e){g.disabled=false;g.textContent='Yadda saxla';err(e);});}
+
+/* ===== SMETA ===== */
+function renderSmeta(){var el=$('v-smeta'),ob=CAT.objects.filter(function(o){return o.active!==false;});if(!SM_OBJ&&ob[0])SM_OBJ=ob[0].id;
+ el.innerHTML='<div class="row" style="margin-bottom:10px"><select id="so" onchange="SM_OBJ=+this.value;drawSmeta()" style="width:auto;min-width:160px">'+ob.map(function(o){return '<option value="'+o.id+'"'+(o.id==SM_OBJ?' selected':'')+'>'+esc(o.name)+'</option>';}).join('')+'</select>'
+  +(CAT.full?'<button class="btn g s" onclick="objNew()">+ Obyekt</button><span class="f1"></span><button class="btn g s" onclick="smImport()">⬆ Excel-dən idxal</button><button class="btn s" onclick="smEdit()">+ Sətir</button>':'')+'</div><div id="sv"></div>';
+ if(!ob.length){$('sv').innerHTML='<div class="card empty">Hələ obyekt yoxdur'+(CAT.full?' — "+ Obyekt" ilə əlavə edin':'')+'</div>';return;}drawSmeta();}
+function drawSmeta(){var v=$('sv');v.innerHTML='<div class="card empty">Yüklənir…</div>';rpc('tk_smeta_view',{p_object:SM_OBJ}).then(function(L){L=L||[];window._sm=L;var tp=0,tf=0,cur=null,h='';
+ L.forEach(function(r){tp+=+r.plan;tf+=+r.famt;});
+ h='<div class="kpis k3"><div class="kpi"><small>Smeta (plan)</small><b>'+man(tp)+'</b></div><div class="kpi"><small>Faktiki sərf</small><b>'+man(tf)+'</b></div><div class="kpi"><small>İcra</small><b style="color:'+(tf>tp?'var(--bad)':'var(--ink)')+'">'+(tp?Math.round(tf*100/tp):0)+'%</b></div></div>';
+ var mc='<div class="mcard">';cur=null;L.forEach(function(r){if(r.section!==cur){cur=r.section;mc+='<div class="small muted" style="margin:10px 2px 4px;font-weight:700">'+esc(cur||'Ümumi')+'</div>';}var p=+r.qty?Math.round(r.fqty*100/r.qty):0;mc+='<div class="mc" '+(CAT.full?'onclick="smEdit('+r.id+')"':'')+'><div class="row sp"><b>'+esc(r.name)+'</b><b style="color:'+(p>100?'var(--bad)':'var(--ink)')+'">'+p+'%</b></div><div class="bar" style="margin:6px 0"><i class="'+(p>100?'over':'')+'" style="width:'+Math.min(100,p)+'%"></i></div><div class="row sp small muted"><span>Sərf '+q(r.fqty)+' / '+q(r.qty)+' '+esc(r.unit||'')+'</span><span>'+man(r.famt)+' / '+man(r.plan)+'</span></div></div>';});mc+=(L.length?'':'<div class="mc empty">Smeta boşdur</div>')+'</div>';cur=null;
+ h+=mc+'<div class="card dtab"><div class="tw"><table><tr><th>Ad</th><th class="num">Plan</th><th class="num">Plan məbləğ</th><th class="num">Sərf</th><th class="num">Fakt məbləğ</th><th style="min-width:110px">İcra</th></tr>';
+ L.forEach(function(r){if(r.section!==cur){cur=r.section;h+='<tr class="sec"><td colspan="6">'+esc(cur||'Ümumi')+'</td></tr>';}var p=+r.qty?Math.round(r.fqty*100/r.qty):0;
+  h+='<tr class="'+(CAT.full?'click':'')+'" '+(CAT.full?'onclick="smEdit('+r.id+')"':'')+'><td>'+esc(r.name)+(r.material_id?'':' <span class="muted small">(iş)</span>')+'</td><td class="num">'+q(r.qty)+' '+esc(r.unit||'')+'</td><td class="num">'+man(r.plan)+'</td><td class="num">'+q(r.fqty)+'</td><td class="num">'+man(r.famt)+'</td><td><div class="row" style="flex-wrap:nowrap"><div class="bar f1"><i class="'+(p>100?'over':'')+'" style="width:'+Math.min(100,p)+'%"></i></div><span class="small" style="width:38px;text-align:right;color:'+(p>100?'var(--bad)':'inherit')+'">'+p+'%</span></div></td></tr>';});
+ h+=L.length?'<tr><td><b>Cəmi</b></td><td></td><td class="num"><b>'+man(tp)+'</b></td><td></td><td class="num"><b>'+man(tf)+'</b></td><td></td></tr>':'<tr><td colspan="6" class="empty">Smeta boşdur'+(CAT.full?' — "+ Sətir" və ya Excel-dən idxal edin':'')+'</td></tr>';
+ v.innerHTML=h+'</table></div><div class="small muted" style="margin-top:8px">Sərf — bu obyektə edilən məxaricdən avtomatik hesablanır (material və ya seçilmiş smeta maddəsinə görə).</div></div>';}).catch(err);}
+function objNew(){var n=prompt('Obyektin adı (məs. Bina 6)');if(!n)return;rpc('tk_save',{p_table:'objects',p_row:{name:n}}).then(function(id){SM_OBJ=id;return loadCat();}).then(function(){renderSmeta();}).catch(err);}
+function smEdit(id){var r=id?(window._sm||[]).find(function(x){return x.id==id;}):{};
+ md('<h2>'+(id?'Smeta sətri':'Yeni smeta sətri')+'</h2><label class="l">Bölmə</label><input id="eS" value="'+esc(r.section||'')+'" placeholder="Karkas, Hörgü, Elektrik…" list="secs"><datalist id="secs">'+Array.from(new Set((window._sm||[]).map(function(x){return x.section;}).filter(Boolean))).map(function(s){return '<option>'+esc(s);}).join('')+'</datalist>'
+  +'<label class="l">Material (anbardakı) — iş xidmətidirsə boş saxlayın</label><select id="eM" onchange="var m=matById(this.value);if(m.name){if(!$(\'eN\').value)$(\'eN\').value=m.name;$(\'eU\').value=m.unit;}">'+matOpts(r.material_id)+'</select>'
+  +'<label class="l">Ad</label><input id="eN" value="'+esc(r.name||'')+'"><div class="row"><div class="f1"><label class="l">Vahid</label><input id="eU" value="'+esc(r.unit||'')+'"></div><div class="f1"><label class="l">Miqdar</label><input id="eQ" type="number" step="any" value="'+(r.qty||'')+'"></div><div class="f1"><label class="l">Vahid qiymət, ₼</label><input id="eP" type="number" step="any" value="'+(r.price||'')+'"></div></div>'
+  +'<div class="row" style="margin-top:14px">'+(id?'<button class="btn r" onclick="delRow(\'smeta\','+id+')">Sil</button>':'')+'<span class="f1"></span><button class="btn g" onclick="mdClose()">Bağla</button><button class="btn" onclick="smSave('+(id||'null')+')">Yadda saxla</button></div>');}
+function smSave(id){var n=$('eN').value.trim();if(!n){toast('Ad yazın');return;}rpc('tk_save',{p_table:'smeta',p_row:{id:id,object_id:SM_OBJ,section:$('eS').value.trim(),name:n,material_id:$('eM').value,unit:$('eU').value.trim(),qty:+$('eQ').value||0,price:+$('eP').value||0}}).then(function(){mdClose();drawSmeta();}).catch(err);}
+function smImport(){md('<h2>Excel-dən smeta idxalı</h2><p class="small muted">Faylda bu sütunlar olsun (birinci sətir başlıq): <b>Bölmə · Ad · Vahid · Miqdar · Qiymət</b>. Adı anbardakı materialla eyni olan sətirlər avtomatik materiala bağlanır.</p><input type="file" id="xf" accept=".xlsx,.xls,.csv"><div id="xr" class="small" style="margin-top:8px"></div><div class="row" style="margin-top:12px"><span class="f1"></span><button class="btn g" onclick="mdClose()">Bağla</button><button class="btn" onclick="smImportGo()">İdxal et</button></div>');}
+function needX(cb){if(window.XLSX)return cb();var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=cb;document.head.appendChild(s);}
+function smImportGo(){var f=$('xf').files[0];if(!f){toast('Fayl seçin');return;}$('xr').textContent='Oxunur…';needX(function(){var rd=new FileReader();rd.onload=function(e){try{var wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'}),rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+  var hd=rows.shift().map(function(x){return String(x).toLowerCase().trim();}),ix=function(ks){for(var i=0;i<hd.length;i++)for(var k=0;k<ks.length;k++)if(hd[i].indexOf(ks[k])>=0)return i;return -1;};
+  var iS=ix(['bölmə','bolme','bölüm','section']),iN=ix(['ad','iş','material','name']),iU=ix(['vahid','ölçü','unit']),iQ=ix(['miqdar','həcm','say','qty']),iP=ix(['qiymət','qiymet','price']);
+  if(iN<0){$('xr').textContent='"Ad" sütunu tapılmadı';return;}var jobs=[],n=0;
+  rows.forEach(function(r){var nm=String(r[iN]||'').trim();if(!nm)return;var m=CAT.materials.find(function(x){return x.name.toLowerCase()===nm.toLowerCase();});n++;
+   jobs.push(function(){return rpc('tk_save',{p_table:'smeta',p_row:{object_id:SM_OBJ,section:iS>=0?String(r[iS]).trim():'',name:nm,material_id:m?m.id:'',unit:iU>=0?String(r[iU]).trim():(m?m.unit:''),qty:iQ>=0?+String(r[iQ]).replace(',','.')||0:0,price:iP>=0?+String(r[iP]).replace(',','.')||0:0,sort:n}});});});
+  var i=0,next=function(){if(i>=jobs.length){mdClose();toast(n+' sətir idxal edildi');drawSmeta();return;}$('xr').textContent=(i+1)+' / '+jobs.length+' …';jobs[i++]().then(next).catch(err);};next();}catch(x){$('xr').textContent='Fayl oxunmadı: '+x.message;}};rd.readAsArrayBuffer(f);});}
+
+/* ===== HESABAT ===== */
+function renderRep(){var el=$('v-rep');var d0=new Date();d0.setDate(1);
+ el.innerHTML='<div class="card"><div class="row"><select id="rk" style="width:auto"><option value="">Bütün əməliyyatlar</option><option value="in">Mədaxil</option><option value="out">Məxaric</option></select><input type="date" id="r1" value="'+d0.toLocaleDateString('sv-SE')+'" style="width:auto"><input type="date" id="r2" value="'+today()+'" style="width:auto"><button class="btn g s" onclick="repDraw()">Göstər</button><span class="f1"></span><button class="btn s" onclick="repCsv()">⬇ Excel (CSV)</button></div></div><div id="rv"></div>';repDraw();}
+function repRows(){return rpc('tk_moves_list',{p_kind:$('rk').value||null,p_limit:2000}).then(function(L){var a=$('r1').value,b=$('r2').value;return (L||[]).filter(function(m){return (!a||m.date>=a)&&(!b||m.date<=b);});});}
+function repDraw(){repRows().then(function(L){var ti=0,to=0;L.forEach(function(m){if(m.kind==='in')ti+=+m.total;else to+=+m.total;});
+ var by={};L.filter(function(m){return m.kind==='out';}).forEach(function(m){var k=m.object||'—';by[k]=(by[k]||0)+(+m.total);});
+ $('rv').innerHTML='<div class="kpis k3"><div class="kpi"><small>Mədaxil</small><b>'+man(ti)+'</b></div><div class="kpi"><small>Məxaric</small><b>'+man(to)+'</b></div><div class="kpi"><small>Əməliyyat sayı</small><b>'+L.length+'</b></div></div>'
+  +(Object.keys(by).length?'<div class="card"><h3>Obyektlər üzrə sərf</h3>'+Object.keys(by).map(function(k){return '<div class="row sp" style="padding:5px 0"><span>'+esc(k)+'</span><b>'+man(by[k])+'</b></div>';}).join('')+'</div>':'')
+  +'<div class="card"><h3>Hərəkət jurnalı</h3>'+movesHtml(L)+'</div>';}).catch(err);}
+function repCsv(){repRows().then(function(L){var R=[['Tarix','Növ','Sənəd №','Təchizatçı','Obyekt','Təhvil alan','Material','Vahid','Miqdar','Qiymət','Məbləğ']];
+ L.forEach(function(m){m.lines.forEach(function(l){R.push([dt(m.date),m.kind==='in'?'Mədaxil':'Məxaric',m.doc_no||'',m.supplier||'',m.object||'',m.receiver||'',l.mat,l.unit,String(l.qty).replace('.',','),String(l.price).replace('.',','),String(Math.round(l.qty*l.price*100)/100).replace('.',',')]);});});
+ var csv='\ufeff'+R.map(function(r){return r.map(function(c){c=String(c);return /[;"\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c;}).join(';');}).join('\n');
+ var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='tikinti-hesabat-'+$('r1').value+'_'+$('r2').value+'.csv';a.click();}).catch(err);}
+
+luxAuth({perms:['tikinti','tikinti_anbar','sys'],title:'Tikinti nəzarəti',noAdminLink:true,onReady:function(client,me){sb=client||window.luxSb;ME=me;document.querySelector('.wrap').style.visibility='';loadCat().then(function(){show('dash');}).catch(err);}});
+</script>
+</body>
+</html>
