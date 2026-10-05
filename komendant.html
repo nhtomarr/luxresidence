@@ -958,7 +958,7 @@ var _actPrint5=actPrint;actPrint=function(a){_actPrint5(a);var td=document.query
 <style>.adel{border:none;background:#fee2e2;color:#991b1b;border-radius:8px;padding:4px 8px;font-size:12px;cursor:pointer}</style>
 <script>
 /* ---- Aktı silmək (admin / kassa) ---- */
-function canDelAct(){var p=(ME&&ME.perms)||[];return !!(ME&&(ME.is_admin||p.indexOf('sys')>=0||p.indexOf('komendant_kassa')>=0));}
+function canDelAct(){var p=(ME&&ME.perms)||[];return !!(ME&&(ME.is_admin||p.indexOf('sys')>=0||p.indexOf('komendant_kassa')>=0||p.indexOf('komendant_akt')>=0));}
 function actDel(id,no){if(!canDelAct())return;var r=prompt('"'+no+'" aktı silinsin?\nSəbəbi yazın (məs. test aktı):','');if(r===null)return;
  sb.rpc('km_act_delete',{p_id:id,p_reason:r,p_revert:true}).then(function(x){if(x.error)throw x.error;toast('Akt silindi');window._acts=(window._acts||[]).filter(function(a){return a.id!==id;});var s=document.querySelector('#aLs');if(s)actListDraw('');return handLoad().then(handDraw);}).catch(err);}
 var _actListDraw6=actListDraw;actListDraw=function(q){_actListDraw6(q);if(!canDelAct())return;var rows=document.querySelectorAll('#aLs tr.click');var L=(window._acts||[]);
