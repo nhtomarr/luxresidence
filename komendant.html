@@ -955,5 +955,17 @@ var _actForm5=actForm;actForm=function(id){_actForm5(id);var n=0;(function go(){
 var _actSave5=actSave;actSave=function(){var sg=giverSig();if(_act&&sg){var orig=sb.rpc.bind(sb),done=false;sb.rpc=function(n,a){if(!done&&n==='km_act_save'&&a&&a.p){done=true;a.p.sign_staff=sg;a.p.staff_name=CFG.act_giver_name||a.p.staff_name;a.p.staff_title=CFG.act_giver_title||'';sb.rpc=orig;}return orig(n,a);};}_actSave5();};
 var _actPrint5=actPrint;actPrint=function(a){_actPrint5(a);var td=document.querySelector('#printArea .actp .as td');if(!td)return;var sm=td.querySelector('small');var nm=(a.staff_title?a.staff_title+' ':'')+(a.staff_name||'');if(sm&&nm.trim())sm.textContent=nm;};
 </script>
+<style>.adel{border:none;background:#fee2e2;color:#991b1b;border-radius:8px;padding:4px 8px;font-size:12px;cursor:pointer}</style>
+<script>
+/* ---- Aktı silmək (admin / kassa) ---- */
+function canDelAct(){var p=(ME&&ME.perms)||[];return !!(ME&&(ME.is_admin||p.indexOf('sys')>=0||p.indexOf('komendant_kassa')>=0));}
+function actDel(id,no){if(!canDelAct())return;var r=prompt('"'+no+'" aktı silinsin?\nSəbəbi yazın (məs. test aktı):','');if(r===null)return;
+ sb.rpc('km_act_delete',{p_id:id,p_reason:r,p_revert:true}).then(function(x){if(x.error)throw x.error;toast('Akt silindi');window._acts=(window._acts||[]).filter(function(a){return a.id!==id;});var s=document.querySelector('#aLs');if(s)actListDraw('');return handLoad().then(handDraw);}).catch(err);}
+var _actListDraw6=actListDraw;actListDraw=function(q){_actListDraw6(q);if(!canDelAct())return;var rows=document.querySelectorAll('#aLs tr.click');var L=(window._acts||[]);
+ var hd=document.querySelector('#aLs tr:first-child');if(hd&&!hd.querySelector('.thd'))hd.insertAdjacentHTML('beforeend','<th class="thd"></th>');
+ rows.forEach(function(tr){var no=tr.querySelector('td b');var a=L.find(function(x){return no&&x.no===no.textContent;});if(!a||tr.querySelector('.adel'))return;tr.insertAdjacentHTML('beforeend','<td><button class="adel" title="Sil" onclick="event.stopPropagation();actDel('+a.id+',\''+esc(a.no)+'\')">🗑</button></td>');});};
+var _hEdit6=hEdit;hEdit=function(id){_hEdit6(id);if(!canDelAct())return;var n=0;(function go(){var links=document.querySelectorAll('#mbox a[onclick*="km_acts"]');if(!links.length){if(n++<20)setTimeout(go,150);return;}
+ (window._uacts||[]).forEach(function(a,i){var l=links[i];if(l&&!l.parentNode.querySelector('.adel'))l.insertAdjacentHTML('afterend',' <button class="adel" onclick="actDel('+a.id+',\''+esc(a.no)+'\')">🗑 Sil</button>');});})();};
+</script>
 </body>
 </html>
