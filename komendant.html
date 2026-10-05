@@ -945,5 +945,15 @@ var _hEdit4=hEdit;hEdit=function(id){var h=HAND[id]||{};if(h.category==='mtk'&&!
 var _actSave4=actSave;actSave=function(){var c=($('a_category')||{}).value||'';if(_act){var orig=sb.rpc.bind(sb),done=false;sb.rpc=function(n,a){if(!done&&n==='km_act_save'&&a&&a.p){done=true;a.p.category=c;sb.rpc=orig;}return orig(n,a);};}_actSave4();};
 var _actDone4=actDone;actDone=function(a,r){window._mLock=false;_actDone4(a,r);};
 </script>
+<style>.agv{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:12px;background:#fffdfb;height:150px;padding:10px;margin-top:4px}.agv img{max-width:62%;max-height:110px}.agv b{display:block;font-size:14px}.agv small{color:var(--mut);font-size:12.5px}@media(max-width:700px){.agv{height:auto;flex-direction:column;align-items:flex-start}.agv img{max-width:100%}}</style>
+<script>
+/* ---- Təhvil verən: sabit imza (Satış Direktoru) ---- */
+function giverSig(){return CFG&&CFG.act_giver_sign?'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(CFG.act_giver_sign):null;}
+var _actForm5=actForm;actForm=function(id){_actForm5(id);var n=0;(function go(){var c=$('aPads');if(!c){if(n++<30)setTimeout(go,50);return;}var sg=giverSig();if(!sg)return;
+ var col=c.parentNode;col.innerHTML='<div class="row sp"><b class="small">Təhvil verən</b></div><div class="agv"><img src="'+sg+'"><div><b>'+esc(CFG.act_giver_name||'')+'</b><small>'+esc(CFG.act_giver_title||'')+'</small></div></div>';
+ var lbl=document.querySelector('#aPadr');if(lbl){var t=lbl.parentNode.querySelector('b.small');if(t)t.textContent='Təhvil alan — burada imzalayın';}})();};
+var _actSave5=actSave;actSave=function(){var sg=giverSig();if(_act&&sg){var orig=sb.rpc.bind(sb),done=false;sb.rpc=function(n,a){if(!done&&n==='km_act_save'&&a&&a.p){done=true;a.p.sign_staff=sg;a.p.staff_name=CFG.act_giver_name||a.p.staff_name;a.p.staff_title=CFG.act_giver_title||'';sb.rpc=orig;}return orig(n,a);};}_actSave5();};
+var _actPrint5=actPrint;actPrint=function(a){_actPrint5(a);var td=document.querySelector('#printArea .actp .as td');if(!td)return;var sm=td.querySelector('small');var nm=(a.staff_title?a.staff_title+' ':'')+(a.staff_name||'');if(sm&&nm.trim())sm.textContent=nm;};
+</script>
 </body>
 </html>
