@@ -65,7 +65,8 @@ function pollHtml(p){var o=p.poll,v=o.votes||{},tot=0,my=o.myvote;Object.keys(v)
  return '<div class="sopoll"><b>📊 '+esc(o.q||'')+'</b>'+(o.opts||[]).map(function(t,i){var n=v[i]||0,pc=tot?Math.round(n*100/tot):0;
   return '<button class="'+(my===i?'my':'')+'" onclick="pollVote(\''+p.id+'\','+i+')"><i style="width:'+(done?pc:0)+'%"></i><span>'+esc(t)+'</span>'+(done?'<em>'+pc+'%</em>':'')+'</button>';}).join('')+'<small>'+tot+' səs</small></div>';}
 function pollVote(id,i){var p=FEED.find(function(x){return x.id===id;});if(p&&p.poll){var v=p.poll.votes=p.poll.votes||{};if(p.poll.myvote!=null)v[p.poll.myvote]=(v[p.poll.myvote]||1)-1;v[i]=(v[i]||0)+1;p.poll.myvote=i;postRedraw(p);}sb.rpc('post_vote',{p_id:id,p_opt:i}).then(function(){},function(){});}
-function postRedraw(p){var e=$('post'+p.id);if(e){var d=document.createElement('div');d.innerHTML=postCard(p);e.replaceWith(d.firstChild);}}
+function postEls(id){return Array.prototype.slice.call(document.querySelectorAll('[id="post'+id+'"]'));}
+function postRedraw(p){postEls(p.id).forEach(function(e){var d=document.createElement('div');d.innerHTML=postCard(p);e.replaceWith(d.firstChild);});}
 /* ---- reaksiyalar ---- */
 var _rh=null;
 function reactHold(id,el){clearTimeout(_rh);_rh=setTimeout(function(){el._held=1;reactPick(id,el);},450);}
@@ -73,10 +74,10 @@ function reactHoldEnd(){clearTimeout(_rh);}
 function reactPick(id,el){try{navigator.vibrate&&navigator.vibrate(12);}catch(e){}var r=el.getBoundingClientRect(),o=document.createElement('div');o.className='sorpick';
  o.innerHTML='<div class="sorbg" onclick="this.parentNode.remove()"></div><div class="sorbar" style="left:'+Math.max(8,r.left-10)+'px;top:'+Math.max(10,r.top-64)+'px">'+REACTS.map(function(e,i){return '<button style="animation-delay:'+(i*30)+'ms" onclick="this.closest(\'.sorpick\').remove();feedReact(\''+id+'\',\''+e+'\',true)">'+e+'</button>';}).join('')+'</div>';document.body.appendChild(o);
  setTimeout(function(){el._held=0;},400);}
-function feedReact(id,emoji,force){var p=FEED.find(function(x){return x.id===id;});if(!p||p.kind==='kudos')return;var btn=document.querySelector('.sorx[data-id="'+id+'"]');if(btn&&btn._held)return;
+function feedReact(id,emoji,force){var p=FEED.find(function(x){return x.id===id;});if(!p||p.kind==='kudos')return;if(Array.prototype.some.call(document.querySelectorAll('.sorx[data-id="'+id+'"]'),function(b){return b._held;}))return;
  if(force&&p.my===emoji)return;var old=p.my;p.reacts=p.reacts||{};if(old){p.reacts[old]=(p.reacts[old]||1)-1;if(!p.reacts[old])delete p.reacts[old];p.likes--;}
  if(emoji){p.reacts[emoji]=(p.reacts[emoji]||0)+1;p.likes++;p.my=emoji;}else p.my=null;postRedraw(p);
- if(emoji){var e=$('post'+id);if(e){var h=document.createElement('span');h.className='igheart';h.textContent=emoji;h.style.position='absolute';e.style.position='relative';e.appendChild(h);setTimeout(function(){h.remove();},900);}}
+ if(emoji){var e=postEls(id).filter(function(x){return x.offsetParent;}).pop();if(e){var h=document.createElement('span');h.className='igheart';h.textContent=emoji;h.style.position='absolute';e.style.position='relative';e.appendChild(h);setTimeout(function(){h.remove();},900);}}
  sb.rpc('post_react',{p_id:id,p_emoji:emoji||null}).then(function(){},function(){});}
 function postSave(id,on){var p=FEED.find(function(x){return x.id===id;});if(p){p.saved=on;postRedraw(p);}run(sb.rpc('post_save',{p_id:id,p_on:on})).then(function(){toast(on?'🔖 Saxlanıldı':'Saxlanılanlardan çıxarıldı');}).catch(err);}
 /* ---- paylaşma ---- */
