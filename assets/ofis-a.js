@@ -1529,9 +1529,10 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/ofis-sw.js',
 var _bip=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();_bip=e;var b=$('instBtn');if(b)b.style.display='';});
 function isStandalone(){return window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;}
 document.addEventListener('DOMContentLoaded',function(){var b=$('instBtn');if(!b)return;
- if(!isNative()&&!isStandalone()&&/iphone|ipad|ipod/i.test(navigator.userAgent))b.style.display='';
+ if(!isNative()&&!isStandalone()&&(/iphone|ipad|ipod/i.test(navigator.userAgent)||isAndroid()))b.style.display='';
  b.onclick=function(){if(_bip){_bip.prompt();_bip.userChoice.then(function(){_bip=null;b.style.display='none';});}
   else if(isIOS()){iosSheetShow(true);}
+  else if(isAndroid()){androidInstall();}
   else modal('<div class="mhead"><h3>Telefona quraşdır</h3><button class="x" onclick="closeModal()">×</button></div><p><b>iPhone (Safari):</b> aşağıdakı <b>Paylaş</b> düyməsi (□↑) → <b>“Ana ekrana əlavə et”</b> → <b>Əlavə et</b>.</p><p style="margin-top:10px"><b>Android (Chrome):</b> sağ yuxarıdakı ⋮ menyu → <b>“Tətbiqi quraşdır”</b>.</p>');};});
 /* ===================== SOSİAL MODUL (qruplar, səsli, fayl, hekayələr, lent, status...) ===================== */
 var CHATgroup=false,CHAT_STORIES=[],_typT=0,_typShowT=null,_rec=null;
@@ -1893,3 +1894,16 @@ function applyBrand(){var L=EMP&&EMP.location_id?locById(EMP.location_id):null;v
  document.body.classList.toggle('lux',lux);try{localStorage.setItem('ofis_brand',lux?'lux':'');}catch(e){}
  var b=document.querySelector('.top .brand');if(b)b.innerHTML=lux?'LUX Residence<small>'+esc(L.name.replace(/^LUX\s*/i,''))+'</small>':'Baş Ofis<small>İdarəetmə sistemi</small>';
  document.title=lux?'LUX Residence — '+L.name:'Baş Ofis — İdarəetmə';}
+
+/* Android: quraşdırma (Chrome təklifi olmasa da) + Bu gün ekranında banner */
+function isAndroid(){return /android/i.test(navigator.userAgent);}
+var APK_URL='https://github.com/nhtomarr/luxresidence/releases/latest/download/bas-ofis.apk';
+function androidInstall(){modal('<div class="mhead"><h3>Telefona quraşdır</h3><button class="x" onclick="closeModal()">×</button></div>'
+ +'<p><b>1-ci yol — Android tətbiqi (tövsiyə olunur).</b> Bildirişlər və yer izləmə daha etibarlı işləyir.</p>'
+ +'<a class="btn" style="display:block;text-align:center;margin:10px 0 4px" href="'+APK_URL+'">⬇ Tətbiqi yüklə (APK)</a>'
+ +'<p class="muted small">Yüklənəndən sonra faylı açın → “Quraşdır”. Telefon “naməlum mənbə” icazəsi istəsə — bu dəfəlik icazə verin.</p>'
+ +'<p style="margin-top:14px"><b>2-ci yol — Chrome ilə.</b> Sağ yuxarıdakı <b>⋮</b> menyu → <b>“Tətbiqi quraşdır”</b> və ya <b>“Ana ekrana əlavə et”</b>.</p>');}
+function instBanner(){try{if(isNative()||isStandalone()||!(isAndroid()||isIOS()))return;if(localStorage.getItem('inst_ban_x')==='1')return;}catch(e){}
+ var v=$('v-today');if(!v||$('instBan'))return;
+ v.insertAdjacentHTML('afterbegin','<div id="instBan" class="card" style="display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:12px"><div style="font-size:26px">📲</div><div style="flex:1"><b>Tətbiqi telefona quraşdırın</b><div class="muted small">Ana ekrandan bir toxunuşla açılsın, bildirişlər gəlsin</div></div><button class="btn sm" onclick="$(\'instBtn\').click()">Quraşdır</button><button class="x" aria-label="Bağla" style="background:none;border:none;font-size:20px;color:var(--mut)" onclick="try{localStorage.setItem(\'inst_ban_x\',\'1\')}catch(e){};$(\'instBan\').remove()">×</button></div>');}
+document.addEventListener('DOMContentLoaded',function(){setTimeout(instBanner,1500);});
