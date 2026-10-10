@@ -9,8 +9,8 @@
 <title>Baş Ofis — İdarəetmə</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="/assets/lux-auth.js?v=104"></script>
-<link rel="stylesheet" href="/assets/ofis-app.css?v=104">
+<script src="/assets/lux-auth.js?v=105"></script>
+<link rel="stylesheet" href="/assets/ofis-app.css?v=105">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
@@ -119,14 +119,15 @@
    <div class="card"><h3>🛡 Ehtiyat nüsxələr</h3><div id="bkSet"></div></div>
    <div class="card"><h3>📱 Mobil tətbiq bildirişləri (Firebase)</h3><div id="fcmSet"></div></div>
    <div class="card"><h3>Telegram bildirişləri</h3><div id="tgSet"></div></div>
-   <div class="card"><h3>Ofisin yeri</h3><p class="muted small">Gəliş-gediş yalnız bu nöqtəyə yaxın olanda qəbul edilir.</p>
+   <div class="card"><h3>İş yerləri</h3><p class="muted small">Hər iş yerinin öz konumu və öz QR-ı var. İşçi kartında "İş yeri" seçilir — işçi yalnız öz iş yerinin QR-ı ilə qeyd olunur.</p><div id="locSet"></div></div>
+   <div class="card"><h3>Baş Ofisin yeri</h3><p class="muted small">Gəliş-gediş yalnız bu nöqtəyə yaxın olanda qəbul edilir.</p>
     <div class="grid g2"><div class="field"><label>Enlik (lat)</label><input id="cLat" inputmode="decimal"></div><div class="field"><label>Uzunluq (lng)</label><input id="cLng" inputmode="decimal"></div></div>
     <button class="btn ghost sm" onclick="useHere()">📍 Hazırkı yerimi ofis kimi götür</button>
     <div class="grid g2" style="margin-top:12px"><div class="field"><label>İcazəli radius (metr)</label><input id="cRad" type="number"></div><div class="field"><label>Gecikməyə güzəşt (dəqiqə)</label><input id="cGrace" type="number"></div></div>
     <label class="row small" style="margin-bottom:6px"><input type="checkbox" id="cGeo"> Yer yoxlaması məcburidir</label>
     <label class="row small" style="margin-bottom:12px"><input type="checkbox" id="cSelfie"> Gəliş-gedişdə selfi ilə təsdiq (başqasının yerinə qeydin qarşısını alır)</label>
     <button class="btn" onclick="saveCfg()">Yadda saxla</button></div>
-   <div class="card"><h3>QR kod</h3>
+   <div class="card"><h3>Baş Ofis — QR kod</h3>
     <label class="qopt"><input type="radio" name="qmode" value="static"> <div><b>Çap olunan sabit QR</b><span>Bir dəfə çap edib divara vurulur. Qoruma telefonun ofisdə olmasının yoxlanması ilə olur (yer yoxlaması avtomatik məcburi olur).</span></div></label>
     <label class="qopt"><input type="radio" name="qmode" value="dynamic"> <div><b>Ekranda dəyişən QR</b><span>Girişdəki planşetdə açıq qalır, kod hər dəqiqə dəyişir. Ən təhlükəsiz variant.</span></div></label>
     <div class="row" style="margin-top:12px"><button class="btn" onclick="saveCfg()">Yadda saxla</button><button class="btn ghost" id="qPrintBtn" onclick="printQR()">🖨 Çap üçün QR</button><button class="btn ghost" id="qScreenBtn" onclick="openQR()">QR ekranını aç</button></div>
@@ -156,9 +157,9 @@
 <div class="toast" id="toast"></div>
 
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script defer src="/assets/ofis-a.js?v=104"></script>
+<script defer src="/assets/ofis-a.js?v=105"></script>
 <script defer src="/bg.js"></script>
-<script defer src="/assets/ofis-b.js?v=104"></script>
+<script defer src="/assets/ofis-b.js?v=105"></script>
 
 
 
