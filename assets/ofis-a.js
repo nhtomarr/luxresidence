@@ -59,7 +59,7 @@ function loadAll(){return Promise.all([
   MGR?run(sb.from('lux_profiles').select('user_id,email,full_name,perms,is_admin,active')):Promise.resolve([]),MGR?run(sb.from('office_config').select('*').eq('id',1).maybeSingle()):Promise.resolve(null),
   run(sb.from('office_leaves').select('*').order('date_from',{ascending:false})),run(sb.from('office_holidays').select('*').order('day')),
   sb.from('office_locations').select('id,name,lat,lng,radius_m,static_qr,active,sort').order('sort').order('id').then(function(x){return x.data||[];},function(){return [];})
- ]).then(function(r){LOCS=r[8]||[];EMPS=r[0]||[];DEPTS=r[1]||[];POS=r[2]||[];TASKS=r[3]||[];PROFS=r[4]||[];CFG=r[5];LEAVES=r[6]||[];HOL=r[7]||[];EMP=EMPS.find(function(e){return e.user_id===ME.user_id&&e.active;})||null;
+ ]).then(function(r){LOCS=r[8]||[];EMPS=r[0]||[];DEPTS=r[1]||[];POS=r[2]||[];TASKS=r[3]||[];PROFS=r[4]||[];CFG=r[5];LEAVES=r[6]||[];HOL=r[7]||[];EMP=EMPS.find(function(e){return e.user_id===ME.user_id&&e.active;})||null;setTimeout(function(){try{applyBrand();}catch(e){}},0);
   SIMPLE=!!(EMP&&EMP.simple_mode&&!MGR);if(SIMPLE){$('tabs').innerHTML=[['today','Bu gün'],['dir','Komanda']].map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join('');document.body.classList.add('simple');}}).catch(err);}
 
 /* ---------- BU GÜN / check-in ---------- */
@@ -1887,3 +1887,9 @@ function locSave(id){var raw=($('lLat').value+'').trim();var m=raw.match(/(-?\d+
  if($('lAct'))b.active=$('lAct').checked;
  var q=id?sb.from('office_locations').update(b).eq('id',id):sb.from('office_locations').insert(b);
  run(q.select('id,name,lat,lng,radius_m,static_qr,active,sort').single()).then(function(r){var i=LOCS.findIndex(function(x){return x.id===r.id;});if(i>=0)LOCS[i]=r;else LOCS.push(r);closeModal();renderLocs();toast('Saxlanıldı');}).catch(err);}
+
+/* LUX Residence işçiləri üçün brend (ad + terakota) */
+function applyBrand(){var L=EMP&&EMP.location_id?locById(EMP.location_id):null;var lux=!!(L&&/lux/i.test(L.name))&&!OWNER;
+ document.body.classList.toggle('lux',lux);try{localStorage.setItem('ofis_brand',lux?'lux':'');}catch(e){}
+ var b=document.querySelector('.top .brand');if(b)b.innerHTML=lux?'LUX Residence<small>'+esc(L.name.replace(/^LUX\s*/i,''))+'</small>':'Baş Ofis<small>İdarəetmə sistemi</small>';
+ document.title=lux?'LUX Residence — '+L.name:'Baş Ofis — İdarəetmə';}

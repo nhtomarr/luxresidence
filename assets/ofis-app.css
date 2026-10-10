@@ -1537,3 +1537,22 @@ video{background:#111}.igmw video,.socar video{background:#111}
 .afm .afr{display:flex;align-items:center;gap:6px;padding:8px 0;border-top:1px solid rgba(0,0,0,.06)}.afm .afr b{font-size:.9rem}.afm .afr small{display:block;color:#6e6e73;font-size:.76rem}
 
 .afwait{background:rgba(255,255,255,.14);color:#fff;border-radius:99px;padding:12px 18px;font-weight:600;font-size:.95rem}
+
+/* =====================================================================
+   LUX RESIDENCE işçiləri — terakota palitrası (body.lux)
+   İşçinin iş yeri LUX-dursa (office_employees.location_id) avtomatik qoşulur.
+   ===================================================================== */
+body.lux{--acc:#ba4d2c;--acc2:#9a3c20;--soft:rgba(186,77,44,.1);--ink:#241109;--mut:#8a7566}
+body.lux.tod-dawn{--amb:linear-gradient(170deg,#fbe1cf 0%,#f6e8de 40%,#f2ebe4 75%,#f7f2ec 100%);--sun:rgba(255,190,140,.55)}
+body.lux.tod-day{--amb:linear-gradient(172deg,#f3dccb 0%,#f6e9de 32%,#f7f0e8 65%,#f7f2ec 100%);--sun:rgba(255,236,214,.75)}
+body.lux.tod-dusk{--amb:linear-gradient(170deg,#f2c6ad 0%,#efd3c4 38%,#ead9cf 70%,#f3ebe4 100%);--sun:rgba(232,140,100,.5)}
+body.lux.tod-night{--amb:linear-gradient(178deg,#d9c3b6 0%,#e3d3c9 30%,#ece2da 60%,#f3ece6 100%);--sun:rgba(190,120,90,.3)}
+html:has(body.lux){background:#f7f2ec}
+body.lux .checkcard{background:linear-gradient(150deg,#2a1610 0%,#7a2e17 55%,#ba4d2c 100%)!important}
+body.lux .top .brand{font-family:var(--serif);font-weight:800;letter-spacing:-.01em;color:#2a1d14}
+body.lux .top .brand small{font-family:var(--sans);color:var(--acc)}
+body.lux .chatav,body.lux .msg.mine,body.lux .chatsend{background:linear-gradient(135deg,#ba4d2c,#9a3c20)}
+body.lux .pushcta{background:linear-gradient(135deg,#5a2414,#ba4d2c)}
+body.lux .iosSheet.on .ios-arrow{color:#ba4d2c}
+body.lux .kbs button.on,body.lux .okinds label:has(input:checked){background:#f6e9e2;box-shadow:0 0 0 3px rgba(186,77,44,.14)}
+body.lux .tdc.an{background:linear-gradient(135deg,#9a3c20,#ba4d2c)}
