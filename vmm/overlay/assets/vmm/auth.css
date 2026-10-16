@@ -1,0 +1,18 @@
+/* VMM Ofis — giriş ekranı */
+#luxAuth{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;background:#ecefee!important;font-family:'Archivo',system-ui,sans-serif}
+#luxAuth::before{content:"";position:fixed;left:0;right:0;top:0;height:6px;background:linear-gradient(90deg,#7b4b2a 0 33.34%,#2e7d4f 33.34% 66.67%,#e2742b 66.67%)}
+#luxAuth form{background:#fff;border:1px solid #d4dbd9;border-radius:14px;padding:34px 28px 26px;width:min(380px,100%);text-align:left}
+#luxAuth h3{margin:0 0 6px;font-size:46px;line-height:1;color:#15232b}
+#luxAuth h3 .vmm-wm{font-stretch:125%;font-weight:900}
+#luxAuth p{margin:0 0 22px;color:#5e6c71;font-size:14px;font-weight:500}
+#luxAuth input{width:100%;box-sizing:border-box;border:1px solid #d4dbd9;border-radius:8px;padding:13px 14px;font-size:15px;margin-bottom:10px;font-family:inherit;background:#fff;color:#15232b}
+#luxAuth input:focus{outline:none;border-color:#24704a;box-shadow:0 0 0 3px rgba(36,112,74,.16)}
+#luxAuth button{width:100%;border:none;border-radius:10px;padding:14px;background:#24704a;color:#fff;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit;margin-top:4px}
+#luxAuth button:hover{background:#1b5838}
+#luxAuth .rm{display:flex;align-items:center;gap:8px;margin:2px 2px 8px;font-size:14px;color:#5e6c71;cursor:pointer}
+#luxAuth .rm input{width:18px;height:18px;margin:0;padding:0;accent-color:#24704a}
+#luxAuth .e{color:#c0392b;font-size:13px;min-height:18px;margin:2px 0 8px}
+#luxAuth .co{display:flex;gap:14px;margin-top:20px;padding-top:16px;border-top:1px solid #e3e8e6;font-size:12.5px;font-weight:600;color:#5e6c71}
+#luxAuth .co span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:1px}
+#luxAuth .co .v::before{background:#7b4b2a}#luxAuth .co .m1::before{background:#2e7d4f}#luxAuth .co .m2::before{background:#e2742b}
+.lux-me{display:none!important}

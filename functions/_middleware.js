@@ -49,6 +49,8 @@ class Append { constructor(h) { this.h = h; } element(el) { el.append(this.h, { 
 const LEAD = { 1: 'geniş planlı 3 və 4 otaqlı mənzillər', 3: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 4: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 5: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 6: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 10: '1 və 3 otaqlı mənzillər', 11: '1 və 3 otaqlı mənzillər' };
 export async function onRequest(ctx) {
   const url = new URL(ctx.request.url);
+  // ---- VMM Ofisin mənbə kodu (vmm/) bu saytda yayımlanmır — VMM ayrıca Netlify-dadır ----
+  if (url.pathname === '/vmm' || url.pathname.startsWith('/vmm/')) return new Response('Not found', { status: 404, headers: { 'X-Robots-Tag': 'noindex' } });
   // ---- Baş Ofis ayrıca domendə (ofis.pilothayat.az): yalnız ofis sistemi açılır ----
   if (OFFICE_HOSTS.has(url.hostname)) return officeHost(ctx, url);
   // ---- Təchizat paneli ayrıca domendə (techizat.pilothayat.az) ----

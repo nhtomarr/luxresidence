@@ -1,0 +1,15 @@
+{
+ "name": "VMM Ofis",
+ "short_name": "VMM Ofis",
+ "start_url": "/",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#ffffff",
+ "theme_color": "#ffffff",
+ "lang": "az",
+ "icons": [
+  {"src": "/assets/vmm/icon-192.png", "sizes": "192x192", "type": "image/png"},
+  {"src": "/assets/vmm/icon-512.png", "sizes": "512x512", "type": "image/png"},
+  {"src": "/assets/vmm/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+ ]
+}
