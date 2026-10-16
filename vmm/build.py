@@ -85,6 +85,14 @@ a = a.replace("<b>2-ci yol — Chrome ilə.</b>", "<b>Chrome ilə:</b>")
 a = must(a, "['Boş mənzillərin siyahısı','🏢'],['Borcluların siyahısı','💰'],", "['Bu gün kim ofisdədir?','🏢'],", 1, 'asstq')
 a = must(a, "<li>“Boş mənzillərin siyahısını PDF ver”</li>", "<li>“Bu ay gecikənlərin siyahısını PDF ver”</li>", 1, 'asstli')
 a = must(a, "planlar, tapşırıqlar, komendantlıq ödənişləri)", "planlar, tapşırıqlar)", 1, 'bk')
+# Rəhbər + sahibkar hüququ olan istifadəçi: iki görünüş arasında keçid (default rəhbər)
+a = must(a, "OWNER=(me.perms||[]).indexOf('ofis_owner')>=0;PREVIEW=!!(me.is_admin&&new URLSearchParams(location.search).get('baxis')==='sahibkar');",
+ "var _pp=me.perms||[];window._DUAL=!me.is_admin&&_pp.indexOf('ofis_owner')>=0&&_pp.indexOf('ofis_admin')>=0;OWNER=_pp.indexOf('ofis_owner')>=0&&!window._DUAL;PREVIEW=!!((me.is_admin||window._DUAL)&&new URLSearchParams(location.search).get('baxis')==='sahibkar');", 1, 'dual')
+a = must(a, "if(ME.is_admin){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';",
+ "if(ME.is_admin||window._DUAL){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'↩ Rəhbər görünüşü':'👁 Sahibkar görünüşü';", 1, 'pvbtn')
+a = must(a, "PREVIEW?'Afiq Rəhmanov':(ME.full_name||ME.email)", "(ME.full_name||ME.email)", 1, 'afiq1')
+a = must(a, "PREVIEW?'Afiq Rəhmanov':(ME.full_name||'Afiq Rəhmanov')", "(ME.full_name||'')", 1, 'afiq2')
+a = must(a, "👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.", "👁 Sahibkar görünüşü. Rəhbər görünüşünə qayıtmaq üçün yuxarıdakı düyməyə basın.", 1, 'pvbar')
 # Saytdan müraciətlər (LUX satış saytı) VMM-də yoxdur
 a = must(a, "if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);", "", 1, 'leads')
 wr('assets/vmm-a.js', a)
