@@ -1,4 +1,4 @@
-# VMM Ofis (Viking · Marol · Marox)
+# VMM Ofis (Viking · Maro · Marox)
 
 Baş Ofis sisteminin VMM üçün ayrıca nüsxəsi, fərqli dizaynla. Test linki: https://vmm-ofis.netlify.app
 

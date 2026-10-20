@@ -295,7 +295,7 @@ Nümunə məlumat (demo=true): Bina 4/5, 10 material, 3 təchizatçı, 12 smeta 
 - 10 okt (ofis-v106) LUX BRENDİ: işçinin iş yeri adında "LUX" varsa (və sahibkar deyilsə) `applyBrand()` → body.lux (terakota palitrası, ofis-app.css sonunda 'LUX RESIDENCE işçiləri' bloku), başlıq "LUX Residence · <iş yeri>", səhifə adı. localStorage `ofis_brand=lux` — növbəti açılışda yüklənmə ekranı da LUX (ofis.html-də kiçik inline skript). Manifest/APK adı "Baş Ofis" olaraq qalır.
 
 ## VMM Ofis (16 oktyabr 2026)
-- Baş Ofisin tam nüsxəsi VMM (Viking, Marol, Marox) üçün, fərqli dizaynla: **https://vmm-ofis.netlify.app** (müvəqqəti test linki, Netlify `vmm-ofis`).
+- Baş Ofisin tam nüsxəsi VMM (Viking, Maro, Marox) üçün, fərqli dizaynla: **https://vmm-ofis.netlify.app** (müvəqqəti test linki, Netlify `vmm-ofis`).
 - Baza hələlik eyni Supabase-dədir, amma ayrıca **`vmm` sxemində** (124 cədvəl, ~360 funksiya, RLS, trigger, cron `vmm-*`, bucket `vmm-*`, edge `vmm-*`). Pilot məlumatı ilə qarışmır. Sonra yeni Supabase hesabına köçürüləcək.
 - Mənbə: `vmm/` (build.py Baş Ofis kodundan yığır + `vmm/overlay`). `/vmm/*` luxresidence.az-da 404 verir.
-- Admin: Nihat (omrnihat@gmail.com, eyni parol). Şöbələr: Viking, Marol, Marox. Tək QR (iş yerləri bölməsi gizlidir). Ofis koordinatı hələ təyin edilməyib (yer yoxlaması söndürülüb).
+- Admin: Nihat (omrnihat@gmail.com, eyni parol). Şöbələr: Viking, Maro, Marox. Tək QR (iş yerləri bölməsi gizlidir). Ofis koordinatı hələ təyin edilməyib (yer yoxlaması söndürülüb).

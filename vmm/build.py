@@ -100,7 +100,7 @@ wr('assets/vmm-a.js', a)
 b = rd('assets/ofis-b.js')
 b = js_common(b, 'b')
 b = must(b, "['lx','LUX ❤️','🏢','#b45309','#7c2d12'],", "['vm','VMM ❤️','⚓','#2e7d4f','#15232b'],", 1, 'lx')
-b = re.sub(r"PLACES=\[[^\]]*\]", "PLACES=['VMM Ofis','Viking','Marol','Marox','Liman','Anbar','Gömrük','Gəmi']", b, count=1)
+b = re.sub(r"PLACES=\[[^\]]*\]", "PLACES=['VMM Ofis','Viking','Maro','Marox','Liman','Anbar','Gömrük','Gəmi']", b, count=1)
 wr('assets/vmm-b.js', b)
 
 # ---------------------------------------------------------------- auth
@@ -114,7 +114,7 @@ au = au.replace("/pilothayat\\.az|luxresidence\\.az|localhost|pages\\.dev/", "/v
 au = au.replace("return h.indexOf('ofis.')===0?'ofis':(p.replace(/^\\/|\\.html$/g,'')||'sayt');", "return 'vmm';")
 au = au.replace("['lux_sales','lux_commercial','lux_garage']", "[]")
 au = au.replace("lux_remember", "vmm_remember").replace("lux_sess", "vmm_sess")
-au = must(au, "<button>Daxil ol</button>", '<button>Daxil ol</button><div class="co"><span class="v">Viking</span><span class="m1">Marol</span><span class="m2">Marox</span></div>', 1, 'co')
+au = must(au, "<button>Daxil ol</button>", '<button>Daxil ol</button><div class="co"><span class="v">Viking</span><span class="m1">Maro</span><span class="m2">Marox</span></div>', 1, 'co')
 # giriş pəncərəsinin dizaynı overlay/auth.css-dən gəlir
 au = re.sub(r"function css\(\)\{.*?document\.head\.appendChild\(st\);\}", "function css(){}", au, count=1, flags=re.S)
 wr('assets/vmm-auth.js', au)
