@@ -35,7 +35,8 @@
   var HS='input,textarea,select,[contenteditable],canvas,video,.leaflet-container,#dock,#tabs,.top,.socar,.igstories,.soseg,.sugl,.s3hl,.pfbd,.fpfl,.sochips,.igvc,.igboards,.s4opts,.sorpick';
   function blocked(el){if(el.closest&&el.closest(HS))return true;for(;el&&el!==document.body;el=el.parentElement){var cs=getComputedStyle(el);if((cs.overflowX==='auto'||cs.overflowX==='scroll')&&el.scrollWidth>el.clientWidth+4)return true;}return false;}
   function busy2(){return busy()||document.querySelector('.pg.on,#igSV,#mvw,#igReel,#stEd,#s4wr,#s4quiz,#igCtx,.s3over')||(typeof CHAT_SEL!=='undefined'&&CHAT_SEL);}
-  function tabList(){return Array.prototype.map.call(document.querySelectorAll('#tabs button'),function(b){return b.dataset.v;});}
+  function tabList(){var all=Array.prototype.map.call(document.querySelectorAll('#tabs button'),function(b){return b.dataset.v;});var prim=[];try{if(typeof dkPrimary==='function'&&typeof dkTabs==='function')prim=dkPrimary(dkTabs());}catch(e){}  /* sıra alt menyudakı kimi: əvvəl menyudakı 4 bölmə, sonra “Daha”dakılar */
+    return prim.concat(all.filter(function(v){return prim.indexOf(v)<0;}));}
   var G=null;
   addEventListener('touchstart',function(e){G=null;if(!mob()||busy2()||e.touches.length!==1||loading)return;var t=e.touches[0];if(t.clientX<16||t.clientX>innerWidth-16||blocked(e.target))return;
     var v=curTab(),el=v&&document.getElementById('v-'+v);if(!el)return;G={x:t.clientX,y:t.clientY,dx:0,on:false,el:el,v:v};},{passive:true});
