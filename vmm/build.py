@@ -161,6 +161,8 @@ h = must(h, '<div class="brand">Baş Ofis<small>İdarəetmə sistemi</small></di
 h = h.replace('Baş Ofisin yeri', 'Ofisin yeri').replace('Baş Ofis — QR kod', 'Ofis QR kodu').replace('Baş Ofis', 'VMM Ofis')
 h = h.replace('/assets/ofis/icon-192.png', '/assets/vmm/icon-192.png')
 h = h.replace('</head>', '<link rel="stylesheet" href="/assets/vmm/auth.css?v=' + VER + '">\n</head>', 1)
+TOPH_JS = "<script>(function(){function f(){var t=document.querySelector('.top');if(t)document.documentElement.style.setProperty('--toph',t.offsetHeight+'px');}addEventListener('resize',f);addEventListener('load',f);document.addEventListener('DOMContentLoaded',function(){f();var t=document.querySelector('.top');if(t&&window.ResizeObserver)new ResizeObserver(f).observe(t);});})();</script>"
+h = h.replace('</body>', TOPH_JS + '</body>', 1)
 wr('index.html', h)
 
 # ---------------------------------------------------------------- SW

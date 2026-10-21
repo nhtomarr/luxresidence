@@ -151,7 +151,9 @@ body.vmm pre,body.vmm code{white-space:pre-wrap;word-break:break-word}
   body.vmm .otbl th,body.vmm .otbl td{white-space:nowrap}
 }
 
-/* ---- iOS "rezin" sürüşməsini söndür: başlıq və menyu yerində qalır, yalnız məzmun sürüşür (Instagram kimi) ---- */
-html,body{overscroll-behavior:none}
-html{background:var(--bg)}
-body.vmm .top{position:sticky;top:0;z-index:50}
+/* ---- Sabit başlıq ---- */
+/* Instagram kimi: məzmun dartılır (rezin effekti qalır), başlıq və alt menyu yerində qalır */
+@media(max-width:759px){
+  body.vmm .top{position:fixed!important;top:0;left:0;right:0;z-index:60}
+  body.vmm{padding-top:var(--toph,64px)}
+}
