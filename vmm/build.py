@@ -106,6 +106,8 @@ b = rd('assets/ofis-b.js')
 b = js_common(b, 'b')
 b = must(b, "['lx','LUX ❤️','🏢','#b45309','#7c2d12'],", "['vm','VMM ❤️','⚓','#2e7d4f','#15232b'],", 1, 'lx')
 b = re.sub(r"PLACES=\[[^\]]*\]", "PLACES=['VMM Ofis','Viking','Maro','Marox','Liman','Anbar','Gömrük','Gəmi']", b, count=1)
+# Çat↔Lent öz jesti söndürülür (VMM-də bütün bölmələr arasında ümumi sürüşdürmə var, vmm-ux.js); çat otağında kənardan geri jesti qalır
+b = must(b, "if(c&&c.classList.contains('on'))return CHATother?'room':'list';if(f&&f.classList.contains('on'))return 'feed';return null;", "if(c&&c.classList.contains('on')&&CHATother)return 'room';return null;", 1, 'swipe-ctx')
 wr('assets/vmm-b.js', b)
 
 # ---------------------------------------------------------------- auth
@@ -162,7 +164,7 @@ h = h.replace('Baş Ofisin yeri', 'Ofisin yeri').replace('Baş Ofis — QR kod',
 h = h.replace('/assets/ofis/icon-192.png', '/assets/vmm/icon-192.png')
 h = h.replace('</head>', '<link rel="stylesheet" href="/assets/vmm/auth.css?v=' + VER + '">\n</head>', 1)
 TOPH_JS = "<script>(function(){function f(){var t=document.querySelector('.top');if(t)document.documentElement.style.setProperty('--toph',t.offsetHeight+'px');}addEventListener('resize',f);addEventListener('load',f);document.addEventListener('DOMContentLoaded',function(){f();var t=document.querySelector('.top');if(t&&window.ResizeObserver)new ResizeObserver(f).observe(t);});})();</script>"
-h = h.replace('</body>', TOPH_JS + '</body>', 1)
+h = h.replace('</body>', TOPH_JS + '<script>' + open(os.path.join(OV, 'vmm-ux.js'), encoding='utf-8').read() + '</script></body>', 1)
 wr('index.html', h)
 
 # ---------------------------------------------------------------- SW

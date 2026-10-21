@@ -89,14 +89,23 @@ body.vmm .checkcard .stat-line{border-top-color:rgba(255,255,255,.14)}
 @media(max-width:759px){
  body.vmm .top{background:#fff!important;padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px;position:sticky}
  body.vmm .top .brand{font-size:22px}
- body.vmm #dock{left:0;right:0;bottom:0;height:calc(64px + env(safe-area-inset-bottom,0px));padding:0 4px env(safe-area-inset-bottom,0px);border-radius:0;
-  background:#fff!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border:none;border-top:1px solid var(--line);box-shadow:none}
- body.vmm #dock .dk{border-radius:0;color:var(--mut);font-size:11px;font-weight:600}
+ /* Instagram tipli şüşə alt menyu: yuxarıda böyük + yazılı, aşağı sürüşəndə kiçilir və yazılar gizlənir */
+ body.vmm #dock{position:fixed;left:12px;right:12px;bottom:calc(8px + env(safe-area-inset-bottom,0px));height:64px;padding:5px;border-radius:999px;display:flex;align-items:stretch;
+  background:rgba(255,255,255,.58)!important;backdrop-filter:saturate(190%) blur(26px)!important;-webkit-backdrop-filter:saturate(190%) blur(26px)!important;
+  border:.5px solid rgba(255,255,255,.75);box-shadow:0 12px 32px -12px rgba(16,28,22,.35),0 1px 0 rgba(255,255,255,.9) inset,0 0 0 .5px rgba(0,0,0,.06);
+  transition:left .38s cubic-bezier(.2,.9,.25,1.05),right .38s cubic-bezier(.2,.9,.25,1.05),height .38s cubic-bezier(.2,.9,.25,1.05),bottom .38s;z-index:70}
+ body.vmm #dock .dk{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:999px;background:none;border:0;
+  color:#1d2421;font-size:10.5px;font-weight:600;position:relative;z-index:1;padding:0}
+ body.vmm #dock .dk svg{width:25px;height:25px;transition:width .3s,height .3s,transform .3s}
+ body.vmm #dock .dk span{max-height:14px;line-height:14px;opacity:1;overflow:hidden;transition:opacity .18s,max-height .3s}
  body.vmm #dock .dk.on{color:var(--ink)}
  body.vmm #dock .dk.on svg{color:var(--acc)}
- body.vmm #dock .dkpill{top:0;bottom:auto;height:3px;border-radius:0 0 3px 3px;background:var(--acc);box-shadow:none}
- body.vmm #dock .dkb{background:var(--mx);border-color:#fff}
- body.vmm main{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+ body.vmm #dock .dkpill{top:5px;bottom:5px;height:auto;border-radius:999px;background:rgba(24,40,32,.09);box-shadow:inset 0 0 0 .5px rgba(0,0,0,.04)}
+ body.vmm #dock .dkb{background:var(--mx);border-color:#fff;top:2px}
+ body.vmm.dk-mini #dock{left:17%;right:17%;height:50px}
+ body.vmm.dk-mini #dock .dk span{opacity:0;max-height:0}
+ body.vmm.dk-mini #dock .dk svg{width:23px;height:23px}
+ body.vmm main{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
 }
 body.vmm .dkgrid button{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:none}
 body.vmm .dkgrid svg{color:var(--acc)}
@@ -157,3 +166,13 @@ body.vmm pre,body.vmm code{white-space:pre-wrap;word-break:break-word}
   body.vmm .top{position:fixed!important;top:0;left:0;right:0;z-index:60}
   body.vmm{padding-top:var(--toph,64px)}
 }
+
+/* Aşağı çəkib yeniləmə göstəricisi */
+#ptr{position:fixed;left:50%;top:calc(var(--toph,64px) + 8px);transform:translate(-50%,0);z-index:55;color:#6b7470;opacity:0;pointer-events:none;transition:opacity .2s;width:26px;height:26px}
+#ptr.spin svg{animation:ptrspin .8s steps(8) infinite}
+@keyframes ptrspin{to{transform:rotate(360deg)}}
+/* Sürüşdürmə keçid animasiyası */
+.view.sw-l{animation:swl .28s cubic-bezier(.2,.8,.2,1)}
+.view.sw-r{animation:swr .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes swl{from{transform:translateX(28px);opacity:.4}to{transform:none;opacity:1}}
+@keyframes swr{from{transform:translateX(-28px);opacity:.4}to{transform:none;opacity:1}}
