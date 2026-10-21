@@ -1,0 +1,8 @@
+// VMM Ofis → Cloudflare Worker (statik fayllar). Yükləmə: python3 vmm/build.py <versiya> && cd vmm && npx wrangler deploy
+// Domenlər: ofis.vmm.az, vmm.az, www.vmm.az (Cloudflare → Workers → vmm-ofis → Domains)
+{
+  "name": "vmm-ofis",
+  "compatibility_date": "2026-06-01",
+  "assets": { "directory": "./dist", "html_handling": "auto-trailing-slash", "not_found_handling": "single-page-application" },
+  "workers_dev": true
+}

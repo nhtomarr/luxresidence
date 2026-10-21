@@ -299,3 +299,9 @@ Nümunə məlumat (demo=true): Bina 4/5, 10 material, 3 təchizatçı, 12 smeta 
 - Baza hələlik eyni Supabase-dədir, amma ayrıca **`vmm` sxemində** (124 cədvəl, ~360 funksiya, RLS, trigger, cron `vmm-*`, bucket `vmm-*`, edge `vmm-*`). Pilot məlumatı ilə qarışmır. Sonra yeni Supabase hesabına köçürüləcək.
 - Mənbə: `vmm/` (build.py Baş Ofis kodundan yığır + `vmm/overlay`). `/vmm/*` luxresidence.az-da 404 verir.
 - Admin: Nihat (omrnihat@gmail.com, eyni parol). Şöbələr: Viking, Maro, Marox. Tək QR (iş yerləri bölməsi gizlidir). Ofis koordinatı hələ təyin edilməyib (yer yoxlaması söndürülüb).
+
+## VMM Ofis — Cloudflare-ə köçürmə (21 oktyabr 2026)
+- Netlify kredit limiti bitdiyi üçün VMM Ofis Cloudflare Worker `vmm-ofis`-ə köçürüldü. Domen: **https://ofis.vmm.az** (həmçinin vmm.az, www.vmm.az). vmm.az zonası Cloudflare-də (NS: glen/molly.ns.cloudflare.com, domen online.az-da).
+- Yükləmə: `python3 vmm/build.py <versiya>` → `cd vmm && npx wrangler deploy` (konfiq: `vmm/wrangler.jsonc`).
+- VMM-də səsli assistent söndürülüb. Responsivlik: owner/rəhbər "İşçilər" cədvəli səhifəni enə dartırdı — `vmm-theme.css`-də minmax(0,1fr)/min-width:0 düzəlişi. Baş Ofisdə də eyni problem var (hələ düzəldilməyib).
+- Azad (azad@vmm.az) tam admin edildi (is_admin + sys).

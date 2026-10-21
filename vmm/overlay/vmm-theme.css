@@ -131,3 +131,22 @@ body.vmm .btile b{font-family:var(--disp);font-stretch:120%;font-weight:780}
 
 /* ox işarəsi düymə deyil */
 body.vmm b.go{background:none!important;color:var(--mut)!important}
+
+/* ---- Responsivlik düzəlişləri (21.10.2026) ----
+   1fr = minmax(auto,1fr): cədvəl kimi geniş məzmun sütunu ekrandan böyüdür. Hər yerdə minmax(0,…) + min-width:0. */
+body.vmm{overflow-x:hidden}
+body.vmm main,body.vmm .view{min-width:0;max-width:100%}
+body.vmm .odash>*,body.vmm .oside>*,body.vmm .bgrid>*,body.vmm .kpi>*,body.vmm .grid>*,body.vmm .row>*{min-width:0}
+@media(max-width:1300px){body.vmm .odash{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:760px){body.vmm .oside{grid-template-columns:minmax(0,1fr)}}
+body.vmm .card{max-width:100%;min-width:0}
+body.vmm .tbl,body.vmm .dtbl,body.vmm .otbl{max-width:100%}
+body.vmm .card table{width:100%}
+body.vmm .otbl .tbl,body.vmm .card>.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch}
+body.vmm img,body.vmm video,body.vmm canvas,body.vmm iframe{max-width:100%}
+body.vmm pre,body.vmm code{white-space:pre-wrap;word-break:break-word}
+@media(max-width:600px){
+  body.vmm main h2,body.vmm .bossh{font-size:22px;font-stretch:110%;overflow-wrap:anywhere}
+  body.vmm .checkcard .clock{font-size:46px}
+  body.vmm .otbl th,body.vmm .otbl td{white-space:nowrap}
+}

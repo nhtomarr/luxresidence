@@ -3,7 +3,7 @@
 
 Mənbə: ../ofis.html, ../assets/ofis-*.js, ../assets/ofis-app.css, ../assets/lux-auth.js, ../ofis-sw.js, ../bg.js
 Üst qat: vmm/overlay/* (VMM dizaynı, ikonlar, şriftlər, Netlify ayarları)
-Nəticə: vmm/dist/  →  Netlify (vmm-ofis.netlify.app)
+Nəticə: vmm/dist/  →  Cloudflare Worker `vmm-ofis` (ofis.vmm.az); köhnə: Netlify vmm-ofis.netlify.app
 
 Baza: eyni Supabase layihəsi, amma ayrıca `vmm` sxemi (cədvəllər, funksiyalar, bucket-lər `vmm-*`,
 edge funksiyalar `vmm-*`). Pilot Həyat məlumatına toxunmur.
@@ -17,7 +17,7 @@ HERE = os.path.join(ROOT, 'vmm')
 OV = os.path.join(HERE, 'overlay')
 DIST = os.path.join(HERE, 'dist')
 VER = sys.argv[1] if len(sys.argv) > 1 else '1'
-SITE = 'https://vmm-ofis.netlify.app'
+SITE = os.environ.get('VMM_SITE', 'https://ofis.vmm.az')   # əsas ünvan (köhnə: vmm-ofis.netlify.app)
 SB = 'https://avqchschbbltnnasabdm.supabase.co'
 
 def rd(p): return open(os.path.join(ROOT, p), encoding='utf-8').read()
@@ -48,7 +48,7 @@ COMMON = [
     ("schema:'public'", "schema:'vmm'"),
     ("sb.channel('", "sb.channel('vmm-"),
     ("https://ofis.pilothayat.az", SITE),
-    ("ofis\\.pilothayat\\.az", "vmm-ofis\\.netlify\\.app"),
+    ("ofis\\.pilothayat\\.az", "(?:ofis\\.vmm\\.az|vmm\\.az|vmm-ofis\\.netlify\\.app|vmm-ofis\\.omrnihat\\.workers\\.dev)"),
     ("'/ofis-sw.js'", "'/sw.js'"),
     ("/assets/ofis/icon-192.png", "/assets/vmm/icon-192.png"),
     ("Baş Ofis<small>İdarəetmə sistemi</small>", WM),
@@ -95,6 +95,7 @@ a = must(a, "PREVIEW?'Afiq Rəhmanov':(ME.full_name||'Afiq Rəhmanov')", "(ME.fu
 a = must(a, "👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.", "👁 Sahibkar görünüşü. Rəhbər görünüşünə qayıtmaq üçün yuxarıdakı düyməyə basın.", 1, 'pvbar')
 # Saytdan müraciətlər (LUX satış saytı) VMM-də yoxdur
 a = must(a, "if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);", "", 1, 'leads')
+a = must(a, "['remind','🔔 Xatırlat'],['asst','🎯 Assistent'],", "['remind','🔔 Xatırlat'],", 1, 'noasst-tab')
 wr('assets/vmm-a.js', a)
 
 b = rd('assets/ofis-b.js')
@@ -110,7 +111,7 @@ au = must(au, "createClient(URL_,KEY,{global:{fetch:_tf}})",
 au = au.replace("localStorage.getItem('sb-avqchschbbltnnasabdm-auth-token')", "localStorage.getItem('vmm-auth')")
 au = au.replace("'Content-Type':'application/json',Prefer:'return=minimal'}", "'Content-Type':'application/json','Content-Profile':'vmm',Prefer:'return=minimal'}")
 au = au.replace("Authorization:'Bearer '+K,'Content-Type':'application/json'},body:JSON.stringify({p_email", "Authorization:'Bearer '+K,'Content-Type':'application/json','Content-Profile':'vmm'},body:JSON.stringify({p_email")
-au = au.replace("/pilothayat\\.az|luxresidence\\.az|localhost|pages\\.dev/", "/vmm-ofis\\.netlify\\.app|localhost/")
+au = au.replace("/pilothayat\\.az|luxresidence\\.az|localhost|pages\\.dev/", "/vmm\\.az|vmm-ofis\\.netlify\\.app|workers\\.dev|localhost/")
 au = au.replace("return h.indexOf('ofis.')===0?'ofis':(p.replace(/^\\/|\\.html$/g,'')||'sayt');", "return 'vmm';")
 au = au.replace("['lux_sales','lux_commercial','lux_garage']", "[]")
 au = au.replace("lux_remember", "vmm_remember").replace("lux_sess", "vmm_sess")
@@ -119,11 +120,15 @@ au = must(au, "<button>Daxil ol</button>", '<button>Daxil ol</button><div class=
 au = re.sub(r"function css\(\)\{.*?document\.head\.appendChild\(st\);\}", "function css(){}", au, count=1, flags=re.S)
 wr('assets/vmm-auth.js', au)
 
+# ---------------------------------------------------------------- AI assistent VMM-də yoxdur (21.10.2026)
+NOASST_CSS = "\n/* Səsli assistent VMM-də söndürülüb */\n#bAsst,#v-asst,[onclick*=\"'asst'\"]{display:none!important}\n"
+
+
 # ---------------------------------------------------------------- CSS
 css = rd('assets/ofis-app.css')
 for x, y in CSS_COLORS: css = css.replace(x, y)
 theme = open(os.path.join(OV, 'vmm-theme.css'), encoding='utf-8').read()
-wr('assets/vmm.css', css + '\n\n' + theme)
+wr('assets/vmm.css', css + '\n\n' + theme + NOASST_CSS)
 
 # ---------------------------------------------------------------- HTML
 h = rd('ofis.html')

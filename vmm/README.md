@@ -1,6 +1,6 @@
 # VMM Ofis (Viking · Maro · Marox)
 
-Baş Ofis sisteminin VMM üçün ayrıca nüsxəsi, fərqli dizaynla. Test linki: https://vmm-ofis.netlify.app
+Baş Ofis sisteminin VMM üçün ayrıca nüsxəsi, fərqli dizaynla. Ünvan: **https://ofis.vmm.az** (Cloudflare Worker `vmm-ofis`; köhnə test linki: vmm-ofis.netlify.app)
 
 ## Necə qurulub
 - **Baza:** eyni Supabase layihəsi (`avqchschbbltnnasabdm`), amma ayrıca **`vmm` sxemi**. Bütün ofis cədvəlləri,
@@ -17,7 +17,8 @@ Baş Ofis sisteminin VMM üçün ayrıca nüsxəsi, fərqli dizaynla. Test linki
 
 ## Frontend
 `python3 vmm/build.py <versiya>` → `vmm/dist/` (Baş Ofis kodundan avtomatik yığılır, `vmm/overlay/` əlavə olunur).
-Baş Ofisdə yenilik olanda eyni skripti yenidən işlət və Netlify-a yüklə.
+Baş Ofisdə yenilik olanda eyni skripti yenidən işlət və Cloudflare-ə yüklə: `cd vmm && npx wrangler deploy` (CLOUDFLARE_API_TOKEN lazımdır).
+VMM-də səsli assistent söndürülüb (build.py: Assistent tabı silinir, NOASST_CSS giriş nöqtələrini gizlədir).
 
 Dizayn: `vmm/overlay/vmm-theme.css` — "Liman": ağ panel + konteyner zolağı (V qəhvəyi #7b4b2a, M yaşıl #2e7d4f, M narıncı #e2742b),
 Archivo şrifti (geniş başlıqlar), düz səthlər.
