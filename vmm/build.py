@@ -100,6 +100,8 @@ a = must(a, "window._DUAL=!me.is_admin&&", "window._HRONLY=(me.perms||[]).indexO
 a = must(a, "if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}}", "if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}if(window._HRONLY){tabs=tabs.filter(function(t){return ['today','me'].indexOf(t[0])<0;});tabs.sort(function(x,y){return (y[0]==='boss')-(x[0]==='boss');});}}", 1, 'hronly-tabs')
 a = must(a, "((OWNER||(ME.is_admin&&!EMP))?'boss':'today')", "((OWNER||window._HRONLY||(ME.is_admin&&!EMP))?'boss':'today')", 1, 'hronly-def')
 a = must(a, "['remind','🔔 Xatırlat'],['asst','🎯 Assistent'],", "['remind','🔔 Xatırlat'],", 1, 'noasst-tab')
+# ---- İşçilər cədvəli: bütün sətir toxunulandır (mobildə ✎ düyməsi ekrandan kənarda qalırdı) ----
+a = must(a, "return '<tr style=\"'+(e.active?'':'opacity:.5')+'\">", "return '<tr onclick=\"if(!event.target.closest(\\'button\\'))openEmp('+e.id+')\" style=\"cursor:pointer;'+(e.active?'':'opacity:.5')+'\">", 1, 'emp-row')
 wr('assets/vmm-a.js', a)
 
 b = rd('assets/ofis-b.js')
@@ -108,6 +110,8 @@ b = must(b, "['lx','LUX ❤️','🏢','#b45309','#7c2d12'],", "['vm','VMM ❤�
 b = re.sub(r"PLACES=\[[^\]]*\]", "PLACES=['VMM Ofis','Viking','Maro','Marox','Liman','Anbar','Gömrük','Gəmi']", b, count=1)
 # Çat↔Lent öz jesti söndürülür (VMM-də bütün bölmələr arasında ümumi sürüşdürmə var, vmm-ux.js); çat otağında kənardan geri jesti qalır
 b = must(b, "if(c&&c.classList.contains('on'))return CHATother?'room':'list';if(f&&f.classList.contains('on'))return 'feed';return null;", "if(c&&c.classList.contains('on')&&CHATother)return 'room';return null;", 1, 'swipe-ctx')
+# ---- Profil menyusunda "Şifrəmi dəyiş" (HR rolunda "Profilim" bölməsi yoxdur) ----
+b = must(b, "+'<button onclick=\"closeModal();statusPick&&statusPick()\">Status<span>›</span></button>'", "+'<button onclick=\"closeModal();setTimeout(function(){modal(\\'<div class=mhead><h3>Şifrəmi dəyiş</h3><button class=x onclick=closeModal()>×</button></div>\\'+pwCard());},50)\">Şifrəmi dəyiş<span>›</span></button>'+'<button onclick=\"closeModal();statusPick&&statusPick()\">Status<span>›</span></button>'", 1, 'pw-menu')
 wr('assets/vmm-b.js', b)
 
 # ---------------------------------------------------------------- auth

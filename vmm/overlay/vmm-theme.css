@@ -176,3 +176,7 @@ body.vmm pre,body.vmm code{white-space:pre-wrap;word-break:break-word}
 .view.sw-r{animation:swr .28s cubic-bezier(.2,.8,.2,1)}
 @keyframes swl{from{transform:translateX(28px);opacity:.4}to{transform:none;opacity:1}}
 @keyframes swr{from{transform:translateX(-28px);opacity:.4}to{transform:none;opacity:1}}
+
+/* Cədvəllər öz kartının içində yana sürüşür (səhifə kəsmir) */
+body.vmm :is(div,section):has(> table){overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+body.vmm #empTbl tr[onclick]:active td{background:rgba(0,0,0,.04)}
