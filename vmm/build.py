@@ -95,6 +95,10 @@ a = must(a, "PREVIEW?'Afiq Rəhmanov':(ME.full_name||'Afiq Rəhmanov')", "(ME.fu
 a = must(a, "👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.", "👁 Sahibkar görünüşü. Rəhbər görünüşünə qayıtmaq üçün yuxarıdakı düyməyə basın.", 1, 'pvbar')
 # Saytdan müraciətlər (LUX satış saytı) VMM-də yoxdur
 a = must(a, "if(MGR||(EMP&&EMP.lead_rotation))tabs.push(['leads','Müraciətlər']);", "", 1, 'leads')
+# ---- "Yalnız HR" rolu (perms: ofis_hronly): işçi bölmələri (Bu gün, Profilim) yoxdur, Nəzarətlə açılır ----
+a = must(a, "window._DUAL=!me.is_admin&&", "window._HRONLY=(me.perms||[]).indexOf('ofis_hronly')>=0;window._DUAL=!me.is_admin&&", 1, 'hronly-flag')
+a = must(a, "if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}}", "if(MGR){tabs.push(['team','Davamiyyət'],['staff','İşçilər'],['set','Ayarlar']);}if(window._HRONLY)tabs=tabs.filter(function(t){return ['today','me'].indexOf(t[0])<0;});}", 1, 'hronly-tabs')
+a = must(a, "((OWNER||(ME.is_admin&&!EMP))?'boss':'today')", "((OWNER||window._HRONLY||(ME.is_admin&&!EMP))?'boss':'today')", 1, 'hronly-def')
 a = must(a, "['remind','🔔 Xatırlat'],['asst','🎯 Assistent'],", "['remind','🔔 Xatırlat'],", 1, 'noasst-tab')
 wr('assets/vmm-a.js', a)
 
