@@ -102,6 +102,9 @@ a = must(a, "((OWNER||(ME.is_admin&&!EMP))?'boss':'today')", "((OWNER||window._H
 a = must(a, "['remind','🔔 Xatırlat'],['asst','🎯 Assistent'],", "['remind','🔔 Xatırlat'],", 1, 'noasst-tab')
 # ---- İşçilər cədvəli: bütün sətir toxunulandır (mobildə ✎ düyməsi ekrandan kənarda qalırdı) ----
 a = must(a, "return '<tr style=\"'+(e.active?'':'opacity:.5')+'\">", "return '<tr onclick=\"if(!event.target.closest(\\'button\\'))openEmp('+e.id+')\" style=\"cursor:pointer;'+(e.active?'':'opacity:.5')+'\">", 1, 'emp-row')
+# ---- Aylıq hesabat: window.print əvəzinə tətbiq daxilində önizləmə + PDF (vmm-ux.js → vmmReport) ----
+a = must(a, "$('repSheet').innerHTML=h;document.body.classList.add('printrep');setTimeout(function(){window.print();setTimeout(function(){document.body.classList.remove('printrep');},500);},300);", "vmmReport(h,'hesabat-'+m,!R.some(function(r){return r.came>0;}));", 1, 'monthrep')
+a = must(a, "function monthReport(){var m=today().slice(0,7);monthRows(function(R){var t=TASKS;", "function monthReport(){var m=($('mMonth')&&$('mMonth').value)||today().slice(0,7);monthRows(function(R){var t=(typeof TASKS!=='undefined'&&TASKS)||[];", 1, 'monthrep2')
 wr('assets/vmm-a.js', a)
 
 b = rd('assets/ofis-b.js')

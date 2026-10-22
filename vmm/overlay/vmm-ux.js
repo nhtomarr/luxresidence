@@ -52,3 +52,47 @@
       if(n){n.classList.remove('sw-l','sw-r');void n.offsetWidth;n.classList.add(dir>0?'sw-l':'sw-r');setTimeout(function(){n.classList.remove('sw-l','sw-r');},320);}},190);
   },{passive:true});
 })();
+
+/* ---------- Aylıq hesabat: tətbiq daxilində önizləmə + PDF (iOS ana ekran tətbiqində window.print işləmir) ---------- */
+(function(){
+  var st=document.createElement('style');
+  st.textContent='#vrep{position:fixed;inset:0;z-index:9999;background:rgba(10,18,24,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;flex-direction:column}'+
+  '#vrep .vr-bar{display:flex;gap:8px;align-items:center;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;background:#15232b;color:#fff}'+
+  '#vrep .vr-bar b{flex:1;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
+  '#vrep .vr-bar button{border:0;border-radius:10px;height:36px;padding:0 14px;font:600 14px/1 inherit;cursor:pointer;background:#2e7d4f;color:#fff}'+
+  '#vrep .vr-bar button.g{background:rgba(255,255,255,.14)}#vrep .vr-bar button:disabled{opacity:.6}'+
+  '#vrep .vr-scroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:16px 12px calc(24px + env(safe-area-inset-bottom,0px))}'+
+  '.vr-sheet{background:#fff;max-width:794px;margin:0 auto;padding:28px;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.3)}'+
+  '.vr-sheet .rp,.vr-cap .rp{font-family:var(--sans,system-ui);color:#15232b}.vr-sheet .rp h1,.vr-cap .rp h1{font-size:24px;margin:0}'+
+  '.vr-sheet .rpm,.vr-cap .rpm{color:#64748b;font-size:12px;margin:2px 0 14px}.vr-sheet h2,.vr-cap h2{font-size:16px;margin:18px 0 8px}'+
+  '.vr-sheet .rpk,.vr-cap .rpk{display:flex;gap:8px;flex-wrap:wrap}.vr-sheet .rpk div,.vr-cap .rpk div{flex:1;min-width:90px;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font-size:12px;color:#475569}'+
+  '.vr-sheet .rpk b,.vr-cap .rpk b{display:block;font-size:22px;color:#15232b}'+
+  '.vr-sheet table,.vr-cap table{width:100%;border-collapse:collapse}.vr-sheet th,.vr-sheet td,.vr-cap th,.vr-cap td{border:1px solid #cbd5e1;padding:6px 8px;font-size:12px;text-align:left}'+
+  '.vr-sheet th,.vr-cap th{background:#f1f5f9}.vr-sheet{overflow-x:auto}'+
+  '.vr-empty{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#fff7ed;color:#9a3412;font-size:12px}'+
+  '@media(max-width:600px){.vr-sheet{padding:16px}.vr-sheet th,.vr-sheet td{padding:5px 6px;font-size:11px}}'+
+  '.vr-cap{position:fixed;left:-10000px;top:0;width:794px;background:#fff;padding:36px}';
+  document.head.appendChild(st);
+  function load(src){return new Promise(function(ok,no){var s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s);});}
+  function libs(){return Promise.all([window.html2canvas?0:load('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'),window.jspdf?0:load('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')]);}
+  window.vmmReport=function(h,name,empty){
+    var old=document.getElementById('vrep');if(old)old.remove();
+    var w=document.createElement('div');w.id='vrep';
+    w.innerHTML='<div class="vr-bar"><b>Aylıq hesabat</b><button type="button" data-a="pdf">⬇ PDF</button><button type="button" class="g" data-a="print">🖨</button><button type="button" class="g" data-a="x" aria-label="Bağla">✕</button></div>'+
+      '<div class="vr-scroll"><div class="vr-sheet">'+h+(empty?'<p class="vr-empty">Bu ay üçün hələ davamiyyət qeydi yoxdur — cədvəllər sıfır göstərir. Qeydlər yığıldıqca hesabat dolacaq.</p>':'')+'</div></div>';
+    document.body.appendChild(w);
+    w.querySelector('[data-a=x]').onclick=function(){w.remove();};
+    w.querySelector('[data-a=print]').onclick=function(){var rs=document.getElementById('repSheet');if(!rs)return;rs.innerHTML=h;w.style.display='none';document.body.classList.add('printrep');
+      setTimeout(function(){window.print();setTimeout(function(){document.body.classList.remove('printrep');w.style.display='';},500);},200);};
+    var pb=w.querySelector('[data-a=pdf]');
+    pb.onclick=function(){pb.disabled=true;pb.textContent='Hazırlanır…';
+      var cap=document.createElement('div');cap.className='vr-cap';cap.innerHTML=h;document.body.appendChild(cap);
+      libs().then(function(){return window.html2canvas(cap,{scale:2,backgroundColor:'#ffffff',width:794,windowWidth:794});}).then(function(cv){
+        var J=window.jspdf.jsPDF,pdf=new J({unit:'mm',format:'a4'});var pw=210,ph=297,ih=cv.height*pw/cv.width,img=cv.toDataURL('image/jpeg',0.92),y=0;
+        while(y<ih-0.5){if(y>0)pdf.addPage();pdf.addImage(img,'JPEG',0,-y,pw,ih);y+=ph;}
+        var fn=(name||'hesabat')+'.pdf',blob=pdf.output('blob');var file;try{file=new File([blob],fn,{type:'application/pdf'});}catch(e){}
+        if(file&&navigator.canShare&&navigator.canShare({files:[file]}))return navigator.share({files:[file],title:fn}).catch(function(){});
+        var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=fn;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove();},4000);
+      }).catch(function(){if(window.toast)toast('PDF hazırlanmadı. İnterneti yoxlayın.');}).then(function(){cap.remove();pb.disabled=false;pb.textContent='⬇ PDF';});};
+  };
+})();
