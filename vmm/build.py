@@ -117,6 +117,9 @@ b = must(b, "if(c&&c.classList.contains('on'))return CHATother?'room':'list';if(
 b = must(b, "+'<button onclick=\"closeModal();statusPick&&statusPick()\">Status<span>›</span></button>'", "+'<button onclick=\"closeModal();setTimeout(function(){modal(\\'<div class=mhead><h3>Şifrəmi dəyiş</h3><button class=x onclick=closeModal()>×</button></div>\\'+pwCard());},50)\">Şifrəmi dəyiş<span>›</span></button>'+'<button onclick=\"closeModal();statusPick&&statusPick()\">Status<span>›</span></button>'", 1, 'pw-menu')
 # ---- Təsdiq nişanı (mavi tık) VMM-də də mavi qalsın (rəng xəritəsi onu yaşıla çevirirdi) ----
 b = must(b, 'aria-label="Təsdiqlənib"><path fill="#24704a"', 'aria-label="Təsdiqlənib"><path fill="#0095f6"', 1, 'vbadge')
+# ---- Alt menyu: aktiv "pill" faizlə yerləşir — menyu kiçilib-böyüyəndə gecikmədən onunla birgə dəyişir (əvvəl px idi və sağa qaçırdı) ----
+b = must(b, "p.style.left=on.offsetLeft+'px';p.style.width=on.offsetWidth+'px';}",
+ "var ks=[].slice.call(d.querySelectorAll('.dk')),i=ks.indexOf(on),n=ks.length,pd=parseFloat(getComputedStyle(d).paddingLeft)||0;p.style.left='calc('+pd+'px + (100% - '+(2*pd)+'px) * '+i+' / '+n+')';p.style.width='calc((100% - '+(2*pd)+'px) / '+n+')';}", 1, 'dkpill')
 wr('assets/vmm-b.js', b)
 
 # ---------------------------------------------------------------- auth

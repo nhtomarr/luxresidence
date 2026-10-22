@@ -12,7 +12,7 @@
   addEventListener('scroll',function(){if(ticking)return;ticking=true;requestAnimationFrame(function(){ticking=false;if(!mob())return;var y=scrollY,b=document.body;
     if(y<=24)b.classList.remove('dk-mini');else if(y>lastY+8)b.classList.add('dk-mini');else if(y<lastY-14)b.classList.remove('dk-mini');
     lastY=y;});},{passive:true});
-  var mo=new MutationObserver(function(){setTimeout(pill,380);});
+  var mo=new MutationObserver(function(){pill();});
   document.addEventListener('DOMContentLoaded',function(){mo.observe(document.body,{attributes:true,attributeFilter:['class']});});
 
   /* 2) Aşağı çəkib yeniləmə */
