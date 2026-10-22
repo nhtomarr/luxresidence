@@ -105,7 +105,7 @@
   function D(){return document.getElementById('dock');}
   function P(){var d=D();return d&&d.querySelector('.dkpill');}
   function ks(){var d=D();return d?[].slice.call(d.querySelectorAll('.dk')):[];}
-  var lastI=-1,drag=null,swallow=false,offT=0,raf=0;
+  var lastI=-1,drag=null,swallow=false,offT=0,raf=0,A=null;
   /* linza aktivdir: altındakı ikonlar məsafəyə görə böyüyür (lupa effekti) */
   function loop(){raf=0;var d=D(),p=P();if(!d||!p)return;var on=d.classList.contains('lq-on'),r=p.getBoundingClientRect(),cx=r.left+r.width/2,w=r.width||1;
     ks().forEach(function(b){var q=b.getBoundingClientRect(),dist=Math.abs(q.left+q.width/2-cx),k=on?Math.max(0,1-dist/(w*.95)):0,s=1+.3*k;
@@ -117,7 +117,13 @@
     if(typeof window.dkPill!=='function'||window.dkPill._lq)return;
     var orig=window.dkPill;
     window.dkPill=function(){orig.apply(this,arguments);if(drag&&drag.on)return;var d=D(),p=P();if(!d||!p)return;var i=ks().indexOf(d.querySelector('.dk.on'));
-      if(i>=0&&lastI>=0&&i!==lastI){lensOn(380);if(p.animate){var far=Math.min(3,Math.abs(i-lastI));p.animate([{transform:'scaleX(1)'},{transform:'scaleX('+(1.1+.06*far)+')',offset:.4},{transform:'scaleX(1)'}],{duration:330,easing:'cubic-bezier(.3,.7,.3,1)'});}}
+      if(i>=0&&!p._lq){/* menyu hər keçiddə yenidən qurulur (bəzən ard-arda 2 dəfə) — yeni linzanı köhnə/cari yerdən başladırıq ki, sürüşüb gəlsin */
+        var now=performance.now(),from=null,rem=0;
+        if(A&&A.to===i&&now<A.t0+A.d){var k=(now-A.t0)/A.d;k=1-Math.pow(1-k,3);from=A.f+(A.to-A.f)*k;rem=A.t0+A.d-now;}
+        else if(lastI>=0&&i!==lastI){rem=(200+50*Math.abs(i-lastI));A={f:lastI,to:i,t0:now,d:rem};from=lastI;}
+        if(from!==null){p.style.transition='none';setIdx(from);void p.offsetWidth;p.style.transition='';p.style.transitionDuration=Math.max(60,rem).toFixed(0)+'ms';setIdx(i);}}
+      p._lq=1;
+      if(i>=0&&lastI>=0&&i!==lastI){lensOn(260+60*Math.abs(i-lastI));if(p.animate){var far=Math.min(3,Math.abs(i-lastI));p.animate([{transform:'scaleX(1)'},{transform:'scaleX('+(1.1+.06*far)+')',offset:.4},{transform:'scaleX(1)'}],{duration:Math.round((.2+.05*far)*1000),easing:'cubic-bezier(.3,.7,.3,1)'});}}
       if(i>=0)lastI=i;};
     window.dkPill._lq=1;try{window.dkPill();}catch(e){}
   }
