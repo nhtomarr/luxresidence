@@ -33,7 +33,7 @@
 
   /* 3) Sağa-sola sürüşdürüb bölmələr arasında keçid (barmağı izləyir, Instagram kimi) */
   var HS='input,textarea,select,[contenteditable],canvas,video,.leaflet-container,#dock,#tabs,.top,.socar,.igstories,.soseg,.sugl,.s3hl,.pfbd,.fpfl,.sochips,.igvc,.igboards,.s4opts,.sorpick';
-  function blocked(el){if(el.closest&&el.closest(HS))return true;for(;el&&el!==document.body;el=el.parentElement){var cs=getComputedStyle(el);if((cs.overflowX==='auto'||cs.overflowX==='scroll')&&el.scrollWidth>el.clientWidth+4)return true;}return false;}
+  function blocked(el){if(el.closest&&(el.closest(HS)||el.closest('#dock')))return true;for(;el&&el!==document.body;el=el.parentElement){var cs=getComputedStyle(el);if((cs.overflowX==='auto'||cs.overflowX==='scroll')&&el.scrollWidth>el.clientWidth+4)return true;}return false;}
   function busy2(){return busy()||document.querySelector('.pg.on,#igSV,#mvw,#igReel,#stEd,#s4wr,#s4quiz,#igCtx,.s3over')||(typeof CHAT_SEL!=='undefined'&&CHAT_SEL);}
   function tabList(){var all=Array.prototype.map.call(document.querySelectorAll('#tabs button'),function(b){return b.dataset.v;});var prim=[];try{if(typeof dkPrimary==='function'&&typeof dkTabs==='function')prim=dkPrimary(dkTabs());}catch(e){}  /* sıra alt menyudakı kimi: əvvəl menyudakı 4 bölmə, sonra “Daha”dakılar */
     return prim.concat(all.filter(function(v){return prim.indexOf(v)<0;}));}
@@ -95,4 +95,36 @@
         var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=fn;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove();},4000);
       }).catch(function(){if(window.toast)toast('PDF hazırlanmadı. İnterneti yoxlayın.');}).then(function(){cap.remove();pb.disabled=false;pb.textContent='⬇ PDF';});};
   };
+})();
+
+
+/* ---------- Alt menyu: "liquid glass" linza (iOS 26 / WhatsApp kimi) — keçiddə uzanıb-yığılır, barmaqla sürüşdürülür ---------- */
+(function(){
+  if(!('ontouchstart' in window)&&!matchMedia('(max-width:759px)').matches)return;
+  function D(){return document.getElementById('dock');}
+  function P(){var d=D();return d&&d.querySelector('.dkpill');}
+  function ks(){var d=D();return d?[].slice.call(d.querySelectorAll('.dk')):[];}
+  var lastI=-1,drag=null,swallow=false;
+  function hook(){
+    if(typeof window.dkPill!=='function'||window.dkPill._lq)return;
+    var orig=window.dkPill;
+    window.dkPill=function(){orig.apply(this,arguments);if(drag&&drag.on)return;var d=D(),p=P();if(!d||!p)return;var on=d.querySelector('.dk.on'),i=ks().indexOf(on);
+      if(i>=0&&lastI>=0&&i!==lastI&&p.animate){var far=Math.min(3,Math.abs(i-lastI));
+        p.animate([{transform:'scale(1,1)'},{transform:'scale('+(1.18+.08*far)+','+(0.9-.02*far)+')',offset:.35},{transform:'scale(.96,1.05)',offset:.75},{transform:'scale(1,1)'}],{duration:520,easing:'cubic-bezier(.3,.7,.3,1)'});}
+      if(i>=0)lastI=i;};
+    window.dkPill._lq=1;try{window.dkPill();}catch(e){}
+  }
+  addEventListener('load',hook);document.addEventListener('DOMContentLoaded',function(){setTimeout(hook,0);});setTimeout(hook,1500);
+  function place(x){var d=D(),p=P();if(!d||!p)return;var r=d.getBoundingClientRect(),pd=parseFloat(getComputedStyle(d).paddingLeft)||0,n=ks().length||1,w=(r.width-2*pd)/n;
+    var l=Math.max(pd,Math.min(r.width-pd-w,x-r.left-w/2));p.style.left=l+'px';p.style.width=w+'px';return Math.round((l-pd)/w);}
+  document.addEventListener('touchstart',function(e){var d=D();if(!d||!d.contains(e.target)||e.touches.length!==1)return;drag={x:e.touches[0].clientX,on:false};},{passive:true});
+  document.addEventListener('touchmove',function(e){if(!drag)return;var x=e.touches[0].clientX;
+    if(!drag.on){if(Math.abs(x-drag.x)<8)return;drag.on=true;var d=D(),p=P();d.classList.add('lq-drag');if(p)p.style.transition='none';}
+    if(e.cancelable)e.preventDefault();drag.i=place(x);},{passive:false});
+  function end(){if(!drag)return;var g=drag;drag=null;var d=D(),p=P();if(!d)return;d.classList.remove('lq-drag');if(!g.on)return;
+    if(p)p.style.transition='';swallow=true;setTimeout(function(){swallow=false;},400);var b=ks()[g.i];
+    try{navigator.vibrate&&navigator.vibrate(8);}catch(e){}
+    if(b&&!b.classList.contains('on'))b.click();else if(window.dkPill)window.dkPill();}
+  document.addEventListener('touchend',end,{passive:true});document.addEventListener('touchcancel',end,{passive:true});
+  document.addEventListener('click',function(e){if(swallow&&D()&&D().contains(e.target)&&e.isTrusted){e.stopPropagation();e.preventDefault();}},true);
 })();
