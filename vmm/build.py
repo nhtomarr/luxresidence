@@ -115,6 +115,8 @@ b = re.sub(r"PLACES=\[[^\]]*\]", "PLACES=['VMM Ofis','Viking','Maro','Marox','Li
 b = must(b, "if(c&&c.classList.contains('on'))return CHATother?'room':'list';if(f&&f.classList.contains('on'))return 'feed';return null;", "if(c&&c.classList.contains('on')&&CHATother)return 'room';return null;", 1, 'swipe-ctx')
 # ---- Profil menyusunda "Şifrəmi dəyiş" (HR rolunda "Profilim" bölməsi yoxdur) ----
 b = must(b, "+'<button onclick=\"closeModal();statusPick&&statusPick()\">Status<span>›</span></button>'", "+'<button onclick=\"closeModal();setTimeout(function(){modal(\\'<div class=mhead><h3>Şifrəmi dəyiş</h3><button class=x onclick=closeModal()>×</button></div>\\'+pwCard());},50)\">Şifrəmi dəyiş<span>›</span></button>'+'<button onclick=\"closeModal();statusPick&&statusPick()\">Status<span>›</span></button>'", 1, 'pw-menu')
+# ---- Təsdiq nişanı (mavi tık) VMM-də də mavi qalsın (rəng xəritəsi onu yaşıla çevirirdi) ----
+b = must(b, 'aria-label="Təsdiqlənib"><path fill="#24704a"', 'aria-label="Təsdiqlənib"><path fill="#0095f6"', 1, 'vbadge')
 wr('assets/vmm-b.js', b)
 
 # ---------------------------------------------------------------- auth
