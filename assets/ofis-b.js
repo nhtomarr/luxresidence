@@ -2167,3 +2167,59 @@ var _socProfilePv=socProfile;socProfile=function(uid){_socProfilePv(uid);if(!uid
  if(p.locked){['.pfhl','.pftabs'].forEach(function(c){var e=t.querySelector(c);if(e)e.remove();});t.querySelectorAll('.pfst>div[onclick]').forEach(function(d){d.setAttribute('onclick',"toast('Bu hesab gizlidir')");});
   var g=t.querySelector('#pfGrid');if(g){g.removeAttribute('id');g.className='';g.innerHTML='<div style="text-align:center;padding:36px 20px;border-top:1px solid rgba(127,127,127,.2);margin-top:8px"><div style="font-size:40px;line-height:1">🔒</div><b style="display:block;margin:10px 0 4px">Bu hesab gizlidir</b><div class="hint">Postları və story-ləri görmək üçün izlə.</div></div>';}}
 })();};
+
+/* ===== ƏMƏK MÜQAVİLƏLƏRİ (e-gov reyestri) — 27 okt 2026 =====
+   Yalnız sahibkar / sys / HR rəhbəri (office_hr_ok → hr_can, hr_emp, hr_list). Cədvələ birbaşa giriş yoxdur. */
+(function(){var s=document.createElement('style');s.textContent=
+'.hrbox{margin:14px 0;padding:14px;border-radius:16px;border:1px solid rgba(127,127,127,.22);background:rgba(127,127,127,.05)}'+
+'.hrbox h4{margin:0 0 4px;display:flex;align-items:center;gap:8px}.hrbox h4 small{font-weight:500;opacity:.6}'+
+'.hrc{border-top:1px solid rgba(127,127,127,.18);padding:12px 0 4px}.hrc:first-of-type{border-top:0}'+
+'.hrc .hd2{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}.hrc .hd2 b{flex:1 1 220px;font-size:14px}'+
+'.hrg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px 14px;font-size:13px}.hrg div{display:grid;min-width:0}.hrg span{opacity:.6;font-size:11.5px}.hrg b{font-weight:600;overflow-wrap:anywhere}'+
+'.hrid{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;font-size:13px;margin:6px 0 4px}.hrid code{font:600 13px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em}'+
+'.hrtot{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;margin:2px 0 6px;opacity:.85}'+
+'.hrf{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}.hrf input,.hrf select{height:38px;border-radius:10px;border:1px solid rgba(127,127,127,.3);padding:0 10px;font:inherit;background:transparent;color:inherit;min-width:0}.hrf input{flex:1 1 200px}'+
+'.hrseg{display:flex;gap:4px;flex-wrap:wrap}.hrseg button{height:32px;padding:0 12px;border-radius:16px;border:1px solid rgba(127,127,127,.3);background:transparent;color:inherit;font:600 12.5px inherit;cursor:pointer}.hrseg button.on{background:#0a84ff;border-color:#0a84ff;color:#fff}'+
+'.hrtbl{overflow:auto;max-height:60vh;border-radius:12px;border:1px solid rgba(127,127,127,.18)}.hrtbl table{width:100%;border-collapse:collapse;font-size:13px}.hrtbl th{position:sticky;top:0;background:var(--card,#fff);text-align:left;font-weight:600;opacity:.95;padding:8px 10px;white-space:nowrap}'+
+'.hrtbl td{padding:8px 10px;border-top:1px solid rgba(127,127,127,.14);vertical-align:top}.hrtbl tr.cl{cursor:pointer}.hrtbl tr.cl:hover td{background:rgba(10,132,255,.06)}'+
+'.hrk{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:8px 0}';
+document.head.appendChild(s);})();
+function hrCan(){if(hrCan.p)return hrCan.p;hrCan.p=run(sb.rpc('hr_can')).then(function(r){return !!r;}).catch(function(){hrCan.p=null;return false;});return hrCan.p;}
+var HR_AZM=['yan','fev','mar','apr','may','iyn','iyl','avq','sen','okt','noy','dek'];
+function hrD(d){if(!d)return '—';var p=String(d).slice(0,10).split('-');return (+p[2])+' '+HR_AZM[+p[1]-1]+' '+p[0];}
+function hrMoney(v){return v==null?'—':Number(v).toLocaleString('ru-RU',{minimumFractionDigits:0,maximumFractionDigits:2}).replace(/ /g,' ')+' ₼';}
+function hrShort(s){s=String(s||'').replace(/MƏHDUD MƏSULİYYƏTLİ CƏMİYYƏTİ/i,'MMC').replace(/\s+/g,' ').trim();return s;}
+function hrEnd(c){var t=today();if(!c.end_date)return {k:'mud',h:'<span class="pill p-ok">Müddətsiz</span>'};
+ var n=dDays(t,c.end_date)-1;if(n<0)return {k:'kec',h:'<span class="pill p-mut" title="e-gov-da status: '+esc(c.status||'')+'">'+hrD(c.end_date)+' · müddəti keçib</span>'};
+ if(n<=30)return {k:'bit',h:'<span class="pill p-warn">'+hrD(c.end_date)+' · '+(n===0?'bu gün':n+' gün qalıb')+'</span>'};
+ return {k:'ok',h:'<span class="pill p-acc">'+hrD(c.end_date)+'</span>'};}
+function hrMask(v,id){if(!v)return '—';v=String(v);return '<code data-hrv="'+esc(v)+'" id="'+id+'">'+'•'.repeat(Math.max(0,v.length-4))+esc(v.slice(-4))+'</code>';}
+function hrReveal(btn){var box=btn.closest('.hrbox');if(!box)return;var on=btn.dataset.on!=='1';box.querySelectorAll('code[data-hrv]').forEach(function(c){var v=c.dataset.hrv;c.textContent=on?v:'•'.repeat(Math.max(0,v.length-4))+v.slice(-4);});btn.dataset.on=on?'1':'0';btn.textContent=on?'Gizlət':'Göstər';}
+function hrBlock(L){if(!L||!L.length)return '<h4>Əmək müqavilələri</h4><div class="muted small">e-gov reyestrində bu işçi üçün müqavilə tapılmayıb.</div>';
+ var f=L[0],sum=L.reduce(function(s,c){return s+(+c.salary||0);},0);
+ return '<h4>Əmək müqavilələri <small>· e-gov reyestri</small></h4>'+
+  '<div class="hrid"><span>FİN: '+hrMask(f.fin,'hf')+'</span><span>Vəsiqə: '+hrMask(f.id_serial,'hs')+'</span><span>SSN: '+hrMask(f.ssn,'hn')+'</span><span>Doğum: <b>'+hrD(f.birth)+'</b></span><button type="button" class="btn ghost sm" onclick="hrReveal(this)">Göstər</button></div>'+
+  '<div class="hrtot"><span>'+L.length+' müqavilə</span>'+(L.length>1?'<span>Cəmi aylıq: <b>'+hrMoney(sum)+'</b></span>':'')+'<span class="muted">'+esc(f.full_name||'')+'</span></div>'+
+  L.map(function(c){var e=hrEnd(c);return '<div class="hrc"><div class="hd2"><b>'+esc(hrShort(c.employer||c.grp))+'</b><span class="pill '+(c.place==='Əsas'?'p-acc':'p-mut')+'">'+esc(c.place||'—')+'</span>'+e.h+'</div>'+
+   '<div class="hrg"><div><span>Vəzifə</span><b>'+esc(c.position||'—')+'</b></div><div><span>Aylıq əmək haqqı</span><b>'+hrMoney(c.salary)+'</b></div><div><span>Əsas müqavilə başlayıb</span><b>'+hrD(c.base_start)+'</b></div><div><span>İşə başlama (cari)</span><b>'+hrD(c.start_date)+'</b></div>'+
+   '<div><span>İş rejimi</span><b>'+esc(c.regime||'—')+'</b></div><div><span>Məzuniyyət</span><b>'+(c.vac_days!=null?c.vac_days+' gün':'—')+'</b></div><div><span>Sənəd</span><b>'+esc(c.doc_type||c.kind||'')+'</b></div><div><span>Sənəd №</span><b>'+esc(c.doc_no||'—')+' · '+hrD(c.signed)+'</b></div></div></div>';}).join('');}
+var _hrOE=openEmp;openEmp=function(id){_hrOE.apply(this,arguments);if(!id)return;hrCan().then(function(ok){if(!ok)return;var mb=$('mbox');if(!mb||mb.querySelector('.hrbox'))return;
+ var rows=[].filter.call(mb.children,function(x){return x.classList&&x.classList.contains('row');});var last=rows[rows.length-1];var box=document.createElement('div');box.className='hrbox';box.innerHTML='<h4>Əmək müqavilələri</h4><div class="muted small">Yüklənir…</div>';
+ if(last)mb.insertBefore(box,last);else mb.appendChild(box);
+ run(sb.rpc('hr_emp',{p_emp:id})).then(function(L){box.innerHTML=hrBlock(L);}).catch(function(e){box.innerHTML='<h4>Əmək müqavilələri</h4><div class="muted small">Yüklənmədi: '+esc(e.message||e)+'</div>';});});};
+var _hrRS=renderStaff;renderStaff=function(){_hrRS.apply(this,arguments);hrCan().then(function(ok){if(!ok)return;var t=$('empTbl');var h=t&&t.previousElementSibling;if(h&&!document.getElementById('hrBtn'))h.insertAdjacentHTML('beforeend',' <button id="hrBtn" class="btn ghost sm" style="margin-left:8px;vertical-align:middle" onclick="hrOpen()">Əmək müqavilələri</button>');});};
+var HRL=null,HRF={q:'',co:'',seg:'all'};
+function hrOpen(){modal('<div class="mhead"><h3>Əmək müqavilələri</h3><button class="x" onclick="closeModal()">×</button></div><div id="hrAll"><div class="muted small">Yüklənir…</div></div>');$('mbox').classList.add('wide');
+ run(sb.rpc('hr_list')).then(function(L){HRL=L||[];hrDraw();}).catch(function(e){$('hrAll').innerHTML='<div class="muted small">Yüklənmədi: '+esc(e.message||e)+'</div>';});}
+function hrDraw(){var box=$('hrAll');if(!box||!HRL)return;var cos=[];HRL.forEach(function(c){var k=hrShort(c.employer||c.grp);if(cos.indexOf(k)<0)cos.push(k);});cos.sort();
+ var q=HRF.q.toLowerCase(),L=HRL.filter(function(c){var e=hrEnd(c).k;return (!HRF.co||hrShort(c.employer||c.grp)===HRF.co)&&(HRF.seg==='all'||HRF.seg===e)&&(!q||((c.emp_name||'')+' '+(c.full_name||'')+' '+(c.position||'')+' '+(c.employer||'')).toLowerCase().indexOf(q)>=0);});
+ var emps={};HRL.forEach(function(c){emps[c.employee_id]=1;});var cnt=function(k){return HRL.filter(function(c){return hrEnd(c).k===k;}).length;};
+ var fund=HRL.filter(function(c){return c.emp_active;}).reduce(function(s,c){return s+(+c.salary||0);},0);
+ var foc=document.activeElement&&document.activeElement.id==='hrQ';
+ box.innerHTML='<div class="hrk">'+kpi(Object.keys(emps).length,'işçi')+kpi(HRL.length,'müqavilə')+kpi(hrMoney(fund),'aylıq fond (aktiv)')+kpi(cnt('bit'),'30 gündə bitir',cnt('bit')?'warn':'')+kpi(cnt('kec'),'müddəti keçib')+'</div>'+
+  '<div class="hrf"><input id="hrQ" placeholder="Ad, vəzifə, şirkət…" value="'+esc(HRF.q)+'" oninput="HRF.q=this.value;hrDraw()"><select onchange="HRF.co=this.value;hrDraw()"><option value="">Bütün şirkətlər</option>'+cos.map(function(c){return '<option'+(c===HRF.co?' selected':'')+'>'+esc(c)+'</option>';}).join('')+'</select></div>'+
+  '<div class="hrseg">'+[['all','Hamısı'],['bit','Bitir (30 gün)'],['kec','Müddəti keçib'],['mud','Müddətsiz'],['ok','Qüvvədə']].map(function(s){return '<button class="'+(HRF.seg===s[0]?'on':'')+'" onclick="HRF.seg=\''+s[0]+'\';hrDraw()">'+s[1]+'</button>';}).join('')+'</div>'+
+  '<p class="muted small" style="margin:8px 0">'+L.length+' müqavilə · sətrə toxunun — işçi kartı açılır. "Müddəti keçib" — e-gov-da hələ də "Qüvvədədir" statusundadır, yenilənməsini yoxlayın.</p>'+
+  '<div class="hrtbl"><table><tr><th>İşçi</th><th>Şirkət</th><th>Vəzifə</th><th>Maaş</th><th>Başlayıb</th><th>Bitmə</th><th>Yer</th></tr>'+
+  L.map(function(c){return '<tr class="cl" onclick="closeModal();openEmp('+c.employee_id+')" style="'+(c.emp_active?'':'opacity:.55')+'"><td><b>'+esc(c.emp_name)+'</b>'+(c.emp_active?'':' <span class="pill p-mut">passiv</span>')+'</td><td>'+esc(hrShort(c.employer||c.grp))+'</td><td>'+esc(c.position||'')+'</td><td style="white-space:nowrap">'+hrMoney(c.salary)+'</td><td style="white-space:nowrap">'+hrD(c.base_start)+'</td><td>'+hrEnd(c).h+'</td><td>'+esc(c.place||'')+'</td></tr>';}).join('')+'</table></div>';
+ if(foc){var i=$('hrQ');i.focus();i.setSelectionRange(i.value.length,i.value.length);}}
