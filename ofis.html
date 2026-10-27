@@ -9,8 +9,8 @@
 <title>Baş Ofis — İdarəetmə</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="/assets/lux-auth.js?v=110"></script>
-<link rel="stylesheet" href="/assets/ofis-app.css?v=110">
+<script src="/assets/lux-auth.js?v=111"></script>
+<link rel="stylesheet" href="/assets/ofis-app.css?v=111">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
@@ -102,7 +102,7 @@
   <section class="view" id="v-cal"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">İclaslar və otaqlar</h2><button class="btn mgr-only" onclick="openEv()">+ İclas</button></div><div id="calList"></div></section>
   <!-- KOMANDA / DAVAMİYYƏT -->
   <section class="view" id="v-team">
-   <div class="row" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">Davamiyyət</h2><div class="row"><input type="date" id="dDay" class="btn ghost sm"><button class="btn ghost sm" onclick="exportDay()">Excel</button></div></div>
+   <div class="row" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">Davamiyyət</h2><div class="row"><input type="date" id="dDay" class="btn ghost sm"><button class="btn ghost sm" onclick="exportDay()">Excel</button><button class="btn sm" onclick="attRangeOpen()" title="Seçilmiş tarix aralığı üzrə Excel hesabat">Hesabat</button></div></div>
    <div class="card tbl" id="dayTbl"></div>
    <div class="row" style="justify-content:space-between;margin:18px 0 10px"><h2 style="margin:0">Aylıq tabel</h2><div class="row"><input type="month" id="mMonth" class="btn ghost sm"><button class="btn ghost sm" onclick="exportMonth()">Excel</button></div></div>
    <div class="card tbl" id="monthTbl"></div>
@@ -158,9 +158,9 @@
 <div class="toast" id="toast"></div>
 
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script defer src="/assets/ofis-a.js?v=110"></script>
+<script defer src="/assets/ofis-a.js?v=111"></script>
 <script defer src="/bg.js"></script>
-<script defer src="/assets/ofis-b.js?v=110"></script>
+<script defer src="/assets/ofis-b.js?v=111"></script>
 
 
 

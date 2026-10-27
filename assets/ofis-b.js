@@ -2223,3 +2223,45 @@ function hrDraw(){var box=$('hrAll');if(!box||!HRL)return;var cos=[];HRL.forEach
   '<div class="hrtbl"><table><tr><th>İşçi</th><th>Şirkət</th><th>Vəzifə</th><th>Maaş</th><th>Başlayıb</th><th>Bitmə</th><th>Yer</th></tr>'+
   L.map(function(c){return '<tr class="cl" onclick="closeModal();openEmp('+c.employee_id+')" style="'+(c.emp_active?'':'opacity:.55')+'"><td><b>'+esc(c.emp_name)+'</b>'+(c.emp_active?'':' <span class="pill p-mut">passiv</span>')+'</td><td>'+esc(hrShort(c.employer||c.grp))+'</td><td>'+esc(c.position||'')+'</td><td style="white-space:nowrap">'+hrMoney(c.salary)+'</td><td style="white-space:nowrap">'+hrD(c.base_start)+'</td><td>'+hrEnd(c).h+'</td><td>'+esc(c.place||'')+'</td></tr>';}).join('')+'</table></div>';
  if(foc){var i=$('hrQ');i.focus();i.setSelectionRange(i.value.length,i.value.length);}}
+
+/* ===== DAVAMİYYƏT — TARİX ARALIĞI HESABATI (27 okt 2026) =====
+   Davamiyyət başlığında "Hesabat": başlanğıc–son tarix, hazır aralıqlar, işçi filtri → Excel (Xülasə + Günlər + Çöl çıxışları). */
+function _arMon(d){var x=new Date(d+'T12:00:00Z');x.setUTCDate(x.getUTCDate()-((x.getUTCDay()+6)%7));return x.toISOString().slice(0,10);}
+function _arPreset(k){var t=today(),m=t.slice(0,7),f,to=t;
+ if(k==='w'){f=_arMon(t);}else if(k==='lw'){to=addDays(_arMon(t),-1);f=addDays(to,-6);}else if(k==='m'){f=m+'-01';}
+ else if(k==='lm'){var x=new Date(m+'-01T12:00:00Z');x.setUTCDate(0);to=x.toISOString().slice(0,10);f=to.slice(0,7)+'-01';}else if(k==='30'){f=addDays(t,-29);}else if(k==='y'){f=t.slice(0,4)+'-01-01';}
+ $('arFrom').value=f;$('arTo').value=to;_arInfo();}
+function _arInfo(){var f=$('arFrom').value,t=$('arTo').value,el=$('arInfo');if(!el)return;if(!f||!t||t<f){el.textContent='Tarixləri düzgün seçin';return;}el.textContent=dDays(f,t)+' gün · '+f.split('-').reverse().join('.')+' — '+t.split('-').reverse().join('.');}
+function attRangeOpen(){var d=$('dDay')&&$('dDay').value||today();var act=EMPS.filter(function(e){return e.active&&locMatch(e);});
+ modal('<div class="mhead"><h3>Davamiyyət hesabatı</h3><button class="x" onclick="closeModal()">×</button></div>'+
+ '<div class="grid g2"><div class="field"><label>Başlanğıc</label><input id="arFrom" type="date" value="'+d.slice(0,7)+'-01" oninput="_arInfo()"></div><div class="field"><label>Son</label><input id="arTo" type="date" value="'+(d>today()?today():d)+'" oninput="_arInfo()"></div></div>'+
+ '<div class="row" style="flex-wrap:wrap;gap:6px;margin:-2px 0 10px">'+[['w','Bu həftə'],['lw','Keçən həftə'],['m','Bu ay'],['lm','Keçən ay'],['30','Son 30 gün'],['y','Bu il']].map(function(p){return '<button type="button" class="btn ghost sm" onclick="_arPreset(\''+p[0]+'\')">'+p[1]+'</button>';}).join('')+'</div>'+
+ '<div class="field"><label>İşçi</label><select id="arEmp"><option value="">Hamısı ('+act.length+')</option>'+act.map(function(e){return '<option value="'+e.id+'">'+esc(e.full_name)+'</option>';}).join('')+'</select></div>'+
+ '<p class="muted small" id="arInfo" style="margin:0 0 6px"></p><p class="muted small" style="margin:0 0 12px">Excel faylında 3 vərəq olacaq: <b>Xülasə</b> (işçi üzrə yekun), <b>Günlər</b> (hər gün gəliş-çıxış, status), <b>Çöl çıxışları</b>.'+(typeof LOCF!=='undefined'&&LOCF?' Yalnız seçilmiş iş yeri.':'')+'</p>'+
+ '<div class="row"><span style="flex:1"></span><button class="btn" id="arGo" onclick="attRangeExport()">Excel yüklə</button></div>');_arInfo();}
+function _arAll(q){var out=[],step=1000;function page(i){return run(q().range(i,i+step-1)).then(function(r){out=out.concat(r||[]);return r&&r.length===step?page(i+step):out;});}return page(0);}
+function attRangeExport(){var f=$('arFrom').value,t=$('arTo').value,eid=+$('arEmp').value||0;if(!f||!t||t<f)return toast('Tarixləri düzgün seçin');
+ if(dDays(f,t)>370)return toast('Ən çox 1 il seçmək olar');var btn=$('arGo');btn.disabled=true;btn.textContent='Hazırlanır…';
+ var emps=EMPS.filter(function(e){return e.active&&locMatch(e)&&(!eid||e.id===eid);});
+ Promise.all([_arAll(function(){var q=sb.from('office_attendance').select('*').gte('day',f).lte('day',t).order('day');return eid?q.eq('employee_id',eid):q;}),
+  _arAll(function(){var q=sb.from('office_outings').select('*').gte('day',f).lte('day',t).order('out_at');return eid?q.eq('employee_id',eid):q;})]).then(function(rr){
+  var att=rr[0],outs=rr[1],days=[];for(var d=f;d<=t;d=addDays(d,1))days.push(d);var tdy=today();
+  var by={};att.forEach(function(a){by[a.employee_id+'|'+a.day]=a;});
+  var S=[['İşçi','Vəzifə','İş yeri','Plan günləri','Gəlib','İcazəli / məzuniyyət','Gəlməyib','Gecikmə (dəfə)','Gecikmə (dəq)','Tez çıxma (dəq)','İşlənib (saat)','Çöl çıxışı (dəfə)','Davamiyyət %']];
+  var D=[['Tarix','Gün','İşçi','İş yeri','Gəliş','Çıxış','Status','Gecikmə (dəq)','Tez çıxma (dəq)','İşlənib (saat)','Gəliş məsafəsi (m)','Qeyd']];
+  var O=[['Tarix','İşçi','Növ','Çıxdı','Qayıtdı','Müddət (dəq)','Səbəb / qeyd','Günü çöldə bitirdi','Çatdığı yer (xəritə)']];
+  emps.forEach(function(e){var st0=[e.hire_date||'',String(e.created_at||'').slice(0,10)].sort().pop();var plan=0,came=0,lv=0,ab=0,lN=0,lM=0,eM=0,wM=0;
+   days.forEach(function(d){var a=by[e.id+'|'+d],work=(e.workdays||[]).indexOf(isoDow(d))>=0&&!isHol(d)&&d>=st0,l=leaveOn(e.id,d),stx;
+    if(a&&a.check_in){came++;stx=a.late_min?'gecikib':'vaxtında';if(a.late_min){lN++;lM+=a.late_min;}eM+=a.early_min||0;wM+=a.worked_min||0;}
+    else if(l){stx=LT[l.type]||'icazəli';}else if(!work){stx=isHol(d)?'bayram':(d<st0?'—':'istirahət');}else if(d>tdy){stx='';}else if(d===tdy){stx='hələ gəlməyib';}else{stx='gəlməyib';}
+    if(work&&(d<tdy||(d===tdy&&a&&a.check_in))){plan++;if(l&&!(a&&a.check_in))lv++;}
+    if(stx==='gəlməyib')ab++;
+    if(stx!==''&&!(stx==='istirahət'&&!a)&&stx!=='—')D.push([d.split('-').reverse().join('.'),WD[isoDow(d)-1],e.full_name,locName(a&&a.check_in?a.location_id:e.location_id),a?hm(a.check_in):'',a?hm(a.check_out):'',stx,a&&a.late_min||0,a&&a.early_min||0,a&&a.worked_min?Math.round(a.worked_min/6)/10:0,a&&a.in_dist!=null?a.in_dist:'',a&&a.note||'']);});
+   var eo=outs.filter(function(o){return o.employee_id===e.id;});
+   eo.forEach(function(o){var mins=o.back_at?Math.round((new Date(o.back_at)-new Date(o.out_at))/6e4):'';O.push([String(o.day).split('-').reverse().join('.'),e.full_name,o.kind==='is'?'İş üçün':'Şəxsi',hm(o.out_at),o.back_at?hm(o.back_at):'qayıtmayıb',mins,o.note||'',o.ended_day?'bəli':'',o.arrive_lat!=null?'https://www.google.com/maps?q='+o.arrive_lat+','+o.arrive_lng:'']);});
+   S.push([e.full_name,(posOf(e)||{}).title||'',locName(e.location_id),plan,came,lv,ab,lN,lM,eM,Math.round(wM/6)/10,eo.length,plan?Math.round(Math.min(came,plan)/plan*100):'']);});
+  D=[D[0]].concat(D.slice(1).sort(function(a,b){var x=a[0].split('.').reverse().join(''),y=b[0].split('.').reverse().join('');return x<y?-1:x>y?1:(a[2]<b[2]?-1:1);}));
+  var name='davamiyyet-'+f+'_'+t+(eid?'-'+(emps[0]||{}).full_name:'')+'.xlsx';
+  function go(){var wb=XLSX.utils.book_new();[['Xülasə',S,[26,22,16,12,8,16,10,13,13,14,13,14,12]],['Günlər',D,[11,6,24,16,8,8,16,12,13,12,14,30]],['Çöl çıxışları',O,[11,24,9,8,10,12,34,16,40]]].forEach(function(x){var ws=XLSX.utils.aoa_to_sheet(x[1]);ws['!cols']=x[2].map(function(w){return {wch:w};});ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:Math.max(0,x[1].length-1),c:x[1][0].length-1}})};XLSX.utils.book_append_sheet(wb,ws,x[0]);});XLSX.writeFile(wb,name.replace(/\s+/g,'_'));closeModal();toast('Hesabat yükləndi');}
+  if(window.XLSX)go();else{var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=go;s.onerror=function(){btn.disabled=false;btn.textContent='Excel yüklə';toast('Excel modulu yüklənmədi');};document.head.appendChild(s);}
+ }).catch(function(e){btn.disabled=false;btn.textContent='Excel yüklə';err(e);});}
