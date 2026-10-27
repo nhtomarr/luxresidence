@@ -305,3 +305,14 @@ Nümunə məlumat (demo=true): Bina 4/5, 10 material, 3 təchizatçı, 12 smeta 
 - Yükləmə: `python3 vmm/build.py <versiya>` → `cd vmm && npx wrangler deploy` (konfiq: `vmm/wrangler.jsonc`).
 - VMM-də səsli assistent söndürülüb. Responsivlik: owner/rəhbər "İşçilər" cədvəli səhifəni enə dartırdı — `vmm-theme.css`-də minmax(0,1fr)/min-width:0 düzəlişi. Baş Ofisdə də eyni problem var (hələ düzəldilməyib).
 - Azad (azad@vmm.az) tam admin edildi (is_admin + sys).
+
+## ƏMƏK MÜQAVİLƏLƏRİ (27 oktyabr 2026, ofis-v110)
+- Mənbə: e-gov əmək müqavilələri reyestrinin Excel ixracı (qrupun 23 şirkəti/fiziki şəxsi, 238 müqavilə). İstifadəçinin qərarı: yalnız **paneldə olan işçilər** üçün məlumat əlavə edilir, qalanlar idxal olunmur.
+- Cədvəl `office_hr_contracts` (employee_id, grp, employer, kind, doc_no UNIQUE, doc_type, status, fin, id_serial, ssn, birth, salary, position, base_start, signed, start_date, end_date, place Əsas/Əlavə, regime, vac_days). RLS açıq, policy YOX, anon/authenticated üçün grant YOX — yalnız RPC.
+- Giriş: `office_hr_ok()` = ofis_owner / sys / **ofis_hr** (+ is_admin). `rehber@pilothayat.az`-a `ofis_hr` verildi. RPC: `hr_can()`, `hr_emp(p_emp)`, `hr_list()`. Yoxlanıb: adi işçi → "İcazə yoxdur", birbaşa cədvəl → permission denied, anon → permission denied.
+- İdxal: ad (ilk 2 söz, İ/ı, e/ə normallaşdırma) + doğum tarixi ilə uyğunlaşdırma → 40 işçiyə 51 müqavilə. Rədd edilən səhv uyğunluqlar: "Laçın Rəhmanov" (≠ Yalçın), "Elşən Məmmədov" (≠ Elşən Əhmədov). "Rəfail Mirzəyev" müqavilələri id=17-yə (passiv) bağlandı — id=60 "Rəfael Mirzəyev" (aktiv, Köçürmə) eyni şəxs ola bilər, yoxlanmalıdır.
+- office_employees yeniləndi (əsas müqavilədən: Əsas yer, son imzalanan): birthday (boşdursa), hire_date = əsas müqavilənin başlama tarixi, leave_days = məzuniyyət günü, contract_end = bitmə tarixi (yalnız gələcəkdədirsə). Mövcud "müqavilə bitir" (30 gün) xatırlatmaları bundan işləyir.
+- **Həssas məlumat repoya YAZILMIR** — data yalnız bazadadır; repoda yalnız sxem (`supabase/migrations/20261027_office_hr_contracts.sql`).
+- UI (ofis-b.js sonu, 'ƏMƏK MÜQAVİLƏLƏRİ' bloku): işçi kartında (openEmp wrapper) "Əmək müqavilələri" bloku — şirkət, Əsas/Əlavə, vəzifə, maaş, tarixlər, rejim, məzuniyyət, sənəd №; FİN/vəsiqə/SSN gizli (son 4 rəqəm), "Göstər" ilə açılır. Ştat səhifəsində "İşçilər" başlığında "Əmək müqavilələri" düyməsi → siyahı (KPI: işçi, müqavilə, aylıq fond, 30 gündə bitir, müddəti keçib; axtarış, şirkət, seqment filtri; sətrə toxun → işçi kartı).
+- DİQQƏT (deploy): push-dan dərhal sonra `?v=NN` ünvanını curl ilə yoxlama — Cloudflare köhnə faylı həmin URL-də 4 saat keşləyir (v109-da baş verdi, v110-a qaldırıldı). Əvvəl ofis-sw.js-in yeni versiyasını gözlə.
+- Gözləyən: Excel-dən yenidən idxal düyməsi (hələ yoxdur — yeni reyestr gələndə SQL ilə yüklənir, doc_no üzrə upsert).
