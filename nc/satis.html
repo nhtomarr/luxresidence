@@ -1,0 +1,124 @@
+<!doctype html><html lang="az"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><title>Satış lövhəsi — Nizami City</title>
+<meta name="theme-color" content="#070c18"><link rel="icon" href="/assets/nc/logo.png"><link rel="apple-touch-icon" href="/assets/nc/apple-touch.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="NC Satış">
+<link rel="preconnect" href="https://avqchschbbltnnasabdm.supabase.co" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nc/nc.css?v=1">
+<style>
+.sb-top{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-bottom:18px}
+@media(max-width:860px){.sb-top{grid-template-columns:1fr}}
+.sb-avail{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.sb-avail span{background:var(--bg2);border:1px solid var(--rule);border-radius:12px;padding:8px 12px;font-size:13px;font-weight:600}
+.sb-avail span b{color:var(--lime);font-size:15px}
+.sb-bar{display:flex;height:12px;border-radius:99px;overflow:hidden;background:var(--bg2);margin:12px 0 10px}
+.sb-bar i{display:block;height:100%}
+.sb-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink2)}
+.sb-leg span{display:inline-flex;align-items:center;gap:6px;cursor:pointer;opacity:.9}
+.sb-leg span.off{opacity:.35}
+.sb-leg i{width:10px;height:10px;border-radius:3px}
+.sb-ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0 14px}
+.sb-ctl .nc-sel{width:auto;height:38px;border-radius:99px;font-size:13.5px;padding:0 14px}
+.sb-ctl .grow{flex:1}
+.board{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);padding:16px 14px 18px;overflow-x:auto}
+.fr{display:flex;align-items:stretch;gap:8px;margin-bottom:8px;min-width:min-content}
+.fl{flex:none;width:44px;display:grid;place-items:center;font-size:13px;font-weight:650;color:var(--mut);border-right:1px solid var(--rule);padding-right:6px}
+.us{display:flex;gap:8px;flex:1}
+.u{flex:1 0 92px;min-width:92px;height:62px;border-radius:14px;border:1px solid transparent;display:flex;flex-direction:column;justify-content:center;padding:0 12px;position:relative;cursor:pointer;transition:transform .18s var(--spring),box-shadow .2s,opacity .2s;text-align:left;color:#f3f2ea}
+.u:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(0,0,0,.6)}
+.u b{font-size:15px;font-weight:650;letter-spacing:-.02em;line-height:1.1}
+.u small{font-size:11.5px;opacity:.8;font-variant-numeric:tabular-nums}
+.u .cd{position:absolute;top:7px;right:8px;font-size:9.5px;font-weight:700;letter-spacing:.04em;padding:1px 5px;border-radius:5px;background:rgba(0,0,0,.25)}
+.u.s-satisda{background:var(--s-satisda);color:#0b1324;box-shadow:0 0 0 1px rgba(221,230,110,.4),0 10px 26px -14px rgba(194,205,63,.8)}
+.u.s-satisda .cd{background:rgba(11,19,36,.15)}
+.u.s-investor,.u.s-fond{color:#0b1324}
+.u.dim{opacity:.18;pointer-events:none}
+.gbar{flex:1;height:40px;border-radius:12px;display:grid;place-items:center;font-size:12.5px;font-weight:600;color:var(--mut);background:repeating-linear-gradient(135deg,var(--bg2),var(--bg2) 8px,transparent 8px,transparent 16px);border:1px dashed var(--rule2)}
+.ch-row{display:grid;grid-template-columns:110px 1fr 70px;gap:12px;align-items:center;margin:10px 0;font-size:13.5px}
+.ch-row .sb-bar{margin:0;height:16px}
+.ud{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.ud div{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:10px 14px}
+.ud span{display:block;font-size:12px;color:var(--mut);font-weight:600}
+.ud b{font-size:16px;font-weight:650}
+.stc{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 14px}
+.stc button{height:36px;padding:0 14px;border-radius:99px;border:1px solid var(--rule2);background:transparent;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:7px}
+.stc button i{width:10px;height:10px;border-radius:50%}
+.stc button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.upd{font-size:12px;color:var(--mut);margin-top:10px}
+</style>
+<script src="/assets/lux-auth.js?v=1790690641"></script>
+<script src="/nc/nc.js?v=1"></script>
+</head><body>
+<main class="nc-wrap" id="app" hidden>
+ <div class="nc-title"><div><h1>Satış <em>lövhəsi</em></h1><p id="sub">City Life MMC · bütün binalar</p></div>
+  <div class="act"><button class="nc-b sm" onclick="openChart()">Bütün binalar</button><button class="nc-b sm" onclick="exportX()">Excel</button></div></div>
+ <div class="sb-top">
+  <div class="nc-card"><h3 id="bTitle">Bina</h3><div class="nc-kpis" id="bKpi"></div><div class="sb-avail" id="bAvail"></div></div>
+  <div class="nc-card"><h3>Ümumi vəziyyət</h3><div class="nc-kpis" id="aKpi"></div><div class="sb-bar" id="aBar"></div><div class="sb-leg" id="leg"></div></div>
+ </div>
+ <div class="nc-seg" id="tabs"></div>
+ <div class="sb-ctl"><select class="nc-sel" id="fRoom"><option value="">Bütün otaqlar</option></select><select class="nc-sel" id="fCond"><option value="">İstənilən vəziyyət</option><option>Təmirli</option><option>White Box</option><option>Kirayə</option></select><span class="grow"></span><span class="mut" id="upd" style="font-size:12.5px"></span></div>
+ <div class="board" id="board"></div>
+</main>
+<script>
+var S={},UPD='',cur='',fSt={},EDIT=false;
+var ORD=['satisda','satilib','investor','bron','sakin','fond','satilmir'];
+function short(b){return b.replace('Bina ','').replace(' · Giriş ',' · ');}
+function units(b){var o=[];var r=(S[b]&&S[b].rows)||{};Object.keys(r).forEach(function(f){(r[f]||[]).forEach(function(u,i){if(u.s!=='qeyri'&&u.s!=='zirzemi')o.push({b:b,f:f,i:i,u:u});});});return o;}
+function cnt(list){var c={};list.forEach(function(x){c[x.u.s]=(c[x.u.s]||0)+1;});return c;}
+function bar(c,tot){return ORD.filter(function(k){return c[k];}).map(function(k){return '<i style="width:'+(c[k]*100/tot)+'%;background:'+NC.ST[k][1]+'" title="'+NC.ST[k][0]+': '+c[k]+'"></i>';}).join('');}
+function flab(b,f){var l=S[b].labels&&S[b].labels[f];return l?(l==='M'?'Mansard':l==='1·II'?'1-ci mərtəbə, II səviyyə':l):f+'-cı mərtəbə';}
+function start(){NC.kv('nc_sales').then(function(r){S=(r&&r.value)||{};UPD=r&&r.updated_at;EDIT=NC.can('nc_sales_edit');var ks=Object.keys(S);if(!cur||!S[cur]){try{cur=sessionStorage.getItem('nc_sb')||'';}catch(e){}if(!S[cur])cur=ks[0];}
+  NC.$('app').hidden=false;fillRooms();render();}).catch(function(e){NC.toast('Yüklənmədi: '+e.message);});}
+function fillRooms(){var rs={};Object.keys(S).forEach(function(b){units(b).forEach(function(x){if(x.u.room)rs[x.u.room]=1;});});var s=NC.$('fRoom'),v=s.value;s.innerHTML='<option value="">Bütün otaqlar</option>'+Object.keys(rs).sort().map(function(r){return '<option value="'+r+'">'+r+' otaqlı</option>';}).join('');s.value=v;}
+function render(){
+ NC.$('tabs').innerHTML=Object.keys(S).map(function(b){var a=units(b).filter(function(x){return x.u.s==='satisda';}).length;return '<button class="'+(b===cur?'on':'')+'" data-b="'+NC.esc(b)+'">'+NC.esc(short(b))+'<small>'+a+'</small></button>';}).join('');
+ NC.$('tabs').querySelectorAll('button').forEach(function(x){x.onclick=function(){cur=x.dataset.b;try{sessionStorage.setItem('nc_sb',cur);}catch(e){}render();};});
+ var L=units(cur),c=cnt(L);NC.$('bTitle').textContent=cur;
+ NC.$('bKpi').innerHTML='<div class="nc-kpi"><b>'+L.length+'</b><span>mənzil</span></div><div class="nc-kpi"><b style="color:var(--lime)">'+(c.satisda||0)+'</b><span>satışda</span></div><div class="nc-kpi"><b>'+(c.satilib||0)+'</b><span>satılıb</span></div>';
+ var br={};L.forEach(function(x){if(x.u.s==='satisda'){var k=x.u.room||'?';br[k]=(br[k]||0)+1;}});
+ NC.$('bAvail').innerHTML=Object.keys(br).sort().map(function(k){return '<span>'+(k==='?'?'Otaq sayı yazılmayıb':k+' otaqlı')+' · <b>'+br[k]+'</b></span>';}).join('')||'<span class="mut">Satışda mənzil yoxdur</span>';
+ var A=[];Object.keys(S).forEach(function(b){A=A.concat(units(b));});var ca=cnt(A);
+ NC.$('aKpi').innerHTML='<div class="nc-kpi"><b>'+A.length+'</b><span>ümumi mənzil</span></div><div class="nc-kpi"><b>'+(ca.satilib||0)+'</b><span>satılıb · '+Math.round((ca.satilib||0)*100/(A.length||1))+'%</span></div><div class="nc-kpi"><b style="color:var(--lime)">'+(ca.satisda||0)+'</b><span>satışda</span></div>';
+ NC.$('aBar').innerHTML=bar(ca,A.length);
+ NC.$('leg').innerHTML=ORD.map(function(k){return '<span data-k="'+k+'" class="'+(fSt[k]?'off':'')+'"><i style="background:'+NC.ST[k][1]+'"></i>'+NC.ST[k][0]+' · '+(ca[k]||0)+'</span>';}).join('');
+ NC.$('leg').querySelectorAll('span').forEach(function(x){x.onclick=function(){fSt[x.dataset.k]=!fSt[x.dataset.k];render();};});
+ NC.$('upd').textContent=UPD?'Yeniləndi: '+new Date(UPD).toLocaleString('az-AZ',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+ board();}
+function board(){var b=S[cur];if(!b)return;var fr=NC.$('fRoom').value,fc=NC.$('fCond').value;var fls=Object.keys(b.rows).sort(function(x,y){return Number(y)-Number(x);});var h='';
+ fls.forEach(function(f){var us=b.rows[f]||[];if(!us.length)return;var lab=b.labels&&b.labels[f]?b.labels[f]:(Number(f)<0?'Z':f);h+='<div class="fr"><div class="fl">'+NC.esc(lab)+'</div><div class="us">';
+  if(us.every(function(u){return u.s==='zirzemi';})){h+='<div class="gbar">Zirzəmi</div></div></div>';return;}
+  if(us.every(function(u){return u.s==='qeyri';})){h+='<div class="gbar">Qeyri-yaşayış sahəsi</div></div></div>';return;}
+  us.forEach(function(u,i){var m=!fSt[u.s]&&(!fr||String(u.room)===fr)&&(!fc||(u.c||'').indexOf(fc)>=0);var st=NC.ST[u.s]||['?','#555'];var cd=(u.c||'').indexOf('Təmirli')>=0?'T':(u.c||'').indexOf('White')>=0?'WB':'';
+   h+='<button class="u s-'+u.s+(m?'':' dim')+'" style="'+(u.s==='satisda'?'':'background:'+st[1])+'" data-f="'+f+'" data-i="'+i+'" title="'+NC.esc(st[0])+'"><b>'+(u.room?u.room+' otaq':'№ '+u.n)+'</b><small>'+(u.area?u.area+' m²':st[0])+'</small>'+(cd?'<span class="cd">'+cd+'</span>':'')+'</button>';});
+  h+='</div></div>';});
+ var bd=NC.$('board');bd.innerHTML=h;bd.querySelectorAll('.u').forEach(function(x){x.onclick=function(){openUnit(x.dataset.f,+x.dataset.i);};});}
+NC.$('fRoom').onchange=board;NC.$('fCond').onchange=board;
+function openUnit(f,i){var u=S[cur].rows[f][i],st=NC.ST[u.s]||['?'];var sel=u.s;
+ var h=NC.mh(NC.esc(short(cur))+' · '+flab(cur,f)+' · №'+NC.esc(u.n),'<span class="nc-pill" style="color:'+st[1]+'"><i></i>'+st[0]+'</span>')+
+ '<div class="ud"><div><span>Otaq</span><b>'+(u.room||'—')+'</b></div><div><span>Sahə</span><b>'+(u.area?u.area+' m²':'—')+'</b></div><div><span>Vəziyyət</span><b>'+NC.esc(u.c||'—')+'</b></div><div><span>Mərtəbə</span><b>'+NC.esc(flab(cur,f))+'</b></div></div>'+
+ (u.note?'<p class="mut" style="margin:0 0 14px">'+NC.esc(u.note)+'</p>':'');
+ if(EDIT){h+='<div class="nc-f"><label>Status</label></div><div class="stc" id="stc">'+ORD.map(function(k){return '<button data-k="'+k+'" class="'+(k===u.s?'on':'')+'"><i style="background:'+NC.ST[k][1]+'"></i>'+NC.ST[k][0]+'</button>';}).join('')+'</div>'+
+  '<div class="nc-row"><div class="nc-f"><label>Otaq sayı</label><input class="nc-in" id="eR" inputmode="numeric" value="'+NC.esc(u.room)+'"></div><div class="nc-f"><label>Sahə (m²)</label><input class="nc-in" id="eA" inputmode="decimal" value="'+NC.esc(u.area)+'"></div><div class="nc-f"><label>Vəziyyət</label><select class="nc-sel" id="eC">'+['','Təmirli','White Box','Təmirli · Kirayə','Qara karkas'].map(function(v){return '<option'+(v===(u.c||'')?' selected':'')+' value="'+v+'">'+(v||'—')+'</option>';}).join('')+'</select></div></div>'+
+  '<div class="nc-f" style="margin-top:12px"><label>Qeyd</label><input class="nc-in" id="eN" value="'+NC.esc(u.note||'')+'" placeholder="Alıcı, bron müddəti və s."></div>';}
+ if(u.by)h+='<div class="upd">Son dəyişiklik: '+NC.esc(u.by)+' · '+NC.esc(u.at||'')+'</div>';
+ h+='<div class="mf">'+(u.s==='satisda'&&u.area?'<a class="nc-b" href="'+NC.base()+'kalkulyator?area='+encodeURIComponent(u.area)+'&u='+encodeURIComponent(short(cur)+', '+flab(cur,f)+', №'+u.n)+'">Kalkulyatorda hesabla</a>':'')+(EDIT?'<button class="nc-b pri" id="eSave">Yadda saxla</button>':'<button class="nc-b" onclick="NC.close()">Bağla</button>')+'</div>';
+ var box=NC.modal(h);if(!EDIT)return;
+ box.querySelectorAll('#stc button').forEach(function(x){x.onclick=function(){sel=x.dataset.k;box.querySelectorAll('#stc button').forEach(function(y){y.classList.toggle('on',y===x);});};});
+ NC.$('eSave').onclick=function(){var btn=this;btn.disabled=true;
+  var nu={s:sel,room:NC.$('eR').value.trim(),area:NC.$('eA').value.trim().replace(',','.'),c:NC.$('eC').value,note:NC.$('eN').value.trim()};
+  NC.kv('nc_sales').then(function(r){var L=(r&&r.value)||S;var tu=L[cur]&&L[cur].rows[f]&&L[cur].rows[f][i];if(!tu)throw new Error('Mənzil tapılmadı, səhifəni yeniləyin');
+   var ch=[];if(tu.s!==nu.s)ch.push((NC.ST[tu.s]||[tu.s])[0]+' → '+NC.ST[nu.s][0]);
+   tu.s=nu.s;tu.room=nu.room;tu.area=nu.area;if(nu.c)tu.c=nu.c;else delete tu.c;if(nu.note)tu.note=nu.note;else delete tu.note;tu.by=NC.me.full_name||NC.me.email;tu.at=new Date().toLocaleString('az-AZ',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+   return NC.kvSave('nc_sales',L).then(function(){S=L;UPD=new Date().toISOString();NC.close();NC.toast('Yadda saxlanıldı'+(ch.length?' · '+ch[0]:''));fillRooms();render();});
+  }).catch(function(e){btn.disabled=false;NC.toast('Xəta: '+e.message);});};}
+function openChart(){var rows=Object.keys(S).map(function(b){var L=units(b),c=cnt(L);return '<div class="ch-row"><b>'+NC.esc(short(b))+'</b><div class="sb-bar">'+bar(c,L.length||1)+'</div><span class="mut num" style="text-align:right">'+(c.satisda||0)+' / '+L.length+'</span></div>';}).join('');
+ var A=[];Object.keys(S).forEach(function(b){A=A.concat(units(b));});var ca=cnt(A);
+ NC.modal(NC.mh('Bütün binalar','Hər binada statusların payı · sağda: satışda / ümumi')+rows+'<div class="sb-leg" style="margin-top:16px">'+ORD.filter(function(k){return ca[k];}).map(function(k){return '<span><i style="background:'+NC.ST[k][1]+'"></i>'+NC.ST[k][0]+' · '+ca[k]+' ('+Math.round(ca[k]*100/A.length)+'%)</span>';}).join('')+'</div>',{wide:true});}
+function exportX(){NC.xlsx(function(){var out=[['Bina','Mərtəbə','№','Otaq','Sahə (m²)','Status','Vəziyyət','Qeyd']];Object.keys(S).forEach(function(b){units(b).sort(function(x,y){return Number(x.f)-Number(y.f)||x.i-y.i;}).forEach(function(x){out.push([b,flab(b,x.f),x.u.n,x.u.room?+x.u.room:'',x.u.area?+x.u.area:'',(NC.ST[x.u.s]||[x.u.s])[0],x.u.c||'',x.u.note||'']);});});
+ var ws=XLSX.utils.aoa_to_sheet(out);ws['!cols']=[{wch:18},{wch:24},{wch:5},{wch:6},{wch:10},{wch:10},{wch:16},{wch:30}];var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Satış');XLSX.writeFile(wb,'Nizami-City-satis-'+NC.today()+'.xlsx');});}
+NC.header('satis','Satış lövhəsi');
+NC.auth({perms:['nc_sales','nc_sales_edit','nc_contracts'],title:'Satış lövhəsi',onReady:start});
+</script>
+</body></html>

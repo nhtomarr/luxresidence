@@ -47,6 +47,19 @@ class Href { constructor(v) { this.v = v; } element(el) { el.setAttribute('href'
 class Title { constructor(v) { this.v = v; } element(el) { el.setInnerContent(this.v); } }
 class Append { constructor(h) { this.h = h; } element(el) { el.append(this.h, { html: true }); } }
 const LEAD = { 1: 'geniş planlı 3 və 4 otaqlı mənzillər', 3: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 4: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 5: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 6: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 10: '1 və 3 otaqlı mənzillər', 11: '1 və 3 otaqlı mənzillər' };
+const NC_HOSTS = new Set(['nizamicity.az', 'www.nizamicity.az', 'sistem.nizamicity.az']);
+const NC_APPS = new Set(['satis', 'kalkulyator', 'muqavile', 'komendant']);
+async function nizamiHost(ctx, url) {
+  const p = url.pathname.replace(/\.html$/, '').replace(/\/$/, '');
+  const noindex = (r) => { const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); };
+  if (url.hostname === 'www.nizamicity.az') { url.hostname = 'nizamicity.az'; return Response.redirect(url.toString(), 301); }
+  const app = p.slice(1);
+  if (NC_APPS.has(app)) return noindex(await ctx.env.ASSETS.fetch(new Request(new URL('/nc/' + app, url).toString(), ctx.request)));
+  if (p.startsWith('/nc/') || p.startsWith('/assets/') || p === '/auth-ok') return ctx.next();
+  if (p === '/favicon.ico' || p === '/apple-touch-icon.png') return ctx.env.ASSETS.fetch(new Request(new URL('/assets/nc/apple-touch.png', url).toString()));
+  if (p === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'Content-Type': 'text/plain' } });
+  return Response.redirect(url.origin + '/satis', 302);
+}
 export async function onRequest(ctx) {
   const url = new URL(ctx.request.url);
   // ---- VMM Ofisin mənbə kodu (vmm/) bu saytda yayımlanmır — VMM ayrıca Netlify-dadır ----
@@ -55,6 +68,9 @@ export async function onRequest(ctx) {
   if (OFFICE_HOSTS.has(url.hostname)) return officeHost(ctx, url);
   // ---- Təchizat paneli ayrıca domendə (techizat.pilothayat.az) ----
   if (url.hostname === 'techizat.pilothayat.az') return techizatHost(ctx, url);
+  // ---- Nizami City daxili sistemləri (nizamicity.az) ----
+  if (NC_HOSTS.has(url.hostname)) return nizamiHost(ctx, url);
+  if (url.pathname === '/nc' || url.pathname.startsWith('/nc/')) { const r = await ctx.next(); const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); }
   // köhnə ünvan → yeni domen (domen aktiv olandan sonra OFFICE_LIVE=true)
   if (OFFICE_LIVE && (url.pathname === '/ofis' || url.pathname === '/ofis.html')) return Response.redirect('https://' + OFFICE_PRIMARY + '/' + url.search, 301);
   if (url.hostname === 'www.luxresidence.az') { url.hostname = 'luxresidence.az'; return Response.redirect(url.toString(), 301); }
