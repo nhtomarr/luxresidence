@@ -1,5 +1,5 @@
 // Baş Ofis — service worker: tətbiq qabığı keşi + telefon bildirişləri (Web Push)
-const C='ofis-v121';const V='121';const AS=['/assets/ofis-app.css?v='+V,'/assets/ofis-a.js?v='+V,'/assets/ofis-b.js?v='+V,'/bg.js'];
+const C='ofis-v122';const V='122';const AS=['/assets/ofis-app.css?v='+V,'/assets/ofis-a.js?v='+V,'/assets/ofis-b.js?v='+V,'/bg.js'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(['/ofis','/assets/ofis/icon-192.png'].concat(AS)).catch(()=>{})));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);
@@ -23,6 +23,7 @@ self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;c
   })());
  }});
 self.addEventListener('push',e=>{let d={};try{d=e.data?e.data.json():{};}catch(_){d={title:'Baş Ofis',body:e.data?e.data.text():''};}
+ const tk=(String(d.url||'').match(/[?&]r=([0-9a-f-]{36})/)||[])[1];const AK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2cWNoc2NoYmJsdG5uYXNhYmRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5NDA2NTAsImV4cCI6MjEwNTUxNjY1MH0.PVxxfLrj8KZH6AUaQQPx5sEqpiGEMDIFy3Mq206OMKI';if(tk)e.waitUntil(fetch('https://avqchschbbltnnasabdm.supabase.co/rest/v1/rpc/ann_delivered',{method:'POST',headers:{apikey:AK,Authorization:'Bearer '+AK,'Content-Type':'application/json'},body:JSON.stringify({p_token:tk})}).catch(()=>{}));
  const title=d.title||'Baş Ofis';
  e.waitUntil(self.registration.showNotification(title,{body:d.body||'',icon:'/assets/ofis/icon-192.png',badge:'/assets/ofis/icon-192.png',tag:d.tag||undefined,image:d.image||undefined,renotify:!!d.tag,requireInteraction:!!d.important,vibrate:d.important?[300,120,300,120,300]:[180,80,180],data:{url:d.url||'/ofis'}}));});
 self.addEventListener('notificationclick',e=>{e.notification.close();const url=(e.notification.data&&e.notification.data.url)||'/ofis';

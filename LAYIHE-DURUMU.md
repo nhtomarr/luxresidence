@@ -335,3 +335,9 @@ Nümunə məlumat (demo=true): Bina 4/5, 10 material, 3 təchizatçı, 12 smeta 
 - Müqavilələr: `nc_contracts` cədvəli (NC-YYYY-0001), `nc_unit_status()` RPC lövhədə statusu dəyişir. Ofis lentinə satış bildirişi GETMİR (LUX-dakı kimi).
 - Komendantlıq: `nc` SXEMİ — LUX km_* strukturunun tam surəti (28 cədvəl, 54 policy, funksiyalar, trigger, km_unit_balance view, cron nc-km-auto-generate). PostgREST db_schemas += nc. `nc/komendant.html` LUX komendant.html-dən `nc/build_komendant.py` ilə YIĞILIR (rəng, brend, icazə, bina adları BN(), fayl yolları nc/, ncacts/) — LUX komendant dəyişəndə skripti yenidən işə sal. Edge: `nc-km-notify`. SMS (nc.km_sms_config) söndürülüb — OTP test rejimində.
 - İcazələr: nc_sales, nc_sales_edit, nc_calc, nc_calc_admin, nc_contracts, nc_komendant, nc_komendant_kassa, nc_komendant_akt, nc_sakin (admin.html PERM_LIST + lux-admin v8). nc.km_units satış lövhəsindən idxal olunub (424 obyekt).
+
+## ELAN İZLƏMƏ (28 okt 2026, ofis-v122)
+- `office_ann_track` (ann_id, employee_id, token, sent_at, devices, delivered_at, seen_at, seen_count). `office_announcements.push_title/push_body` — push üçün qısa mətn (tam mətn kartda).
+- RPC: `ann_send(id, only_unread)` — hər işçiyə ayrıca push (url ?ann=ID&r=token); `ann_delivered(token)` — SW push alanda çağırır (anon); `ann_seen(id)` — kart açılanda; `ann_stats(id)` — rəhbər üçün siyahı.
+- UI: Elanlar → hər elanda «📊 Kim gördü» (Çatdı / Gördü / Tanış oldu, süzgəc, Excel, xatırlat). «Xatırlat» indi ann_send(only_unread).
+- Elan 9 (davamiyyət, 1 noyabr) audience=[Nihat] — "hamıya göndər" deyiləndə: update audience=null; select ann_send(9).

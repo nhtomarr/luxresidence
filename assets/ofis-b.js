@@ -2383,3 +2383,33 @@ pushGateEnable=function(){var b=$('pgGo');if(b){b.disabled=true;b.textContent='G
 var _pgCheck0=pushGateCheck;pushGateCheck=function(manual){if(_pgPreview())return _pgCheck0(manual);if(_pgExempt()){pushGateHide();return;}
  _pgHasSub().then(function(has){if(has){pushGateHide();if(manual)toast('Bildirişlər aktivdir ✅');return;}
   return _pgTimeout(pushState(),6000,'state timeout').catch(function(){return 'off';}).then(function(st){if(st==='native-soon'){pushGateHide();return;}pushGateRender(st);if(!pushGateCheck.logged){pushGateCheck.logged=1;_pgLog('shown '+st+(isNative()?' native':'')+(isStandalone()?' pwa':''));}if(manual&&st!=='on')toast('Hələ aktiv deyil');});}).catch(function(){});};
+
+/* ===== ELAN İZLƏMƏ: kimə çatdı, kim gördü, kim tanış oldu (28 okt 2026) =====
+   office_ann_track (sent/delivered/seen), office_ann_reads (Tanış oldum). Push-u SW "çatdı" kimi qeyd edir (?r=token). */
+(function(){var s=document.createElement('style');s.textContent=
+'.nc-as-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:4px 0 12px}'+
+'.nc-as-sum div{background:rgba(127,140,170,.1);border-radius:14px;padding:10px 8px;text-align:center}'+
+'.nc-as-sum b{display:block;font-size:22px;font-weight:700;line-height:1.1}.nc-as-sum span{font-size:11.5px;opacity:.7}'+
+'.nc-as-tb{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.nc-as-tb button{border:1px solid rgba(127,140,170,.35);background:none;border-radius:99px;padding:6px 12px;font-size:12.5px;font-weight:600;color:inherit;cursor:pointer}.nc-as-tb button.on{background:#0A84FF;border-color:#0A84FF;color:#fff}'+
+'.nc-as-ls{max-height:52vh;overflow-y:auto}.nc-as-r{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 2px;border-bottom:1px solid rgba(127,140,170,.18);font-size:13.5px}'+
+'.nc-as-r b{font-weight:600}.nc-as-st{display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap}.nc-as-st i{font-style:normal;font-size:11px;font-weight:600;padding:2px 7px;border-radius:99px;background:rgba(127,140,170,.14);opacity:.45}'+
+'.nc-as-st i.y{opacity:1;background:rgba(48,209,88,.16);color:#1f9d47}.nc-as-st i.w{opacity:1;background:rgba(255,159,10,.16);color:#c77700}.nc-as-r small{grid-column:1/-1;opacity:.6;font-size:11.5px}'+
+'.nc-as-btn{margin-left:6px}';document.head.appendChild(s);})();
+(function(){var _show=annHeroShow;annHeroShow=function(a,isRead){var r=_show.apply(this,arguments);try{if(a&&a.id&&EMP)sb.rpc('ann_seen',{p_id:a.id}).then(function(){},function(){});}catch(e){}return r;};})();
+annRemind=function(id,el){if(!confirm('Tanış olmayanlara yenidən bildiriş göndərilsin?'))return;el.disabled=true;run(sb.rpc('ann_send',{p_id:id,p_only_unread:true})).then(function(r){el.textContent='✓ '+((r&&r.employees)||0)+' nəfərə göndərildi';}).catch(function(e){el.disabled=false;err(e);});};
+function _asT(t){if(!t)return '';var d=new Date(t);return d.toLocaleDateString('az-AZ',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'});}
+function annStats(id,f){f=f||'all';run(sb.rpc('ann_stats',{p_id:id})).then(function(L){L=L||[];var a=(typeof ANN!=='undefined'&&ANN.find(function(x){return x.id===id;}))||{};
+ var sent=L.filter(function(x){return x.sent;}).length,dl=L.filter(function(x){return x.delivered;}).length,sn=L.filter(function(x){return x.seen||x.read;}).length,rd=L.filter(function(x){return x.read;}).length;
+ var F={all:['Hamısı',L],unread:['Tanış olmayıb',L.filter(function(x){return !x.read;})],seen:['Görüb, təsdiqləməyib',L.filter(function(x){return (x.seen)&&!x.read;})],nodev:['Bildiriş qoşulmayıb',L.filter(function(x){return !x.devices;})]};
+ var rows=F[f][1].map(function(x){var info=[];if(x.sent)info.push('göndərildi '+_asT(x.sent));if(x.delivered)info.push('çatdı '+_asT(x.delivered));if(x.seen)info.push('gördü '+_asT(x.seen)+(x.seen_n>1?' ('+x.seen_n+' dəfə)':''));if(x.read)info.push('tanış oldu '+_asT(x.read));if(!x.devices)info.push('telefonda bildiriş aktiv deyil');
+  return '<div class="nc-as-r"><b>'+esc(x.name)+'</b><span class="nc-as-st"><i class="'+(x.delivered?'y':x.sent&&x.devices?'w':'')+'">Çatdı</i><i class="'+(x.seen||x.read?'y':'')+'">Gördü</i><i class="'+(x.read?'y':'')+'">Tanış oldu</i></span><small>'+esc(info.join(' · ')||'hələ heç nə')+'</small></div>';}).join('');
+ modal('<div class="mhead"><h3>Kim gördü</h3><button class="x" onclick="closeModal()">×</button></div><p class="hint" style="margin:0 0 10px">'+esc(a.title||'')+'</p>'+
+  '<div class="nc-as-sum"><div><b>'+L.length+'</b><span>işçi</span></div><div><b>'+dl+'</b><span>çatdı</span></div><div><b>'+sn+'</b><span>gördü</span></div><div><b style="color:#1f9d47">'+rd+'</b><span>tanış oldu</span></div></div>'+
+  '<div class="nc-as-tb">'+Object.keys(F).map(function(k){return '<button class="'+(k===f?'on':'')+'" onclick="annStats('+id+',\''+k+'\')">'+F[k][0]+' · '+F[k][1].length+'</button>';}).join('')+'</div>'+
+  '<div class="nc-as-ls">'+(rows||'<p class="hint">Siyahı boşdur</p>')+'</div>'+
+  '<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn sm" onclick="annRemind('+id+',this)">🔔 Tanış olmayanlara xatırlat</button><button class="btn sm ghost" onclick="annStatsX('+id+')">Excel</button></div>'+
+  '<p class="hint" style="margin-top:10px;font-size:11.5px">«Çatdı» — bildiriş telefona düşüb (iPhone/brauzer). Android tətbiqində çatma qeydə alınmaya bilər; «Gördü» — tətbiqdə elanı açıb; «Tanış oldu» — düyməni basıb.</p>');}).catch(err);}
+function annStatsX(id){run(sb.rpc('ann_stats',{p_id:id})).then(function(L){var go=function(){var a=[['İşçi','Bildiriş cihazı','Göndərildi','Çatdı','Gördü','Tanış oldu']].concat((L||[]).map(function(x){return [x.name,x.devices,_asT(x.sent),_asT(x.delivered),_asT(x.seen),_asT(x.read)];}));var ws=XLSX.utils.aoa_to_sheet(a),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Elan');XLSX.writeFile(wb,'elan-'+id+'-oxuyanlar.xlsx');};
+ if(window.XLSX)go();else{var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=go;document.head.appendChild(s);}}).catch(err);}
+(function(){var _rn=renderNews;renderNews=function(){_rn.apply(this,arguments);if(!MGR)return;var t=0;(function w(){var el=$('annList');var done=el&&el.querySelector('.s3annr');if(!done){if(t++<40)setTimeout(w,150);return;}
+ Array.prototype.forEach.call(el.querySelectorAll('.card.ann'),function(c,i){var a=ANN[i];var box=c.querySelector('.s3annr');if(!a||!box||box.querySelector('.nc-as-btn'))return;box.insertAdjacentHTML('beforeend','<button class="btn sm ghost nc-as-btn" onclick="annStats('+a.id+')">📊 Kim gördü</button>');});})();};})();
