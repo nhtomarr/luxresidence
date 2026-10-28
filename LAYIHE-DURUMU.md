@@ -328,7 +328,7 @@ Nümunə məlumat (demo=true): Bina 4/5, 10 material, 3 təchizatçı, 12 smeta 
 - 28 okt (ofis-v121) DÜZƏLİŞ: bildiriş ekranı boş göy ekran kimi görünürdü — '.pg' sinfi tətbiqin səhifə yığını sinfi ilə toqquşurdu (position:fixed; translateX(100%) → məzmun ekrandan kənarda). Hero/gate/bilbord sinifləri 'nc-' prefiksi ilə ayrıldı. DƏRS: ofis-b.js-ə yeni UI əlavə edəndə qısa ümumi sinif adları (pg, ok, out, go, in, done...) işlətmə — həmişə unikal prefiks; test harness-ə real assets/ofis-app.css qoş.
 
 ## NIZAMI CITY DAXİLİ SİSTEMLƏRİ (28 oktyabr 2026)
-- Yer: `nc/` qovluğu → luxresidence.az/nc/{satis,kalkulyator,muqavile,komendant}. nizamicity.az qoşulanda middleware (`nizamiHost`) /satis, /kalkulyator, /muqavile, /komendant yollarını `nc/`-ə yönləndirir; kök → /satis (ictimai sayt hələ artifaktdadır).
+- Yer: `nc/` qovluğu → luxresidence.az/nc/{satis,kalkulyator,muqavile,komendant}. nizami-city.az qoşulanda middleware (`nizamiHost`) /satis, /kalkulyator, /muqavile, /komendant yollarını `nc/`-ə yönləndirir; kök → /satis (ictimai sayt hələ artifaktdadır).
 - Dizayn: Nizami (göy #070c18 / laym #c2cd3f), ortaq `nc/nc.css` + `nc/nc.js` (NC.auth = luxAuth üstündən, NC.kv, NC.modal, NC.toast). Loqo/ikonlar `assets/nc/`.
 - Mənzil bazası: City Life MMC şahmatkası (07.10.2026 docx) → `lux_kv.nc_sales` (8 blok: A·1, A·2, B, E·1, E·2, F, G·1, G·2; mərtəbə "10"=Mansard, "1.5"=1-ci mərtəbə II səviyyə). Mənzildə `c` = vəziyyət (Təmirli/White Box/Kirayə). 415 mənzil. C, D, H binaları cədvəldə yox idi.
 - Kalkulyator: `lux_kv.nc_cfg` (açıq oxunur; yazma nc_calc_admin). Qiymətlər NÜMUNƏ (2000 ₼/m², sample:true) — real qiymət gözlənilir. Binaya görə qiymət `bprice`.

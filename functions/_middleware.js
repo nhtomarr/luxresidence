@@ -47,12 +47,12 @@ class Href { constructor(v) { this.v = v; } element(el) { el.setAttribute('href'
 class Title { constructor(v) { this.v = v; } element(el) { el.setInnerContent(this.v); } }
 class Append { constructor(h) { this.h = h; } element(el) { el.append(this.h, { html: true }); } }
 const LEAD = { 1: 'geniş planlı 3 və 4 otaqlı mənzillər', 3: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 4: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 5: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 6: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 10: '1 və 3 otaqlı mənzillər', 11: '1 və 3 otaqlı mənzillər' };
-const NC_HOSTS = new Set(['nizamicity.az', 'www.nizamicity.az', 'sistem.nizamicity.az']);
+const NC_HOSTS = new Set(['nizami-city.az', 'www.nizami-city.az', 'nizamicity.az', 'www.nizamicity.az']);
 const NC_APPS = new Set(['satis', 'kalkulyator', 'muqavile', 'komendant']);
 async function nizamiHost(ctx, url) {
   const p = url.pathname.replace(/\.html$/, '').replace(/\/$/, '');
   const noindex = (r) => { const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); };
-  if (url.hostname === 'www.nizamicity.az') { url.hostname = 'nizamicity.az'; return Response.redirect(url.toString(), 301); }
+  if (url.hostname.startsWith('www.')) { url.hostname = url.hostname.slice(4); return Response.redirect(url.toString(), 301); }
   const app = p.slice(1);
   if (NC_APPS.has(app)) return noindex(await ctx.env.ASSETS.fetch(new Request(new URL('/nc/' + app, url).toString(), ctx.request)));
   if (p.startsWith('/nc/') || p.startsWith('/assets/') || p === '/auth-ok') return ctx.next();

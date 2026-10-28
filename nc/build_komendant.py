@@ -22,7 +22,7 @@ rep('LUX Residence Komendantlığı', 'Nizami City Komendantlığı', must=False
 rep('LUX Residence komendantlığı', 'Nizami City komendantlığı', must=False)
 rep('LUX RESIDENCE', 'NIZAMI CITY', must=False)
 rep('LUX Residence', 'Nizami City', must=False)
-rep('@sakin.luxresidence.az', '@sakin.nizamicity.az')
+rep('@sakin.luxresidence.az', '@sakin.nizami-city.az')
 rep('href="komendant.webmanifest"', 'href="/nc/komendant.webmanifest"', must=False)
 rep('href="/komendant.webmanifest"', 'href="/nc/komendant.webmanifest"', must=False)
 s = re.sub(r'<link rel="apple-touch-icon"[^>]*>', '<link rel="apple-touch-icon" href="/assets/nc/apple-touch.png"><link rel="icon" href="/assets/nc/logo.png">', s, count=1)
