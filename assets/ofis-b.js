@@ -2361,3 +2361,25 @@ var _bbdOT=renderOwnerTasksForEmp;renderOwnerTasksForEmp=function(){_bbdOT.apply
   anchor.insertAdjacentHTML(anchor.id==='tOwnerTasks'?'afterbegin':'afterend','<button class="bbd" type="button" onclick="bbdOpen()">'+(a.image?'<img src="'+esc(a.image)+'" alt="">':'')+'<div class="bb"><div class="bt"><i></i>Vacib · Rəhbərlik</div><b>'+esc(a.title)+'</b>'+(cd?'<span class="cd">'+cd+'</span>':'')+'</div><span class="mo">›</span></button>');});};
 function bbdOpen(){if(!BBD)return;var a=BBD;Promise.resolve(EMP?run(sb.from('office_ann_reads').select('ann_id').eq('ann_id',a.id).eq('employee_id',EMP.id)):[]).then(function(r){annHeroShow(a,!!(r&&r.length));}).catch(function(){annHeroShow(a,true);});}
 (function wait(n){if(typeof sb!=='undefined'&&sb&&typeof ME!=='undefined'&&ME&&typeof EMPS!=='undefined'&&EMPS.length){setTimeout(function(){try{renderOwnerTasksForEmp();}catch(_){}},400);return;}if(n<120)setTimeout(function(){wait(n+1);},500);})(0);
+
+/* --- Bildiriş ekranı v2 (28 okt): öz aktivləşdirmə axını, xəta ekranda göstərilir, diaqnostika sys_errors-a,
+   paylaşılan cihazda abunəlik office_push_claim ilə cari istifadəçiyə keçir, pushState asılı qalsa 6 san sonra ekran yenə də çıxır. */
+function _pgLog(m){try{if(_pgLog.n=(_pgLog.n||0)+1,_pgLog.n>8)return;sb.from('sys_errors').insert({app:'ofis',msg:'pushgate: '+String(m).slice(0,300),url:location.href.slice(0,200),ua:navigator.userAgent.slice(0,250),user_id:ME&&ME.user_id}).then(function(){},function(){});}catch(_){}}
+function _pgErr(t){var g=$('pushGate');if(!g)return;var e=$('pgErr');if(!e){g.querySelector('.pg').insertAdjacentHTML('beforeend','<p id="pgErr" style="margin-top:14px;padding:10px 12px;border-radius:12px;background:rgba(255,69,58,.22);font-size:14px"></p>');e=$('pgErr');}e.textContent=t;}
+function _pgTimeout(p,ms,msg){return Promise.race([p,new Promise(function(_,rej){setTimeout(function(){rej(new Error(msg));},ms);})]);}
+pushGateEnable=function(){var b=$('pgGo');if(b){b.disabled=true;b.textContent='Gözləyin…';}
+ var reset=function(){var b2=$('pgGo');if(b2){b2.disabled=false;b2.textContent='Yenidən cəhd et';}};
+ if(isNative()){try{enablePush();}catch(e){_pgLog('native '+e.message);}var n=0;(function poll(){_pgHasSub().then(function(ok){if(ok){pushGateHide();return;}if(++n<15)setTimeout(poll,1500);else{reset();_pgErr('Telefon bildiriş icazəsini təsdiqləmədi. Ayarlar → Tətbiqlər → Baş Ofis → Bildirişlər bölməsindən aktiv edin.');_pgLog('native timeout');}});})();return;}
+ if(isIOS()&&!isStandalone()){pushGateRender('ios-install');return;}
+ if(!pushSupported()){pushGateRender('unsupported');return;}
+ var P;try{P=Notification.requestPermission();}catch(e){P=Promise.reject(e);}
+ Promise.resolve(P).then(function(p){if(p!=='granted'){_pgLog('perm '+p);if(p==='denied')pushGateRender('denied');else{reset();_pgErr('İcazə verilmədi. Açılan pəncərədə "İcazə ver" (Allow) seçin.');}return;}
+  return _pgTimeout(navigator.serviceWorker.ready,8000,'Tətbiq xidməti hazır deyil — səhifəni yeniləyin').then(function(reg){
+   return _pgTimeout(run(sb.rpc('office_push_key')),10000,'Server cavab vermir').then(function(key){if(!key)throw new Error('Açar alınmadı');
+    return reg.pushManager.getSubscription().then(function(old){return old||reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(key)});});});})
+  .then(function(sub){var j=sub.toJSON();return run(sb.rpc('office_push_claim',{p_endpoint:j.endpoint,p_p256dh:j.keys.p256dh,p_auth:j.keys.auth,p_ua:navigator.userAgent}));})
+  .then(function(){_pgLog('ok');pushGateHide();toast('Bildirişlər aktivdir ✅');try{notify('push_test',{});}catch(_){}try{renderPushCards();}catch(_){}});})
+ .catch(function(e){var m=(e&&e.message)||String(e);_pgLog('err '+m);reset();_pgErr('Alınmadı: '+m);});};
+var _pgCheck0=pushGateCheck;pushGateCheck=function(manual){if(_pgPreview())return _pgCheck0(manual);if(_pgExempt()){pushGateHide();return;}
+ _pgHasSub().then(function(has){if(has){pushGateHide();if(manual)toast('Bildirişlər aktivdir ✅');return;}
+  return _pgTimeout(pushState(),6000,'state timeout').catch(function(){return 'off';}).then(function(st){if(st==='native-soon'){pushGateHide();return;}pushGateRender(st);if(!pushGateCheck.logged){pushGateCheck.logged=1;_pgLog('shown '+st+(isNative()?' native':'')+(isStandalone()?' pwa':''));}if(manual&&st!=='on')toast('Hələ aktiv deyil');});}).catch(function(){});};
