@@ -2304,7 +2304,8 @@ function annHeroCheck(){var id=null;try{id=+new URLSearchParams(location.search)
  var since=new Date(Date.now()-30*864e5).toISOString();
  var q=id?run(sb.from('office_announcements').select('*').eq('id',id).limit(1)):run(sb.from('office_announcements').select('*').eq('style','hero').gte('created_at',since).order('created_at',{ascending:false}).limit(5));
  Promise.all([q,EMP?run(sb.from('office_ann_reads').select('ann_id').eq('employee_id',EMP.id)):Promise.resolve([])]).then(function(r){var A=r[0]||[],rd=(r[1]||[]).map(function(x){return x.ann_id;});
-  var a=id?A[0]:A.filter(function(x){return rd.indexOf(x.id)<0;})[0];if(a)annHeroShow(a,rd.indexOf(a.id)>=0);}).catch(function(){});}
+  if(!EMP){try{rd=JSON.parse(localStorage.getItem('ann_seen_local')||'[]');}catch(_){rd=[];}}
+  var a=id?A[0]:A.filter(function(x){return rd.indexOf(x.id)<0;})[0];if(!a)return;if(!EMP){try{if(rd.indexOf(a.id)<0){rd.push(a.id);localStorage.setItem('ann_seen_local',JSON.stringify(rd.slice(-50)));}}catch(_){}}annHeroShow(a,!EMP||rd.indexOf(a.id)>=0);}).catch(function(){});}
 (function wait(n){if(typeof sb!=='undefined'&&sb&&typeof ME!=='undefined'&&ME&&typeof EMPS!=='undefined'&&EMPS.length){setTimeout(annHeroCheck,600);return;}if(n<120)setTimeout(function(){wait(n+1);},500);})(0);
 
 /* ===== BİLDİRİŞ MƏCBURİYYƏTİ (28 okt 2026) =====
