@@ -2344,18 +2344,20 @@ document.addEventListener('visibilitychange',function(){if(document.visibilitySt
    "Bu gün"də sahibkar tapşırığı yerində — ən son sabitlənmiş (pinned) hero elan bilbord kimi. Audience-ə uyğun (RLS):
    test vaxtı yalnız hədəf, elan hamıya açılanda hamı görür. Toxun → tam ekran elan kartı. */
 (function(){var s=document.createElement('style');s.textContent=
-'.bbd{position:relative;display:block;width:100%;margin:0 0 14px;padding:0;border:0;border-radius:22px;overflow:hidden;cursor:pointer;text-align:left;color:#fff;background:linear-gradient(150deg,#071a44,#0b2f78 60%,#0a5fd6);box-shadow:0 14px 34px rgba(10,47,120,.28);font-family:inherit;animation:bbdIn .6s cubic-bezier(.2,.8,.2,1)}'+
-'.bbd img{display:block;width:100%;aspect-ratio:2/1;object-fit:cover}.bbd .bb{padding:14px 16px 16px}.bbd .bt{display:flex;align-items:center;gap:8px;font:800 11px/1 system-ui;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin-bottom:6px}.bbd .bt i{width:7px;height:7px;border-radius:50%;background:#34c759;box-shadow:0 0 0 0 rgba(52,199,89,.6);animation:bbdP 1.8s infinite}'+
-'.bbd b{display:block;font:800 18px/1.2 system-ui,-apple-system,sans-serif;letter-spacing:-.01em}.bbd .cd{display:inline-flex;gap:6px;align-items:center;margin-top:10px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.14);font:700 12.5px system-ui}.bbd .mo{float:right;margin-top:12px;font:700 13px system-ui;opacity:.9}'+
-'@keyframes bbdIn{from{opacity:0;transform:translateY(10px)}}@keyframes bbdP{70%{box-shadow:0 0 0 7px rgba(52,199,89,0)}}@media (prefers-reduced-motion:reduce){.bbd,.bbd .bt i{animation:none}}';
+'.bbd{display:flex;align-items:center;gap:12px;width:100%;margin:12px 0;padding:10px 12px 10px 10px;border:0;border-radius:18px;cursor:pointer;text-align:left;color:#fff;background:linear-gradient(135deg,#071a44,#0b2f78 60%,#0a5fd6);box-shadow:0 8px 22px rgba(10,47,120,.22);font-family:inherit;animation:bbdIn .5s cubic-bezier(.2,.8,.2,1)}'+
+'.bbd img{flex:none;width:64px;height:64px;border-radius:12px;object-fit:cover;object-position:78% 50%}.bbd .bb{flex:1;min-width:0}.bbd .bt{display:flex;align-items:center;gap:6px;font:800 10px/1 system-ui;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin-bottom:4px}'+
+'.bbd .bt i{width:6px;height:6px;border-radius:50%;background:#34c759;animation:bbdP 1.8s infinite}.bbd b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:700 14px/1.25 system-ui,-apple-system,sans-serif}'+
+'.bbd .cd{display:inline-block;margin-top:5px;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.16);font:700 11.5px system-ui}.bbd .mo{flex:none;font-size:22px;opacity:.7;padding-left:2px}'+
+'@keyframes bbdIn{from{opacity:0;transform:translateY(8px)}}@keyframes bbdP{0%{box-shadow:0 0 0 0 rgba(52,199,89,.6)}70%{box-shadow:0 0 0 6px rgba(52,199,89,0)}}@media (prefers-reduced-motion:reduce){.bbd,.bbd .bt i{animation:none}}';
 document.head.appendChild(s);})();
 var BBD=null,BBDt=0;
 function bbdLoad(){if(BBD&&Date.now()-BBDt<120000)return Promise.resolve(BBD);var since=new Date(Date.now()-30*864e5).toISOString();
  return run(sb.from('office_announcements').select('*').eq('style','hero').eq('pinned',true).gte('created_at',since).order('created_at',{ascending:false}).limit(1)).then(function(r){BBD=(r&&r[0])||false;BBDt=Date.now();return BBD;}).catch(function(){return false;});}
 function bbdCountdown(a){var m=String(a.title||'').match(/(\d{1,2})\s*noyabr/i);if(!m)return '';var d='2026-11-'+String(+m[1]).padStart(2,'0'),n=dDays(today(),d)-1;
  return n>0?'⏳ '+n+' gün qalıb':n===0?'🟢 Bu gündən qüvvədədir':'🟢 Qüvvədədir';}
-var _bbdOT=renderOwnerTasksForEmp;renderOwnerTasksForEmp=function(){_bbdOT.apply(this,arguments);var box=$('tOwnerTasks');if(!box||!sb)return;
- bbdLoad().then(function(a){var old=box.querySelector('.bbd');if(old)old.remove();if(!a)return;var cd=bbdCountdown(a);
-  box.insertAdjacentHTML('afterbegin','<button class="bbd" type="button" onclick="bbdOpen()">'+(a.image?'<img src="'+esc(a.image)+'" alt="" loading="lazy">':'')+'<div class="bb"><div class="bt"><i></i>Vacib · Rəhbərlik</div><b>'+esc(a.title)+'</b>'+(cd?'<span class="cd">'+cd+'</span>':'')+'<span class="mo">Ətraflı ›</span></div></button>');});};
+var _bbdOT=renderOwnerTasksForEmp;renderOwnerTasksForEmp=function(){_bbdOT.apply(this,arguments);if(!sb)return;
+ var st=$('tStats'),anchor=st&&st.closest('.card');if(!anchor){var ob=$('tOwnerTasks');anchor=ob;}if(!anchor)return;
+ bbdLoad().then(function(a){document.querySelectorAll('.bbd').forEach(function(x){x.remove();});if(!a)return;var cd=bbdCountdown(a);
+  anchor.insertAdjacentHTML(anchor.id==='tOwnerTasks'?'afterbegin':'afterend','<button class="bbd" type="button" onclick="bbdOpen()">'+(a.image?'<img src="'+esc(a.image)+'" alt="">':'')+'<div class="bb"><div class="bt"><i></i>Vacib · Rəhbərlik</div><b>'+esc(a.title)+'</b>'+(cd?'<span class="cd">'+cd+'</span>':'')+'</div><span class="mo">›</span></button>');});};
 function bbdOpen(){if(!BBD)return;var a=BBD;Promise.resolve(EMP?run(sb.from('office_ann_reads').select('ann_id').eq('ann_id',a.id).eq('employee_id',EMP.id)):[]).then(function(r){annHeroShow(a,!!(r&&r.length));}).catch(function(){annHeroShow(a,true);});}
 (function wait(n){if(typeof sb!=='undefined'&&sb&&typeof ME!=='undefined'&&ME&&typeof EMPS!=='undefined'&&EMPS.length){setTimeout(function(){try{renderOwnerTasksForEmp();}catch(_){}},400);return;}if(n<120)setTimeout(function(){wait(n+1);},500);})(0);
