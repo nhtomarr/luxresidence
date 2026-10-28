@@ -2332,7 +2332,9 @@ function pushGateRender(st){var g=$('pushGate');if(!g){g=document.createElement(
 function pushGateHide(){var g=$('pushGate');if(g)g.remove();document.documentElement.style.overflow='';}
 function pushGateEnable(){var b=$('pgGo');if(b){b.disabled=true;b.textContent='Gözləyin…';}try{enablePush();}catch(e){}
  var n=0;(function poll(){_pgHasSub().then(function(ok){if(ok){pushGateHide();return;}if(++n<15)setTimeout(poll,1500);else pushGateCheck(true);});})();}
-function pushGateCheck(manual){if(_pgExempt()){pushGateHide();return;}
+function _pgPreview(){try{return new URLSearchParams(location.search).get('pushgate')==='1';}catch(_){return false;}}
+function pushGateCheck(manual){if(_pgPreview()){pushState().then(function(st){pushGateRender(st==='on'?'off':st);var g=$('pushGate');if(g)g.querySelector('.pg').insertAdjacentHTML('afterbegin','<div style="margin-bottom:16px;padding:8px 12px;border-radius:12px;background:rgba(255,204,0,.22);font:700 13px system-ui">ÖNİZLƏMƏ — işçilər bu ekranı görür</div>')+g.querySelector('.pg').insertAdjacentHTML('beforeend','<div><button class="alt" onclick="location.href=location.pathname">Önizləmədən çıx</button></div>');});return;}
+ if(_pgExempt()){pushGateHide();return;}
  _pgHasSub().then(function(has){if(has){pushGateHide();if(manual)toast('Bildirişlər aktivdir ✅');return;}
   return pushState().then(function(st){if(st==='native-soon'){pushGateHide();return;}pushGateRender(st);if(manual&&st!=='on')toast('Hələ aktiv deyil');});}).catch(function(){});}
 (function wait(n){if(typeof sb!=='undefined'&&sb&&typeof ME!=='undefined'&&ME&&typeof EMPS!=='undefined'&&EMPS.length){setTimeout(function(){pushGateCheck(false);},300);return;}if(n<120)setTimeout(function(){wait(n+1);},500);})(0);
