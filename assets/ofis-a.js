@@ -33,11 +33,11 @@ function err(e){toast((e&&e.message)||'Xəta baş verdi');console.warn(e);}
 function run(q){return q.then(function(r){if(r.error)throw r.error;return r.data;});}
 
 /* ---------- start ---------- */
-luxAuth({perms:['ofis','ofis_admin','ofis_owner'],title:'Baş Ofis',sub:'İşçi hesabınızla daxil olun',logo:false,noAdminLink:true,accent:'#2563eb',bg:'linear-gradient(135deg,#e2e8f0,#f8fafc)',onReady:function(client,me){sb=client;ME=me;OWNER=(me.perms||[]).indexOf('ofis_owner')>=0;PREVIEW=!!(me.is_admin&&new URLSearchParams(location.search).get('baxis')==='sahibkar');if(PREVIEW)OWNER=true;MGR=me.is_admin||OWNER||(me.perms||[]).indexOf('ofis_admin')>=0;start();}});
+luxAuth({perms:['ofis','ofis_admin','ofis_owner','dev'],title:'Baş Ofis',sub:'İşçi hesabınızla daxil olun',logo:false,noAdminLink:true,accent:'#2563eb',bg:'linear-gradient(135deg,#e2e8f0,#f8fafc)',onReady:function(client,me){sb=client;ME=me;OWNER=(me.perms||[]).indexOf('ofis_owner')>=0;window.DEV=(me.perms||[]).indexOf('dev')>=0;PREVIEW=!!((me.is_admin||DEV)&&new URLSearchParams(location.search).get('baxis')==='sahibkar');if(PREVIEW)OWNER=true;MGR=me.is_admin||OWNER||DEV||(me.perms||[]).indexOf('ofis_admin')>=0;start();}});
 function start(){$('app').style.display='';var _bl=document.getElementById('bootload');if(_bl)_bl.style.display='none';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
- $('meBox').innerHTML='<b>'+esc(PREVIEW?'Afiq Rəhmanov':(ME.full_name||ME.email))+'</b>'+(PREVIEW?'Sahibkar':ME.is_admin?'Sistem admini':OWNER?'Sahibkar':MGR?'HR rəhbəri':'İşçi');
+ $('meBox').innerHTML='<b>'+esc(PREVIEW?'Afiq Rəhmanov':(ME.full_name||ME.email))+'</b>'+(PREVIEW?'Sahibkar':ME.is_admin?'Sistem admini':DEV?'Developer':OWNER?'Sahibkar':MGR?'HR rəhbəri':'İşçi');
  $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href=OFB();});};
- if(ME.is_admin){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';pv.onclick=function(){location.href=PREVIEW?OFB():OFB('?baxis=sahibkar');};$('outBtn').parentNode.insertBefore(pv,$('outBtn'));}
+ if(ME.is_admin||DEV){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';pv.onclick=function(){location.href=PREVIEW?OFB():OFB('?baxis=sahibkar');};$('outBtn').parentNode.insertBefore(pv,$('outBtn'));}
  if(PREVIEW){var bn=document.createElement('div');bn.className='pvbar';bn.innerHTML='👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.';document.body.insertBefore(bn,$('app'));}
  var tabs;
  if(OWNER)tabs=[['boss','Nəzarət'],['chat','💬 Çat'],['feed','📣 Lent'],['remind','🔔 Xatırlat'],['asst','🎯 Assistent'],['oprofil','Profil']];
