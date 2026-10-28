@@ -2306,3 +2306,34 @@ function annHeroCheck(){var id=null;try{id=+new URLSearchParams(location.search)
  Promise.all([q,EMP?run(sb.from('office_ann_reads').select('ann_id').eq('employee_id',EMP.id)):Promise.resolve([])]).then(function(r){var A=r[0]||[],rd=(r[1]||[]).map(function(x){return x.ann_id;});
   var a=id?A[0]:A.filter(function(x){return rd.indexOf(x.id)<0;})[0];if(a)annHeroShow(a,rd.indexOf(a.id)>=0);}).catch(function(){});}
 (function wait(n){if(typeof sb!=='undefined'&&sb&&typeof ME!=='undefined'&&ME&&typeof EMPS!=='undefined'&&EMPS.length){setTimeout(annHeroCheck,600);return;}if(n<120)setTimeout(function(){wait(n+1);},500);})(0);
+
+/* ===== BİLDİRİŞ MƏCBURİYYƏTİ (28 okt 2026) =====
+   İşçinin heç bir cihazda bildirişi aktiv deyilsə, tətbiq bağlanır — yalnız "Bildirişləri aktiv et" ekranı.
+   İstisna: sahibkar, admin, developer, sahibkar görünüşü, QR ekran rejimi (?qr=1). Server yoxlaması: office_push_subs (istənilən cihaz). */
+(function(){var s=document.createElement('style');s.textContent=
+'#pushGate{position:fixed;inset:0;z-index:2147482000;display:grid;place-items:center;padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));background:linear-gradient(160deg,#061433,#0b2f78 60%,#0a5fd6);color:#fff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:auto}'+
+'#pushGate .pg{width:min(440px,100%);text-align:center}#pushGate .bell{width:96px;height:96px;margin:0 auto 18px;border-radius:30px;background:rgba(255,255,255,.14);display:grid;place-items:center;animation:pgRing 2.4s ease-in-out infinite;transform-origin:50% 10%}'+
+'#pushGate .bell svg{width:52px;height:52px}#pushGate h2{font-size:24px;line-height:1.2;margin:0 0 10px;font-weight:800;letter-spacing:-.02em}#pushGate p{font-size:16px;line-height:1.5;margin:0 0 18px;color:rgba(255,255,255,.88)}'+
+'#pushGate .go{width:100%;height:56px;border:0;border-radius:16px;background:#34c759;color:#fff;font:800 17px system-ui,-apple-system,sans-serif;cursor:pointer;box-shadow:0 12px 30px rgba(52,199,89,.4)}#pushGate .go:disabled{opacity:.6}'+
+'#pushGate .alt{margin-top:12px;width:100%;height:46px;border:1px solid rgba(255,255,255,.35);border-radius:14px;background:transparent;color:#fff;font:700 15px system-ui,sans-serif;cursor:pointer}'+
+'#pushGate ol{text-align:left;margin:0 0 18px;padding:16px 16px 16px 36px;border-radius:16px;background:rgba(255,255,255,.1);line-height:1.8;font-size:15px}#pushGate .out{margin-top:18px;background:none;border:0;color:rgba(255,255,255,.6);font:600 14px system-ui;text-decoration:underline;cursor:pointer}'+
+'@keyframes pgRing{0%,60%,100%{transform:rotate(0)}10%{transform:rotate(14deg)}20%{transform:rotate(-12deg)}30%{transform:rotate(8deg)}40%{transform:rotate(-5deg)}}@media (prefers-reduced-motion:reduce){#pushGate .bell{animation:none}}';
+document.head.appendChild(s);})();
+function _pgExempt(){try{if(new URLSearchParams(location.search).get('qr'))return true;}catch(_){}return !EMP||OWNER||PREVIEW||(ME&&ME.is_admin)||window.DEV;}
+function _pgHasSub(){return run(sb.from('office_push_subs').select('id').eq('user_id',ME.user_id).limit(1)).then(function(r){return !!(r&&r.length);}).catch(function(){return true;});}
+var BELL='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>';
+function pushGateRender(st){var g=$('pushGate');if(!g){g=document.createElement('div');g.id='pushGate';g.setAttribute('role','dialog');g.setAttribute('aria-modal','true');document.body.appendChild(g);}
+ var nm=esc(((EMP&&EMP.full_name)||'').split(' ')[0]),h='<div class="pg"><div class="bell">'+BELL+'</div><h2>'+(nm?nm+', ':'')+'bildirişləri aktiv edin</h2>';
+ if(st==='ios-install')h+='<p>iPhone-da bildirişlər yalnız Baş Ofis <b>ana ekrana əlavə olunanda</b> işləyir:</p><ol><li>Safari-də aşağıdakı <b>Paylaş</b> düyməsinə (□↑) toxunun</li><li><b>"Ana ekrana əlavə et"</b> → <b>Əlavə et</b></li><li>Ana ekrandakı <b>Ofis</b> ikonundan açıb daxil olun</li><li><b>"Bildirişləri aktiv et"</b> → <b>İcazə ver</b></li></ol><button class="alt" onclick="pushGateCheck(true)">Yenidən yoxla</button>';
+ else if(st==='denied')h+='<p>Bu cihazda bildirişlər <b>bloklanıb</b>. Telefonun və ya brauzerin ayarlarında Baş Ofis üçün bildirişlərə icazə verin, sonra "Yenidən yoxla"ya toxunun.</p><ol><li><b>iPhone:</b> Ayarlar → Bildirişlər → Ofis → İcazə ver</li><li><b>Android:</b> Ayarlar → Tətbiqlər → Baş Ofis (və ya Chrome) → Bildirişlər → Aktiv</li><li><b>Kompüter:</b> ünvan sətrindəki 🔒 → Bildirişlər → İcazə ver</li></ol><button class="go" onclick="pushGateCheck(true)">Yenidən yoxla</button>';
+ else if(st==='unsupported')h+='<p>Bu brauzer bildirişləri dəstəkləmir. Telefonunuzda Baş Ofisi açıb orada bildirişləri aktiv edin — sonra burada da davam edə biləcəksiniz.</p><button class="go" onclick="pushGateCheck(true)">Telefonda aktiv etdim — yoxla</button>';
+ else h+='<p>Davamiyyət, tapşırıq və vacib elanlar barədə xəbərdarlıqlar telefonunuza gəlməlidir. Bildirişləri aktiv etmədən tətbiqdən istifadə etmək mümkün deyil.</p><button class="go" id="pgGo" onclick="pushGateEnable()">Bildirişləri aktiv et</button>';
+ h+='<button class="out" onclick="sb.auth.signOut().then(function(){location.reload();})">Hesabdan çıx</button></div>';g.innerHTML=h;document.documentElement.style.overflow='hidden';}
+function pushGateHide(){var g=$('pushGate');if(g)g.remove();document.documentElement.style.overflow='';}
+function pushGateEnable(){var b=$('pgGo');if(b){b.disabled=true;b.textContent='Gözləyin…';}try{enablePush();}catch(e){}
+ var n=0;(function poll(){_pgHasSub().then(function(ok){if(ok){pushGateHide();return;}if(++n<15)setTimeout(poll,1500);else pushGateCheck(true);});})();}
+function pushGateCheck(manual){if(_pgExempt()){pushGateHide();return;}
+ _pgHasSub().then(function(has){if(has){pushGateHide();if(manual)toast('Bildirişlər aktivdir ✅');return;}
+  return pushState().then(function(st){if(st==='native-soon'){pushGateHide();return;}pushGateRender(st);if(manual&&st!=='on')toast('Hələ aktiv deyil');});}).catch(function(){});}
+(function wait(n){if(typeof sb!=='undefined'&&sb&&typeof ME!=='undefined'&&ME&&typeof EMPS!=='undefined'&&EMPS.length){setTimeout(function(){pushGateCheck(false);},300);return;}if(n<120)setTimeout(function(){wait(n+1);},500);})(0);
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&$('pushGate'))pushGateCheck(false);});
