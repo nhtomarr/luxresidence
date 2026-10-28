@@ -341,3 +341,12 @@ Nümunə məlumat (demo=true): Bina 4/5, 10 material, 3 təchizatçı, 12 smeta 
 - RPC: `ann_send(id, only_unread)` — hər işçiyə ayrıca push (url ?ann=ID&r=token); `ann_delivered(token)` — SW push alanda çağırır (anon); `ann_seen(id)` — kart açılanda; `ann_stats(id)` — rəhbər üçün siyahı.
 - UI: Elanlar → hər elanda «📊 Kim gördü» (Çatdı / Gördü / Tanış oldu, süzgəc, Excel, xatırlat). «Xatırlat» indi ann_send(only_unread).
 - Elan 9 (davamiyyət, 1 noyabr) audience=[Nihat] — "hamıya göndər" deyiləndə: update audience=null; select ann_send(9).
+
+## MAAŞ VERİLİŞİ — BARMAQ İZİ (28 okt 2026, ofis-v126)
+- Cihaz: ZKTeco SenseFace 2A (barmaq+üz+kart, ADMS standart). Rejim T&A Push. Cihazda Cloud Server = ofis.pilothayat.az (443 və ya 80). Davamiyyət üçün DEYİL — yalnız maaş təsdiqi.
+- Axın: `functions/iclock/[[path]].js` (proxy, x-device-ip) → edge `bio-adms` → `bio_scan()` → açıq dövrdə (office_pay_period.open) ən köhnə «gozleyir» maaş «verildi» olur + işçiyə push. Dublikat (sn,pin,at) qəbul olunmur.
+- Cihaz Baş Ofisdə «Təsdiqlə» ilə aktiv olur (bio_devices.allowed + info.lock_ip = həmin anın IP-si; başqa IP-dən gələn qəbul edilmir).
+- PIN = office_employees.id. Şablonlar (FP/BIODATA/FACE) `bio_users.templates`-də ehtiyat (brauzerə verilmir — `bio_status()` RPC yalnız say qaytarır). Blok → DATA DELETE USERINFO; blokdan çıxanda USERINFO + şablonlar geri yüklənir.
+- Cədvəllər: office_pay_base, office_pay_period, office_payroll, bio_devices, bio_users, bio_cmds, bio_logs. RPC: pay_make, pay_block, pay_manual, pay_scans, bio_push_user, bio_sync_all, bio_enroll, bio_block, bio_status. İcazə: office_pay_ok() = ofis_maas | ofis_owner | sys | dev | ofis_hr.
+- UI (ofis-b.js sonu): «💰 Maaş verilişi» — İşçilər səhifəsində; ofis_maas olan (rəhbər olmayan) ana ekranda. ?maas=1 → kassir ekranı. Tablar: Siyahı / Kassir ekranı / Sabit maaşlar / Barmaq izi cihazı.
+- bio_devices-də 'ZZTEST' test sətri qalıb (allowed=false) — silmək olar.
