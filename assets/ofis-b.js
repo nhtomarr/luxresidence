@@ -2376,9 +2376,9 @@ pushGateEnable=function(){var b=$('pgGo');if(b){b.disabled=true;b.textContent='G
  Promise.resolve(P).then(function(p){if(p!=='granted'){_pgLog('perm '+p);if(p==='denied')pushGateRender('denied');else{reset();_pgErr('İcazə verilmədi. Açılan pəncərədə "İcazə ver" (Allow) seçin.');}return;}
   return _pgTimeout(navigator.serviceWorker.ready,8000,'Tətbiq xidməti hazır deyil — səhifəni yeniləyin').then(function(reg){
    return _pgTimeout(run(sb.rpc('office_push_key')),10000,'Server cavab vermir').then(function(key){if(!key)throw new Error('Açar alınmadı');
-    return reg.pushManager.getSubscription().then(function(old){return old||reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(key)});});});})
-  .then(function(sub){var j=sub.toJSON();return run(sb.rpc('office_push_claim',{p_endpoint:j.endpoint,p_p256dh:j.keys.p256dh,p_auth:j.keys.auth,p_ua:navigator.userAgent}));})
-  .then(function(){_pgLog('ok');pushGateHide();toast('Bildirişlər aktivdir ✅');try{notify('push_test',{});}catch(_){}try{renderPushCards();}catch(_){}});})
+    return reg.pushManager.getSubscription().then(function(old){return old?old.unsubscribe().catch(function(){}):null;}).then(function(){return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(key)});});});})
+  .then(function(sub){var j=sub.toJSON();window._pgEp=String(j.endpoint).slice(0,48);var A={p_endpoint:j.endpoint,p_p256dh:j.keys.p256dh,p_auth:j.keys.auth,p_ua:navigator.userAgent};return run(sb.rpc('office_push_claim',A)).then(function(r){if(r!==false)return r;_pgLog('claim false → refresh');return sb.auth.refreshSession().then(function(){return run(sb.rpc('office_push_claim',A));});});})
+  .then(function(r){_pgLog('ok claim='+r+' ep='+window._pgEp);if(r===false)throw new Error('Giriş sessiyası köhnəlib. Profil → Çıxış edin, yenidən daxil olub təkrar basın.');pushGateHide();toast('Bildirişlər aktivdir ✅');try{notify('push_test',{});}catch(_){}try{renderPushCards();}catch(_){}});})
  .catch(function(e){var m=(e&&e.message)||String(e);_pgLog('err '+m);reset();_pgErr('Alınmadı: '+m);});};
 var _pgCheck0=pushGateCheck;pushGateCheck=function(manual){if(_pgPreview())return _pgCheck0(manual);if(_pgExempt()){pushGateHide();return;}
  _pgHasSub().then(function(has){if(has){pushGateHide();if(manual)toast('Bildirişlər aktivdir ✅');return;}
