@@ -2365,7 +2365,7 @@ function bbdOpen(){if(!BBD)return;var a=BBD;Promise.resolve(EMP?run(sb.from('off
 
 /* --- Bildiriş ekranı v2 (28 okt): öz aktivləşdirmə axını, xəta ekranda göstərilir, diaqnostika sys_errors-a,
    paylaşılan cihazda abunəlik office_push_claim ilə cari istifadəçiyə keçir, pushState asılı qalsa 6 san sonra ekran yenə də çıxır. */
-function _pgLog(m){try{if(_pgLog.n=(_pgLog.n||0)+1,_pgLog.n>8)return;sb.from('sys_errors').insert({app:'ofis',msg:'pushgate: '+String(m).slice(0,300),url:location.href.slice(0,200),ua:navigator.userAgent.slice(0,250),user_id:ME&&ME.user_id}).then(function(){},function(){});}catch(_){}}
+function _pgLog(m){try{if(/^(ok|shown)/.test(String(m)))return;if(_pgLog.n=(_pgLog.n||0)+1,_pgLog.n>8)return;sb.from('sys_errors').insert({app:'ofis',msg:'pushgate: '+String(m).slice(0,300),url:location.href.slice(0,200),ua:navigator.userAgent.slice(0,250),user_id:ME&&ME.user_id}).then(function(){},function(){});}catch(_){}}
 function _pgErr(t){var g=$('pushGate');if(!g)return;var e=$('pgErr');if(!e){g.querySelector('.nc-pg').insertAdjacentHTML('beforeend','<p id="pgErr" style="margin-top:14px;padding:10px 12px;border-radius:12px;background:rgba(255,69,58,.22);font-size:14px"></p>');e=$('pgErr');}e.textContent=t;}
 function _pgTimeout(p,ms,msg){return Promise.race([p,new Promise(function(_,rej){setTimeout(function(){rej(new Error(msg));},ms);})]);}
 pushGateEnable=function(){var b=$('pgGo');if(b){b.disabled=true;b.textContent='Gözləyin…';}
