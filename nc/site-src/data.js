@@ -89,12 +89,14 @@ window.NC = (function () {
     ['Mərhələ III', 'D, H, I binaları', 'Növbəti mərhələ. Tarixlər satış ofisi tərəfindən elan olunacaq.', 'n'],
   ];
   const GAL = [
-    { src: 'front', c: 'Vizuallar', t: 'Küçə fasadı və kommersiya qalereyası' },
-    { src: 'aerial', c: 'Vizuallar', t: 'Kompleksin quşbaxışı görünüşü' },
-    { src: 'entrance', c: 'Detallar', t: 'Həyətə giriş portalı' },
-    { src: 'tower_r', c: 'Detallar', t: 'Fasad: krem keramoqranit və terrakota panellər' },
-    { src: 'tower_l', c: 'Detallar', t: 'Künc bina, küçə tərəfi' },
-    { src: 'aerial_c', c: 'Vizuallar', t: 'Binalar və daxili həyətlər' },
+    { src: 'aerial', c: 'Vizuallar', t: 'Hazır binalar — 3D quşbaxışı vizual, mərkəzdə qapalı həyət' },
+    { src: 'front', c: 'Vizuallar', t: 'Küçə fasadı və «Nizami City» girişi' },
+    { src: 'aerial_c', c: 'Vizuallar', t: 'Binalar və giriş portalı' },
+    { src: 'entrance', c: 'Detallar', t: 'Həyətə giriş, terras və kommersiya qalereyası' },
+    { src: 'corner', c: 'Vizuallar', t: 'Künc görünüşü və giriş qapısı' },
+    { src: 'tower_l', c: 'Detallar', t: 'Künc bina: keramoqranit və kərpic fasad' },
+    { src: 'tower_r', c: 'Detallar', t: 'Küçə tərəfi, birinci mərtəbədə vitrinlər' },
+    { src: 'street', c: 'Vizuallar', t: 'Uzun fasad və kommersiya mərtəbəsi' },
   ];
   const GCATS = ['Hamısı', 'Vizuallar', 'Detallar', 'Tikinti gedişatı', 'İnteryer'];
   const BLOG = [

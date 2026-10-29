@@ -333,7 +333,7 @@ pages.layihe = () => ({
     <div class="grid12" style="margin-top:34px;align-items:end"><h1 class="d h1" style="grid-column:1/9"><span class="ln"><span>Doqquz bina.</span></span><span class="ln"><span><em>Bir həyət.</em></span></span></h1>
     <p class="txt up" style="grid-column:9/13">Nizami City Yasamal rayonunda, Cəfər Cabbarlı küçəsində 2,87 hektar ərazidə inşa olunan yaşayış kompleksidir. Binalar perimetr boyunca düzülüb, mərkəzdə isə avtomobil girməyən qapalı həyət qalır.</p></div>
   </div></section>
-  <figure class="wide up"><img src="${IMG.aerial}" alt="Nizami City quşbaxışı vizual"><figcaption class="w">Vizual · kompleksin quşbaxışı görünüşü</figcaption></figure>
+  <figure class="wide up"><img src="${IMG.aerial}" alt="Nizami City quşbaxışı vizual"><figcaption class="w">Vizual · hazır binaların 3D quşbaxışı görünüşü</figcaption></figure>
   <section class="sec"><div class="w grid12">
     <div style="grid-column:1/6;display:grid;gap:22px;align-content:start"><span class="lbl">Fakt vərəqi</span><h2 class="d h2">Rəqəmlərlə</h2></div>
     <div class="kv" style="grid-column:7/13">${[['Ünvan', CO.addr], ['Binalar', '9 yaşayış binası'], ['Mənzillər', '~750, 1–4 otaqlı'], ['Ərazi', '2,87 ha'], ['Fasad', 'Keramoqranit'], ['Parkinq', '2 səviyyəli, yeraltı'], ['Təhvil', 'Təmirsiz, sərbəst plan'], ['Mərhələ I', 'A, B, C — təhvil verilib'], ['Mərhələ II', 'E, F, G — 2027'], ['Ödəniş', 'Nağd və ya 50% + 36 ayadək daxili kredit'], ['Qiymət', `${fmt(CO.priceFrom)} ₼/m²-dən`]].map(([a, b]) => `<div><span>${a}</span><b>${b}</b></div>`).join('')}</div>

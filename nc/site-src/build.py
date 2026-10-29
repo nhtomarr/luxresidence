@@ -5,8 +5,8 @@ S = pathlib.Path(__file__).parent
 def webp(p, maxw, q=78):
     im = Image.open(p).convert('RGB'); im.thumbnail((maxw, maxw)); bio = io.BytesIO(); im.save(bio, 'WEBP', quality=q, method=6)
     return 'data:image/webp;base64,' + base64.b64encode(bio.getvalue()).decode()
-img = {'front': webp(S/'real/front.jpg', 1800, 80), 'aerial': webp(S/'real/aerial.jpg', 1200, 82)}
-for k in ['entrance', 'tower_l', 'tower_r', 'aerial_c']: img[k] = webp(S/f'real/{k}.jpg', 900, 80)
+img = {'front': webp(S/'real/front.jpg', 1800, 72), 'aerial': webp(S/'real/aerial.jpg', 1400, 74)}
+for k in ['entrance', 'tower_l', 'tower_r', 'aerial_c', 'corner', 'street']: img[k] = webp(S/f'real/{k}.jpg', 1100, 70)
 logo = Image.open(S/'logo.png').convert('RGBA'); logo.thumbnail((128, 128)); bio = io.BytesIO(); logo.save(bio, 'WEBP', quality=85)
 LOGO = 'data:image/webp;base64,' + base64.b64encode(bio.getvalue()).decode(); img['logo'] = LOGO
 ANON = re.search(r"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_.-]+", (S.parent.parent/'assets/lux-auth.js').read_text()).group(0)
