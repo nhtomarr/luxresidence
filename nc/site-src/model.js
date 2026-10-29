@@ -4,12 +4,9 @@ window.NC_BLD = [
   { id: 'A', st: 'ok', x: -150, z: -175, w: 150, d: 62 },
   { id: 'B', st: 'ok', x: 30, z: -175, w: 150, d: 62 },
   { id: 'C', st: 'ok', x: 200, z: -95, w: 62, d: 150 },
-  { id: 'D', st: 'n', x: 200, z: 85, w: 62, d: 150 },
   { id: 'E', st: 'w', x: 30, z: 175, w: 150, d: 62 },
   { id: 'F', st: 'w', x: -150, z: 175, w: 150, d: 62 },
   { id: 'G', st: 'w', x: -232, z: 85, w: 62, d: 120 },
-  { id: 'H', st: 'n', x: -232, z: -70, w: 62, d: 120 },
-  { id: 'I', st: 'n', x: 15, z: 0, w: 70, d: 70 },
 ];
 window.NC_FLOORS = 9; window.NC_FH = 7.4;
 

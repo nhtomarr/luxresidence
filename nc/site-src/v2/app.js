@@ -137,7 +137,7 @@ function mpBlock(full) {
     <div class="tabs" role="tablist" data-r><button type="button" role="tab" class="on" data-v="3d" aria-selected="true">3D baş plan</button><button type="button" role="tab" data-v="iso" aria-selected="false">Hazır binalar</button></div></div>
     <div class="mp"><div class="stage" id="stg">
       <div class="v" id="v3d"><div class="tip3" id="tip3"></div>
-        <div class="lg"><span><i class="st-ok"></i>Təhvil verilib</span><span><i class="st-w"></i>Tikilir · ${esc(CO.delivery)}</span><span><i class="st-n" style="background:none;box-shadow:inset 0 0 0 1.5px var(--ac)"></i>Növbəti mərhələ</span></div>
+        <div class="lg"><span><i class="st-ok"></i>Təhvil verilib</span><span><i class="st-w"></i>Tikilir · ${esc(CO.delivery)}</span></div>
         <div class="zm"><button type="button" aria-label="Yaxınlaşdır" data-z=".86">+</button><button type="button" aria-label="Uzaqlaşdır" data-z="1.16">−</button></div></div>
       <div class="v off iso" id="viso"><div class="card" id="isoC">${pic('aerial', 'Hazır binaların 3D vizualı: qapalı həyət, uşaq meydançası və kommersiya qalereyası', { sizes: '(max-width:980px) 92vw, 66vw' })}
         <button type="button" class="hs" style="left:47%;top:58%"><i></i><span>Qapalı həyət və uşaq meydançası</span></button>
@@ -197,8 +197,8 @@ const FEAT = [
 const featBlock = () => `<div class="ft-h"><h2 class="d h2">${lines(['Şəhərin', 'içində sakit', 'həyat'])}</h2></div>
   ${FEAT.map(([k, t, p, alt]) => `<div class="frow"><div class="tx"><h3 class="d h3" data-r>${t}</h3><p class="p" data-r>${p}</p></div><figure class="clip" data-par>${pic(k, alt, { sizes: '(max-width:860px) 92vw, 30vw' })}</figure></div>`).join('')}`;
 const statBlock = () => `<section class="stat" data-ncs>${pic('corner', 'Nizami City: künc bina və həyət binaları', { cls: 'par' })}<div class="hero-s"></div>
-  <h2>Ərazi</h2><div class="fg"><b class="num" data-r>2,87 ha</b><p data-r>Yasamalın mərkəzində doqquz bina, iki səviyyəli parkinq və bir qapalı həyət üçün ayrılmış məhəllə.</p></div></section>
-  <div class="subst w f0"><div data-r><b>~750</b><span>mənzil, 1–4 otaqlı</span></div><div data-r><b>${window.NC_FLOORS || 10}</b><span>yaşayış mərtəbəsi</span></div><div data-r><b>9</b><span>bina, üç mərhələ</span></div></div>`;
+  <h2>Ərazi</h2><div class="fg"><b class="num" data-r>2,87 ha</b><p data-r>Yasamalın mərkəzində altı bina, iki səviyyəli parkinq və bir qapalı həyət üçün ayrılmış məhəllə.</p></div></section>
+  <div class="subst w f0"><div data-r><b>1–4</b><span>otaqlı mənzillər</span></div><div data-r><b>${window.NC_FLOORS || 10}</b><span>yaşayış mərtəbəsi</span></div><div data-r><b>6</b><span>bina, iki mərhələ</span></div></div>`;
 const MAPQ = encodeURIComponent('Nizami City, Cəfər Cabbarlı 31, Bakı');
 const locBlock = (h = 'h2') => `<div class="loc"><div class="map" data-r><iframe title="Xəritə: Nizami City" loading="lazy" src="https://maps.google.com/maps?q=${MAPQ}&z=15&output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
   <div><${h} class="d h2">${lines(['Hər şey', 'yaxındadır'])}</${h}><p class="p" style="margin:-16px 0 36px" data-r>${esc(CO.addr)}</p>
@@ -218,14 +218,14 @@ pages.home = () => {
   return {
     title: 'Nizami City — Yasamalda qapalı həyətli yaşayış kompleksi', dark: true, html: `
   <section class="hero" id="hero"><div class="hero-m">${pic('front', 'Nizami City: küçə fasadı və həyətə giriş portalı', { eager: true })}</div><div class="hero-s t"></div><div class="hero-s"></div>
-    <div class="hero-c"><div class="hero-row"><div class="hero-l"><p class="lead hx">Yasamalda, Nizami metrosunun yanında: doqquz bina və avtomobilsiz qapalı həyət.</p>
+    <div class="hero-c"><div class="hero-row"><div class="hero-l"><p class="lead hx">Yasamalda, Nizami metrosunun yanında: altı bina və avtomobilsiz qapalı həyət.</p>
       <div class="hero-act hx"><a class="btn" href="#menziller">Mənzil seç ${AR}</a><a class="lk" href="#visit">Baxışa yazıl</a></div></div>
       <div class="hero-f hx"><b class="num">${fmt(CO.priceFrom)} ₼/m²-dən</b><span>${t ? '50% ilkin ödənişlə ' + t.m + ' ay faizsiz' : 'daxili kredit'}</span></div></div>
       <h1 class="d hero-t"><span class="ln"><span>Nizami</span></span><span class="ln"><span>City</span></span></h1></div></section>
-  <section class="sec w paper"><div class="intro"><h2 class="d h2">${lines(['Doqquz bina,', 'bir həyət'])}</h2>
+  <section class="sec w paper"><div class="intro"><h2 class="d h2">${lines(['Altı bina,', 'bir həyət'])}</h2>
     <div class="ph clip">${pic('tower_l', 'Nizami City: künc bina, kommersiya mərtəbəsi', { cls: 'par', sizes: '(max-width:860px) 80vw, 42vw' })}</div>
     <div class="tx"><p class="lead" data-r>Binalar məhəllənin perimetri boyunca düzülüb. Mərkəzdə avtomobil girməyən həyət qalır — maşınlar iki səviyyəli yeraltı parkinqdədir.</p><p class="p" data-r>${esc(CO.addr)}. Hazır binalarda açarı dərhal təhvil alırsınız, tikilən binalarda qiymət daha sərfəlidir.</p><div data-r><a class="lk" href="#binalar">Baş plana bax ${AR}</a></div></div>
-    <div class="facts"><div data-r><b class="num">9</b><span>bina</span></div><div data-r><b class="num">~750</b><span>mənzil</span></div><div data-r><b class="num">${free.length}</b><span>mənzil indi satışda</span></div><div data-r><b class="num">${CO.delivery}</b><span>tikilən binaların təhvili</span></div></div></div></section>
+    <div class="facts"><div data-r><b class="num">6</b><span>bina</span></div><div data-r><b class="num">${window.NC_FLOORS || 10}</b><span>mərtəbə</span></div><div data-r><b class="num">${free.length}</b><span>mənzil indi satışda</span></div><div data-r><b class="num">${CO.delivery}</b><span>tikilən binaların təhvili</span></div></div></div></section>
   ${sceneBlock()}
   <section class="sec w f1">${mpBlock()}</section>
   <section class="sec w paper">${selBlock()}</section>
@@ -332,7 +332,7 @@ pages.mekan = () => ({ title: 'Məkan — Nizami City', html: `${pHead('Məkan',
 pages.kommersiya = () => ({
   title: 'Kommersiya sahələri — Nizami City', html: `${pHead('Kommersiya', 'Binaların birinci mərtəbələrində qeyri-yaşayış sahələri: küçəyə açılan vitrinlər və kompleksin öz sakinləri.', false)}
   <section class="band">${pic('street', 'Nizami City: kommersiya mərtəbəsi və vitrinlər', { cls: 'par' })}</section>
-  <section class="sec w paper"><div class="split"><div><h2 class="d h2">${lines(['Biznesiniz', 'üçün yer'])}</h2>${INFRA.length ? '' : ''}<div class="kv" data-r>${[['Yerləşmə', 'Birinci mərtəbələr, küçə tərəfi'], ['Daimi müştəri bazası', '~750 mənzilin sakinləri'], ['Nəqliyyat', 'Nizami metrosunun piyada axını'], ['Uyğundur', 'Supermarket, aptek, kafe, salon, ofis']].map(([a, b]) => `<div><span>${a}</span><b>${b}</b></div>`).join('')}</div></div>
+  <section class="sec w paper"><div class="split"><div><h2 class="d h2">${lines(['Biznesiniz', 'üçün yer'])}</h2>${INFRA.length ? '' : ''}<div class="kv" data-r>${[['Yerləşmə', 'Birinci mərtəbələr, küçə tərəfi'], ['Daimi müştəri bazası', 'Kompleksin öz sakinləri'], ['Nəqliyyat', 'Nizami metrosunun piyada axını'], ['Uyğundur', 'Supermarket, aptek, kafe, salon, ofis']].map(([a, b]) => `<div><span>${a}</span><b>${b}</b></div>`).join('')}</div></div>
     <div><form class="frm" id="cf" novalidate><div class="fld"><label for="cfN">Adınız</label><input class="in" id="cfN" name="name" autocomplete="name"><div class="err" data-e="name"></div></div><div class="fld"><label for="cfP">Telefon</label><input class="in" id="cfP" name="phone" type="tel" inputmode="tel" autocomplete="tel"><div class="err" data-e="phone"></div></div><div class="fld"><label for="cfB">Biznes növü və lazım olan sahə</label><input class="in" id="cfB" name="msg" placeholder="Məsələn: kafe, 120 m²"></div><div><button class="btn">Sorğu göndər ${AR}</button></div></form></div></div></section>`,
   mount(root) { bindForm($('#cf', root), 'commercial', null, () => 'Kommersiya meneceri sizə zəng edəcək.'); }
 });

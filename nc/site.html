@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Nizami City — Yasamalda qapalı həyətli yaşayış kompleksi</title>
-<meta name="description" content="Nizami City: Yasamalda, Nizami metrosunun yanında doqquz bina və avtomobilsiz qapalı həyət. Satışdakı mənzillər, qiymətlər, 6 ay faizsiz daxili kredit, baxışa yazılış.">
+<meta name="description" content="Nizami City: Yasamalda, Nizami metrosunun yanında altı bina və avtomobilsiz qapalı həyət. Satışdakı mənzillər, qiymətlər, 6 ay faizsiz daxili kredit, baxışa yazılış.">
 <link rel="canonical" href="https://nizami-city.az/">
 <meta property="og:title" content="Nizami City — Yasamalda qapalı həyətli yaşayış kompleksi">
-<meta property="og:description" content="Doqquz bina, bir qapalı həyət. Mənzillər 3 800 ₼/m²-dən.">
+<meta property="og:description" content="Altı bina, bir qapalı həyət. Mənzillər 3 800 ₼/m²-dən.">
 <meta property="og:image" content="https://nizami-city.az/assets/nc/site/front-1280.webp">
 <meta name="theme-color" content="#141712">
 <link rel="icon" href="/assets/nc/logo.png"><link rel="apple-touch-icon" href="/assets/nc/apple-touch.png">
@@ -535,12 +535,9 @@ window.NC_BLD = [
   { id: 'A', st: 'ok', x: -150, z: -175, w: 150, d: 62 },
   { id: 'B', st: 'ok', x: 30, z: -175, w: 150, d: 62 },
   { id: 'C', st: 'ok', x: 200, z: -95, w: 62, d: 150 },
-  { id: 'D', st: 'n', x: 200, z: 85, w: 62, d: 150 },
   { id: 'E', st: 'w', x: 30, z: 175, w: 150, d: 62 },
   { id: 'F', st: 'w', x: -150, z: 175, w: 150, d: 62 },
   { id: 'G', st: 'w', x: -232, z: 85, w: 62, d: 120 },
-  { id: 'H', st: 'n', x: -232, z: -70, w: 62, d: 120 },
-  { id: 'I', st: 'n', x: 15, z: 0, w: 70, d: 70 },
 ];
 window.NC_FLOORS = 9; window.NC_FH = 7.4;
 
@@ -768,7 +765,7 @@ window.NC = (function () {
   const FAQ = [
     ['Mənzillər təmirlidir?', 'Hazır binalarda həm təmirli, həm təmirsiz mənzillər var. Tikilən binalarda mənzillər təmirsiz, sərbəst planla təhvil verilir.'],
     ['Hansı binalar hazırdır?', 'A, B və C binaları təhvil verilib. E, F və G binalarının təhvili ' + CO.delivery + '-ci ilə planlaşdırılır.'],
-    ['Hansı ödəniş variantları var?', 'Nağd ödəniş, daxili kredit (6 ay faizsiz, 12–36 ay) və ya ipoteka. Saytdakı kalkulyatorda öz variantınızı hesablayın.'],
+    ['Hansı ödəniş variantları var?', 'Nağd ödəniş, daxili kredit (6 ay faizsiz, 12 və 24 ay) və ya ipoteka. Saytdakı kalkulyatorda öz variantınızı hesablayın.'],
     ['Kvadratmetr qiyməti nə qədərdir?', 'Qiymətlər ' + CO.priceFrom.toLocaleString('ru').replace(/,/g,' ') + ' ₼/m²-dən başlayır: tikilən binalarda ' + P_KOT + ', hazır binalarda təmirsiz ' + P_TS + ', təmirli ' + P_TL + ' ₼/m².'],
     ['Parkinq var?', 'Bəli, kompleksdə 2 səviyyəli yeraltı parkinq var.'],
     ['Kommersiya sahələri satılır?', 'Bəli, binaların birinci mərtəbələrində qeyri-yaşayış sahələri satışdadır. Kommersiya bölməsindən sorğu göndərin.'],
@@ -778,7 +775,6 @@ window.NC = (function () {
   const TIMELINE = [
     ['Mərhələ I', 'A, B, C binaları', 'Tikinti tamamlanıb, mənzillər sakinlərə təhvil verilib.', 'ok'],
     ['Mərhələ II', 'E, F, G binaları', 'Tikinti davam edir. Təhvil ' + CO.delivery + '-ci ilə planlaşdırılır.', 'w'],
-    ['Mərhələ III', 'D, H, I binaları', 'Növbəti mərhələ. Tarixlər satış ofisi tərəfindən elan olunacaq.', 'n'],
   ];
   const GAL = [
     { src: 'aerial', c: 'Vizuallar', t: 'Hazır binalar — 3D quşbaxışı vizual, mərkəzdə qapalı həyət' },
@@ -795,7 +791,7 @@ window.NC = (function () {
     { id: 'kredit-ipoteka-nagd', c: 'Maliyyə', d: '2026-10-14', m: 7, img: 'tower_r', t: 'Nağd, daxili kredit, yoxsa ipoteka?', x: 'Eyni mənzili üç fərqli yolla almaq — hər birinin real xərci və kimə uyğun olduğu.',
       b: `<p>Mənzil alarkən ən böyük sual çox vaxt «hansı mənzil?» yox, «necə ödəyim?» olur. Eyni mənzilin son xərci seçilən ödəniş yolundan asılı olaraq ciddi fərqlənə bilər.</p>
 <h2>Nağd ödəniş</h2><p>Ən sadə yoldur: müqavilə bağlanır, məbləğ ödənilir, əlavə xərc yoxdur. Nağd alışda satış ofisi ilə qiymət barədə danışmaq imkanı da adətən daha genişdir.</p>
-<h2>Daxili kredit</h2><p>Nizami City-də məbləğin 50%-ni ilkin ödəyib, qalan hissəni 36 ayadək hissə-hissə ödəmək mümkündür. Bu yol banka müraciət etmədən, birbaşa tikinti şirkəti ilə razılaşma əsasında işləyir. Aylıq ödəniş müddət qısa olduğu üçün yüksək olur, amma ümumi xərc proqnozlaşdırılandır.</p>
+<h2>Daxili kredit</h2><p>Nizami City-də məbləğin 50%-ni ilkin ödəyib, qalan hissəni 24 ayadək hissə-hissə ödəmək mümkündür. Bu yol banka müraciət etmədən, birbaşa tikinti şirkəti ilə razılaşma əsasında işləyir. Aylıq ödəniş müddət qısa olduğu üçün yüksək olur, amma ümumi xərc proqnozlaşdırılandır.</p>
 <blockquote>Qayda: aylıq ödəniş ailə gəlirinin 40%-dən çox olmamalıdır.</blockquote>
 <h2>İpoteka</h2><p>Uzunmüddətli bank krediti aylıq ödənişi azaldır, lakin faiz hesabına ümumi xərci artırır. İpoteka şərtləri bankdan və proqramdan asılıdır, ona görə müraciətdən əvvəl bir neçə bankın təklifini müqayisə edin.</p>
 <h2>Necə qərar verməli?</h2><ol><li>Əlinizdə olan vəsaiti və aylıq ödəyə biləcəyiniz məbləği yazın.</li><li>Saytdakı kalkulyatorda üç variantı eyni mənzil üçün müqayisə edin.</li><li>Son qərardan əvvəl satış ofisində aktual şərtləri dəqiqləşdirin.</li></ol>` },
@@ -976,7 +972,7 @@ function mpBlock(full) {
     <div class="tabs" role="tablist" data-r><button type="button" role="tab" class="on" data-v="3d" aria-selected="true">3D baş plan</button><button type="button" role="tab" data-v="iso" aria-selected="false">Hazır binalar</button></div></div>
     <div class="mp"><div class="stage" id="stg">
       <div class="v" id="v3d"><div class="tip3" id="tip3"></div>
-        <div class="lg"><span><i class="st-ok"></i>Təhvil verilib</span><span><i class="st-w"></i>Tikilir · ${esc(CO.delivery)}</span><span><i class="st-n" style="background:none;box-shadow:inset 0 0 0 1.5px var(--ac)"></i>Növbəti mərhələ</span></div>
+        <div class="lg"><span><i class="st-ok"></i>Təhvil verilib</span><span><i class="st-w"></i>Tikilir · ${esc(CO.delivery)}</span></div>
         <div class="zm"><button type="button" aria-label="Yaxınlaşdır" data-z=".86">+</button><button type="button" aria-label="Uzaqlaşdır" data-z="1.16">−</button></div></div>
       <div class="v off iso" id="viso"><div class="card" id="isoC">${pic('aerial', 'Hazır binaların 3D vizualı: qapalı həyət, uşaq meydançası və kommersiya qalereyası', { sizes: '(max-width:980px) 92vw, 66vw' })}
         <button type="button" class="hs" style="left:47%;top:58%"><i></i><span>Qapalı həyət və uşaq meydançası</span></button>
@@ -1036,8 +1032,8 @@ const FEAT = [
 const featBlock = () => `<div class="ft-h"><h2 class="d h2">${lines(['Şəhərin', 'içində sakit', 'həyat'])}</h2></div>
   ${FEAT.map(([k, t, p, alt]) => `<div class="frow"><div class="tx"><h3 class="d h3" data-r>${t}</h3><p class="p" data-r>${p}</p></div><figure class="clip" data-par>${pic(k, alt, { sizes: '(max-width:860px) 92vw, 30vw' })}</figure></div>`).join('')}`;
 const statBlock = () => `<section class="stat" data-ncs>${pic('corner', 'Nizami City: künc bina və həyət binaları', { cls: 'par' })}<div class="hero-s"></div>
-  <h2>Ərazi</h2><div class="fg"><b class="num" data-r>2,87 ha</b><p data-r>Yasamalın mərkəzində doqquz bina, iki səviyyəli parkinq və bir qapalı həyət üçün ayrılmış məhəllə.</p></div></section>
-  <div class="subst w f0"><div data-r><b>~750</b><span>mənzil, 1–4 otaqlı</span></div><div data-r><b>${window.NC_FLOORS || 10}</b><span>yaşayış mərtəbəsi</span></div><div data-r><b>9</b><span>bina, üç mərhələ</span></div></div>`;
+  <h2>Ərazi</h2><div class="fg"><b class="num" data-r>2,87 ha</b><p data-r>Yasamalın mərkəzində altı bina, iki səviyyəli parkinq və bir qapalı həyət üçün ayrılmış məhəllə.</p></div></section>
+  <div class="subst w f0"><div data-r><b>1–4</b><span>otaqlı mənzillər</span></div><div data-r><b>${window.NC_FLOORS || 10}</b><span>yaşayış mərtəbəsi</span></div><div data-r><b>6</b><span>bina, iki mərhələ</span></div></div>`;
 const MAPQ = encodeURIComponent('Nizami City, Cəfər Cabbarlı 31, Bakı');
 const locBlock = (h = 'h2') => `<div class="loc"><div class="map" data-r><iframe title="Xəritə: Nizami City" loading="lazy" src="https://maps.google.com/maps?q=${MAPQ}&z=15&output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
   <div><${h} class="d h2">${lines(['Hər şey', 'yaxındadır'])}</${h}><p class="p" style="margin:-16px 0 36px" data-r>${esc(CO.addr)}</p>
@@ -1057,14 +1053,14 @@ pages.home = () => {
   return {
     title: 'Nizami City — Yasamalda qapalı həyətli yaşayış kompleksi', dark: true, html: `
   <section class="hero" id="hero"><div class="hero-m">${pic('front', 'Nizami City: küçə fasadı və həyətə giriş portalı', { eager: true })}</div><div class="hero-s t"></div><div class="hero-s"></div>
-    <div class="hero-c"><div class="hero-row"><div class="hero-l"><p class="lead hx">Yasamalda, Nizami metrosunun yanında: doqquz bina və avtomobilsiz qapalı həyət.</p>
+    <div class="hero-c"><div class="hero-row"><div class="hero-l"><p class="lead hx">Yasamalda, Nizami metrosunun yanında: altı bina və avtomobilsiz qapalı həyət.</p>
       <div class="hero-act hx"><a class="btn" href="#menziller">Mənzil seç ${AR}</a><a class="lk" href="#visit">Baxışa yazıl</a></div></div>
       <div class="hero-f hx"><b class="num">${fmt(CO.priceFrom)} ₼/m²-dən</b><span>${t ? '50% ilkin ödənişlə ' + t.m + ' ay faizsiz' : 'daxili kredit'}</span></div></div>
       <h1 class="d hero-t"><span class="ln"><span>Nizami</span></span><span class="ln"><span>City</span></span></h1></div></section>
-  <section class="sec w paper"><div class="intro"><h2 class="d h2">${lines(['Doqquz bina,', 'bir həyət'])}</h2>
+  <section class="sec w paper"><div class="intro"><h2 class="d h2">${lines(['Altı bina,', 'bir həyət'])}</h2>
     <div class="ph clip">${pic('tower_l', 'Nizami City: künc bina, kommersiya mərtəbəsi', { cls: 'par', sizes: '(max-width:860px) 80vw, 42vw' })}</div>
     <div class="tx"><p class="lead" data-r>Binalar məhəllənin perimetri boyunca düzülüb. Mərkəzdə avtomobil girməyən həyət qalır — maşınlar iki səviyyəli yeraltı parkinqdədir.</p><p class="p" data-r>${esc(CO.addr)}. Hazır binalarda açarı dərhal təhvil alırsınız, tikilən binalarda qiymət daha sərfəlidir.</p><div data-r><a class="lk" href="#binalar">Baş plana bax ${AR}</a></div></div>
-    <div class="facts"><div data-r><b class="num">9</b><span>bina</span></div><div data-r><b class="num">~750</b><span>mənzil</span></div><div data-r><b class="num">${free.length}</b><span>mənzil indi satışda</span></div><div data-r><b class="num">${CO.delivery}</b><span>tikilən binaların təhvili</span></div></div></div></section>
+    <div class="facts"><div data-r><b class="num">6</b><span>bina</span></div><div data-r><b class="num">${window.NC_FLOORS || 10}</b><span>mərtəbə</span></div><div data-r><b class="num">${free.length}</b><span>mənzil indi satışda</span></div><div data-r><b class="num">${CO.delivery}</b><span>tikilən binaların təhvili</span></div></div></div></section>
   ${sceneBlock()}
   <section class="sec w f1">${mpBlock()}</section>
   <section class="sec w paper">${selBlock()}</section>
@@ -1171,7 +1167,7 @@ pages.mekan = () => ({ title: 'Məkan — Nizami City', html: `${pHead('Məkan',
 pages.kommersiya = () => ({
   title: 'Kommersiya sahələri — Nizami City', html: `${pHead('Kommersiya', 'Binaların birinci mərtəbələrində qeyri-yaşayış sahələri: küçəyə açılan vitrinlər və kompleksin öz sakinləri.', false)}
   <section class="band">${pic('street', 'Nizami City: kommersiya mərtəbəsi və vitrinlər', { cls: 'par' })}</section>
-  <section class="sec w paper"><div class="split"><div><h2 class="d h2">${lines(['Biznesiniz', 'üçün yer'])}</h2>${INFRA.length ? '' : ''}<div class="kv" data-r>${[['Yerləşmə', 'Birinci mərtəbələr, küçə tərəfi'], ['Daimi müştəri bazası', '~750 mənzilin sakinləri'], ['Nəqliyyat', 'Nizami metrosunun piyada axını'], ['Uyğundur', 'Supermarket, aptek, kafe, salon, ofis']].map(([a, b]) => `<div><span>${a}</span><b>${b}</b></div>`).join('')}</div></div>
+  <section class="sec w paper"><div class="split"><div><h2 class="d h2">${lines(['Biznesiniz', 'üçün yer'])}</h2>${INFRA.length ? '' : ''}<div class="kv" data-r>${[['Yerləşmə', 'Birinci mərtəbələr, küçə tərəfi'], ['Daimi müştəri bazası', 'Kompleksin öz sakinləri'], ['Nəqliyyat', 'Nizami metrosunun piyada axını'], ['Uyğundur', 'Supermarket, aptek, kafe, salon, ofis']].map(([a, b]) => `<div><span>${a}</span><b>${b}</b></div>`).join('')}</div></div>
     <div><form class="frm" id="cf" novalidate><div class="fld"><label for="cfN">Adınız</label><input class="in" id="cfN" name="name" autocomplete="name"><div class="err" data-e="name"></div></div><div class="fld"><label for="cfP">Telefon</label><input class="in" id="cfP" name="phone" type="tel" inputmode="tel" autocomplete="tel"><div class="err" data-e="phone"></div></div><div class="fld"><label for="cfB">Biznes növü və lazım olan sahə</label><input class="in" id="cfB" name="msg" placeholder="Məsələn: kafe, 120 m²"></div><div><button class="btn">Sorğu göndər ${AR}</button></div></form></div></div></section>`,
   mount(root) { bindForm($('#cf', root), 'commercial', null, () => 'Kommersiya meneceri sizə zəng edəcək.'); }
 });

@@ -76,7 +76,7 @@ window.NC = (function () {
   const FAQ = [
     ['Mənzillər təmirlidir?', 'Hazır binalarda həm təmirli, həm təmirsiz mənzillər var. Tikilən binalarda mənzillər təmirsiz, sərbəst planla təhvil verilir.'],
     ['Hansı binalar hazırdır?', 'A, B və C binaları təhvil verilib. E, F və G binalarının təhvili ' + CO.delivery + '-ci ilə planlaşdırılır.'],
-    ['Hansı ödəniş variantları var?', 'Nağd ödəniş, daxili kredit (6 ay faizsiz, 12–36 ay) və ya ipoteka. Saytdakı kalkulyatorda öz variantınızı hesablayın.'],
+    ['Hansı ödəniş variantları var?', 'Nağd ödəniş, daxili kredit (6 ay faizsiz, 12 və 24 ay) və ya ipoteka. Saytdakı kalkulyatorda öz variantınızı hesablayın.'],
     ['Kvadratmetr qiyməti nə qədərdir?', 'Qiymətlər ' + CO.priceFrom.toLocaleString('ru').replace(/,/g,' ') + ' ₼/m²-dən başlayır: tikilən binalarda ' + P_KOT + ', hazır binalarda təmirsiz ' + P_TS + ', təmirli ' + P_TL + ' ₼/m².'],
     ['Parkinq var?', 'Bəli, kompleksdə 2 səviyyəli yeraltı parkinq var.'],
     ['Kommersiya sahələri satılır?', 'Bəli, binaların birinci mərtəbələrində qeyri-yaşayış sahələri satışdadır. Kommersiya bölməsindən sorğu göndərin.'],
@@ -86,7 +86,6 @@ window.NC = (function () {
   const TIMELINE = [
     ['Mərhələ I', 'A, B, C binaları', 'Tikinti tamamlanıb, mənzillər sakinlərə təhvil verilib.', 'ok'],
     ['Mərhələ II', 'E, F, G binaları', 'Tikinti davam edir. Təhvil ' + CO.delivery + '-ci ilə planlaşdırılır.', 'w'],
-    ['Mərhələ III', 'D, H, I binaları', 'Növbəti mərhələ. Tarixlər satış ofisi tərəfindən elan olunacaq.', 'n'],
   ];
   const GAL = [
     { src: 'aerial', c: 'Vizuallar', t: 'Hazır binalar — 3D quşbaxışı vizual, mərkəzdə qapalı həyət' },
@@ -103,7 +102,7 @@ window.NC = (function () {
     { id: 'kredit-ipoteka-nagd', c: 'Maliyyə', d: '2026-10-14', m: 7, img: 'tower_r', t: 'Nağd, daxili kredit, yoxsa ipoteka?', x: 'Eyni mənzili üç fərqli yolla almaq — hər birinin real xərci və kimə uyğun olduğu.',
       b: `<p>Mənzil alarkən ən böyük sual çox vaxt «hansı mənzil?» yox, «necə ödəyim?» olur. Eyni mənzilin son xərci seçilən ödəniş yolundan asılı olaraq ciddi fərqlənə bilər.</p>
 <h2>Nağd ödəniş</h2><p>Ən sadə yoldur: müqavilə bağlanır, məbləğ ödənilir, əlavə xərc yoxdur. Nağd alışda satış ofisi ilə qiymət barədə danışmaq imkanı da adətən daha genişdir.</p>
-<h2>Daxili kredit</h2><p>Nizami City-də məbləğin 50%-ni ilkin ödəyib, qalan hissəni 36 ayadək hissə-hissə ödəmək mümkündür. Bu yol banka müraciət etmədən, birbaşa tikinti şirkəti ilə razılaşma əsasında işləyir. Aylıq ödəniş müddət qısa olduğu üçün yüksək olur, amma ümumi xərc proqnozlaşdırılandır.</p>
+<h2>Daxili kredit</h2><p>Nizami City-də məbləğin 50%-ni ilkin ödəyib, qalan hissəni 24 ayadək hissə-hissə ödəmək mümkündür. Bu yol banka müraciət etmədən, birbaşa tikinti şirkəti ilə razılaşma əsasında işləyir. Aylıq ödəniş müddət qısa olduğu üçün yüksək olur, amma ümumi xərc proqnozlaşdırılandır.</p>
 <blockquote>Qayda: aylıq ödəniş ailə gəlirinin 40%-dən çox olmamalıdır.</blockquote>
 <h2>İpoteka</h2><p>Uzunmüddətli bank krediti aylıq ödənişi azaldır, lakin faiz hesabına ümumi xərci artırır. İpoteka şərtləri bankdan və proqramdan asılıdır, ona görə müraciətdən əvvəl bir neçə bankın təklifini müqayisə edin.</p>
 <h2>Necə qərar verməli?</h2><ol><li>Əlinizdə olan vəsaiti və aylıq ödəyə biləcəyiniz məbləği yazın.</li><li>Saytdakı kalkulyatorda üç variantı eyni mənzil üçün müqayisə edin.</li><li>Son qərardan əvvəl satış ofisində aktual şərtləri dəqiqləşdirin.</li></ol>` },
