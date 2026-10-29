@@ -90,7 +90,7 @@
       ib.textContent = '🖼 Şəkli dəyiş';
       if (r.error) return alert('Yükləmə xətası: ' + r.error.message);
       var url = sb.storage.from('nc-site').getPublicUrl(path).data.publicUrl;
-      var old = IMG[key]; document.querySelectorAll('img').forEach(function (im) { if (im.getAttribute('src') === old) im.src = url; });
+      var old = IMG[key]; document.querySelectorAll('img').forEach(function (im) { if (im.getAttribute('src') === old) { im.removeAttribute('srcset'); im.src = url; } });
       IMG[key] = url; PEND.img[key] = url; upd();
     };
     f.click();

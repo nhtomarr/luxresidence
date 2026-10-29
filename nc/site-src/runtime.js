@@ -39,7 +39,7 @@
 
   function maint(S) {
     var m = S.maintText || 'Sayt yenilənir. Tezliklə qayıdacağıq.';
-    document.body.innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#070c18;color:#fff;font:16px Inter,system-ui,sans-serif;text-align:center;padding:24px"><div style="display:grid;gap:18px;justify-items:center;max-width:460px"><img src="' + (window.IMG && IMG.logo || '') + '" style="width:72px;height:72px;border-radius:50%" alt=""><h1 style="margin:0;font-weight:600;font-size:28px">Nizami City</h1><p style="margin:0;opacity:.75;line-height:1.6"></p><a href="tel:*0788" style="color:#c9a86a;text-decoration:none;font-weight:600">*0788</a></div></div>';
+    document.body.innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#141712;color:#ece4d2;font:17px \'NC Text\',system-ui,sans-serif;text-align:center;padding:24px"><div style="display:grid;gap:18px;justify-items:center;max-width:460px"><img src="' + (window.IMG && IMG.logo || '') + '" style="width:84px;height:auto" alt=""><h1 style="margin:0;font:400 64px/1 \'NC Display\',serif;text-transform:uppercase">Nizami City</h1><p style="margin:0;opacity:.75;line-height:1.6"></p><a href="tel:*0788" style="color:#c6a66b;text-decoration:none;font-weight:600">*0788</a></div></div>';
     document.querySelector('p').textContent = m;
   }
 

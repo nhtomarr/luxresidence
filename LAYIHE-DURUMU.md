@@ -328,7 +328,7 @@ Nümunə məlumat (demo=true): Bina 4/5, 10 material, 3 təchizatçı, 12 smeta 
 - 28 okt (ofis-v121) DÜZƏLİŞ: bildiriş ekranı boş göy ekran kimi görünürdü — '.pg' sinfi tətbiqin səhifə yığını sinfi ilə toqquşurdu (position:fixed; translateX(100%) → məzmun ekrandan kənarda). Hero/gate/bilbord sinifləri 'nc-' prefiksi ilə ayrıldı. DƏRS: ofis-b.js-ə yeni UI əlavə edəndə qısa ümumi sinif adları (pg, ok, out, go, in, done...) işlətmə — həmişə unikal prefiks; test harness-ə real assets/ofis-app.css qoş.
 
 ## NIZAMI CITY DAXİLİ SİSTEMLƏRİ (28 oktyabr 2026)
-- Yer: `nc/` qovluğu → luxresidence.az/nc/{satis,kalkulyator,muqavile,komendant}. nizami-city.az qoşulanda middleware (`nizamiHost`) /satis, /kalkulyator, /muqavile, /komendant yollarını `nc/`-ə yönləndirir; kök → /satis (ictimai sayt hələ artifaktdadır).
+- Yer: `nc/` qovluğu → luxresidence.az/nc/{satis,kalkulyator,muqavile,komendant}. nizami-city.az qoşulanda middleware (`nizamiHost`) /satis, /kalkulyator, /muqavile, /komendant yollarını `nc/`-ə yönləndirir; kök `/` → ictimai sayt (`nc/site.html`), `/sayt` → sayt idarə paneli.
 - Dizayn: Nizami (göy #070c18 / laym #c2cd3f), ortaq `nc/nc.css` + `nc/nc.js` (NC.auth = luxAuth üstündən, NC.kv, NC.modal, NC.toast). Loqo/ikonlar `assets/nc/`.
 - Mənzil bazası: City Life MMC şahmatkası (07.10.2026 docx) → `lux_kv.nc_sales` (8 blok: A·1, A·2, B, E·1, E·2, F, G·1, G·2; mərtəbə "10"=Mansard, "1.5"=1-ci mərtəbə II səviyyə). Mənzildə `c` = vəziyyət (Təmirli/White Box/Kirayə). 415 mənzil. C, D, H binaları cədvəldə yox idi.
 - Kalkulyator: `lux_kv.nc_cfg` (açıq oxunur; yazma nc_calc_admin). Qiymətlər (29.10): kotlovan 3800, hazır təmirsiz 3900–4000, hazır təmirli 4200; slayder 3800-dən; müddət LUX kimi 6:0, 12:+200, 24:+400, 36:+600. `presets` düymələri; lövhədən mənzil seçəndə vəziyyətə görə (Təmirli → 4200, digər → 3900). Domen: nizami-city.az (Cloudflare zona + Pages custom domain, 29.10). Hesab: admin@nizami-city.az (bütün nc_* icazələri).
@@ -350,3 +350,10 @@ Nümunə məlumat (demo=true): Bina 4/5, 10 material, 3 təchizatçı, 12 smeta 
 - Cədvəllər: office_pay_base, office_pay_period, office_payroll, bio_devices, bio_users, bio_cmds, bio_logs. RPC: pay_make, pay_block, pay_manual, pay_scans, bio_push_user, bio_sync_all, bio_enroll, bio_block, bio_status. İcazə: office_pay_ok() = ofis_maas | ofis_owner | sys | dev | ofis_hr.
 - UI (ofis-b.js sonu): «💰 Maaş verilişi» — İşçilər səhifəsində; ofis_maas olan (rəhbər olmayan) ana ekranda. ?maas=1 → kassir ekranı. Tablar: Siyahı / Kassir ekranı / Sabit maaşlar / Barmaq izi cihazı.
 - bio_devices-də 'ZZTEST' test sətri qalıb (allowed=false) — silmək olar.
+
+### Nizami City ictimai sayt (nizami-city.az, v2 — 29.10)
+- Mənbə: `nc/site-src/` → `python3 nc/site-src/build.py` → `nc/site.html` (+ `nc/site-defaults.json` panel üçün). Dizayn faylları `nc/site-src/v2/` (app.js, app.css, maquette.js, index.tpl.html); məlumat `data.js`, canlı yükləyici `runtime.js`.
+- Üslub: tünd zeytun + krem (loqo rəngləri), mis yalnız əsas düymədə. Şriftlər öz serverimizdə: `assets/nc/fonts/` (NC Display = Imbue, NC Text = Albert Sans; ə/Ə dəstəklənir; ₼ display şriftindən gəlir).
+- Şəkillər `assets/nc/site/*-2560.webp` və `*-1280.webp` (srcset). `aerial` = hazır binaların fonsuz 3D vizualı. Paneldən dəyişəndə `lux_kv.nc_site.img` URL-i istifadə olunur.
+- Hərəkət: GSAP 3.12.5 + ScrollTrigger, Lenis 1.1.13 (cdnjs/jsdelivr), three r128 — 3D baş plan maketi (`ncMaquette`) və imza səhnəsi (hazır binalar scroll ilə açılır). prefers-reduced-motion nəzərə alınır.
+- Mənzillər real `nc_public_units()`-dən; qiymət nc_cfg presetlərindən; sorğular `nc_leads`.

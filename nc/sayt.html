@@ -83,8 +83,8 @@
  </section>
 </main>
 <script>
-var SITE={},BLOG=null,DEF={},LEADS=[],TAB='leads',IMGK=[['front','Ana səhifə — küçə fasadı'],['aerial','Hazır binalar — 3D quşbaxışı'],['aerial_c','Binalar və giriş portalı'],['entrance','Həyətə giriş'],['corner','Künc görünüşü'],['tower_l','Künc bina'],['tower_r','Küçə tərəfi'],['street','Uzun fasad']];
-var TABS=[['leads','Sorğular'],['blog','Bloq'],['co','Məlumatlar'],['faq','Suallar'],['timeline','Mərhələlər'],['infra','İnfrastruktur'],['gal','Qalereya'],['img','Şəkillər'],['set','Bölmələr və ayarlar']];
+var SITE={},BLOG=null,DEF={},LEADS=[],TAB='leads',IMGK=[['front','Ana səhifə — əsas kadr (fasad)'],['tower_l','«Doqquz bina, bir həyət» — şaquli foto'],['aerial','Hazır binalar — 3D vizual (fonsuz PNG/WebP)'],['aerial_c','Qapalı həyət'],['street','Kommersiya qalereyası'],['tower_r','Fasad'],['entrance','Parkinq və təhlükəsizlik'],['corner','Ərazi (2,87 ha) — tam ekran foto']];
+var TABS=[['leads','Sorğular'],['blog','Bloq'],['co','Məlumatlar'],['faq','Suallar'],['timeline','Mərhələlər'],['img','Şəkillər'],['set','Bölmələr və ayarlar']];
 var SITEURL=/nizami-?city\.az$/.test(location.hostname)?'/':'/nc/site.html';
 var LST={new:'Yeni',contacted:'Əlaqə saxlanılıb',done:'Bağlanıb',spam:'Spam'};
 var KIND={viewing:'Baxış',commercial:'Kommersiya',contact:'Əlaqə',callback:'Zəng sifarişi',unit:'Mənzil sorğusu'};
@@ -191,7 +191,7 @@ function drawBld(){var ov={};(SITE.bld||[]).forEach(function(o){ov[o.id]=o.st;})
 
 /* ---------- şəkillər ---------- */
 function drawImgs(){var I=SITE.img||{};
- NC.$('imgG').innerHTML=IMGK.map(function(k){var u=I[k[0]];return '<figure>'+(u?'<img src="'+E(u)+'" alt="">':'<div class="ph">İlkin şəkil</div>')+'<figcaption><b>'+k[1]+'</b><div style="display:flex;gap:6px"><button class="nc-b sm" onclick="setImg(\''+k[0]+'\')">Dəyiş</button>'+(u?'<button class="nc-b sm bad" onclick="rmImg(\''+k[0]+'\')">İlkinə qaytar</button>':'')+'</div></figcaption></figure>';}).join('');}
+ NC.$('imgG').innerHTML=IMGK.map(function(k){var u=I[k[0]];return '<figure>'+'<img src="'+E(u||('/assets/nc/site/'+k[0]+(k[0]==='aerial'?'-1280':'-1280')+'.webp'))+'" alt="">'+'<figcaption><b>'+k[1]+'</b><div style="display:flex;gap:6px"><button class="nc-b sm" onclick="setImg(\''+k[0]+'\')">Dəyiş</button>'+(u?'<button class="nc-b sm bad" onclick="rmImg(\''+k[0]+'\')">İlkinə qaytar</button>':'')+'</div></figcaption></figure>';}).join('');}
 function setImg(k){upload('img',function(u){put(function(V){V.img=V.img||{};V.img[k]=u;});});}
 function rmImg(k){put(function(V){if(V.img)delete V.img[k];});}
 
