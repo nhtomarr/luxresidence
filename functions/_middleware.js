@@ -49,7 +49,7 @@ class Title { constructor(v) { this.v = v; } element(el) { el.setInnerContent(th
 class Append { constructor(h) { this.h = h; } element(el) { el.append(this.h, { html: true }); } }
 const LEAD = { 1: 'geniş planlı 3 və 4 otaqlı mənzillər', 3: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 4: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 5: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 6: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 10: '1 və 3 otaqlı mənzillər', 11: '1 və 3 otaqlı mənzillər' };
 const NC_HOSTS = new Set(['nizami-city.az', 'www.nizami-city.az', 'nizamicity.az', 'www.nizamicity.az']);
-const NC_APPS = new Set(['satis', 'kalkulyator', 'muqavile', 'komendant']);
+const NC_APPS = new Set(['satis', 'kalkulyator', 'muqavile', 'komendant', 'sayt']);
 async function nizamiHost(ctx, url) {
   const p = url.pathname.replace(/\.html$/, '').replace(/\/$/, '');
   const noindex = (r) => { const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); };
@@ -58,8 +58,10 @@ async function nizamiHost(ctx, url) {
   if (NC_APPS.has(app)) return noindex(await ctx.env.ASSETS.fetch(new Request(new URL('/nc/' + app, url).toString(), ctx.request)));
   if (p.startsWith('/nc/') || p.startsWith('/assets/') || p === '/auth-ok') return ctx.next();
   if (p === '/favicon.ico' || p === '/apple-touch-icon.png') return ctx.env.ASSETS.fetch(new Request(new URL('/assets/nc/apple-touch.png', url).toString()));
-  if (p === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'Content-Type': 'text/plain' } });
-  return Response.redirect(url.origin + '/satis', 302);
+  if (p === '/robots.txt') return new Response('User-agent: *\nAllow: /$\nDisallow: /nc/\nDisallow: /satis\nDisallow: /kalkulyator\nDisallow: /muqavile\nDisallow: /komendant\nDisallow: /sayt\nSitemap: https://nizami-city.az/sitemap.xml\n', { headers: { 'Content-Type': 'text/plain' } });
+  if (p === '/sitemap.xml') return new Response('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://nizami-city.az/</loc><changefreq>daily</changefreq></url></urlset>', { headers: { 'Content-Type': 'application/xml' } });
+  if (p === '' || p === '/index') { const r = await ctx.env.ASSETS.fetch(new Request(new URL('/nc/site', url).toString(), ctx.request)); const h = new Headers(r.headers); h.set('Cache-Control', 'public, max-age=300'); h.delete('X-Robots-Tag'); return new Response(r.body, { status: r.status, headers: h }); }
+  return Response.redirect(url.origin + '/', 302);
 }
 export async function onRequest(ctx) {
   const url = new URL(ctx.request.url);

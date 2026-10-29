@@ -1,0 +1,213 @@
+<!doctype html><html lang="az"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><title>Sayt idarəsi — Nizami City</title>
+<meta name="theme-color" content="#070c18"><link rel="icon" href="/assets/nc/logo.png"><link rel="apple-touch-icon" href="/assets/nc/apple-touch.png">
+<link rel="preconnect" href="https://avqchschbbltnnasabdm.supabase.co" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nc/nc.css?v=2">
+<style>
+.py-tabs{margin:4px 0 16px}
+.py-pane{display:none}.py-pane.on{display:block}
+.py-sw{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.py-sw:last-child{border-bottom:0}
+.py-sw b{display:block;font-size:14.5px}.py-sw span{font-size:12.5px;color:var(--mut)}
+.py-tg{position:relative;flex:none;width:48px;height:28px;border-radius:99px;background:var(--rule2);border:0;cursor:pointer;transition:background .2s}
+.py-tg:after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s}
+.py-tg.on{background:var(--lime)}.py-tg.on:after{transform:translateX(20px)}
+.py-rows{display:grid;gap:10px}
+.py-row{display:grid;gap:8px;background:var(--bg2);border:1px solid var(--rule);border-radius:16px;padding:12px}
+.py-row .py-rh{display:flex;gap:6px;align-items:center}
+.py-row .py-rh b{font-size:12px;color:var(--mut);margin-right:auto}
+.py-ib{width:32px;height:32px;border-radius:10px;border:1px solid var(--rule2);background:transparent;color:inherit;cursor:pointer;font-size:14px}
+.py-save{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom));display:flex;justify-content:flex-end;gap:8px;margin-top:14px;z-index:5}
+@media(min-width:761px){.py-save{bottom:16px}}
+.py-lead td small{display:block;color:var(--mut);font-size:12px}
+.py-st{height:32px;border-radius:99px;border:1px solid var(--rule2);background:var(--bg2);padding:0 10px;font-size:13px}
+.py-st.new{border-color:var(--lime);color:var(--lime)}
+.py-post{display:grid;grid-template-columns:96px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--rule)}
+.py-post img,.py-post .ph{width:96px;height:64px;border-radius:12px;object-fit:cover;background:var(--bg2)}
+.py-post b{display:block;font-size:15px}.py-post span{font-size:12.5px;color:var(--mut)}
+.py-ed{min-height:260px;max-height:55vh;overflow:auto;background:var(--bg2);border:1px solid var(--rule2);border-radius:12px;padding:12px 14px;outline:none;line-height:1.6}
+.py-ed h2{font-size:19px;margin:14px 0 6px}.py-ed blockquote{border-left:3px solid var(--lime);margin:10px 0;padding:4px 12px;color:var(--ink2)}
+.py-tb{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.py-imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.py-imgs figure{margin:0;background:var(--bg2);border:1px solid var(--rule);border-radius:16px;overflow:hidden}
+.py-imgs figure .ph,.py-imgs img{display:grid;place-items:center;width:100%;height:120px;object-fit:cover;color:var(--mut);font-size:12.5px}
+.py-imgs figcaption{padding:10px 12px;display:grid;gap:8px;font-size:13px}
+.py-ov{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid var(--rule);font-size:13.5px}
+.py-ov s{color:var(--mut)}
+@media(max-width:640px){.py-post{grid-template-columns:64px 1fr}.py-post img,.py-post .ph{width:64px;height:48px}.py-post .act{grid-column:1/-1}.py-ov{grid-template-columns:1fr}}
+</style>
+<script src="/assets/lux-auth.js?v=1790690641"></script>
+<script src="/nc/nc.js?v=2"></script>
+</head><body>
+<main class="nc-wrap" id="app" hidden>
+ <div class="nc-title"><div><h1>Sayt <em>idarəsi</em></h1><p>nizami-city.az · bütün dəyişikliklər saytda dərhal görünür</p></div>
+  <div class="act"><a class="nc-b sm" id="viewBtn" target="_blank" rel="noopener">Sayta bax ↗</a><a class="nc-b sm pri" id="editBtn" target="_blank" rel="noopener">✏️ Saytda redaktə et</a></div></div>
+ <div class="nc-seg py-tabs" id="tabs"></div>
+
+ <section class="py-pane" data-p="leads">
+  <div class="nc-kpis" id="lKpi" style="margin-bottom:14px"></div>
+  <div class="sb-ctl" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px"><select class="nc-sel" id="lSt" style="width:auto"><option value="">Bütün statuslar</option><option value="new">Yeni</option><option value="contacted">Əlaqə saxlanılıb</option><option value="done">Bağlanıb</option><option value="spam">Spam</option></select><input class="nc-in" id="lQ" placeholder="Ad, telefon, mənzil…" style="flex:1;min-width:180px"><button class="nc-b sm" onclick="leadsX()">Excel</button></div>
+  <div class="nc-tw"><table class="nc-tbl py-lead"><thead><tr><th>Tarix</th><th>Növ</th><th>Ad / telefon</th><th>Mənzil / vaxt</th><th>Mesaj</th><th>Status</th></tr></thead><tbody id="lBody"></tbody></table></div>
+ </section>
+
+ <section class="py-pane" data-p="blog">
+  <div class="nc-card"><div style="display:flex;gap:10px;align-items:center;margin-bottom:6px"><h3 style="margin:0">Bloq yazıları</h3><button class="nc-b sm pri" style="margin-left:auto" onclick="postEd(-1)">+ Yeni yazı</button></div><div id="bList"></div></div>
+ </section>
+
+ <section class="py-pane" data-p="co">
+  <div class="nc-card"><h3>Əlaqə və əsas məlumatlar</h3><div class="nc-row" id="coF"></div></div>
+  <div class="nc-card" style="margin-top:14px"><h3>Elan zolağı (saytın aşağısında)</h3>
+   <div class="py-sw"><div><b>Elanı göstər</b><span>Məs. «Noyabr kampaniyası: 6 ay faizsiz»</span></div><button class="py-tg" id="bnOn"></button></div>
+   <div class="nc-row"><div class="nc-f"><label>Mətn</label><input class="nc-in" id="bnT"></div><div class="nc-f"><label>Düymə mətni</label><input class="nc-in" id="bnB" placeholder="Ətraflı"></div><div class="nc-f"><label>Link</label><input class="nc-in" id="bnU" placeholder="#kalkulyator və ya https://…"></div></div></div>
+  <div class="py-save"><button class="nc-b pri" onclick="saveCo()">Yadda saxla</button></div>
+ </section>
+
+ <section class="py-pane" data-p="faq"><div class="nc-card"><h3>Tez-tez verilən suallar</h3><div class="py-rows" id="faqR"></div><button class="nc-b sm" style="margin-top:10px" onclick="addRow('faq')">+ Sual</button></div><div class="py-save"><button class="nc-b sm" onclick="resetList('faq')">Defolta qaytar</button><button class="nc-b pri" onclick="saveList('faq')">Yadda saxla</button></div></section>
+ <section class="py-pane" data-p="timeline"><div class="nc-card"><h3>Mərhələlər (Layihə səhifəsi)</h3><div class="py-rows" id="timelineR"></div><button class="nc-b sm" style="margin-top:10px" onclick="addRow('timeline')">+ Mərhələ</button></div>
+  <div class="nc-card" style="margin-top:14px"><h3>Binaların statusu (3D model və kataloq)</h3><div class="nc-row" id="bldF"></div></div>
+  <div class="py-save"><button class="nc-b sm" onclick="resetList('timeline')">Defolta qaytar</button><button class="nc-b pri" onclick="saveList('timeline')">Yadda saxla</button></div></section>
+ <section class="py-pane" data-p="infra"><div class="nc-card"><h3>İnfrastruktur</h3><div class="py-rows" id="infraR"></div><button class="nc-b sm" style="margin-top:10px" onclick="addRow('infra')">+ Bənd</button></div><div class="py-save"><button class="nc-b sm" onclick="resetList('infra')">Defolta qaytar</button><button class="nc-b pri" onclick="saveList('infra')">Yadda saxla</button></div></section>
+ <section class="py-pane" data-p="gal"><div class="nc-card"><h3>Qalereya</h3><div class="py-rows" id="galR"></div><button class="nc-b sm" style="margin-top:10px" onclick="addRow('gal')">+ Şəkil</button></div><div class="py-save"><button class="nc-b sm" onclick="resetList('gal')">Defolta qaytar</button><button class="nc-b pri" onclick="saveList('gal')">Yadda saxla</button></div></section>
+
+ <section class="py-pane" data-p="img"><div class="nc-card"><h3>Saytın əsas şəkilləri</h3><p class="mut" style="margin:-4px 0 14px;font-size:13px">Ana səhifə, qalereya və bloqda istifadə olunan şəkillər. Yenisini yükləyəndə saytda hər yerdə əvəz olunur.</p><div class="py-imgs" id="imgG"></div></div></section>
+
+ <section class="py-pane" data-p="set">
+  <div class="nc-card"><h3>Bölmələr — yandır / söndür</h3><div id="pgF"></div></div>
+  <div class="nc-card" style="margin-top:14px"><h3>Texniki rejim</h3>
+   <div class="py-sw"><div><b>Saytı bağla (texniki işlər)</b><span>Ziyarətçilər yalnız mesaj görür. Redaktə rejimi işləyir.</span></div><button class="py-tg" id="mtOn"></button></div>
+   <div class="nc-f"><label>Mesaj</label><input class="nc-in" id="mtT" placeholder="Sayt yenilənir. Tezliklə qayıdacağıq."></div></div>
+  <div class="nc-card" style="margin-top:14px"><h3>Saytda edilmiş redaktələr</h3><div id="ovL"></div></div>
+  <div class="py-save"><button class="nc-b pri" onclick="saveSet()">Yadda saxla</button></div>
+ </section>
+</main>
+<script>
+var SITE={},BLOG=null,DEF={},LEADS=[],TAB='leads',IMGK=[['front','Ana səhifə — küçə fasadı'],['aerial','Quşbaxışı'],['entrance','Həyətə giriş'],['tower_r','Fasad detalı'],['tower_l','Künc bina'],['aerial_c','Binalar və həyət']];
+var TABS=[['leads','Sorğular'],['blog','Bloq'],['co','Məlumatlar'],['faq','Suallar'],['timeline','Mərhələlər'],['infra','İnfrastruktur'],['gal','Qalereya'],['img','Şəkillər'],['set','Bölmələr və ayarlar']];
+var SITEURL=/nizami-?city\.az$/.test(location.hostname)?'/':'/nc/site.html';
+var LST={new:'Yeni',contacted:'Əlaqə saxlanılıb',done:'Bağlanıb',spam:'Spam'};
+var KIND={viewing:'Baxış',commercial:'Kommersiya',contact:'Əlaqə',callback:'Zəng sifarişi',unit:'Mənzil sorğusu'};
+function kindT(k){k=String(k||'');if(k.indexOf('waitlist-')===0)return 'Gözləmə · Bina '+k.slice(9);return KIND[k]||k;}
+function E(s){return NC.esc(s==null?'':String(s));}
+
+function start(){NC.$('viewBtn').href=SITEURL;NC.$('editBtn').href=SITEURL+'?edit=1';
+ NC.$('tabs').innerHTML=TABS.map(function(t){return '<button data-t="'+t[0]+'">'+t[1]+'<small id="tc_'+t[0]+'"></small></button>';}).join('');
+ NC.$('tabs').querySelectorAll('button').forEach(function(b){b.onclick=function(){tab(b.dataset.t);};});
+ var q=new URLSearchParams(location.search).get('t');
+ Promise.all([NC.kv('nc_site'),NC.kv('nc_blog'),fetch('/nc/site-defaults.json?v='+Date.now()).then(function(r){return r.json();}).catch(function(){return {};})]).then(function(r){
+  SITE=(r[0]&&r[0].value)||{};BLOG=r[1]&&r[1].value;DEF=r[2]||{};NC.$('app').hidden=false;
+  tab(q||(NC.can('nc_site')?'leads':'leads'));loadLeads();drawAll();
+ }).catch(function(e){NC.toast('Yüklənmədi: '+e.message);});
+}
+function tab(t){TAB=t;document.querySelectorAll('.py-pane').forEach(function(p){p.classList.toggle('on',p.dataset.p===t);});NC.$('tabs').querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t);});}
+function drawAll(){drawBlog();drawCo();['faq','timeline','infra','gal'].forEach(drawList);drawBld();drawImgs();drawSet();}
+async function fresh(){var r=await NC.kv('nc_site');return (r&&r.value)||{};}
+async function put(fn){try{var V=await fresh();fn(V);await NC.kvSave('nc_site',V);SITE=V;NC.toast('Yadda saxlanıldı ✓');drawAll();}catch(e){NC.toast('Xəta: '+e.message);}}
+
+/* ---------- sorğular ---------- */
+function loadLeads(){NC.sb.from('nc_leads').select('*').order('id',{ascending:false}).limit(500).then(function(r){if(r.error){NC.toast(r.error.message);return;}LEADS=r.data||[];drawLeads();});}
+function drawLeads(){var st=NC.$('lSt').value,q=NC.$('lQ').value.trim().toLowerCase();
+ var L=LEADS.filter(function(x){return (!st||x.status===st)&&(!q||[x.name,x.phone,x.unit,x.msg,x.email].join(' ').toLowerCase().indexOf(q)>=0);});
+ var n=LEADS.filter(function(x){return x.status==='new';}).length;NC.$('tc_leads').textContent=n?n:'';
+ var wk=Date.now()-7*864e5;
+ NC.$('lKpi').innerHTML='<div class="nc-kpi"><b style="color:var(--lime)">'+n+'</b><span>yeni</span></div><div class="nc-kpi"><b>'+LEADS.filter(function(x){return new Date(x.created_at)>wk;}).length+'</b><span>son 7 gün</span></div><div class="nc-kpi"><b>'+LEADS.length+'</b><span>cəmi</span></div>';
+ NC.$('lBody').innerHTML=L.map(function(x){var d=new Date(x.created_at);
+  return '<tr><td class="num">'+d.toLocaleDateString('az-AZ')+'<small>'+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'})+'</small></td><td>'+E(kindT(x.kind))+'</td><td><b>'+E(x.name)+'</b><small><a href="tel:'+E(String(x.phone||'').replace(/[^\d+]/g,''))+'">'+E(x.phone)+'</a>'+(x.email?' · '+E(x.email):'')+'</small></td><td>'+E(x.unit||'')+'<small>'+E(x.slot||'')+'</small></td><td style="max-width:280px">'+E(x.msg||'')+(x.data&&Object.keys(x.data).filter(function(k){return k!=='page';}).length?'<small>'+E(Object.keys(x.data).filter(function(k){return k!=='page';}).map(function(k){return k+': '+x.data[k];}).join(' · '))+'</small>':'')+'</td><td><select class="py-st '+x.status+'" data-id="'+x.id+'">'+Object.keys(LST).map(function(k){return '<option value="'+k+'"'+(k===x.status?' selected':'')+'>'+LST[k]+'</option>';}).join('')+'</select></td></tr>';}).join('')||'<tr><td colspan="6" class="nc-empty">Sorğu yoxdur</td></tr>';
+ NC.$('lBody').querySelectorAll('.py-st').forEach(function(s){s.onchange=function(){var id=+s.dataset.id;NC.sb.from('nc_leads').update({status:s.value,handled_by:NC.me&&NC.me.id,updated_at:new Date().toISOString()}).eq('id',id).then(function(r){if(r.error)return NC.toast(r.error.message);var x=LEADS.find(function(l){return l.id===id;});if(x)x.status=s.value;drawLeads();});};});
+}
+NC.$('lSt').onchange=drawLeads;NC.$('lQ').oninput=drawLeads;
+function leadsX(){NC.xlsx(function(){var a=[['Tarix','Növ','Ad','Telefon','Email','Mənzil','Vaxt','Mesaj','Status']].concat(LEADS.map(function(x){return [new Date(x.created_at).toLocaleString('az-AZ'),kindT(x.kind),x.name,x.phone,x.email||'',x.unit||'',x.slot||'',x.msg||'',LST[x.status]||x.status];}));var ws=XLSX.utils.aoa_to_sheet(a),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Sorğular');XLSX.writeFile(wb,'Nizami-City-sorgular-'+NC.today()+'.xlsx');});}
+
+/* ---------- şəkil yükləmə ---------- */
+function shrink(file,max){return new Promise(function(res){var im=new Image();im.onload=function(){var s=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);c.toBlob(function(b){res(b||file);},'image/jpeg',.85);};im.onerror=function(){res(file);};im.src=URL.createObjectURL(file);});}
+function upload(dir,cb){var f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async function(){var file=f.files[0];if(!file)return;if(file.size>12e6)return NC.toast('Şəkil 12 MB-dan böyük olmamalıdır');NC.toast('Yüklənir…');var b=await shrink(file,2000),p=dir+'/'+Date.now()+'-'+Math.random().toString(36).slice(2,7)+'.jpg';var r=await NC.sb.storage.from('nc-site').upload(p,b,{contentType:'image/jpeg'});if(r.error)return NC.toast('Xəta: '+r.error.message);cb(NC.sb.storage.from('nc-site').getPublicUrl(p).data.publicUrl);NC.toast('Yükləndi ✓');};f.click();}
+function imgSrc(v){return /^https?:/.test(v||'')?v:'';}
+
+/* ---------- bloq ---------- */
+function posts(){return Array.isArray(BLOG)?BLOG:(DEF.blog||[]);}
+function drawBlog(){var P=posts();NC.$('tc_blog').textContent=P.length;
+ NC.$('bList').innerHTML=(Array.isArray(BLOG)?'':'<p class="mut" style="font-size:13px">Hazırda saytda ilkin (defolt) yazılar göstərilir. İlk dəyişiklikdən sonra siyahı sizin idarənizə keçir.</p>')+P.map(function(p,i){var s=imgSrc(p.img);return '<div class="py-post">'+(s?'<img src="'+E(s)+'" alt="">':'<div class="ph"></div>')+'<div><b>'+E(p.t)+(p.pub===false?' <span class="nc-pill">Qaralama</span>':'')+'</b><span>'+E(p.c)+' · '+E(p.d)+' · '+E(p.m||'')+' dəq</span></div><div class="act" style="display:flex;gap:6px"><button class="py-ib" title="Yuxarı" onclick="mvPost('+i+',-1)">↑</button><button class="py-ib" title="Aşağı" onclick="mvPost('+i+',1)">↓</button><button class="nc-b sm" onclick="postEd('+i+')">Redaktə</button><button class="nc-b sm bad" onclick="delPost('+i+')">Sil</button></div></div>';}).join('')||'<div class="nc-empty">Yazı yoxdur</div>';}
+async function saveBlog(L){try{await NC.kvSave('nc_blog',L);BLOG=L;drawBlog();NC.toast('Bloq yadda saxlanıldı ✓');return true;}catch(e){NC.toast('Xəta: '+e.message);return false;}}
+function mvPost(i,d){var L=posts().slice(),j=i+d;if(j<0||j>=L.length)return;var t=L[i];L[i]=L[j];L[j]=t;saveBlog(L);}
+function delPost(i){var L=posts().slice();if(!confirm('«'+L[i].t+'» silinsin?'))return;L.splice(i,1);saveBlog(L);}
+function slug(t){var m={'ə':'e','ı':'i','ö':'o','ü':'u','ş':'s','ç':'c','ğ':'g','İ':'i'};return String(t).toLowerCase().replace(/[əıöüşçğİ]/g,function(c){return m[c]||c;}).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60)||('yazi-'+Date.now());}
+var PIMG='';
+function postEd(i){var p=i>=0?posts()[i]:{c:'Xəbər',d:NC.today(),m:3,t:'',x:'',b:'<p><br></p>',img:'',pub:true};PIMG=p.img||'';
+ var cats={};posts().forEach(function(x){cats[x.c]=1;});
+ NC.modal(NC.mh(i>=0?'Yazını redaktə et':'Yeni yazı')+
+ '<div class="nc-grid"><div class="nc-f"><label>Başlıq</label><input class="nc-in" id="pT" value="'+E(p.t)+'"></div>'+
+ '<div class="nc-row"><div class="nc-f"><label>Kateqoriya</label><input class="nc-in" id="pC" list="pCl" value="'+E(p.c)+'"><datalist id="pCl">'+Object.keys(cats).map(function(c){return '<option value="'+E(c)+'">';}).join('')+'</datalist></div><div class="nc-f"><label>Tarix</label><input class="nc-in" type="date" id="pD" value="'+E(p.d)+'"></div><div class="nc-f"><label>Oxu müddəti, dəq</label><input class="nc-in" type="number" id="pM" value="'+E(p.m)+'"></div></div>'+
+ '<div class="nc-f"><label>Qısa təsvir</label><textarea class="nc-ta" id="pX" style="min-height:60px">'+E(p.x)+'</textarea></div>'+
+ '<div class="nc-f"><label>Şəkil</label><div style="display:flex;gap:10px;align-items:center"><span id="pImg" class="mut" style="font-size:13px">'+(imgSrc(p.img)?'<img src="'+E(p.img)+'" style="height:56px;border-radius:10px">':(p.img?'Saytın şəkli: '+E(p.img):'Şəkil yoxdur'))+'</span><button class="nc-b sm" type="button" onclick="upload(\'blog\',function(u){PIMG=u;NC.$(\'pImg\').innerHTML=\'<img src=&quot;\'+u+\'&quot; style=&quot;height:56px;border-radius:10px&quot;>\';})">Yüklə</button></div></div>'+
+ '<div class="nc-f"><label>Mətn</label><div class="py-tb"><button class="nc-b sm" type="button" onmousedown="event.preventDefault();document.execCommand(\'bold\')"><b>B</b></button><button class="nc-b sm" type="button" onmousedown="event.preventDefault();document.execCommand(\'formatBlock\',false,\'h2\')">Başlıq</button><button class="nc-b sm" type="button" onmousedown="event.preventDefault();document.execCommand(\'formatBlock\',false,\'p\')">Abzas</button><button class="nc-b sm" type="button" onmousedown="event.preventDefault();document.execCommand(\'insertUnorderedList\')">• Siyahı</button><button class="nc-b sm" type="button" onmousedown="event.preventDefault();document.execCommand(\'formatBlock\',false,\'blockquote\')">Sitat</button><button class="nc-b sm" type="button" onmousedown="event.preventDefault();var u=prompt(\'Link:\');if(u)document.execCommand(\'createLink\',false,u)">Link</button></div><div class="py-ed" id="pB" contenteditable="true">'+(p.b||'')+'</div></div>'+
+ '<div class="py-sw"><div><b>Dərc olunsun</b><span>Söndürülsə qaralama kimi qalır</span></div><button class="py-tg'+(p.pub===false?'':' on')+'" id="pP" type="button" onclick="this.classList.toggle(\'on\')"></button></div></div>'+
+ '<div class="mf"><button class="nc-b" onclick="NC.close()">Ləğv et</button><button class="nc-b pri" id="pSave">Yadda saxla</button></div>',{wide:true});
+ NC.$('pSave').onclick=async function(){var t=NC.$('pT').value.trim();if(!t)return NC.toast('Başlıq yazın');
+  var b=clean(NC.$('pB').innerHTML);var L=posts().slice();
+  var o=Object.assign({},p,{t:t,c:NC.$('pC').value.trim()||'Xəbər',d:NC.$('pD').value||NC.today(),m:+NC.$('pM').value||3,x:NC.$('pX').value.trim(),b:b,img:PIMG,pub:NC.$('pP').classList.contains('on')});
+  if(!o.id){o.id=slug(t);while(L.some(function(q){return q.id===o.id;}))o.id+='-2';}
+  if(i>=0)L[i]=o;else L.unshift(o);if(await saveBlog(L))NC.close();};
+}
+function clean(h){var d=document.createElement('div');d.innerHTML=h;d.querySelectorAll('script,style,iframe,object,embed').forEach(function(e){e.remove();});d.querySelectorAll('*').forEach(function(e){[].slice.call(e.attributes).forEach(function(a){if(/^on/i.test(a.name)||(a.name==='style')||(a.name==='href'&&/^\s*javascript:/i.test(a.value)))e.removeAttribute(a.name);});});return d.innerHTML;}
+
+/* ---------- məlumatlar ---------- */
+var COF=[['name','Layihə adı'],['slogan','Şüar'],['short','Qısa nömrə'],['phones','Telefonlar (vergüllə)'],['tel','Zəng linkləri (+994…, vergüllə)'],['email','Email'],['addr','Ünvan'],['hours','İş saatları'],['ig','Instagram (istifadəçi adı)'],['wa','WhatsApp (994…)'],['delivery','Tikilən binaların təhvil ili']];
+function drawCo(){var co=Object.assign({},DEF.co||{},SITE.co||{});
+ NC.$('coF').innerHTML=COF.map(function(f){var v=co[f[0]];if(Array.isArray(v))v=v.join(', ');return '<div class="nc-f"><label>'+f[1]+'</label><input class="nc-in" data-co="'+f[0]+'" value="'+E(v)+'"></div>';}).join('');
+ var bn=SITE.banner||{};NC.$('bnOn').classList.toggle('on',!!bn.on);NC.$('bnT').value=bn.t||'';NC.$('bnB').value=bn.btn||'';NC.$('bnU').value=bn.url||'';}
+NC.$('bnOn').onclick=function(){this.classList.toggle('on');};
+function saveCo(){var co={};document.querySelectorAll('[data-co]').forEach(function(i){var k=i.dataset.co,v=i.value.trim();if(k==='phones'||k==='tel')v=v.split(',').map(function(s){return s.trim();}).filter(Boolean);var d=(DEF.co||{})[k];if(JSON.stringify(v)!==JSON.stringify(d))co[k]=v;});
+ put(function(V){V.co=co;V.banner={on:NC.$('bnOn').classList.contains('on'),t:NC.$('bnT').value.trim(),btn:NC.$('bnB').value.trim(),url:NC.$('bnU').value.trim()};});}
+
+/* ---------- siyahılar ---------- */
+var LF={
+ faq:{f:[['Sual','in'],['Cavab','ta']],arr:true,blank:['','']},
+ timeline:{f:[['Mərhələ','in'],['Binalar','in'],['Təsvir','ta'],['Status','st']],arr:true,blank:['Mərhələ','','','n']},
+ infra:{f:[['Ad','in'],['Təsvir','in']],arr:true,keep:2,blank:['','','M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z']},
+ gal:{f:[['Şəkil','img','src'],['Kateqoriya','cat','c'],['Başlıq','in','t']],arr:false,blank:{src:'',c:'Vizuallar',t:''}}
+};
+var ED={};
+function cur(k){return ED[k]||(ED[k]=JSON.parse(JSON.stringify((Array.isArray(SITE[k])&&SITE[k].length?SITE[k]:DEF[k])||[])));}
+function drawList(k){var L=cur(k),cfg=LF[k];
+ NC.$(k+'R').innerHTML=L.map(function(r,i){return '<div class="py-row"><div class="py-rh"><b>#'+(i+1)+'</b><button class="py-ib" onclick="mvRow(\''+k+'\','+i+',-1)">↑</button><button class="py-ib" onclick="mvRow(\''+k+'\','+i+',1)">↓</button><button class="py-ib" onclick="delRow(\''+k+'\','+i+')">✕</button></div>'+cfg.f.map(function(f,j){var key=cfg.arr?j:f[2],v=r[key];var a='data-k="'+k+'" data-i="'+i+'" data-j="'+key+'"';
+  if(f[1]==='ta')return '<textarea class="nc-ta" '+a+' style="min-height:64px" placeholder="'+f[0]+'">'+E(v)+'</textarea>';
+  if(f[1]==='st')return '<select class="nc-sel" '+a+'><option value="ok"'+(v==='ok'?' selected':'')+'>Tamamlanıb</option><option value="w"'+(v==='w'?' selected':'')+'>Davam edir</option><option value="n"'+(v==='n'?' selected':'')+'>Növbəti</option></select>';
+  if(f[1]==='cat')return '<select class="nc-sel" '+a+'>'+(DEF.gcats||['Vizuallar']).filter(function(c){return c!=='Hamısı';}).map(function(c){return '<option'+(c===v?' selected':'')+'>'+E(c)+'</option>';}).join('')+'</select>';
+  if(f[1]==='img')return '<div style="display:flex;gap:10px;align-items:center">'+(imgSrc(v)?'<img src="'+E(v)+'" style="height:52px;border-radius:10px">':'<span class="mut" style="font-size:13px">'+(v?'Saytın şəkli: '+E(v):'Şəkil seçilməyib')+'</span>')+'<button class="nc-b sm" onclick="rowImg(\''+k+'\','+i+',\''+key+'\')">Yüklə</button></div>';
+  return '<input class="nc-in" '+a+' placeholder="'+f[0]+'" value="'+E(v)+'">';}).join('')+'</div>';}).join('')||'<div class="nc-empty">Boşdur</div>';
+ NC.$(k+'R').querySelectorAll('[data-k]').forEach(function(e){e.oninput=e.onchange=function(){var r=cur(k)[+e.dataset.i],j=e.dataset.j;r[isNaN(j)?j:+j]=e.value;};});
+ if(NC.$('tc_'+k))NC.$('tc_'+k).textContent=L.length;}
+function rowImg(k,i,key){upload('gal',function(u){cur(k)[i][key]=u;drawList(k);});}
+function addRow(k){var b=LF[k].blank;cur(k).push(JSON.parse(JSON.stringify(b)));drawList(k);}
+function delRow(k,i){cur(k).splice(i,1);drawList(k);}
+function mvRow(k,i,d){var L=cur(k),j=i+d;if(j<0||j>=L.length)return;var t=L[i];L[i]=L[j];L[j]=t;drawList(k);}
+function resetList(k){if(!confirm('Siyahı ilkin vəziyyətə qaytarılsın?'))return;delete ED[k];put(function(V){delete V[k];});}
+function saveList(k){var L=cur(k).filter(function(r){return LF[k].arr?String(r[0]||'').trim():(r.src||'').trim();});
+ if(k==='gal'&&cur(k).some(function(r){return !r.src;}))NC.toast('Şəkli olmayan sətirlər saxlanmadı');
+ put(function(V){V[k]=L;if(k==='timeline'){V.bld=[].slice.call(document.querySelectorAll('[data-bld]')).map(function(s){return {id:s.dataset.bld,st:s.value};}).filter(function(o){var d=(DEF.bld||[]).find(function(x){return x.id===o.id;});return !d||d.st!==o.st;});}});delete ED[k];}
+function drawBld(){var ov={};(SITE.bld||[]).forEach(function(o){ov[o.id]=o.st;});
+ NC.$('bldF').innerHTML=(DEF.bld||[]).map(function(b){var v=ov[b.id]||b.st;return '<div class="nc-f"><label>Bina '+b.id+'</label><select class="nc-sel" data-bld="'+b.id+'"><option value="ok"'+(v==='ok'?' selected':'')+'>Təhvil verilib</option><option value="w"'+(v==='w'?' selected':'')+'>Tikilir</option><option value="n"'+(v==='n'?' selected':'')+'>Növbəti mərhələ</option></select></div>';}).join('');}
+
+/* ---------- şəkillər ---------- */
+function drawImgs(){var I=SITE.img||{};
+ NC.$('imgG').innerHTML=IMGK.map(function(k){var u=I[k[0]];return '<figure>'+(u?'<img src="'+E(u)+'" alt="">':'<div class="ph">İlkin şəkil</div>')+'<figcaption><b>'+k[1]+'</b><div style="display:flex;gap:6px"><button class="nc-b sm" onclick="setImg(\''+k[0]+'\')">Dəyiş</button>'+(u?'<button class="nc-b sm bad" onclick="rmImg(\''+k[0]+'\')">İlkinə qaytar</button>':'')+'</div></figcaption></figure>';}).join('');}
+function setImg(k){upload('img',function(u){put(function(V){V.img=V.img||{};V.img[k]=u;});});}
+function rmImg(k){put(function(V){if(V.img)delete V.img[k];});}
+
+/* ---------- bölmələr / ayarlar ---------- */
+var OFF={};
+function drawSet(){OFF=Object.assign({},SITE.off||{});
+ NC.$('pgF').innerHTML=(DEF.pages||[]).map(function(p){return '<div class="py-sw"><div><b>'+p[1]+'</b><span>#'+p[0]+'</span></div><button class="py-tg'+(OFF[p[0]]?'':' on')+'" data-pg="'+p[0]+'"></button></div>';}).join('');
+ NC.$('pgF').querySelectorAll('[data-pg]').forEach(function(b){b.onclick=function(){b.classList.toggle('on');OFF[b.dataset.pg]=!b.classList.contains('on');};});
+ NC.$('mtOn').classList.toggle('on',!!SITE.maint);NC.$('mtT').value=SITE.maintText||'';
+ var T=SITE.txt||{},H=SITE.hide||{},rows=Object.keys(T).map(function(k){return '<div class="py-ov"><s>'+E(k)+'</s><span>'+E(T[k])+'</span><button class="nc-b sm" onclick="rmOv(\'txt\','+JSON.stringify(k).replace(/"/g,'&quot;')+')">Geri qaytar</button></div>';}).concat(Object.keys(H).filter(function(k){return H[k];}).map(function(k){return '<div class="py-ov"><span>Gizlədilmiş bölmə</span><span class="mut">'+E(k.replace(':',' · bölmə #'))+'</span><button class="nc-b sm" onclick="rmOv(\'hide\','+JSON.stringify(k).replace(/"/g,'&quot;')+')">Göstər</button></div>';}));
+ NC.$('ovL').innerHTML=rows.join('')||'<p class="mut" style="font-size:13px;margin:0">Hələ redaktə yoxdur. «✏️ Saytda redaktə et» ilə saytın istənilən mətnini dəyişə, bölmələri gizlədə, şəkilləri əvəz edə bilərsiniz.</p>';}
+NC.$('mtOn').onclick=function(){this.classList.toggle('on');};
+function rmOv(g,k){put(function(V){if(V[g])delete V[g][k];});}
+function saveSet(){put(function(V){var o={};Object.keys(OFF).forEach(function(k){if(OFF[k])o[k]=true;});V.off=o;V.maint=NC.$('mtOn').classList.contains('on');V.maintText=NC.$('mtT').value.trim();});}
+
+NC.header('sayt','Sayt idarəsi');
+NC.auth({perms:['nc_site'],title:'Sayt idarəsi',onReady:start});
+</script>
+</body></html>
