@@ -58,7 +58,7 @@
   <div class="nc-card"><h3>Ümumi vəziyyət</h3><div class="nc-kpis" id="aKpi"></div><div class="sb-bar" id="aBar"></div><div class="sb-leg" id="leg"></div></div>
  </div>
  <div class="nc-seg" id="tabs"></div>
- <div class="sb-ctl"><select class="nc-sel" id="fRoom"><option value="">Bütün otaqlar</option></select><select class="nc-sel" id="fCond"><option value="">İstənilən vəziyyət</option><option>Təmirli</option><option>White Box</option><option>Kirayə</option></select><span class="grow"></span><span class="mut" id="upd" style="font-size:12.5px"></span></div>
+ <div class="sb-ctl"><select class="nc-sel" id="fRoom"><option value="">Bütün otaqlar</option></select><select class="nc-sel" id="fSt"><option value="">Bütün statuslar</option><option value="satisda">Satışda</option><option value="satilib">Satılıb</option><option value="investor">İnvestor</option><option value="bron">Bron</option><option value="sakin">Sakin</option><option value="fond">Fond</option><option value="satilmir">Satılmır</option></select><select class="nc-sel" id="fCond"><option value="">İstənilən vəziyyət</option><option>Təmirli</option><option>White Box</option><option>Kirayə</option></select><span class="grow"></span><span class="mut" id="upd" style="font-size:12.5px"></span></div>
  <div class="board" id="board"></div>
 </main>
 <script>
@@ -86,15 +86,15 @@ function render(){
  NC.$('leg').querySelectorAll('span').forEach(function(x){x.onclick=function(){fSt[x.dataset.k]=!fSt[x.dataset.k];render();};});
  NC.$('upd').textContent=UPD?'Yeniləndi: '+new Date(UPD).toLocaleString('az-AZ',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
  board();}
-function board(){var b=S[cur];if(!b)return;var fr=NC.$('fRoom').value,fc=NC.$('fCond').value;var fls=Object.keys(b.rows).sort(function(x,y){return Number(y)-Number(x);});var h='';
+function board(){var b=S[cur];if(!b)return;var fr=NC.$('fRoom').value,fc=NC.$('fCond').value,fs=NC.$('fSt').value;var fls=Object.keys(b.rows).sort(function(x,y){return Number(y)-Number(x);});var h='';
  fls.forEach(function(f){var us=b.rows[f]||[];if(!us.length)return;var lab=b.labels&&b.labels[f]?b.labels[f]:(Number(f)<0?'Z':f);h+='<div class="fr"><div class="fl">'+NC.esc(lab)+'</div><div class="us">';
   if(us.every(function(u){return u.s==='zirzemi';})){h+='<div class="gbar">Zirzəmi</div></div></div>';return;}
   if(us.every(function(u){return u.s==='qeyri';})){h+='<div class="gbar">Qeyri-yaşayış sahəsi</div></div></div>';return;}
-  us.forEach(function(u,i){var m=!fSt[u.s]&&(!fr||String(u.room)===fr)&&(!fc||(u.c||'').indexOf(fc)>=0);var st=NC.ST[u.s]||['?','#555'];var cd=(u.c||'').indexOf('Təmirli')>=0?'T':(u.c||'').indexOf('White')>=0?'WB':'';
+  us.forEach(function(u,i){var m=!fSt[u.s]&&(!fs||u.s===fs)&&(!fr||String(u.room)===fr)&&(!fc||(u.c||'').indexOf(fc)>=0);var st=NC.ST[u.s]||['?','#555'];var cd=(u.c||'').indexOf('Təmirli')>=0?'T':(u.c||'').indexOf('White')>=0?'WB':'';
    h+='<button class="u s-'+u.s+(m?'':' dim')+'" style="'+(u.s==='satisda'?'':'background:'+st[1])+'" data-f="'+f+'" data-i="'+i+'" title="'+NC.esc(st[0])+'"><b>'+(u.room?u.room+' otaq':'№ '+u.n)+'</b><small>'+(u.area?u.area+' m²':st[0])+'</small>'+(cd?'<span class="cd">'+cd+'</span>':'')+'</button>';});
   h+='</div></div>';});
  var bd=NC.$('board');bd.innerHTML=h;bd.querySelectorAll('.u').forEach(function(x){x.onclick=function(){openUnit(x.dataset.f,+x.dataset.i);};});}
-NC.$('fRoom').onchange=board;NC.$('fCond').onchange=board;
+NC.$('fRoom').onchange=board;NC.$('fSt').onchange=board;NC.$('fCond').onchange=board;
 function openUnit(f,i){var u=S[cur].rows[f][i],st=NC.ST[u.s]||['?'];var sel=u.s;
  var h=NC.mh(NC.esc(short(cur))+' · '+flab(cur,f)+' · №'+NC.esc(u.n),'<span class="nc-pill" style="color:'+st[1]+'"><i></i>'+st[0]+'</span>')+
  '<div class="ud"><div><span>Otaq</span><b>'+(u.room||'—')+'</b></div><div><span>Sahə</span><b>'+(u.area?u.area+' m²':'—')+'</b></div><div><span>Vəziyyət</span><b>'+NC.esc(u.c||'—')+'</b></div><div><span>Mərtəbə</span><b>'+NC.esc(flab(cur,f))+'</b></div></div>'+
