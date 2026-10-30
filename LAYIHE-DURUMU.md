@@ -357,3 +357,8 @@ Nümunə məlumat (demo=true): Bina 4/5, 10 material, 3 təchizatçı, 12 smeta 
 - Şəkillər `assets/nc/site/*-2560.webp` və `*-1280.webp` (srcset). `aerial` = hazır binaların fonsuz 3D vizualı. Paneldən dəyişəndə `lux_kv.nc_site.img` URL-i istifadə olunur.
 - Hərəkət: GSAP 3.12.5 + ScrollTrigger, Lenis 1.1.13 (cdnjs/jsdelivr), three r128 — 3D baş plan maketi (`ncMaquette`) və imza səhnəsi (hazır binalar scroll ilə açılır). prefers-reduced-motion nəzərə alınır.
 - Mənzillər real `nc_public_units()`-dən; qiymət nc_cfg presetlərindən; sorğular `nc_leads`.
+
+## 30 okt 2026 — Nizami City sayt v3+ (önizləmə: nizami-city.az/nc/site-v3)
+Mənbə: nc/site-src/v3/{app.js, plus.js, maq.js, app.css, plus.css}. build.py: APP=app.js+plus.js, CSS=app.css+plus.css, %MAQ%=maq.js, MODEL-ə ncSunPos əlavə olunur. render() → beforeRender()/afterRender() (plus.js).
+20 əlavə: işıqlı 3D maket (three r128, yalnız görünəndə CDN-dən), virtual tur, günəş/kölgə (Bakı koord.), gecə görünüşü, bina səhifəsində 3D + mərtəbə sinxronu, mənzildə 3D yer, izometrik mərtəbə (CSS 3D), kinematik hero, səhifə keçidi/irəliləyiş zolağı, yumşaq görünmə + sayğaclar, kartlarda 3D meyl, tünd tema (defolt açıq), əlçatanlıq (şrift/kontrast/animasiya), ətraf sxemi (filtrli), baxış saatı, zəng vaxtı, QR (qrcode-generator 1.4.4), #brosur (çap/PDF), "Sual verin" əlaqə mərkəzi (WhatsApp hazır suallar), ödəniş planı (faizlə, qiymətsiz).
+Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html) hələ v2-dir — təsdiqdən sonra `python3 build.py` (NC_OUT-suz).

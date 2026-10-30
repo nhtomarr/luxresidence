@@ -134,15 +134,16 @@ function leadForm(o = {}) {
     <div class="fld"><span>Nə ilə maraqlanırsınız?</span><div class="chips" data-k="kind"><button type="button" data-v="price" class="${isPrice ? 'on' : ''}">Qiymət</button><button type="button" data-v="viewing" class="${isPrice ? '' : 'on'}">Baxışa gəlmək</button><button type="button" data-v="callback">Zəng edin</button></div></div>
     ${o.unit ? `<input type="hidden" name="unit" value="${esc(o.unit)}">` : `<div class="fld"><span>Otaq sayı</span><div class="chips" data-k="r"><button type="button" data-v="">Fərq etməz</button>${['1', '2', '3', '4+'].map((t, i) => `<button type="button" data-v="${t}" class="${i === 1 ? 'on' : ''}">${t}</button>`).join('')}</div></div>`}
     <div class="fld lf-day"><span>Baxış günü</span><div class="chips" data-k="day">${days.map((x, i) => `<button type="button" data-v="${x.toISOString().slice(0, 10)}" class="${i ? '' : 'on'}">${x.getDate()} ${MON[x.getMonth()].slice(0, 3)}<small>${DAYS[x.getDay()]}</small></button>`).join('')}</div></div>
+    <div class="fld lf-day"><span>${I.cal} Saat</span><div class="chips" data-k="tm">${HOURS.map((h, i) => `<button type="button" data-v="${h}" class="${i === 1 ? 'on' : ''}">${h}</button>`).join('')}</div></div>
     <div><button class="btn" type="submit">Göndər ${I.ar}</button></div></form>`;
 }
 function bindLead(root, unit) {
   const f = $('#lf', root); if (!f) return;
   const v = k => (($(`[data-k=${k}] .on`, f) || {}).dataset || {}).v;
   const kind = () => v('kind') || 'viewing';
-  const sync = () => { const d = $('.lf-day', f); if (d) d.style.display = kind() === 'viewing' ? '' : 'none'; };
+  const sync = () => { $$('.lf-day', f).forEach(d => d.style.display = kind() === 'viewing' ? '' : 'none'); };
   $('[data-k=kind]', f).addEventListener('click', () => setTimeout(sync, 0)); sync();
-  bindForm(f, kind, () => { const k = kind(), u = unit; return { slot: k === 'viewing' ? v('day') : '', msg: (k === 'price' ? 'Qiymət sorğusu' : k === 'viewing' ? 'Baxışa yazılış' : 'Zəng sifarişi') + (u ? ': ' + bLbl(u) + ', ' + ord(u.f) + ' mərtəbə, ' + roomsT(u.r) + ', ' + fm2(u.a) + ' m²' : v('r') ? ': ' + v('r') + ' otaqlı' : '') }; },
+  bindForm(f, kind, () => { const k = kind(), u = unit; return { slot: k === 'viewing' ? v('day') + ' ' + (v('tm') || '') : '', msg: (k === 'price' ? 'Qiymət sorğusu' : k === 'viewing' ? 'Baxışa yazılış' : 'Zəng sifarişi') + (u ? ': ' + bLbl(u) + ', ' + ord(u.f) + ' mərtəbə, ' + roomsT(u.r) + ', ' + fm2(u.a) + ' m²' : v('r') ? ': ' + v('r') + ' otaqlı' : '') }; },
     d => `${esc(d.name)}, sorğunuz qəbul olundu. Satış meneceri qısa zamanda zəng edəcək.`);
 }
 
@@ -217,8 +218,9 @@ addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key.toLower
 /* 7: zəng sifarişi */
 function callback(unit) {
   const u = unit && uById(unit);
-  const m = modal(`<h2 class="h2">Sizə zəng edək</h2><p class="lead" style="margin:6px 0 18px">${u ? esc(uTitle(u)) + ' üzrə — ' : ''}nömrənizi yazın, satış meneceri iş saatlarında 15 dəqiqə ərzində zəng edəcək.</p><form class="frm" id="cbf" novalidate>${nameFld('cb')}<div><button class="btn" type="submit">Zəng sifariş et ${I.ar}</button></div></form><p class="mu" style="margin:14px 0 0;font-size:14px">Və ya özünüz zəng edin: <a href="tel:${esc(CO.short)}"><b>${esc(CO.short)}</b></a> · ${esc(CO.hours)}</p>`);
-  bindForm($('#cbf', m), 'callback', () => u ? { unit: u.id, msg: 'Zəng sifarişi: ' + uTitle(u) } : { msg: 'Zəng sifarişi' }, d => `${esc(d.name)}, tezliklə zəng edəcəyik.`);
+  const m = modal(`<h2 class="h2">Sizə zəng edək</h2><p class="lead" style="margin:6px 0 18px">${u ? esc(uTitle(u)) + ' üzrə — ' : ''}nömrənizi yazın, satış meneceri iş saatlarında 15 dəqiqə ərzində zəng edəcək.</p><form class="frm" id="cbf" novalidate>${nameFld('cb')}<div class="fld"><span>Nə vaxt zəng edək?</span><div class="chips" data-k="when">${WHEN.map(([v, t], i) => `<button type="button" data-v="${t}" class="${i ? '' : 'on'}">${t}</button>`).join('')}</div></div><div><button class="btn" type="submit">Zəng sifariş et ${I.ar}</button></div></form><p class="mu" style="margin:14px 0 0;font-size:14px">Və ya özünüz zəng edin: <a href="tel:${esc(CO.short)}"><b>${esc(CO.short)}</b></a> · ${esc(CO.hours)}</p>`);
+  const wh = () => (($('[data-k=when] .on', m) || {}).dataset || {}).v || '';
+  bindForm($('#cbf', m), 'callback', () => Object.assign({ slot: wh() }, u ? { unit: u.id, msg: 'Zəng sifarişi (' + wh() + '): ' + uTitle(u) } : { msg: 'Zəng sifarişi (' + wh() + ')' }), d => `${esc(d.name)}, tezliklə zəng edəcəyik.`);
 }
 /* 12: yeni mənzil çıxanda xəbər ver */
 function alertSub(crit) {
@@ -234,7 +236,8 @@ document.addEventListener('click', e => {
 function share(id) {
   const u = uById(id), url = location.origin + location.pathname + '#menzil-' + id, txt = 'Nizami City — ' + (u ? uTitle(u) : '');
   if (navigator.share && matchMedia('(pointer:coarse)').matches) { navigator.share({ title: txt, url }).catch(() => { }); return; }
-  const m = modal(`<h2 class="h2">Paylaş</h2><p class="lead" style="margin:6px 0 16px">${esc(txt)}</p><div class="shr"><a class="btn tn" href="https://wa.me/?text=${encodeURIComponent(txt + ' ' + url)}" target="_blank" rel="noopener">${I.wa} WhatsApp</a><a class="btn tn" href="https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(txt)}" target="_blank" rel="noopener">${I.tg} Telegram</a><button class="btn tn" type="button" id="cpy">${I.share} Linki kopyala</button></div>`);
+  const m = modal(`<h2 class="h2">Paylaş</h2><p class="lead" style="margin:6px 0 16px">${esc(txt)}</p><div class="shr"><a class="btn tn" href="https://wa.me/?text=${encodeURIComponent(txt + ' ' + url)}" target="_blank" rel="noopener">${I.wa} WhatsApp</a><a class="btn tn" href="https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(txt)}" target="_blank" rel="noopener">${I.tg} Telegram</a><button class="btn tn" type="button" id="cpy">${I.share} Linki kopyala</button></div><div class="qrbox"><div data-qr="${esc(url)}"></div><span class="mu">Telefonla skan edin — mənzil səhifəsi açılacaq</span></div>`);
+  fillQR(m);
   $('#cpy', m).onclick = () => { (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(() => toast('Link kopyalandı')).catch(() => { prompt('Linki kopyalayın:', url); }); };
 }
 
@@ -303,7 +306,7 @@ const featBlock = () => `<div class="sh"><h2 class="h2">Kompleksdə həyat</h2><
   <div class="icons">${ICONS.map(([i, b, s]) => `<div class="icn"><i>${i}</i><div><b>${b}</b><span>${s}</span></div></div>`).join('')}</div>`;
 const MAPQ = encodeURIComponent('Nizami City, Cəfər Cabbarlı 31, Bakı');
 const PIC = { 'Nəqliyyat': 'M', 'Alış-veriş': 'T', 'Təhsil': 'S', 'İstirahət': 'P' };
-const locBlock = () => `<div class="sh"><h2 class="h2">Məkan</h2><span class="mu">${esc(CO.addr)}</span></div><div class="loc"><div class="map"><iframe title="Xəritə: Nizami City" loading="lazy" src="https://maps.google.com/maps?q=${MAPQ}&z=15&output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+const locBlock = () => `<div class="sh"><div><h2 class="h2">Məkan</h2><span class="mu">${esc(CO.addr)}</span></div><div class="tabs loc-t"><button type="button" data-v="nbh" class="on">Ətraf sxemi</button><button type="button" data-v="map">Xəritə</button></div></div><div class="loc"><div class="map"><div data-lv="nbh">${nbhBlock()}</div><div data-lv="map" style="display:none;height:100%"><iframe title="Xəritə: Nizami City" loading="lazy" data-src="https://maps.google.com/maps?q=${MAPQ}&z=15&output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe></div></div>
   <div class="pois"><div class="dirs"><span class="mu">Yol göstər:</span><a class="tag" href="https://www.google.com/maps/dir/?api=1&destination=${MAPQ}" target="_blank" rel="noopener">Google Maps</a><a class="tag" href="https://waze.com/ul?q=${MAPQ}&navigate=yes" target="_blank" rel="noopener">Waze</a><a class="tag" href="https://yandex.com/maps/?text=${MAPQ}" target="_blank" rel="noopener">Yandex</a></div>${POI.map(p => `<div class="poi"><i>${PIC[p.c] || '•'}</i><div><b>${esc(p.n)}</b><span>${esc(p.d)}</span></div><em>${esc(p.c)}</em></div>`).join('')}</div></div>`;
 const posts = () => BLOG.slice().sort((a, b) => String(b.d).localeCompare(String(a.d)));
 const dfmt = s => { const d = new Date(s); return isNaN(d) ? esc(s) : `${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}`; };
@@ -318,22 +321,25 @@ const faqBlock = n => `<div class="two"><div class="card"><h2 class="h2" style="
 const pages = {};
 pages.home = () => ({
   title: 'Nizami City — Yasamalda qapalı həyətli yaşayış kompleksi', html: `${heroBlock()}
+  ${numBlock()}
+  ${maqSection()}
   <section class="sec wrap">${buildingsBlock()}</section>
   ${SHOW_STOCK ? `<section class="sec wrap">${offersBlock()}</section>` : ''}
   ${seenBlock()}
   <section class="sec wrap">${promoBlock()}</section>
+  <section class="sec wrap">${planBlock()}</section>
   <section class="sec wrap">${featBlock()}</section>
   <section class="sec wrap">${locBlock()}</section>
   ${newsBlock() ? `<section class="sec wrap">${newsBlock()}</section>` : ''}
   <section class="sec wrap">${faqBlock(5)}</section>`,
-  mount(r) { bindHero(r); bindFind(r); bindBuildings(r); bindRail(r); bindLead(r); bindLb(r); }
+  mount(r) { bindHero(r); heroFx(r); bindFind(r); bindMaqHome(r); bindBuildings(r); bindRail(r); bindPlan(r); bindLead(r); bindLb(r); }
 });
 pages.binalar = () => ({
   title: 'Binalar — Nizami City', html: `${pHead('Binalar', SHOW_ST ? 'A, B və C binaları təhvil verilib. E, F və G binaları tikilir' + (SHOW_DEL ? ', təhvil ' + esc(CO.delivery) : '') + '.' : 'Altı bina, bir qapalı həyət. Binanı seçin — mərtəbələr və mənzillər açılacaq.', `<div class="stats"><div class="stat"><b>${BLD.length}</b><span>bina</span></div>${SHOW_STOCK ? `<div class="stat"><b>${free.filter(u => u.st === 'free').length}</b><span>satışda</span></div>` : ''}<div class="stat"><b>${window.NC_FLOORS || 10}</b><span>mərtəbə</span></div></div>`)}
-  <section class="sec wrap"><div class="iso" data-lb="iso">${pic('aerial', 'Hazır binaların 3D vizualı', { sizes: '(max-width:900px) 92vw, 1200px' })}<span class="hs" style="left:47%;top:58%"><i></i><span>Qapalı həyət</span></span><span class="hs" style="left:45%;top:80%"><i></i><span>Kommersiya qalereyası</span></span><span class="hs" style="left:57%;top:88%"><i></i><span>Parkinqə giriş</span></span></div></section>
+  <section class="sec wrap"><div class="sh"><h2 class="h2">Baş plan</h2><div class="tabs" id="bpT"><button type="button" data-v="3d" class="on">${I.cube} 3D maket</button><button type="button" data-v="img">Vizual</button></div></div><div data-bp="3d">${maqHtml('mqH')}</div><div data-bp="img" style="display:none"><div class="iso" data-lb="iso">${pic('aerial', 'Hazır binaların 3D vizualı', { sizes: '(max-width:900px) 92vw, 1200px' })}<span class="hs" style="left:47%;top:58%"><i></i><span>Qapalı həyət</span></span><span class="hs" style="left:45%;top:80%"><i></i><span>Kommersiya qalereyası</span></span><span class="hs" style="left:57%;top:88%"><i></i><span>Parkinqə giriş</span></span></div></div></section>
   <section class="sec wrap">${buildingsBlock(true)}</section>
   ${SHOW_ST ? '' : '<!--'}<section class="sec wrap"><div class="sh"><h2 class="h2">Mərhələlər</h2></div><div class="tline">${TIMELINE.map(([a, b, c, s]) => `<div class="card"><span class="badge" style="position:static;background:var(--soft)"><i class="${s === 'ok' ? 'st-ok' : 'st-w'}"></i>${esc(b)}</span><h3 class="h3" style="margin:12px 0 6px">${esc(a)}</h3><p class="ink2" style="margin:0">${esc(c)}</p></div>`).join('')}</div></section>${SHOW_ST ? '' : '-->'}`,
-  mount(r) { bindBuildings(r); bindLb(r); }
+  mount(r) { bindBuildings(r); bindLb(r); mountMaq($('#mqH', r)); $('#bpT', r).onclick = e => { const b = e.target.closest('button'); if (!b) return; $$('#bpT button', r).forEach(x => x.classList.toggle('on', x === b)); $$('[data-bp]', r).forEach(x => x.style.display = x.dataset.bp === b.dataset.v ? '' : 'none'); }; }
 });
 pages.bina = id => {
   const b = BLD.find(x => x.id === id); if (!b) return pages.binalar();
@@ -342,6 +348,7 @@ pages.bina = id => {
   const sold = us.filter(u => u.st === 'sold').length;
   return {
     title: `Bina ${id} — Nizami City`, html: `${pHead('Bina ' + id, stTxt(b.st), `<div class="stats"><div class="stat"><b>${fls.length}</b><span>mərtəbə</span></div>${SHOW_STOCK ? `<div class="stat"><b>${us.filter(u => u.st === 'free').length}</b><span>satışda</span></div>${us.length ? `<div class="stat"><b>${Math.round(sold * 100 / us.length)}%</b><span>satılıb</span></div>` : ''}` : ''}</div>`, [['Binalar', 'binalar'], ['Bina ' + id]])}
+    <section class="sec wrap">${maqHtml('mqB', { sm: true, tour: false })}</section>
     <section class="sec wrap">${us.length ? `<div class="sh"><h2 class="h2" id="flT"></h2><div class="tabs" id="bv"${SHOW_STOCK ? '' : ' style="display:none"'}><button type="button" data-v="fl" class="on">Mərtəbə üzrə</button>${SHOW_STOCK ? `<button type="button" data-v="ch">${I.grid} Şahmatka</button>` : ''}</div></div><div id="bvb"></div>` : `<div class="empty">Bu binanın mənzilləri hazırda saytda göstərilmir. Satış ofisindən məlumat alın: ${esc(CO.short)}</div>`}</section>
     <section class="sec wrap">${contactBlock({ title: 'Bina ' + id + ' üzrə sorğu', kind: 'price' })}</section>`,
     mount(r) {
@@ -352,6 +359,8 @@ pages.bina = id => {
         box.innerHTML = `<div class="card chess-w"><div class="chess-lg"><span><i class="c-free"></i>Satışda</span><span><i class="c-bron"></i>Bron</span><span><i class="c-sold"></i>Satılıb</span></div>${ents.map(e => `${ents.length > 1 ? `<h3 class="h3" style="margin:14px 0 8px">${e}-ci giriş</h3>` : ''}<div class="chess">${fls.map(f => { const row = us.filter(u => u.f === f && u.ent === e).sort((a, c) => a.n - c.n); return row.length ? `<div class="ch-r"><b>${f}</b>${row.map(u => `<a class="ch-c c-${u.st}" href="#menzil-${u.id}" title="${esc(uTitle(u))}${u.st === 'sold' ? ' · satılıb' : ''}"><span>${roomsT(u.r).replace(' otaqlı', 'o')}</span><small>${Math.round(u.a)} m²</small></a>`).join('')}</div>` : ''; }).join('')}</div>`).join('')}</div>`; };
       if (us.length) { $('#bv', r).onclick = e => { const t = e.target.closest('button'); if (!t) return; view = t.dataset.v; $$('#bv button', r).forEach(x => x.classList.toggle('on', x === t)); view === 'ch' ? drawCh() : drawFl(fl); }; drawFl(fl); }
       bindLead(r);
+      const curF = () => { const b = $('.floors button.on', r); return b ? +b.dataset.f : null; };
+      mountMaq($('#mqB', r), { autoRotate: false, onPick: x => { if (x !== id) location.hash = 'bina-' + x; }, homeFn: m => m.focus(id, curF()), ready: m => { m.focus(id, curF()); r.addEventListener('click', e => { const b = e.target.closest('.floors button'); if (b) m.focus(id, +b.dataset.f); else if (e.target.closest('#bv button')) setTimeout(() => m.focus(id, curF()), 0); }); } });
     }
   };
 };
@@ -412,18 +421,19 @@ pages.menzil = id => {
   const sim = free.filter(x => x.id !== u.id && x.r === u.r && x.st === 'free').sort((a, b) => Math.abs(a.a - u.a) - Math.abs(b.a - u.a)).slice(0, 4);
   return {
     title: `${roomsT(u.r)}, ${fm2(u.a)} m² — ${bLbl(u)} — Nizami City`, html: `<section class="ph wrap">${crumbs(['Mənzillər', 'menziller'], [bLbl(u)])}
-      <div class="prn-h"><img src="/assets/nc/logo.png" alt=""><div><b>Nizami City</b><br>${esc(CO.addr)} · ${esc(CO.short)}</div></div>
-      <div class="unit"><div style="display:grid;gap:16px"><div class="gal" data-lb="u">${pic(bPic(u.b), bLbl(u), { eager: true, sizes: '(max-width:900px) 92vw, 58vw' })}</div><div class="thumbs" data-lb="u">${['aerial_c', 'entrance', 'street', 'aerial'].filter(k => k !== bPic(u.b)).map(k => pic(k, { aerial_c: 'Qapalı həyət', entrance: 'Giriş və terras', street: 'Kommersiya qalereyası', aerial: '3D vizual' }[k], { sizes: '200px' })).join('')}</div><div class="plan"><h3 class="h3" style="margin-bottom:12px">Mərtəbədə yerləşmə</h3>${plateSvg(u)}<p class="mu" style="margin:10px 0 0;font-size:14px">Sxematik göstərilib. Dəqiq plan satış ofisində təqdim olunur.</p></div></div>
+      <div class="prn-h"><img src="/assets/nc/logo.png" alt=""><div><b>Nizami City</b><br>${esc(CO.addr)} · ${esc(CO.short)}</div><div class="prn-qr" data-qr="${esc(location.origin + location.pathname + '#menzil-' + u.id)}"></div></div>
+      <div class="unit"><div style="display:grid;gap:16px"><div class="gal" data-lb="u">${pic(bPic(u.b), bLbl(u), { eager: true, sizes: '(max-width:900px) 92vw, 58vw' })}</div><div class="thumbs" data-lb="u">${['aerial_c', 'entrance', 'street', 'aerial'].filter(k => k !== bPic(u.b)).map(k => pic(k, { aerial_c: 'Qapalı həyət', entrance: 'Giriş və terras', street: 'Kommersiya qalereyası', aerial: '3D vizual' }[k], { sizes: '200px' })).join('')}</div>${placeBlock(u)}</div>
       <div class="side"><div class="card"><h1 class="h2">${roomsT(u.r)}, ${fm2(u.a)} m²</h1><p class="mu" style="margin:6px 0 16px">${bLbl(u)} · ${ord(u.f)} mərtəbə</p>
         <div class="prbox"><b>${priceT(u)}</b>${!HP && u.st !== 'sold' ? `<span class="mu">${fmt(u.ppm)} ₼/m²</span>` : ''}</div>
         <div class="kv" style="margin-top:14px">${[['Otaq sayı', u.r], ['Sahə', fm2(u.a) + ' m²'], ['Mərtəbə', `${u.f} / ${window.NC_FLOORS || 10}`], ['Vəziyyət', u.c || condOf(u)], ...(SHOW_ST ? [['Təhvil', u.bst === 'ok' ? 'Hazırdır' : SHOW_DEL ? CO.delivery : 'Tikilir']] : []), ['Status', u.st === 'bron' ? 'Bron olunub' : u.st === 'sold' ? 'Satılıb' : 'Satışda']].map(([a, b]) => `<div><span>${a}</span><b>${esc(b)}</b></div>`).join('')}</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px"><a class="btn" href="#lfw">${HP ? 'Qiyməti öyrən' : 'Baxışa yazıl'} ${I.ar}</a><a class="btn tn" href="https://wa.me/${WA()}?text=${encodeURIComponent('Salam! Bu mənzillə maraqlanıram: ' + uTitle(u) + ' — ' + location.origin + location.pathname + '#menzil-' + u.id)}" target="_blank" rel="noopener">${I.wa} WhatsApp</a><button class="btn tn" type="button" data-callback="${u.id}">${I.ph} Zəng sifarişi</button></div>
         <div class="uacts"><button type="button" class="ua ${isFav(u.id) ? 'on' : ''}" data-fav="${u.id}">${I.heart}<span>Seçilmiş</span></button><button type="button" class="ua ${isCmp(u.id) ? 'on' : ''}" data-cmp="${u.id}">${I.cmp}<span>Müqayisə</span></button><button type="button" class="ua" data-share="${u.id}">${I.share}<span>Paylaş</span></button><button type="button" class="ua" data-print>${I.prn}<span>Çap / PDF</span></button></div></div>
         ${!HP ? `<div class="card"><h3 class="h3" style="margin-bottom:12px">Ödəniş hesabla</h3>${calcBlock(u)}</div>` : ''}</div></div></section>
+    ${HP ? `<section class="sec wrap">${planBlock()}</section>` : ''}
     <section class="sec wrap" id="lfw">${contactBlock({ title: HP ? 'Bu mənzilin qiyməti' : 'Bu mənzil üzrə sorğu', sub: 'Nömrənizi yazın — satış meneceri qiymət və ödəniş şərtlərini zəng edib desin.', kind: 'price', unit: u.id })}</section>
     ${sim.length ? `<section class="sec wrap"><div class="sh"><h2 class="h2">Oxşar mənzillər</h2></div><div class="ugrid">${sim.map(x => uCard(x, true)).join('')}</div></section>` : ''}
     ${seenBlock(u.id)}`,
-    mount(r) { addSeen(u.id); bindCalc(r, u); bindLead(r, u); bindLb(r); bindRail(r); $$('a[href="#lfw"]', r).forEach(a => a.onclick = e => { e.preventDefault(); $('#lfw', r).scrollIntoView({ behavior: 'smooth' }); }); }
+    mount(r) { addSeen(u.id); bindCalc(r, u); bindLead(r, u); bindLb(r); bindRail(r); bindPlace(r, u); bindPlan(r); $$('a[href="#lfw"]', r).forEach(a => a.onclick = e => { e.preventDefault(); $('#lfw', r).scrollIntoView({ behavior: 'smooth' }); }); }
   };
 };
 pages.kalkulyator = () => ({ title: 'Ödəniş — Nizami City', html: `${pHead('Ödəniş', 'Daxili kredit: ' + TERMS.map(t => t.m + ' ay' + (t.s ? ' (+' + t.s + ' ₼/m²)' : ' faizsiz')).join(', ') + '. Nəticə təxminidir.')}<section class="sec wrap"><div class="two"><div class="card">${calcBlock()}</div><div class="card"><h2 class="h2">Sorğu</h2><p class="lead" style="margin:8px 0 20px">Dəqiq hesablama üçün satış meneceri ilə əlaqə saxlayın.</p>${leadForm({ kind: 'price' })}</div></div></section>`, mount(r) { bindCalc(r); bindLead(r); } });
@@ -463,14 +473,14 @@ function parse() {
   return [pages[h] && !['bina', 'menzil', 'post'].includes(h) && !OFF[h] ? h : 'home'];
 }
 function render() {
-  const [k, arg] = parse(), pg = pages[k](arg), main = $('#view');
+  beforeRender(); const [k, arg] = parse(), pg = pages[k](arg), main = $('#view');
   main.innerHTML = pg.html; document.title = pg.title || 'Nizami City';
   const act = k === 'menzil' ? 'menziller' : k === 'bina' ? 'binalar' : k === 'post' ? 'bloq' : k;
   $$('.nav a, .menu nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + act));
   scrollTo(0, 0); pg.mount && pg.mount(main); syncBadges();
   $$('a[data-ph]', main).forEach(a => a.setAttribute('href', '#menziller?ph=' + a.dataset.ph));
   try { window.ncAfterRender && window.ncAfterRender(k, main); } catch (e) { }
-  closeMenu(); closeModal();
+  closeMenu(); closeModal(); afterRender(k, main);
 }
 addEventListener('hashchange', render);
 const mbtn = $('#mbtn');
@@ -481,4 +491,3 @@ addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 footer();
 $('#cmpClr').onclick = () => { CMP = []; LS.set('cmp', CMP); syncBadges(); if (location.hash.startsWith('#muqayise')) render(); };
 if (HP) $$('a[href="#kalkulyator"]').forEach(a => a.style.display = 'none');
-render();
