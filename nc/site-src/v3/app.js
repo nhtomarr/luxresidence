@@ -92,13 +92,7 @@ const crumbs = (...a) => `<nav class="crumbs" aria-label="Yol"><a href="#home">A
 const pHead = (title, sub, extra = '', cr) => `<section class="ph wrap">${crumbs(...(cr || [[title]]))}<div class="ph-card"><div><h1 class="h1">${title}</h1>${sub ? `<p class="lead">${sub}</p>` : ''}</div>${extra}</div></section>`;
 
 /* kartlar */
-function uCard(u, photo) {
-  return `<article class="ucard ${u.st === 'sold' ? 'sold' : ''}"><a class="ulnk" href="#menzil-${u.id}" aria-label="${esc(uTitle(u))}"></a>${photo ? `<div class="ph">${pic(bPic(u.b), bLbl(u), { sizes: '300px' })}</div>` : ''}
-    <div class="uact"><button type="button" class="ub ${isFav(u.id) ? 'on' : ''}" data-fav="${u.id}" aria-label="Seçilmişlərə əlavə et" title="Seçilmişlər">${I.heart}</button><button type="button" class="ub ${isCmp(u.id) ? 'on' : ''}" data-cmp="${u.id}" aria-label="Müqayisəyə əlavə et" title="Müqayisə">${I.cmp}</button></div>
-    <div class="top"><span class="a num">${fm2(u.a)} m²</span><span class="pr">${HP ? 'Sorğu ilə' : fmt(u.price) + ' ₼'}</span></div>
-    <div class="ln"><span>${roomsT(u.r)}</span><span>${I.bld}${bLbl(u)}</span><span>${I.fl}${ord(u.f)} mərtəbə</span></div>
-    <div class="ln">${u.c ? `<span class="tag">${esc(u.c)}</span>` : (SHOW_ST ? `<span class="tag g">${u.bst === 'ok' ? 'Hazır bina' : 'Tikilir'}</span>` : '')}${u.st === 'bron' ? '<span class="tag g">Bron</span>' : ''}${window.ncPlan(u.a, u.b) ? '<span class="tag g">Plan var</span>' : ''}</div></article>`;
-}
+function uCard(u) { return tCard(typeOf(u)); }
 function bCard(b) {
   const us = UNITS.filter(u => u.b === b.id), fr = us.filter(u => u.st === 'free');
   const a0 = fr.length ? Math.min(...fr.map(u => u.a)) : 0, a1 = fr.length ? Math.max(...fr.map(u => u.a)) : 0;
@@ -188,7 +182,7 @@ function quiz() {
       $$('.qopt', box).forEach(b => b.onclick = () => { Object.assign(A, opts[+b.dataset.i][1]); q++; draw(); }); return; }
     let L = match(); const relaxed = !L.length; if (relaxed) { delete A.c; L = match(); }
     box.innerHTML = `<h2 class="h2">${L.length ? (SHOW_STOCK ? L.length + ' uyğun mənzil tapdıq' : 'Sizə uyğun mənzillər') : 'Uyğun mənzil hazırda yoxdur'}</h2><p class="lead" style="margin:6px 0 16px">${relaxed && L.length ? 'Təmir şərti olmadan nəticələr göstərilir.' : L.length ? 'Ən uyğun variantlar:' : 'Yeni mənzil satışa çıxanda sizə xəbər verək.'}</p>
-      <div class="ugrid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">${L.sort((a, b) => a.a - b.a).slice(0, 4).map(u => uCard(u)).join('')}</div>
+      <div class="ugrid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">${L.sort((a, b) => a.a - b.a).map(u => u).filter((u, i, A) => A.findIndex(x => tKey(x) === tKey(u)) === i).slice(0, 4).map(u => uCard(u)).join('')}</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">${L.length ? `<a class="btn" href="#menziller?${new URLSearchParams(Object.assign({}, A.r ? { r: A.r[A.r.length - 1] >= 4 ? 4 : '' } : {}, A.ph ? { ph: A.ph } : {}, A.c ? { c: A.c } : {})).toString()}" data-x>Hamısına bax ${I.ar}</a>` : ''}<button class="btn tn" type="button" data-alert>${I.bell} Xəbər ver</button></div>`;
   };
   draw();
@@ -288,14 +282,14 @@ function offersBlock() {
   const L = [1, 2, 3, 4].flatMap(r => pickBy(r).filter((u, i, A) => A.findIndex(x => Math.abs(x.a - u.a) < .5 && x.b === u.b) === i).slice(0, 2));
   if (!L.length) return '';
   return `<div class="sh"><h2 class="h2">Satışda olan mənzillər</h2><div style="display:flex;gap:10px;align-items:center"><a class="pillbtn" href="#menziller">Hamısına bax ${I.ar}</a>${railNav()}</div></div>
-    <div class="rail">${L.map(u => uCard(u, true)).join('')}</div>`;
+    <div class="rail">${uniqT(L).map(x => tCard(x)).join('')}</div>`;
 }
 const railNav = () => `<div class="rail-nav"><button type="button" aria-label="Geri" data-rd="-1">${I.al}</button><button type="button" aria-label="İrəli" data-rd="1">${I.ar}</button></div>`;
 function bindRail(root) { $$('[data-rd]', root).forEach(b => b.onclick = () => { const sec = b.closest('section') || root, r = $('.rail', sec); if (r) r.scrollBy({ left: +b.dataset.rd * (r.clientWidth * .8), behavior: 'smooth' }); }); }
 /* 4: son baxılanlar */
 function seenBlock(skip) {
-  const L = SEEN.map(uById).filter(u => u && u.id !== skip); if (!L.length) return '';
-  return `<section class="sec wrap"><div class="sh"><h2 class="h2">Son baxdığınız mənzillər</h2><div style="display:flex;gap:10px;align-items:center"><button class="lk" type="button" data-clrseen>Təmizlə</button>${railNav()}</div></div><div class="rail">${L.map(u => uCard(u)).join('')}</div></section>`;
+  const sk = skip && uById(skip), L = uniqT(SEEN.map(uById).filter(u => u && (!sk || tKey(u) !== tKey(sk)))); if (!L.length) return '';
+  return `<section class="sec wrap"><div class="sh"><h2 class="h2">Son baxdığınız mənzillər</h2><div style="display:flex;gap:10px;align-items:center"><button class="lk" type="button" data-clrseen>Təmizlə</button>${railNav()}</div></div><div class="rail">${L.map(x => tCard(x)).join('')}</div></section>`;
 }
 document.addEventListener('click', e => { if (e.target.closest('[data-clrseen]')) { SEEN = []; LS.set('seen', SEEN); const s = e.target.closest('section'); if (s) s.remove(); } });
 const promoBlock = () => `<div class="promo"><div class="tx"><h2>Hazır binalarda açarı bu gün alın</h2><p class="lead">A, B və C binaları tikilib və təhvil verilib. Mənzilə baxın, müqavilədən sonra açarı dərhal təhvil alın.</p>
@@ -350,17 +344,17 @@ pages.bina = id => {
   return {
     title: `Bina ${id} — Nizami City`, html: `${pHead('Bina ' + id, stTxt(b.st), `<div class="stats"><div class="stat"><b>${fls.length}</b><span>mərtəbə</span></div>${SHOW_STOCK ? `<div class="stat"><b>${us.filter(u => u.st === 'free').length}</b><span>satışda</span></div>${us.length ? `<div class="stat"><b>${Math.round(sold * 100 / us.length)}%</b><span>satılıb</span></div>` : ''}` : ''}</div>`, [['Binalar', 'binalar'], ['Bina ' + id]])}
     <section class="sec wrap">${maqHtml('mqB', { sm: true, tour: false })}</section>
-    <section class="sec wrap">${us.length ? `<div class="sh"><h2 class="h2" id="flT"></h2><div class="tabs" id="bv"${SHOW_STOCK ? '' : ' style="display:none"'}><button type="button" data-v="fl" class="on">Mərtəbə üzrə</button>${SHOW_STOCK ? `<button type="button" data-v="ch">${I.grid} Şahmatka</button>` : ''}</div></div><div id="bvb"></div>` : `<div class="empty">Bu binanın mənzilləri hazırda saytda göstərilmir. Satış ofisindən məlumat alın: ${esc(CO.short)}</div>`}</section>
+    <section class="sec wrap">${us.length ? `<div class="sh"><h2 class="h2" id="flT"></h2><div class="tabs" id="bv"${SHOW_STOCK ? '' : ' style="display:none"'}><button type="button" data-v="fl" class="on">Mənzil planları</button>${SHOW_STOCK ? `<button type="button" data-v="ch">${I.grid} Şahmatka</button>` : ''}</div></div><div id="bvb"></div>` : `<div class="empty">Bu binanın mənzilləri hazırda saytda göstərilmir. Satış ofisindən məlumat alın: ${esc(CO.short)}</div>`}</section>
     <section class="sec wrap">${contactBlock({ title: 'Bina ' + id + ' üzrə sorğu', kind: 'price' })}</section>`,
     mount(r) {
       const box = $('#bvb', r);
-      const drawFl = f => { fl = f; $('#flT', r).textContent = ord(f) + ' mərtəbə'; box.innerHTML = `<div class="floors">${fls.map(x => `<button type="button" data-f="${x}" class="${x === f ? 'on' : ''}"><b>${x}</b><span>${SHOW_STOCK ? us.filter(u => u.f === x && u.st === 'free').length + ' satışda' : 'mərtəbə'}</span></button>`).join('')}</div><div class="ugrid" style="margin-top:14px">${us.filter(u => u.f === f).map(u => uCard(u)).join('')}</div>`; $$('.floors button', box).forEach(x => x.onclick = () => drawFl(+x.dataset.f)); };
+      const drawFl = f => { $('#flT', r).textContent = 'Mənzil planları'; box.innerHTML = `<div class="ugrid">${typesGrid(us.filter(u => u.st !== 'sold'), id) || '<div class="empty" style="grid-column:1/-1">Bu binada satışda mənzil yoxdur.</div>'}</div>`; return; box.innerHTML = `<div class="floors">${fls.map(x => `<button type="button" data-f="${x}" class="${x === f ? 'on' : ''}"><b>${x}</b><span>${SHOW_STOCK ? us.filter(u => u.f === x && u.st === 'free').length + ' satışda' : 'mərtəbə'}</span></button>`).join('')}</div><div class="ugrid" style="margin-top:14px">${us.filter(u => u.f === f).map(u => uCard(u)).join('')}</div>`; $$('.floors button', box).forEach(x => x.onclick = () => drawFl(+x.dataset.f)); };
       /* 9: şahmatka */
       const drawCh = () => { $('#flT', r).textContent = 'Şahmatka'; const ents = [...new Set(us.map(u => u.ent))].sort();
         box.innerHTML = `<div class="card chess-w"><div class="chess-lg"><span><i class="c-free"></i>Satışda</span><span><i class="c-bron"></i>Bron</span><span><i class="c-sold"></i>Satılıb</span></div>${ents.map(e => `${ents.length > 1 ? `<h3 class="h3" style="margin:14px 0 8px">${e}-ci giriş</h3>` : ''}<div class="chess">${fls.map(f => { const row = us.filter(u => u.f === f && u.ent === e).sort((a, c) => a.n - c.n); return row.length ? `<div class="ch-r"><b>${f}</b>${row.map(u => `<a class="ch-c c-${u.st}" href="#menzil-${u.id}" title="${esc(uTitle(u))}${u.st === 'sold' ? ' · satılıb' : ''}"><span>${roomsT(u.r).replace(' otaqlı', 'o')}</span><small>${Math.round(u.a)} m²</small></a>`).join('')}</div>` : ''; }).join('')}</div>`).join('')}</div>`; };
       if (us.length) { $('#bv', r).onclick = e => { const t = e.target.closest('button'); if (!t) return; view = t.dataset.v; $$('#bv button', r).forEach(x => x.classList.toggle('on', x === t)); view === 'ch' ? drawCh() : drawFl(fl); }; drawFl(fl); }
       bindLead(r);
-      const curF = () => { const b = $('.floors button.on', r); return b ? +b.dataset.f : null; };
+      const curF = () => null;
       mountMaq($('#mqB', r), { autoRotate: false, onPick: x => { if (x !== id) location.hash = 'bina-' + x; }, homeFn: m => m.focus(id, curF()), ready: m => { m.focus(id, curF()); r.addEventListener('click', e => { const b = e.target.closest('.floors button'); if (b) m.focus(id, +b.dataset.f); else if (e.target.closest('#bv button')) setTimeout(() => m.focus(id, curF()), 0); }); } });
     }
   };
@@ -383,14 +377,14 @@ pages.menziller = qs => { fFromQuery(qs); return {
     <div class="fld"><label for="fB">Bina</label><select class="sel" id="fB"><option value="">Bütün binalar</option>${BLD.map(b => `<option value="${b.id}">Bina ${b.id}</option>`).join('')}</select></div>
     <div class="fld"><label for="fA">Sahə</label><select class="sel" id="fA">${AREAS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('')}</select></div>
     <div class="fld"><label for="fC">Vəziyyət</label><select class="sel" id="fC"><option value="">Hamısı</option><option>Təmirli</option><option>White Box</option><option>Təmirsiz</option></select></div>
-    <div class="fld"><label for="fS">Sıralama</label><select class="sel" id="fS">${HP ? '' : '<option value="pa">Qiymət: ucuzdan</option><option value="pd">Qiymət: bahadan</option>'}<option value="aa">Sahə: kiçikdən</option><option value="ad">Sahə: böyükdən</option><option value="fd">Mərtəbə: yuxarıdan</option></select></div></div>
-    <div class="cnt"><div><b class="num" id="fN"></b> <span class="mu">mənzil tapıldı</span></div><div style="display:flex;gap:14px;flex-wrap:wrap"><button class="lk" type="button" data-share-f>${I.share} Axtarışı paylaş</button><button class="lk" type="button" id="fAl">${I.bell} Yeni mənzil çıxanda xəbər ver</button><button class="lk" type="button" id="fR">Filtrləri sıfırla</button></div></div>
+    <div class="fld"><label for="fS">Sıralama</label><select class="sel" id="fS">${HP ? '' : '<option value="pa">Qiymət: ucuzdan</option><option value="pd">Qiymət: bahadan</option>'}<option value="aa">Sahə: kiçikdən</option><option value="ad">Sahə: böyükdən</option></select></div></div>
+    <div class="cnt"><div><b class="num" id="fN"></b> <span class="mu">mənzil planı tapıldı</span></div><div style="display:flex;gap:14px;flex-wrap:wrap"><button class="lk" type="button" data-share-f>${I.share} Axtarışı paylaş</button><button class="lk" type="button" id="fAl">${I.bell} Yeni mənzil çıxanda xəbər ver</button><button class="lk" type="button" id="fR">Filtrləri sıfırla</button></div></div>
     <div class="ugrid" id="fG"></div><div class="more"><button class="btn tn" type="button" id="fM">Daha çox göstər</button></div></section>
   ${seenBlock()}
   <section class="sec wrap">${contactBlock({ title: 'Uyğun mənzili birlikdə seçək', kind: 'price' })}</section>`,
   mount(r) {
     const sync = () => { $$('.seg[data-k]', r).forEach(s => $$('button', s).forEach(b => b.classList.toggle('on', String(F[s.dataset.k]) === b.dataset.v))); $('#fB', r).value = F.b; $('#fS', r).value = F.sort; $('#fC', r).value = F.c; const av = F.a0 || F.a1 ? (F.a0 || 0) + '-' + (F.a1 || 999) : ''; $('#fA', r).value = AREAS.some(a => a[0] === av) ? av : ''; const q = fQuery(); history.replaceState(null, '', '#menziller' + (q ? '?' + q : '')); };
-    const draw = () => { const L = filtered(); $('#fN', r).textContent = L.length; $('#fG', r).innerHTML = L.slice(0, F.n).map(u => uCard(u)).join('') || `<div class="empty" style="grid-column:1/-1"><p style="margin:0 0 14px">Bu filtrlərlə satışda mənzil yoxdur.</p><button class="btn" type="button" data-alert="${esc(critText())}">${I.bell} Uyğun mənzil çıxanda xəbər ver</button></div>`; $('#fM', r).style.display = L.length > F.n ? '' : 'none'; };
+    const draw = () => { const U = filtered(), L = uniqT(U), cmpS = { pa: (a, b) => a.pmin - b.pmin, pd: (a, b) => b.pmin - a.pmin, aa: (a, b) => a.r - b.r || a.a - b.a, ad: (a, b) => b.a - a.a }[F.sort] || ((a, b) => a.a - b.a); L.sort((a, b) => (!!b.plan - !!a.plan) || cmpS(a, b)); $('#fN', r).textContent = L.length; $('#fG', r).innerHTML = L.slice(0, F.n).map(x => tCard(x, F.b ? x.blds.filter(b => b === F.b) : null)).join('') || `<div class="empty" style="grid-column:1/-1"><p style="margin:0 0 14px">Bu filtrlərlə satışda mənzil yoxdur.</p><button class="btn" type="button" data-alert="${esc(critText())}">${I.bell} Uyğun mənzil çıxanda xəbər ver</button></div>`; $('#fM', r).style.display = L.length > F.n ? '' : 'none'; };
     const ch = () => { F.n = 24; sync(); draw(); };
     $$('.seg[data-k]', r).forEach(s => s.onclick = e => { const b = e.target.closest('button'); if (!b) return; F[s.dataset.k] = s.dataset.k === 'r' ? +b.dataset.v : b.dataset.v; ch(); });
     $('#fB', r).onchange = e => { F.b = e.target.value; ch(); }; $('#fS', r).onchange = e => { F.sort = e.target.value; sync(); draw(); }; $('#fC', r).onchange = e => { F.c = e.target.value; ch(); };
@@ -404,12 +398,12 @@ pages.menziller = qs => { fFromQuery(qs); return {
 /* 1: seçilmişlər */
 pages.secilmis = () => { const L = FAV.map(uById).filter(Boolean); return {
   title: 'Seçilmişlər — Nizami City', html: `${pHead('Seçilmişlər', L.length ? L.length + ' mənzil yadda saxlanılıb. Siyahı bu cihazda saxlanılır.' : 'Mənzil kartındakı ♡ düyməsi ilə bəyəndiyiniz mənzilləri burada toplayın.', L.length ? `<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn tn" type="button" id="fvW">${I.wa} Menecerə göndər</button><button class="btn tn" type="button" id="fvC">Hamısını müqayisə et</button></div>` : '')}
-  <section class="sec wrap">${L.length ? `<div class="ugrid">${L.map(u => uCard(u)).join('')}</div>` : `<div class="empty"><p style="margin:0 0 14px">Hələ mənzil seçməmisiniz.</p><a class="btn" href="#menziller">Mənzillərə bax ${I.ar}</a></div>`}</section>
+  <section class="sec wrap">${L.length ? `<div class="ugrid">${uniqT(L).map(x => tCard(x)).join('')}</div>` : `<div class="empty"><p style="margin:0 0 14px">Hələ mənzil seçməmisiniz.</p><a class="btn" href="#menziller">Mənzillərə bax ${I.ar}</a></div>`}</section>
   ${L.length ? `<section class="sec wrap">${contactBlock({ title: 'Seçdiyiniz mənzillər üzrə sorğu', kind: 'price' })}</section>` : ''}`,
   mount(r) { const w = $('#fvW', r); if (w) w.onclick = () => open(`https://wa.me/${WA()}?text=${encodeURIComponent('Salam! Nizami City-də bu mənzillərlə maraqlanıram:\n' + L.map(u => '• ' + uTitle(u)).join('\n'))}`, '_blank'); const c = $('#fvC', r); if (c) c.onclick = () => { CMP = L.slice(0, 3).map(u => u.id); LS.set('cmp', CMP); location.hash = 'muqayise'; }; bindLead(r); }
 }; };
 /* 2: müqayisə */
-pages.muqayise = () => { const L = CMP.map(uById).filter(Boolean); const rows = [['Şəkil', u => `<div class="cm-ph">${pic(bPic(u.b), bLbl(u), { sizes: '300px' })}</div>`], ['Plan', u => { const p = window.ncPlan(u.a, u.b); return p ? `<img class="cm-pl" src="${p.img}" alt="Mənzil planı" loading="lazy">` : '<span class="mu">—</span>'; }], ['Qiymət', u => `<b>${priceT(u)}</b>`], ['Otaq sayı', u => u.r], ['Sahə', u => fm2(u.a) + ' m²'], ['Bina', u => bLbl(u)], ['Mərtəbə', u => u.f + ' / ' + (window.NC_FLOORS || 10)], ['Vəziyyət', u => esc(u.c || condOf(u))],  ...(SHOW_ST ? [['Təhvil', u => u.bst === 'ok' ? 'Hazırdır' : SHOW_DEL ? CO.delivery : 'Tikilir']] : []), ['Status', u => u.st === 'bron' ? 'Bron' : u.st === 'sold' ? 'Satılıb' : 'Satışda'], ['', u => `<div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn sm" href="#menzil-${u.id}">Bax</a><button class="btn tn sm" type="button" data-cmp="${u.id}">Çıxar</button></div>`]];
+pages.muqayise = () => { const L = CMP.map(uById).filter(Boolean); const rows = [['Plan', u => { const p = window.ncPlan(u.a, u.b); return p ? `<img class="cm-pl" src="${p.img}" alt="Mənzil planı" loading="lazy">` : '<span class="mu">—</span>'; }], ['Qiymət', u => `<b>${priceT(u)}</b>`], ['Otaq sayı', u => u.r], ['Sahə', u => fm2(u.a) + ' m²'], ['Binalar', u => typeOf(u).blds.join(', ')], ['Vəziyyət', u => esc(u.c || condOf(u))],  ...(SHOW_ST ? [['Təhvil', u => u.bst === 'ok' ? 'Hazırdır' : SHOW_DEL ? CO.delivery : 'Tikilir']] : []), ['Status', u => u.st === 'bron' ? 'Bron' : u.st === 'sold' ? 'Satılıb' : 'Satışda'], ['', u => `<div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn sm" href="#menzil-${u.id}">Bax</a><button class="btn tn sm" type="button" data-cmp="${u.id}">Çıxar</button></div>`]];
   return { title: 'Müqayisə — Nizami City', html: `${pHead('Müqayisə', L.length ? 'Ən çox 3 mənzil yan-yana.' : 'Mənzil kartındakı ⇅ düyməsi ilə 3 mənzilədək seçib burada müqayisə edin.')}
   <section class="sec wrap">${L.length ? `<div class="card cmp-w"><table class="cmp"><tbody>${rows.map(([t, f]) => `<tr><th>${t}</th>${L.map(u => `<td>${f(u)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : `<div class="empty"><a class="btn" href="#menziller">Mənzillərə bax ${I.ar}</a></div>`}</section>`,
     mount(r) { r.addEventListener('click', e => { if (e.target.closest('[data-cmp]')) setTimeout(() => { if (location.hash.startsWith('#muqayise')) render(); }, 0); }); } }; };
@@ -469,14 +463,15 @@ function parse() {
   if (h === 'menziller') return ['menziller', qs];
   if ((m = h.match(/^bina-([A-Z])$/))) return ['bina', m[1]];
   if ((m = h.match(/^menzil-(.+)$/))) return ['menzil', m[1]];
+  if ((m = h.match(/^plan-(.+)$/))) return ['tip', m[1]];
   if ((m = h.match(/^bloq-(.+)$/))) return OFF.bloq ? ['home'] : ['post', m[1]];
   if (h === 'layihe' || h === 'gunes' || h === 'qalereya') return ['binalar'];
-  return [pages[h] && !['bina', 'menzil', 'post'].includes(h) && !OFF[h] ? h : 'home'];
+  return [pages[h] && !['bina', 'menzil', 'post', 'tip'].includes(h) && !OFF[h] ? h : 'home'];
 }
 function render() {
   beforeRender(); const [k, arg] = parse(), pg = pages[k](arg), main = $('#view');
   main.innerHTML = pg.html; document.title = pg.title || 'Nizami City';
-  const act = k === 'menzil' ? 'menziller' : k === 'bina' ? 'binalar' : k === 'post' ? 'bloq' : k;
+  const act = k === 'menzil' || k === 'tip' ? 'menziller' : k === 'bina' ? 'binalar' : k === 'post' ? 'bloq' : k;
   $$('.nav a, .menu nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + act));
   scrollTo(0, 0); pg.mount && pg.mount(main); syncBadges();
   $$('a[data-ph]', main).forEach(a => a.setAttribute('href', '#menziller?ph=' + a.dataset.ph));

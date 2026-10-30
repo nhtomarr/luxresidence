@@ -384,3 +384,24 @@ html[data-theme=dark] .expl i{background:#4a3f22;color:#f2deb3}
 html[data-theme=dark] .cmap-p{background:#fff}
 @media(min-width:901px){.cmap-m.maplibregl-map{position:absolute!important}}
 .cmap-z{overflow:hidden}.cmap-z .cmap-b:hover{transform:none;background:#f2f4f8}
+
+/* mənzil tipi kartları (LUX məntiqi) */
+.tcard{padding:0;overflow:hidden;gap:0}
+.tcard .tpl{aspect-ratio:4/3;background:radial-gradient(circle at 50% 45%,#fbfbf8,#eef0e7 85%);display:grid;place-items:center;padding:16px;position:relative}
+.tcard .tpl img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 12px 14px rgba(30,36,26,.16));transition:transform .5s}
+.tcard:hover .tpl img{transform:scale(1.04)}
+.tpl-ph{width:42%;color:#c6ccb8}
+.tpl{display:grid;place-items:center;gap:6px;text-align:center}
+.tpl span{font-size:12.5px;color:var(--mut)}
+.tpl-big{aspect-ratio:16/10;border-radius:16px;background:var(--soft)}
+.tcard .uact{top:12px;right:12px}
+.tcard .tb{padding:14px 16px 16px;display:grid;gap:8px}
+.tcard .ts{font-size:19px;font-weight:600;letter-spacing:-.01em}
+.tl{display:flex;align-items:flex-start;gap:6px;font-size:14px;color:var(--ink2)}
+.tl svg{width:16px;height:16px;flex:none;margin-top:2px;color:var(--mut)}
+.tcard .tf{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid var(--line);padding-top:10px;margin-top:2px}
+.tcard .pr{font-weight:600;color:var(--olive);font-size:15px}
+.tcard .lk{font-size:14.5px}
+html[data-theme=dark] .tcard .tpl{background:radial-gradient(circle at 50% 45%,#f4f5f0,#dfe3d6 85%)}
+.tcard .tpl{overflow:hidden}
+.tcard .tpl img{position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px);object-fit:contain}

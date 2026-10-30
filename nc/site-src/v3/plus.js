@@ -422,4 +422,66 @@ function bindCity(r) {
   const io = new IntersectionObserver(es => { if (es[0].isIntersecting) { io.disconnect(); start(); } }, { rootMargin: '300px' }); io.observe(box);
 }
 
+
+/* ===== Mənzil tipləri (LUX məntiqi): kart = plan + otaq·sahə + binalar; mərtəbə/giriş bölgüsü yoxdur ===== */
+// Eyni plana düşən mənzillər bir kartdır (məs. 84,40 / 84,42 / 84,57); planı olmayanlar sahə + otaq sayına görə qruplaşır
+const tKey = u => { const p = window.ncPlan(u.a, u.b); return p ? 'p' + p.a.toFixed(2) : (+u.a).toFixed(2) + '-' + (u.r || 0); };
+const mode = L => { const c = {}; L.forEach(x => c[x] = (c[x] || 0) + 1); return Object.keys(c).sort((a, b) => c[b] - c[a])[0]; };
+const TYPES = {};
+free.forEach(u => { const k = tKey(u); (TYPES[k] = TYPES[k] || { key: k, units: [] }).units.push(u); });
+Object.values(TYPES).forEach(t => {
+  t.a = +mode(t.units.map(u => (+u.a).toFixed(2))); t.r = +mode(t.units.map(u => u.r || 0));
+  t.blds = [...new Set(t.units.map(u => u.b))].sort();
+  t.plan = t.blds.map(b => window.ncPlan(t.a, b)).find(Boolean) || null;
+  t.rep = (t.units.find(u => u.st === 'free') || t.units[0]);
+  t.conds = [...new Set(t.units.map(u => u.c || condOf(u)))];
+  t.nFree = t.units.filter(u => u.st === 'free').length;
+  t.pmin = Math.min(...t.units.map(u => u.price || Infinity));
+});
+const typeOf = u => TYPES[tKey(u)] || { key: tKey(u), a: +u.a, r: u.r, units: [u], blds: [u.b], plan: window.ncPlan(u.a, u.b), rep: u, conds: [u.c || condOf(u)], nFree: u.st === 'free' ? 1 : 0, pmin: u.price };
+const uniqT = L => { const s = new Set(), o = []; L.forEach(u => { const t = typeOf(u); if (!s.has(t.key)) { s.add(t.key); o.push(t); } }); return o; };
+const tTitle = t => `${roomsT(t.r)} · ${fm2(t.a)} m²`;
+const bList = L => L.map(b => 'Bina ' + b).join(', ');
+const PLSVG = '<svg viewBox="0 0 120 90" class="tpl-ph" aria-hidden="true"><rect x="8" y="8" width="104" height="74" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><path d="M50 8v30H8M50 56v26M80 38h32M80 38v44M50 38h12" fill="none" stroke="currentColor" stroke-width="3"/></svg>';
+function tCard(t, blds) {
+  const r = t.rep, bl = blds || t.blds;
+  return `<article class="ucard tcard"><a class="ulnk" href="#plan-${t.key}" aria-label="${esc(tTitle(t))}"></a>
+    <div class="tpl">${t.plan ? `<img src="${t.plan.img}" alt="${esc(roomsT(t.r))} mənzil planı, ${fm2(t.a)} m²" loading="lazy" decoding="async">` : `${PLSVG}<span>Plan satış ofisində</span>`}</div>
+    <div class="uact"><button type="button" class="ub ${isFav(r.id) ? 'on' : ''}" data-fav="${r.id}" aria-label="Seçilmişlərə əlavə et" title="Seçilmişlər">${I.heart}</button><button type="button" class="ub ${isCmp(r.id) ? 'on' : ''}" data-cmp="${r.id}" aria-label="Müqayisəyə əlavə et" title="Müqayisə">${I.cmp}</button></div>
+    <div class="tb"><b class="ts">${tTitle(t)}</b><span class="tl">${I.pin}${bList(bl)}</span>
+    ${SHOW_STOCK ? `<span class="mu" style="font-size:13.5px">${t.nFree} mənzil satışda</span>` : ''}
+    <div class="tf"><span class="pr">${HP ? 'Qiymət sorğu ilə' : fmt(t.pmin) + ' ₼-dan'}</span><span class="lk">Ətraflı ${I.ar}</span></div></div></article>`;
+}
+function typesGrid(units, filterB) { return uniqT(units).sort((a, b) => a.r - b.r || a.a - b.a).map(t => tCard(t, filterB ? t.blds.filter(b => b === filterB) : null)).join(''); }
+
+pages.tip = key => {
+  const t = TYPES[key]; if (!t) return pages.menziller();
+  const u = t.rep, url = location.origin + location.pathname + '#plan-' + t.key;
+  const sim = Object.values(TYPES).filter(x => x.key !== t.key && x.r === t.r).sort((a, b) => Math.abs(a.a - t.a) - Math.abs(b.a - t.a)).slice(0, 4);
+  const msg = `${tTitle(t)} (${bList(t.blds)})`;
+  return {
+    title: `${roomsT(t.r)} mənzil, ${fm2(t.a)} m² — Nizami City`, html: `<section class="ph wrap">${crumbs(['Mənzillər', 'menziller'], [tTitle(t)])}
+      <div class="prn-h"><img src="/assets/nc/logo.png" alt=""><div><b>Nizami City</b><br>${esc(CO.addr)} · ${esc(CO.short)}</div><div class="prn-qr" data-qr="${esc(url)}"></div></div>
+      <div class="unit"><div style="display:grid;gap:16px">${t.plan ? planCard({ a: t.a, b: t.plan ? t.blds.find(b => window.ncPlan(t.a, b)) : u.b }) : `<div class="plan"><div class="tpl tpl-big">${PLSVG}<span>Bu mənzilin planını satış ofisi təqdim edir</span></div></div>`}
+        <div class="plan"><div class="sh" style="margin-bottom:14px;align-items:center"><h3 class="h3">Binada yerləşmə</h3><span class="mu" style="font-size:14px">${bList(t.blds)}</span></div>${maqHtml('mqU', { sm: true, tour: false })}</div></div>
+      <div class="side"><div class="card"><h1 class="h2">${roomsT(t.r)}, ${fm2(t.a)} m²</h1><p class="mu tl" style="margin:8px 0 16px">${I.pin}${bList(t.blds)}</p>
+        <div class="prbox"><b>${HP ? 'Qiymət sorğu ilə' : fmt(t.pmin) + ' ₼-dan'}</b></div>
+        <div class="kv" style="margin-top:14px">${[['Otaq sayı', t.r], ['Sahə', fm2(t.a) + ' m²'], ['Binalar', t.blds.join(', ')], ['Vəziyyət', t.conds.join(', ')], ...(SHOW_STOCK ? [['Satışda', t.nFree + ' mənzil']] : [])].map(([a, b]) => `<div><span>${a}</span><b>${esc(b)}</b></div>`).join('')}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px"><a class="btn" href="#lfw">${HP ? 'Qiyməti öyrən' : 'Baxışa yazıl'} ${I.ar}</a><a class="btn tn" href="https://wa.me/${WA()}?text=${encodeURIComponent('Salam! Bu mənzillə maraqlanıram: ' + msg + ' — ' + url)}" target="_blank" rel="noopener">${I.wa} WhatsApp</a><button class="btn tn" type="button" data-callback="${u.id}">${I.ph} Zəng sifarişi</button></div>
+        <div class="uacts"><button type="button" class="ua ${isFav(u.id) ? 'on' : ''}" data-fav="${u.id}">${I.heart}<span>Seçilmiş</span></button><button type="button" class="ua ${isCmp(u.id) ? 'on' : ''}" data-cmp="${u.id}">${I.cmp}<span>Müqayisə</span></button><button type="button" class="ua" data-share="${u.id}">${I.share}<span>Paylaş</span></button><button type="button" class="ua" data-print>${I.prn}<span>Çap / PDF</span></button></div></div></div></div></section>
+    ${HP ? `<section class="sec wrap">${planBlock()}</section>` : ''}
+    <section class="sec wrap" id="lfw">${contactBlock({ title: HP ? 'Bu mənzilin qiyməti' : 'Bu mənzil üzrə sorğu', sub: 'Nömrənizi yazın — satış meneceri qiymət və ödəniş şərtlərini zəng edib desin.', kind: 'price' })}</section>
+    ${sim.length ? `<section class="sec wrap"><div class="sh"><h2 class="h2">Oxşar mənzillər</h2></div><div class="ugrid">${sim.map(x => tCard(x)).join('')}</div></section>` : ''}
+    ${seenBlock(u.id)}`,
+    mount(r) {
+      addSeen(u.id); bindLb(r); bindRail(r); bindPlan(r);
+      const f = $('#lf', r); if (f) bindForm(f, () => (($('[data-k=kind] .on', f) || {}).dataset || {}).v || 'price', () => { const v = k => (($(`[data-k=${k}] .on`, f) || {}).dataset || {}).v || ''; const k = v('kind') || 'price'; return { unit: u.id, slot: k === 'viewing' ? v('day') + ' ' + v('tm') : '', msg: (k === 'price' ? 'Qiymət sorğusu' : k === 'viewing' ? 'Baxışa yazılış' : 'Zəng sifarişi') + ': ' + msg }; }, d => `${esc(d.name)}, sorğunuz qəbul olundu. Satış meneceri qısa zamanda zəng edəcək.`);
+      if (f) { $$('.chips', f).forEach(c => c.addEventListener('click', () => setTimeout(() => $$('.lf-day', f).forEach(d => d.style.display = ((($('[data-k=kind] .on', f) || {}).dataset || {}).v === 'viewing') ? '' : 'none'), 0))); $$('.lf-day', f).forEach(d => d.style.display = ((($('[data-k=kind] .on', f) || {}).dataset || {}).v === 'viewing') ? '' : 'none'); }
+      $$('a[href="#lfw"]', r).forEach(a => a.onclick = e => { e.preventDefault(); $('#lfw', r).scrollIntoView({ behavior: 'smooth' }); });
+      mountMaq($('#mqU', r), { autoRotate: false, onPick: id => { location.hash = 'bina-' + id; }, homeFn: m => m.focus(t.blds[0]), ready: m => m.focus(t.blds[0]) });
+    }
+  };
+};
+pages.menzil = id => { const u = uById(id); return u ? pages.tip(typeOf(u).key) : pages.menziller(); };
+
 render();
