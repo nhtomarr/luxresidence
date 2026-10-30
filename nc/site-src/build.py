@@ -9,7 +9,7 @@ for k in img: assert (R/img[k].lstrip('/')).exists(), img[k]
 ANON = re.search(r"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_.-]+", (R/'assets/lux-auth.js').read_text()).group(0)
 t = (V/'index.tpl.html').read_text()
 for k, v in {'%FONTS%': (R/'assets/nc/fonts/fonts.css').read_text(), '%CSS%': (V/'app.css').read_text() + '\n' + (V/'plus.css').read_text(), '%IMG%': 'window.IMG=' + json.dumps(img) + ';',
-             '%MODEL%': (S/'model.js').read_text().split('window.buildNizami')[0] + 'window.ncSunPos' + (S/'model.js').read_text().split('window.ncSunPos')[1], '%MAQ%': (V/'maq.js').read_text(),
+             '%MODEL%': (S/'model.js').read_text().split('window.buildNizami')[0] + 'window.ncSunPos' + (S/'model.js').read_text().split('window.ncSunPos')[1], '%MAQ%': (V/'maq.js').read_text() + '\n' + (S/'plans.js').read_text(),
              '%DATA%': (S/'data.js').read_text(), '%APP%': (V/'app.js').read_text() + '\n' + (V/'plus.js').read_text(), '%RUNTIME%': (S/'runtime.js').read_text().replace('%ANON%', ANON)}.items():
     assert k in t, k; t = t.replace(k, v)
 import os; out = S.parent/os.environ.get('NC_OUT','site.html'); out.write_text(t); print(out, round(len(t)/1024), 'KB')

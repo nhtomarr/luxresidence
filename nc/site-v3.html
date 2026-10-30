@@ -747,6 +747,26 @@ html[data-theme=dark] .sprog{background:linear-gradient(90deg,var(--olive),var(-
 
 .nbh-sc{flex:1;display:flex;overflow-x:auto;scrollbar-width:none}.nbh-sc::-webkit-scrollbar{display:none}
 @media(max-width:700px){.nbh-s{min-width:680px}.hd-r>[data-ui-open]{display:none}.mq-b[data-mq=in],.mq-b[data-mq=out],.mq-b[data-mq=fs],.mq-sep{display:none}.uip{top:72px}}
+
+/* mənzil planı */
+.plx{display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:center}
+.plx-im{margin:0;background:radial-gradient(circle at 50% 45%,#fbfbf8,#eef0e7 85%);border-radius:16px;padding:clamp(12px,2vw,24px);display:grid;place-items:center}
+.plx-im img{width:100%;height:auto;max-height:520px;object-fit:contain;filter:drop-shadow(0 18px 22px rgba(30,36,26,.18));transition:transform .5s}
+.plx-im:hover img{transform:scale(1.02)}
+.expl{list-style:none;margin:0;padding:0;display:grid;gap:2px;font-size:15px}
+.expl li{display:flex;align-items:baseline;gap:8px;padding:7px 4px;border-radius:10px}
+.expl li:hover{background:var(--soft)}
+.expl i{flex:none;width:24px;height:24px;border-radius:50%;background:#e8dfc4;color:#5b4a1e;font-style:normal;font-size:12px;font-weight:600;display:grid;place-items:center;align-self:center}
+.expl em{flex:1;border-bottom:1.5px dotted var(--soft2);transform:translateY(-4px);min-width:12px}
+.expl b{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.expl .tot{margin-top:6px;border-top:1px solid var(--line);border-radius:0;padding-top:12px;font-weight:600}
+.expl .tot b{color:var(--olive);font-size:17px}
+.cm-pl{width:100%;max-width:220px;aspect-ratio:1;object-fit:contain;background:#f4f5f0;border-radius:12px;padding:8px}
+@media(max-width:1100px){.plx{grid-template-columns:1fr}}
+html[data-theme=dark] .plx-im{background:radial-gradient(circle at 50% 45%,#f4f5f0,#dfe3d6 85%)}
+html[data-theme=dark] .expl i{background:#4a3f22;color:#f2deb3}
+@media print{.pl-card{break-inside:avoid}.plx{grid-template-columns:1.2fr 1fr}}
+.pl-card .lk svg{width:18px;height:18px}.pl-card .lk{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -1006,6 +1026,27 @@ window.ncMaq = function (host, o) {
   applyLight();
   return api;
 };
+
+// Mənzil planları və eksplikasiya (developerin plan şəkillərindən köçürülüb). Açar: sahə m² (2 rəqəm). Şəkil: /assets/nc/plans/plan-<sahə>.png
+window.NC_PLANS = (function () {
+  const H = 'Holl', D = 'Dəhliz', M = 'Mətbəx', Z = 'Zal', S = 'Sanitar qovşaq', Y = 'Yataq otağı', Q = 'Qarderob', C = 'Camaşırxana', E = 'Eyvan';
+  const P = {
+    '81.91': [[H, 19.64], [M, 10.84], [Z, 16.18], [S, 5.00], [Y, 16.28], [C, 7.18], [E, 6.79]],
+    '84.40': [[D, 14.05], [M, 10.39], [Z, 25.00], [S, 7.59], [Y, 15.66], [Q, 4.40], [E, 7.31]],
+    '87.95': [[H, 16.60], [M, 5.95], [Z, 20.87], [S, 7.00], [Y, 16.77], [Q, 7.80], [C, 5.24], [E, 7.72]],
+    '113.18': [[H, 14.18], [D, 6.62], [M, 7.38], [Z, 21.89], [S, 7.15], [Y, 21.37], [Y, 16.18], [Q, 10.41], [E, 8.00]],
+    '123.71': [[H, 14.45], [D, 4.91], [M, 9.92], [Z, 26.79], [S, 6.33], [Y, 19.49], [E, 7.30], [Y, 20.94], [C, 4.53], [Q, 9.05]],
+    '129.00': [[H, 14.18], [M, 23.54], [Z, 26.92], [S, 8.94], [Y, 21.53], [Y, 20.06], [C, 5.59], [E, 8.24]],
+    '151.45': [[H, 22.20], [M, 23.32], [Z, 33.15], [S, 5.36], [S, 4.39], [Q, 7.06], [Y, 23.81], [Y, 22.82], [E, 9.34]],
+    '154.76': [[H, 14.45], [D, 9.13], [M, 18.89], [Z, 26.64], [S, 6.96], [S, 6.96], [C, 7.68], [Q, 4.13], [Y, 30.09], [Y, 22.97], [E, 6.96]],
+    '165.30': [[H, 23.77], [M, 20.36], [Z, 26.81], [S, 6.04], [S, 5.18], [C, 5.06], [Q, 9.23], [Q, 6.58], [Y, 25.29], [Y, 21.48], [E, 7.65], [E, 7.85]],
+    '206.70': [[H, 15.55], [D, 12.55], [M, 19.50], [Z, 32.82], [S, 7.01], [S, 5.47], [Y, 29.66], [Y, 18.74], [Y, 18.33], [Q, 4.72], [Q, 7.66], [Q, 7.35], ['İnventar', 6.18], [E, 8.85], [E, 12.31]],
+  };
+  const R = {};
+  Object.keys(P).forEach(a => { R[a] = { a: +a, rooms: P[a], img: '/assets/nc/plans/plan-' + a.replace('.', '_') + '.png' }; });
+  return R;
+})();
+window.ncPlan = function (area) { return window.NC_PLANS[(+area).toFixed(2)] || null; };
 </script>
 <script>window.__NC_START=function(){
 // Nizami City — məlumat qatı. İctimai mənbələr: report.az, ipoteka.az, Instagram @nizami.city.
@@ -1253,7 +1294,7 @@ function uCard(u, photo) {
     <div class="uact"><button type="button" class="ub ${isFav(u.id) ? 'on' : ''}" data-fav="${u.id}" aria-label="Seçilmişlərə əlavə et" title="Seçilmişlər">${I.heart}</button><button type="button" class="ub ${isCmp(u.id) ? 'on' : ''}" data-cmp="${u.id}" aria-label="Müqayisəyə əlavə et" title="Müqayisə">${I.cmp}</button></div>
     <div class="top"><span class="a num">${fm2(u.a)} m²</span><span class="pr">${HP ? 'Sorğu ilə' : fmt(u.price) + ' ₼'}</span></div>
     <div class="ln"><span>${roomsT(u.r)}</span><span>${I.bld}${bLbl(u)}</span><span>${I.fl}${ord(u.f)} mərtəbə</span></div>
-    <div class="ln">${u.c ? `<span class="tag">${esc(u.c)}</span>` : (SHOW_ST ? `<span class="tag g">${u.bst === 'ok' ? 'Hazır bina' : 'Tikilir'}</span>` : '')}${u.st === 'bron' ? '<span class="tag g">Bron</span>' : ''}</div></article>`;
+    <div class="ln">${u.c ? `<span class="tag">${esc(u.c)}</span>` : (SHOW_ST ? `<span class="tag g">${u.bst === 'ok' ? 'Hazır bina' : 'Tikilir'}</span>` : '')}${u.st === 'bron' ? '<span class="tag g">Bron</span>' : ''}${window.ncPlan(u.a) ? '<span class="tag g">Plan var</span>' : ''}</div></article>`;
 }
 function bCard(b) {
   const us = UNITS.filter(u => u.b === b.id), fr = us.filter(u => u.st === 'free');
@@ -1564,7 +1605,7 @@ pages.secilmis = () => { const L = FAV.map(uById).filter(Boolean); return {
   mount(r) { const w = $('#fvW', r); if (w) w.onclick = () => open(`https://wa.me/${WA()}?text=${encodeURIComponent('Salam! Nizami City-də bu mənzillərlə maraqlanıram:\n' + L.map(u => '• ' + uTitle(u)).join('\n'))}`, '_blank'); const c = $('#fvC', r); if (c) c.onclick = () => { CMP = L.slice(0, 3).map(u => u.id); LS.set('cmp', CMP); location.hash = 'muqayise'; }; bindLead(r); }
 }; };
 /* 2: müqayisə */
-pages.muqayise = () => { const L = CMP.map(uById).filter(Boolean); const rows = [['Şəkil', u => `<div class="cm-ph">${pic(bPic(u.b), bLbl(u), { sizes: '300px' })}</div>`], ['Qiymət', u => `<b>${priceT(u)}</b>`], ['Otaq sayı', u => u.r], ['Sahə', u => fm2(u.a) + ' m²'], ['Bina', u => bLbl(u)], ['Mərtəbə', u => u.f + ' / ' + (window.NC_FLOORS || 10)], ['Vəziyyət', u => esc(u.c || condOf(u))],  ...(SHOW_ST ? [['Təhvil', u => u.bst === 'ok' ? 'Hazırdır' : SHOW_DEL ? CO.delivery : 'Tikilir']] : []), ['Status', u => u.st === 'bron' ? 'Bron' : u.st === 'sold' ? 'Satılıb' : 'Satışda'], ['', u => `<div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn sm" href="#menzil-${u.id}">Bax</a><button class="btn tn sm" type="button" data-cmp="${u.id}">Çıxar</button></div>`]];
+pages.muqayise = () => { const L = CMP.map(uById).filter(Boolean); const rows = [['Şəkil', u => `<div class="cm-ph">${pic(bPic(u.b), bLbl(u), { sizes: '300px' })}</div>`], ['Plan', u => { const p = window.ncPlan(u.a); return p ? `<img class="cm-pl" src="${p.img}" alt="Mənzil planı" loading="lazy">` : '<span class="mu">—</span>'; }], ['Qiymət', u => `<b>${priceT(u)}</b>`], ['Otaq sayı', u => u.r], ['Sahə', u => fm2(u.a) + ' m²'], ['Bina', u => bLbl(u)], ['Mərtəbə', u => u.f + ' / ' + (window.NC_FLOORS || 10)], ['Vəziyyət', u => esc(u.c || condOf(u))],  ...(SHOW_ST ? [['Təhvil', u => u.bst === 'ok' ? 'Hazırdır' : SHOW_DEL ? CO.delivery : 'Tikilir']] : []), ['Status', u => u.st === 'bron' ? 'Bron' : u.st === 'sold' ? 'Satılıb' : 'Satışda'], ['', u => `<div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn sm" href="#menzil-${u.id}">Bax</a><button class="btn tn sm" type="button" data-cmp="${u.id}">Çıxar</button></div>`]];
   return { title: 'Müqayisə — Nizami City', html: `${pHead('Müqayisə', L.length ? 'Ən çox 3 mənzil yan-yana.' : 'Mənzil kartındakı ⇅ düyməsi ilə 3 mənzilədək seçib burada müqayisə edin.')}
   <section class="sec wrap">${L.length ? `<div class="card cmp-w"><table class="cmp"><tbody>${rows.map(([t, f]) => `<tr><th>${t}</th>${L.map(u => `<td>${f(u)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : `<div class="empty"><a class="btn" href="#menziller">Mənzillərə bax ${I.ar}</a></div>`}</section>`,
     mount(r) { r.addEventListener('click', e => { if (e.target.closest('[data-cmp]')) setTimeout(() => { if (location.hash.startsWith('#muqayise')) render(); }, 0); }); } }; };
@@ -1578,7 +1619,7 @@ pages.menzil = id => {
   return {
     title: `${roomsT(u.r)}, ${fm2(u.a)} m² — ${bLbl(u)} — Nizami City`, html: `<section class="ph wrap">${crumbs(['Mənzillər', 'menziller'], [bLbl(u)])}
       <div class="prn-h"><img src="/assets/nc/logo.png" alt=""><div><b>Nizami City</b><br>${esc(CO.addr)} · ${esc(CO.short)}</div><div class="prn-qr" data-qr="${esc(location.origin + location.pathname + '#menzil-' + u.id)}"></div></div>
-      <div class="unit"><div style="display:grid;gap:16px"><div class="gal" data-lb="u">${pic(bPic(u.b), bLbl(u), { eager: true, sizes: '(max-width:900px) 92vw, 58vw' })}</div><div class="thumbs" data-lb="u">${['aerial_c', 'entrance', 'street', 'aerial'].filter(k => k !== bPic(u.b)).map(k => pic(k, { aerial_c: 'Qapalı həyət', entrance: 'Giriş və terras', street: 'Kommersiya qalereyası', aerial: '3D vizual' }[k], { sizes: '200px' })).join('')}</div>${placeBlock(u)}</div>
+      <div class="unit"><div style="display:grid;gap:16px"><div class="gal" data-lb="u">${pic(bPic(u.b), bLbl(u), { eager: true, sizes: '(max-width:900px) 92vw, 58vw' })}</div><div class="thumbs" data-lb="u">${['aerial_c', 'entrance', 'street', 'aerial'].filter(k => k !== bPic(u.b)).map(k => pic(k, { aerial_c: 'Qapalı həyət', entrance: 'Giriş və terras', street: 'Kommersiya qalereyası', aerial: '3D vizual' }[k], { sizes: '200px' })).join('')}</div>${planCard(u)}${placeBlock(u)}</div>
       <div class="side"><div class="card"><h1 class="h2">${roomsT(u.r)}, ${fm2(u.a)} m²</h1><p class="mu" style="margin:6px 0 16px">${bLbl(u)} · ${ord(u.f)} mərtəbə</p>
         <div class="prbox"><b>${priceT(u)}</b>${!HP && u.st !== 'sold' ? `<span class="mu">${fmt(u.ppm)} ₼/m²</span>` : ''}</div>
         <div class="kv" style="margin-top:14px">${[['Otaq sayı', u.r], ['Sahə', fm2(u.a) + ' m²'], ['Mərtəbə', `${u.f} / ${window.NC_FLOORS || 10}`], ['Vəziyyət', u.c || condOf(u)], ...(SHOW_ST ? [['Təhvil', u.bst === 'ok' ? 'Hazırdır' : SHOW_DEL ? CO.delivery : 'Tikilir']] : []), ['Status', u.st === 'bron' ? 'Bron olunub' : u.st === 'sold' ? 'Satılıb' : 'Satışda']].map(([a, b]) => `<div><span>${a}</span><b>${esc(b)}</b></div>`).join('')}</div>
@@ -1767,6 +1808,16 @@ function bindPlace(r, u) {
   tb.onclick = e => { const b = e.target.closest('button'); if (!b) return; $$('button', tb).forEach(x => x.classList.toggle('on', x === b)); $$('[data-pv]', r).forEach(x => x.style.display = x.dataset.pv === b.dataset.v ? '' : 'none'); };
   bindIso(r);
   mountMaq($('#mqU', r), { autoRotate: false, onPick: id => { if (id !== u.b) location.hash = 'bina-' + id; }, homeFn: m => m.focus(u.b, u.f), ready: m => m.focus(u.b, u.f) });
+}
+
+/* mənzil planı + eksplikasiya */
+const f2 = n => (+n).toFixed(2).replace('.', ',');
+function planCard(u) {
+  const p = window.ncPlan(u.a); if (!p) return '';
+  return `<div class="plan pl-card"><div class="sh" style="margin-bottom:14px;align-items:center"><div><h3 class="h3">Mənzil planı</h3><span class="mu" style="font-size:14px">Ümumi sahə ${fm2(p.a)} m² · ${p.rooms.length} bölmə</span></div><a class="lk" href="${p.img}" download="Nizami-City-plan-${fm2(p.a)}m2.png">${I.doc} PNG yüklə</a></div>
+    <div class="plx"><figure class="plx-im" data-lb="pl"><img src="${p.img}" alt="Mənzil planı, ${fm2(p.a)} m²" loading="lazy" decoding="async"></figure>
+    <ol class="expl">${p.rooms.map(([n, m], i) => `<li><i>${i + 1}</i><span>${esc(n)}</span><em></em><b>${f2(m)} m²</b></li>`).join('')}<li class="tot"><span>Ümumi sahə</span><em></em><b>${f2(p.a)} m²</b></li></ol></div>
+    <p class="mu" style="margin:12px 0 0;font-size:13.5px">Plandakı rəqəmlər eksplikasiyadakı nömrələrə uyğundur. Mebel düzülüşü təqdimat xarakterlidir.</p></div>`;
 }
 
 /* ===== 8: kinematik hero ===== */
