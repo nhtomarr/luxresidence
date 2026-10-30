@@ -2108,7 +2108,6 @@ function afterRender(k, main) {
 const GEO = (() => { const g = String(SITE_.geo || '').match(/(-?\d+\.\d+)\s*[,; ]\s*(-?\d+\.\d+)/); return g ? [+g[2], +g[1]] : [49.8295, 40.3806]; })(); // [lng, lat]
 const PROJ = [
   { id: 'nc', n: 'Nizami City', sub: '«Nizami» metro stansiyası', ic: 'metro', img: '/assets/nc/site/front-1280.webp', ll: GEO, addr: CO.addr, tel: CO.short, href: '#binalar', more: 'Binalara bax' },
-  { id: 'lux', n: 'LUX Residence', sub: '«Elmlər Akademiyası» metro stansiyası', ic: 'metro', img: '/assets/og-cover.jpg', ll: [49.81879, 40.36664], addr: 'Ə.Ələkbərov, M.Müşfiq, S.Dağlı, İ.Qutqaşınlı küç. kəsişməsi', href: 'https://luxresidence.az', more: 'luxresidence.az', ext: true },
 ];
 const NEAR = [
   { n: 'Nizami metrosu', c: 'Nəqliyyat', ic: 'metro', ll: [49.83002, 40.37932] },
@@ -2223,7 +2222,7 @@ function bindCity(r) {
 }
 
 
-/* ===== Mənzil tipləri (LUX məntiqi): kart = plan + otaq·sahə + binalar; mərtəbə/giriş bölgüsü yoxdur ===== */
+/* ===== Mənzil tipləri (plan üzrə): kart = plan + otaq·sahə + binalar; mərtəbə/giriş bölgüsü yoxdur ===== */
 // Eyni plana düşən mənzillər bir kartdır (məs. 84,40 / 84,42 / 84,57); planı olmayanlar sahə + otaq sayına görə qruplaşır
 const tKey = u => { const p = window.ncPlan(u.a, u.b); return p ? 'p' + p.a.toFixed(2) : (+u.a).toFixed(2) + '-' + (u.r || 0); };
 const mode = L => { const c = {}; L.forEach(x => c[x] = (c[x] || 0) + 1); return Object.keys(c).sort((a, b) => c[b] - c[a])[0]; };
