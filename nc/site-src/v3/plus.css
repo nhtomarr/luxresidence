@@ -298,3 +298,4 @@ html[data-theme=dark] .plx-im{background:radial-gradient(circle at 50% 45%,#f4f5
 html[data-theme=dark] .expl i{background:#4a3f22;color:#f2deb3}
 @media print{.pl-card{break-inside:avoid}.plx{grid-template-columns:1.2fr 1fr}}
 .pl-card .lk svg{width:18px;height:18px}.pl-card .lk{white-space:nowrap}
+.expl .tot2{font-size:14px;color:var(--mut)}.expl .tot2 b{color:var(--ink2);font-weight:500}

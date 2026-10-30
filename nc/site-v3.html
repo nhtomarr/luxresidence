@@ -767,6 +767,7 @@ html[data-theme=dark] .plx-im{background:radial-gradient(circle at 50% 45%,#f4f5
 html[data-theme=dark] .expl i{background:#4a3f22;color:#f2deb3}
 @media print{.pl-card{break-inside:avoid}.plx{grid-template-columns:1.2fr 1fr}}
 .pl-card .lk svg{width:18px;height:18px}.pl-card .lk{white-space:nowrap}
+.expl .tot2{font-size:14px;color:var(--mut)}.expl .tot2 b{color:var(--ink2);font-weight:500}
 </style>
 </head>
 <body>
@@ -1046,7 +1047,13 @@ window.NC_PLANS = (function () {
   Object.keys(P).forEach(a => { R[a] = { a: +a, rooms: P[a], img: '/assets/nc/plans/plan-' + a.replace('.', '_') + '.png' }; });
   return R;
 })();
-window.ncPlan = function (area) { return window.NC_PLANS[(+area).toFixed(2)] || null; };
+// Planlar A və E binalarına aiddir. Dəqiq uyğunluq, yoxdursa ±0,3 m² daxilində ən yaxın plan (məs. 128,74 → 129,00; 154,53 → 154,76).
+// Satış bazasındakı sahə dəyişmir — saytda müqavilə sahəsi ayrıca göstərilir.
+window.ncPlan = function (area, b) {
+  if (b && !/^[AE]$/.test(b)) return null;
+  const a = +area, P = window.NC_PLANS; if (P[a.toFixed(2)]) return P[a.toFixed(2)];
+  let best = null, d = 0.3001; Object.keys(P).forEach(k => { const x = Math.abs(+k - a); if (x <= d) { d = x; best = P[k]; } }); return best;
+};
 </script>
 <script>window.__NC_START=function(){
 // Nizami City — məlumat qatı. İctimai mənbələr: report.az, ipoteka.az, Instagram @nizami.city.
@@ -1294,7 +1301,7 @@ function uCard(u, photo) {
     <div class="uact"><button type="button" class="ub ${isFav(u.id) ? 'on' : ''}" data-fav="${u.id}" aria-label="Seçilmişlərə əlavə et" title="Seçilmişlər">${I.heart}</button><button type="button" class="ub ${isCmp(u.id) ? 'on' : ''}" data-cmp="${u.id}" aria-label="Müqayisəyə əlavə et" title="Müqayisə">${I.cmp}</button></div>
     <div class="top"><span class="a num">${fm2(u.a)} m²</span><span class="pr">${HP ? 'Sorğu ilə' : fmt(u.price) + ' ₼'}</span></div>
     <div class="ln"><span>${roomsT(u.r)}</span><span>${I.bld}${bLbl(u)}</span><span>${I.fl}${ord(u.f)} mərtəbə</span></div>
-    <div class="ln">${u.c ? `<span class="tag">${esc(u.c)}</span>` : (SHOW_ST ? `<span class="tag g">${u.bst === 'ok' ? 'Hazır bina' : 'Tikilir'}</span>` : '')}${u.st === 'bron' ? '<span class="tag g">Bron</span>' : ''}${window.ncPlan(u.a) ? '<span class="tag g">Plan var</span>' : ''}</div></article>`;
+    <div class="ln">${u.c ? `<span class="tag">${esc(u.c)}</span>` : (SHOW_ST ? `<span class="tag g">${u.bst === 'ok' ? 'Hazır bina' : 'Tikilir'}</span>` : '')}${u.st === 'bron' ? '<span class="tag g">Bron</span>' : ''}${window.ncPlan(u.a, u.b) ? '<span class="tag g">Plan var</span>' : ''}</div></article>`;
 }
 function bCard(b) {
   const us = UNITS.filter(u => u.b === b.id), fr = us.filter(u => u.st === 'free');
@@ -1605,7 +1612,7 @@ pages.secilmis = () => { const L = FAV.map(uById).filter(Boolean); return {
   mount(r) { const w = $('#fvW', r); if (w) w.onclick = () => open(`https://wa.me/${WA()}?text=${encodeURIComponent('Salam! Nizami City-də bu mənzillərlə maraqlanıram:\n' + L.map(u => '• ' + uTitle(u)).join('\n'))}`, '_blank'); const c = $('#fvC', r); if (c) c.onclick = () => { CMP = L.slice(0, 3).map(u => u.id); LS.set('cmp', CMP); location.hash = 'muqayise'; }; bindLead(r); }
 }; };
 /* 2: müqayisə */
-pages.muqayise = () => { const L = CMP.map(uById).filter(Boolean); const rows = [['Şəkil', u => `<div class="cm-ph">${pic(bPic(u.b), bLbl(u), { sizes: '300px' })}</div>`], ['Plan', u => { const p = window.ncPlan(u.a); return p ? `<img class="cm-pl" src="${p.img}" alt="Mənzil planı" loading="lazy">` : '<span class="mu">—</span>'; }], ['Qiymət', u => `<b>${priceT(u)}</b>`], ['Otaq sayı', u => u.r], ['Sahə', u => fm2(u.a) + ' m²'], ['Bina', u => bLbl(u)], ['Mərtəbə', u => u.f + ' / ' + (window.NC_FLOORS || 10)], ['Vəziyyət', u => esc(u.c || condOf(u))],  ...(SHOW_ST ? [['Təhvil', u => u.bst === 'ok' ? 'Hazırdır' : SHOW_DEL ? CO.delivery : 'Tikilir']] : []), ['Status', u => u.st === 'bron' ? 'Bron' : u.st === 'sold' ? 'Satılıb' : 'Satışda'], ['', u => `<div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn sm" href="#menzil-${u.id}">Bax</a><button class="btn tn sm" type="button" data-cmp="${u.id}">Çıxar</button></div>`]];
+pages.muqayise = () => { const L = CMP.map(uById).filter(Boolean); const rows = [['Şəkil', u => `<div class="cm-ph">${pic(bPic(u.b), bLbl(u), { sizes: '300px' })}</div>`], ['Plan', u => { const p = window.ncPlan(u.a, u.b); return p ? `<img class="cm-pl" src="${p.img}" alt="Mənzil planı" loading="lazy">` : '<span class="mu">—</span>'; }], ['Qiymət', u => `<b>${priceT(u)}</b>`], ['Otaq sayı', u => u.r], ['Sahə', u => fm2(u.a) + ' m²'], ['Bina', u => bLbl(u)], ['Mərtəbə', u => u.f + ' / ' + (window.NC_FLOORS || 10)], ['Vəziyyət', u => esc(u.c || condOf(u))],  ...(SHOW_ST ? [['Təhvil', u => u.bst === 'ok' ? 'Hazırdır' : SHOW_DEL ? CO.delivery : 'Tikilir']] : []), ['Status', u => u.st === 'bron' ? 'Bron' : u.st === 'sold' ? 'Satılıb' : 'Satışda'], ['', u => `<div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn sm" href="#menzil-${u.id}">Bax</a><button class="btn tn sm" type="button" data-cmp="${u.id}">Çıxar</button></div>`]];
   return { title: 'Müqayisə — Nizami City', html: `${pHead('Müqayisə', L.length ? 'Ən çox 3 mənzil yan-yana.' : 'Mənzil kartındakı ⇅ düyməsi ilə 3 mənzilədək seçib burada müqayisə edin.')}
   <section class="sec wrap">${L.length ? `<div class="card cmp-w"><table class="cmp"><tbody>${rows.map(([t, f]) => `<tr><th>${t}</th>${L.map(u => `<td>${f(u)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : `<div class="empty"><a class="btn" href="#menziller">Mənzillərə bax ${I.ar}</a></div>`}</section>`,
     mount(r) { r.addEventListener('click', e => { if (e.target.closest('[data-cmp]')) setTimeout(() => { if (location.hash.startsWith('#muqayise')) render(); }, 0); }); } }; };
@@ -1813,10 +1820,10 @@ function bindPlace(r, u) {
 /* mənzil planı + eksplikasiya */
 const f2 = n => (+n).toFixed(2).replace('.', ',');
 function planCard(u) {
-  const p = window.ncPlan(u.a); if (!p) return '';
-  return `<div class="plan pl-card"><div class="sh" style="margin-bottom:14px;align-items:center"><div><h3 class="h3">Mənzil planı</h3><span class="mu" style="font-size:14px">Ümumi sahə ${fm2(p.a)} m² · ${p.rooms.length} bölmə</span></div><a class="lk" href="${p.img}" download="Nizami-City-plan-${fm2(p.a)}m2.png">${I.doc} PNG yüklə</a></div>
+  const p = window.ncPlan(u.a, u.b); if (!p) return ''; const dif = Math.abs(p.a - u.a) > 0.005;
+  return `<div class="plan pl-card"><div class="sh" style="margin-bottom:14px;align-items:center"><div><h3 class="h3">Mənzil planı</h3><span class="mu" style="font-size:14px">${p.rooms.length} bölmə · plan ${f2(p.a)} m²</span></div><a class="lk" href="${p.img}" download="Nizami-City-plan-${fm2(p.a)}m2.png">${I.doc} PNG yüklə</a></div>
     <div class="plx"><figure class="plx-im" data-lb="pl"><img src="${p.img}" alt="Mənzil planı, ${fm2(p.a)} m²" loading="lazy" decoding="async"></figure>
-    <ol class="expl">${p.rooms.map(([n, m], i) => `<li><i>${i + 1}</i><span>${esc(n)}</span><em></em><b>${f2(m)} m²</b></li>`).join('')}<li class="tot"><span>Ümumi sahə</span><em></em><b>${f2(p.a)} m²</b></li></ol></div>
+    <ol class="expl">${p.rooms.map(([n, m], i) => `<li><i>${i + 1}</i><span>${esc(n)}</span><em></em><b>${f2(m)} m²</b></li>`).join('')}<li class="tot"><span>${dif ? 'Plan üzrə sahə' : 'Ümumi sahə'}</span><em></em><b>${f2(p.a)} m²</b></li>${dif ? `<li class="tot2"><span>Sənəd üzrə sahə</span><em></em><b>${f2(u.a)} m²</b></li>` : ''}</ol></div>
     <p class="mu" style="margin:12px 0 0;font-size:13.5px">Plandakı rəqəmlər eksplikasiyadakı nömrələrə uyğundur. Mebel düzülüşü təqdimat xarakterlidir.</p></div>`;
 }
 

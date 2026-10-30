@@ -17,4 +17,10 @@ window.NC_PLANS = (function () {
   Object.keys(P).forEach(a => { R[a] = { a: +a, rooms: P[a], img: '/assets/nc/plans/plan-' + a.replace('.', '_') + '.png' }; });
   return R;
 })();
-window.ncPlan = function (area) { return window.NC_PLANS[(+area).toFixed(2)] || null; };
+// Planlar A və E binalarına aiddir. Dəqiq uyğunluq, yoxdursa ±0,3 m² daxilində ən yaxın plan (məs. 128,74 → 129,00; 154,53 → 154,76).
+// Satış bazasındakı sahə dəyişmir — saytda müqavilə sahəsi ayrıca göstərilir.
+window.ncPlan = function (area, b) {
+  if (b && !/^[AE]$/.test(b)) return null;
+  const a = +area, P = window.NC_PLANS; if (P[a.toFixed(2)]) return P[a.toFixed(2)];
+  let best = null, d = 0.3001; Object.keys(P).forEach(k => { const x = Math.abs(+k - a); if (x <= d) { d = x; best = P[k]; } }); return best;
+};

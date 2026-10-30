@@ -122,10 +122,10 @@ function bindPlace(r, u) {
 /* mənzil planı + eksplikasiya */
 const f2 = n => (+n).toFixed(2).replace('.', ',');
 function planCard(u) {
-  const p = window.ncPlan(u.a); if (!p) return '';
-  return `<div class="plan pl-card"><div class="sh" style="margin-bottom:14px;align-items:center"><div><h3 class="h3">Mənzil planı</h3><span class="mu" style="font-size:14px">Ümumi sahə ${fm2(p.a)} m² · ${p.rooms.length} bölmə</span></div><a class="lk" href="${p.img}" download="Nizami-City-plan-${fm2(p.a)}m2.png">${I.doc} PNG yüklə</a></div>
+  const p = window.ncPlan(u.a, u.b); if (!p) return ''; const dif = Math.abs(p.a - u.a) > 0.005;
+  return `<div class="plan pl-card"><div class="sh" style="margin-bottom:14px;align-items:center"><div><h3 class="h3">Mənzil planı</h3><span class="mu" style="font-size:14px">${p.rooms.length} bölmə · plan ${f2(p.a)} m²</span></div><a class="lk" href="${p.img}" download="Nizami-City-plan-${fm2(p.a)}m2.png">${I.doc} PNG yüklə</a></div>
     <div class="plx"><figure class="plx-im" data-lb="pl"><img src="${p.img}" alt="Mənzil planı, ${fm2(p.a)} m²" loading="lazy" decoding="async"></figure>
-    <ol class="expl">${p.rooms.map(([n, m], i) => `<li><i>${i + 1}</i><span>${esc(n)}</span><em></em><b>${f2(m)} m²</b></li>`).join('')}<li class="tot"><span>Ümumi sahə</span><em></em><b>${f2(p.a)} m²</b></li></ol></div>
+    <ol class="expl">${p.rooms.map(([n, m], i) => `<li><i>${i + 1}</i><span>${esc(n)}</span><em></em><b>${f2(m)} m²</b></li>`).join('')}<li class="tot"><span>${dif ? 'Plan üzrə sahə' : 'Ümumi sahə'}</span><em></em><b>${f2(p.a)} m²</b></li>${dif ? `<li class="tot2"><span>Sənəd üzrə sahə</span><em></em><b>${f2(u.a)} m²</b></li>` : ''}</ol></div>
     <p class="mu" style="margin:12px 0 0;font-size:13.5px">Plandakı rəqəmlər eksplikasiyadakı nömrələrə uyğundur. Mebel düzülüşü təqdimat xarakterlidir.</p></div>`;
 }
 
