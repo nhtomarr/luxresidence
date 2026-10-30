@@ -1,14 +1,15 @@
 // Nizami City — 3D kompleks modeli (three r128). Sayt və render skripti ortaq istifadə edir.
 // Koordinatlar: x şərq, z cənub; 1 vahid ≈ 0.5 m. Baş plan sxematikdir.
 window.NC_BLD = [
-  // 1-ci məhəllə: A, B, C — ortada öz parkı
-  { id: 'A', st: 'ok', x: -235, z: -112, w: 170, d: 56, q: 1 },
-  { id: 'B', st: 'ok', x: -235, z: 112, w: 170, d: 56, q: 1 },
-  { id: 'C', st: 'ok', x: -350, z: 0, w: 56, d: 168, q: 1 },
-  // 2-ci məhəllə: E, F, G — ortada öz parkı (küçə ilə ayrılır)
-  { id: 'E', st: 'w', x: 235, z: -112, w: 170, d: 56, q: 2 },
-  { id: 'F', st: 'w', x: 235, z: 112, w: 170, d: 56, q: 2 },
-  { id: 'G', st: 'w', x: 350, z: 0, w: 56, d: 168, q: 2 },
+  // İki məhəllə eyni istiqamətdədir: hər birinin açıq tərəfi qərbə baxır, 2-ci məhəllə 1-cinin arxasından başlayır
+  // 1-ci məhəllə: A (şimal), C (cənub), B (arxa — birləşdirici); ortada park
+  { id: 'A', st: 'ok', x: -250, z: -112, w: 170, d: 56, q: 1 },
+  { id: 'C', st: 'ok', x: -250, z: 112, w: 170, d: 56, q: 1 },
+  { id: 'B', st: 'ok', x: -135, z: 0, w: 56, d: 168, q: 1 },
+  // 2-ci məhəllə: E (şimal), G (cənub), F (arxa — birləşdirici); ortada park
+  { id: 'E', st: 'w', x: 215, z: -112, w: 170, d: 56, q: 2 },
+  { id: 'G', st: 'w', x: 215, z: 112, w: 170, d: 56, q: 2 },
+  { id: 'F', st: 'w', x: 330, z: 0, w: 56, d: 168, q: 2 },
 ];
 window.NC_FLOORS = 9; window.NC_FH = 7.4;
 

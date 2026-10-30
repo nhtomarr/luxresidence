@@ -896,14 +896,15 @@ html[data-theme=dark] .tcard .tpl{background:radial-gradient(circle at 50% 45%,#
 <script>// Nizami City — 3D kompleks modeli (three r128). Sayt və render skripti ortaq istifadə edir.
 // Koordinatlar: x şərq, z cənub; 1 vahid ≈ 0.5 m. Baş plan sxematikdir.
 window.NC_BLD = [
-  // 1-ci məhəllə: A, B, C — ortada öz parkı
-  { id: 'A', st: 'ok', x: -235, z: -112, w: 170, d: 56, q: 1 },
-  { id: 'B', st: 'ok', x: -235, z: 112, w: 170, d: 56, q: 1 },
-  { id: 'C', st: 'ok', x: -350, z: 0, w: 56, d: 168, q: 1 },
-  // 2-ci məhəllə: E, F, G — ortada öz parkı (küçə ilə ayrılır)
-  { id: 'E', st: 'w', x: 235, z: -112, w: 170, d: 56, q: 2 },
-  { id: 'F', st: 'w', x: 235, z: 112, w: 170, d: 56, q: 2 },
-  { id: 'G', st: 'w', x: 350, z: 0, w: 56, d: 168, q: 2 },
+  // İki məhəllə eyni istiqamətdədir: hər birinin açıq tərəfi qərbə baxır, 2-ci məhəllə 1-cinin arxasından başlayır
+  // 1-ci məhəllə: A (şimal), C (cənub), B (arxa — birləşdirici); ortada park
+  { id: 'A', st: 'ok', x: -250, z: -112, w: 170, d: 56, q: 1 },
+  { id: 'C', st: 'ok', x: -250, z: 112, w: 170, d: 56, q: 1 },
+  { id: 'B', st: 'ok', x: -135, z: 0, w: 56, d: 168, q: 1 },
+  // 2-ci məhəllə: E (şimal), G (cənub), F (arxa — birləşdirici); ortada park
+  { id: 'E', st: 'w', x: 215, z: -112, w: 170, d: 56, q: 2 },
+  { id: 'G', st: 'w', x: 215, z: 112, w: 170, d: 56, q: 2 },
+  { id: 'F', st: 'w', x: 330, z: 0, w: 56, d: 168, q: 2 },
 ];
 window.NC_FLOORS = 9; window.NC_FH = 7.4;
 
@@ -978,15 +979,14 @@ window.ncMaq = function (host, o) {
   const ground = new T.Mesh(new T.CircleGeometry(2600, 64), mat(C.ground, 1)); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; S.add(ground);
   // iki ayrı məhəllə, aralarında küçə; hər birinin ortasında öz parkı
   const roadM = mat(C.road, 1);
-  [[0, -205, 1800, 44], [0, 205, 1800, 44], [0, 0, 44, 1800], [-440, 0, 44, 1800], [440, 0, 44, 1800]].forEach(([x, z, w, d]) => { const m = new T.Mesh(new T.PlaneGeometry(w, d), roadM); m.rotation.x = -Math.PI / 2; m.position.set(x, .4, z); m.receiveShadow = true; S.add(m); });
+  [[0, -205, 1800, 44], [0, 205, 1800, 44], [10, 0, 44, 1800], [-460, 0, 44, 1800], [420, 0, 44, 1800]].forEach(([x, z, w, d]) => { const m = new T.Mesh(new T.PlaneGeometry(w, d), roadM); m.rotation.x = -Math.PI / 2; m.position.set(x, .4, z); m.receiveShadow = true; S.add(m); });
   const plM = mat(C.plate, .95), crM = mat(C.court, .95), lawnM = mat(C.lawn, 1), plyM = mat(C.play, .7);
   const tg = new T.IcosahedronGeometry(1, 1), tm = mat(C.tree, 1), trG = new T.CylinderGeometry(.12, .16, 1, 6), trM = mat(0x8a7a62, 1);
   const tree = (x, z, r) => { const g = new T.Group(); const c = new T.Mesh(tg, tm); c.scale.setScalar(r); c.position.y = r * 1.7; c.castShadow = true; const tk = new T.Mesh(trG, trM); tk.scale.set(r, r * 1.4, r); tk.position.y = r * .7; g.add(tk, c); g.position.set(x, 3, z); S.add(g); };
   const lampM = new T.MeshStandardMaterial({ color: lin(0xf6f1e4), emissive: lin(0xffd38a), emissiveIntensity: 0 }); emissives.push([lampM, 2.2]);
   const lampG = new T.SphereGeometry(2.2, 10, 8);
-  [-1, 1].forEach(sx => {
-    const cx = sx * 222, px = sx * 200; // məhəllənin və parkın mərkəzi (park açıq tərəfə — küçəyə doğru)
-    const pl = new T.Mesh(new T.BoxGeometry(380, 2, 330), plM); pl.position.set(cx + sx * 10, 1, 0); pl.receiveShadow = true; S.add(pl);
+  [[-245, -265], [220, 200]].forEach(([cx, px]) => { const sx = 1; // məhəllənin və parkın mərkəzi (park açıq tərəfə — qərbə doğru)
+    const pl = new T.Mesh(new T.BoxGeometry(380, 2, 330), plM); pl.position.set(cx, 1, 0); pl.receiveShadow = true; S.add(pl);
     const ct = new T.Mesh(new T.BoxGeometry(230, 1, 160), crM); ct.position.set(px, 2.5, 0); ct.receiveShadow = true; S.add(ct);
     [[-50, -38, 80, 46], [-50, 38, 80, 46], [52, -38, 70, 46], [52, 38, 70, 46]].forEach(([x, z, w, d]) => { const m = new T.Mesh(new T.BoxGeometry(w, 1.2, d), lawnM); m.position.set(px + sx * x, 3.2, z); m.receiveShadow = true; S.add(m); });
     const ply = new T.Mesh(new T.CylinderGeometry(22, 22, 1.6, 48), plyM); ply.position.set(px, 3.4, 0); ply.receiveShadow = true; S.add(ply);
@@ -994,7 +994,7 @@ window.ncMaq = function (host, o) {
     for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; const m = new T.Mesh(lampG, lampM); m.position.set(px + Math.cos(a) * 36, 9, Math.sin(a) * 36); S.add(m); }
   });
   for (let i = -9; i <= 9; i++) { if (Math.abs(i) < 1) continue; tree(i * 90, -232, 5); tree(i * 90, 232, 5); }
-  for (let i = -5; i <= 5; i++) { tree(-26, i * 70, 4.5); tree(26, i * 70, 4.5); }
+  for (let i = -5; i <= 5; i++) { tree(-16, i * 70, 4.5); tree(36, i * 70, 4.5); }
   // şəhər konteksti — ağ maket blokları
   const cm = mat(C.ctx, 1);
   for (let i = 0; i < 30; i++) {
@@ -1103,10 +1103,10 @@ window.ncMaq = function (host, o) {
 
   const TOUR = [
     { tgt: [0, 30, 0], th: -0.55, ph: .62, dist: 1500, cap: '9 bina, qapalı həyət' },
-    { tgt: [-235, 20, 0], th: .5, ph: .7, dist: 680, cap: 'A, B, C binaları — ortada öz parkı' },
-    { tgt: [-200, 0, 0], th: 1.1, ph: .5, dist: 420, cap: 'Avtomobilsiz qapalı həyət' },
-    { tgt: [235, 20, 0], th: -.5, ph: .7, dist: 680, cap: 'E, F, G binaları — ortada öz parkı' },
-    { tgt: [200, 0, 0], th: -1.1, ph: .5, dist: 420, cap: 'Hər məhəllənin öz həyəti' },
+    { tgt: [-250, 20, 0], th: -1.0, ph: .7, dist: 680, cap: 'A, B, C binaları — ortada öz parkı' },
+    { tgt: [-270, 0, 0], th: -1.25, ph: .5, dist: 420, cap: 'Avtomobilsiz qapalı həyət' },
+    { tgt: [215, 20, 0], th: -1.0, ph: .7, dist: 680, cap: 'E, F, G binaları — ortada öz parkı' },
+    { tgt: [195, 0, 0], th: -1.25, ph: .5, dist: 420, cap: 'Hər məhəllənin öz həyəti' },
     { tgt: [0, 6, 205], th: .35, ph: .16, dist: 460, cap: 'Birinci mərtəbələrdə kommersiya qalereyası' },
     { tgt: [0, 30, 0], th: -0.55, ph: .62, dist: 1500, cap: 'Nizami City — Yasamal' },
   ];
@@ -1122,7 +1122,7 @@ window.ncMaq = function (host, o) {
       restyle();
       const g = blds.find(x => x.userData.b.id === id);
       if (g) { const b = g.userData.b, horiz = b.w > b.d, yy = fl == null ? 34 : (fl < 2 ? 6 : POD + (fl - 2) * FH); // kamera həyət tərəfdən baxır
-        const thx = horiz ? (b.z < 0 ? .45 : Math.PI - .45) : (b.x > 0 ? -Math.PI / 2 + .35 : Math.PI / 2 - .35);
+        const qx = NC_BLD.filter(o => o.q === b.q && o.w > o.d).reduce((s, o, i, A) => s + o.x / A.length, 0), thx = horiz ? (b.z < 0 ? .45 : Math.PI - .45) : (qx < b.x ? -Math.PI / 2 + .35 : Math.PI / 2 - .35);
         fly({ tgt: [b.x, yy, b.z], th: thx, ph: fl == null ? .42 : .32, dist: mob ? 760 : 580 }, 1500); }
       else fly(HOME, 1400);
     },
