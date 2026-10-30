@@ -1,3 +1,42 @@
+/* ===== Marşrut: ayrı səhifələr (/mekan, /menziller/plan-87-95 …); köhnə #linklər avtomatik çevrilir ===== */
+const RT = ['home', 'menziller', 'binalar', 'kalkulyator', 'mekan', 'kommersiya', 'bloq', 'suallar', 'elaqe', 'secilmis', 'muqayise', 'brosur'];
+function isRoute(h) { h = String(h || '').split('?')[0]; return RT.includes(h) || /^(bina|menzil|bloq|plan|layihe|gunes|qalereya)-/.test(h) || ['layihe', 'gunes', 'qalereya'].includes(h); }
+function slugKey(k) { let m = k.match(/^p(\d+)\.(\d+)$/); if (m) return 'plan-' + m[1] + '-' + m[2]; m = k.match(/^(\d+)\.(\d+)-(\d+)$/); return m ? m[1] + '-' + m[2] + '-' + m[3] + '-otaq' : encodeURIComponent(k); }
+function unslugKey(s) { let m = s.match(/^plan-(\d+)-(\d+)$/); if (m) return 'p' + m[1] + '.' + m[2]; m = s.match(/^(\d+)-(\d+)-(\d+)-otaq$/); return m ? m[1] + '.' + m[2] + '-' + m[3] : decodeURIComponent(s); }
+function toPath(h) {
+  h = String(h || 'home').replace(/^#/, ''); const qi = h.indexOf('?'), b = qi >= 0 ? h.slice(0, qi) : h, q = qi >= 0 ? h.slice(qi) : ''; let m;
+  if (b === 'home' || !b) return '/' + q;
+  if (b === 'kalkulyator') return '/odenis' + q;
+  if ((m = b.match(/^bina-([A-Z])$/i))) return '/binalar/' + m[1].toLowerCase() + q;
+  if ((m = b.match(/^bloq-(.+)$/))) return '/bloq/' + m[1] + q;
+  if ((m = b.match(/^plan-(.+)$/))) return '/menziller/' + slugKey(m[1]) + q;
+  if ((m = b.match(/^menzil-(.+)$/))) { const u = uById(m[1]); return u ? '/menziller/' + slugKey(typeOf(u).key) : '/menziller'; }
+  return '/' + b + q;
+}
+function fromPath() {
+  const p = decodeURIComponent(location.pathname).replace(/\/+$/, '').replace(/\.html$/, ''), q = location.search.replace(/[?&]edit=1/, '').replace(/^&/, '?'); let m;
+  if (!p || p === '/' || p === '/nc/site' || p === '/index') return 'home';
+  if (p === '/odenis') return 'kalkulyator' + q;
+  if ((m = p.match(/^\/binalar\/([a-z])$/i))) return 'bina-' + m[1].toUpperCase();
+  if ((m = p.match(/^\/bloq\/(.+)$/))) return 'bloq-' + m[1];
+  if ((m = p.match(/^\/menziller\/(.+)$/))) return 'plan-' + unslugKey(m[1]);
+  return p.slice(1) + (q && q !== '?' ? q : '');
+}
+function curRoute() { return fromPath().split('?')[0]; }
+function nav(h) { const to = toPath(h); if (to !== location.pathname + location.search) history.pushState(null, '', to); render(); }
+window.ncCurRoute = () => curRoute();
+// klik: #route və /route linkləri səhifəni yeniləmədən açır
+document.addEventListener('click', e => {
+  if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const a = e.target.closest('a[href]'); if (!a || a.target === '_blank' || a.hasAttribute('download')) return;
+  const href = a.getAttribute('href');
+  if (href[0] === '#') { const h = href.slice(1); if (!isRoute(h)) return; e.preventDefault(); nav(h); return; }
+  if (href[0] === '/' && href[1] !== '/' && !/^\/(assets|nc|satis|sayt|muqavile|komendant|kalkulyator)\b/.test(href)) { e.preventDefault(); history.pushState(null, '', href); render(); }
+});
+// görünən linklər təmiz ünvanla göstərilsin
+function fixLinks(root) { $$('a[href^="#"]', root || document).forEach(a => { const h = a.getAttribute('href').slice(1); if (isRoute(h)) a.setAttribute('href', toPath(h)); }); }
+new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType === 1) { if (n.matches && n.matches('a[href^="#"]')) fixLinks(n.parentNode); else fixLinks(n); } }))).observe(document.body, { childList: true, subtree: true });
+
 /* Nizami City — sayt v3+: 3D maket, animasiyalar, görünüş, əlavə alətlər. app.js ilə eyni əhatədə işləyir. */
 Object.assign(I, {
   sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
@@ -57,7 +96,7 @@ function mountMaq(host, o = {}) {
     let ht; const m = window.ncMaq(host, Object.assign({
       showSt: SHOW_ST, tip,
       tipHtml: b => { const fr = UNITS.filter(u => u.b === b.id && u.st === 'free').length; return `<b>Bina ${b.id}</b><span>${SHOW_STOCK ? fr + ' mənzil satışda' : SHOW_ST ? stTxt(b.st) : 'Mərtəbələrə bax'}</span>`; },
-      onPick: id => { location.hash = 'bina-' + id; },
+      onPick: id => { nav('bina-' + id); },
       onCap: (t, i, n) => { cap.classList.toggle('on', !!t); if (t) { $('span', cap).textContent = t; $('em', cap).textContent = i + ' / ' + n; } },
       onWheelHint: () => { const h = $('.mq-hint', host); h.classList.add('on'); clearTimeout(ht); ht = setTimeout(() => h.classList.remove('on'), 1600); },
     }, o));
@@ -116,7 +155,7 @@ function bindPlace(r, u) {
   const tb = $('#pv', r); if (!tb) return;
   tb.onclick = e => { const b = e.target.closest('button'); if (!b) return; $$('button', tb).forEach(x => x.classList.toggle('on', x === b)); $$('[data-pv]', r).forEach(x => x.style.display = x.dataset.pv === b.dataset.v ? '' : 'none'); };
   bindIso(r);
-  mountMaq($('#mqU', r), { autoRotate: false, onPick: id => { if (id !== u.b) location.hash = 'bina-' + id; }, homeFn: m => m.focus(u.b, u.f), ready: m => m.focus(u.b, u.f) });
+  mountMaq($('#mqU', r), { autoRotate: false, onPick: id => { if (id !== u.b) nav('bina-' + id); }, homeFn: m => m.focus(u.b, u.f), ready: m => m.focus(u.b, u.f) });
 }
 
 /* mənzil planı + eksplikasiya */
@@ -243,7 +282,7 @@ function fillQR(root) { const L = $$('[data-qr]', root); if (!L.length) return; 
 
 /* ===== 18: broşür ===== */
 pages.brosur = () => {
-  const site = location.origin + location.pathname, t = TERMS[0];
+  const site = location.origin + '/', t = TERMS[0];
   return { title: 'Broşür — Nizami City', html: `<section class="ph wrap bro-top">${crumbs(['Broşür'])}<div class="ph-card"><div><h1 class="h1">Broşür</h1><p class="lead">Kompleks haqqında əsas məlumat bir səhifədə — çap edin və ya PDF kimi saxlayın.</p></div><button class="btn" type="button" data-print>${I.prn} Çap et / PDF saxla</button></div></section>
   <div class="wrap bro">
     <div class="bro-s bro-cov">${pic('front', 'Nizami City', { sizes: '1200px' })}<div class="bro-cv"><img src="/assets/nc/site/mark-cream.png" alt=""><div><b>Nizami City</b><span>${esc(CO.slogan || 'Yasamalda qapalı həyətli yaşayış kompleksi')}</span></div></div></div>
@@ -296,7 +335,7 @@ const numBlock = () => `<section class="sec wrap" style="padding-top:16px"><div 
 /* render qarmaqları */
 function beforeRender() { killMaq(); killCity(); const p = $('#uiP'); if (p) p.remove(); const h = $('#hub'); if (h) h.remove(); }
 function afterRender(k, main) {
-  pageIn(main); reveal(main); fillQR(main); bindLocTabs(main); bindCity(main); onScroll();
+  fixLinks(document); pageIn(main); reveal(main); fillQR(main); bindLocTabs(main); bindCity(main); onScroll();
   document.body.classList.toggle('pg-bro', k === 'brosur');
 }
 // başlıq və altlıq əlavələri
@@ -455,7 +494,7 @@ function typesGrid(units, filterB) { return uniqT(units).sort((a, b) => a.r - b.
 
 pages.tip = key => {
   const t = TYPES[key]; if (!t) return pages.menziller();
-  const u = t.rep, url = location.origin + location.pathname + '#plan-' + t.key;
+  const u = t.rep, url = location.origin + toPath('plan-' + t.key);
   const sim = Object.values(TYPES).filter(x => x.key !== t.key && x.r === t.r).sort((a, b) => Math.abs(a.a - t.a) - Math.abs(b.a - t.a)).slice(0, 4);
   const msg = `${tTitle(t)} (${bList(t.blds)})`;
   return {
@@ -477,10 +516,12 @@ pages.tip = key => {
       const f = $('#lf', r); if (f) bindForm(f, () => (($('[data-k=kind] .on', f) || {}).dataset || {}).v || 'price', () => { const v = k => (($(`[data-k=${k}] .on`, f) || {}).dataset || {}).v || ''; const k = v('kind') || 'price'; return { unit: u.id, slot: k === 'viewing' ? v('day') + ' ' + v('tm') : '', msg: (k === 'price' ? 'Qiymət sorğusu' : k === 'viewing' ? 'Baxışa yazılış' : 'Zəng sifarişi') + ': ' + msg }; }, d => `${esc(d.name)}, sorğunuz qəbul olundu. Satış meneceri qısa zamanda zəng edəcək.`);
       if (f) { $$('.chips', f).forEach(c => c.addEventListener('click', () => setTimeout(() => $$('.lf-day', f).forEach(d => d.style.display = ((($('[data-k=kind] .on', f) || {}).dataset || {}).v === 'viewing') ? '' : 'none'), 0))); $$('.lf-day', f).forEach(d => d.style.display = ((($('[data-k=kind] .on', f) || {}).dataset || {}).v === 'viewing') ? '' : 'none'); }
       $$('a[href="#lfw"]', r).forEach(a => a.onclick = e => { e.preventDefault(); $('#lfw', r).scrollIntoView({ behavior: 'smooth' }); });
-      mountMaq($('#mqU', r), { autoRotate: false, onPick: id => { location.hash = 'bina-' + id; }, homeFn: m => m.focus(t.blds[0]), ready: m => m.focus(t.blds[0]) });
+      mountMaq($('#mqU', r), { autoRotate: false, onPick: id => { nav('bina-' + id); }, homeFn: m => m.focus(t.blds[0]), ready: m => m.focus(t.blds[0]) });
     }
   };
 };
 pages.menzil = id => { const u = uById(id); return u ? pages.tip(typeOf(u).key) : pages.menziller(); };
 
+// köhnə #ünvan → yeni yol
+(() => { const h = location.hash.slice(1); if (isRoute(h)) history.replaceState(null, '', toPath(h)); })();
 render();

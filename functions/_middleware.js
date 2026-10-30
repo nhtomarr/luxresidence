@@ -50,6 +50,17 @@ class Append { constructor(h) { this.h = h; } element(el) { el.append(this.h, { 
 const LEAD = { 1: 'geniş planlı 3 və 4 otaqlı mənzillər', 3: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 4: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 5: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 6: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 10: '1 və 3 otaqlı mənzillər', 11: '1 və 3 otaqlı mənzillər' };
 const NC_HOSTS = new Set(['nizami-city.az', 'www.nizami-city.az', 'nizamicity.az', 'www.nizamicity.az']);
 const NC_APPS = new Set(['satis', 'kalkulyator', 'muqavile', 'komendant', 'sayt']);
+const NC_PUB = /^\/(menziller(\/[a-z0-9-]+)?|binalar(\/[a-z])?|mekan|kommersiya|bloq(\/[a-z0-9-]+)?|suallar|elaqe|secilmis|muqayise|odenis|brosur)$/i;
+const NC_SEO = {
+  menziller: ['Mənzillər və planlar — Nizami City', 'Nizami City mənzil planları: 1, 2, 3 və 4 otaqlı mənzillər, eksplikasiya, binalar. Qiymət sorğu ilə, 6 ay faizsiz daxili kredit.'],
+  binalar: ['Binalar və 3D baş plan — Nizami City', 'Nizami City-nin altı binası və qapalı həyəti 3D maketdə. Binanı seçin — mənzil planları açılacaq.'],
+  mekan: ['Məkan — Nizami City, Yasamal', 'Nizami City Cəfər Cabbarlı küç. 31-də, Nizami metrosunun yanındadır. 3D xəritə, ətraf obyektlər və marşrut.'],
+  kommersiya: ['Kommersiya sahələri — Nizami City', 'Nizami City binalarının birinci mərtəbələrində küçəyə açılan kommersiya sahələri.'],
+  bloq: ['Bloq — Nizami City', 'Mənzil seçimi, ödəniş və Yasamalda həyat haqqında yazılar.'],
+  suallar: ['Suallar və cavablar — Nizami City', 'Nizami City haqqında tez-tez verilən suallar: ödəniş, təmir, parkinq, sənədlər.'],
+  elaqe: ['Əlaqə — Nizami City', 'Nizami City satış ofisi: *0788. Ünvan, iş saatları, 3D xəritə və baxışa yazılış.'],
+  brosur: ['Broşür — Nizami City', 'Nizami City broşürü: kompleks, üstünlüklər, ödəniş və əlaqə — çap və ya PDF.'],
+};
 async function nizamiHost(ctx, url) {
   const p = url.pathname.replace(/\.html$/, '').replace(/\/$/, '');
   const noindex = (r) => { const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); };
@@ -61,8 +72,14 @@ async function nizamiHost(ctx, url) {
   if (p.startsWith('/nc/') || p.startsWith('/assets/') || p === '/auth-ok') return ctx.next();
   if (p === '/favicon.ico' || p === '/apple-touch-icon.png') return ctx.env.ASSETS.fetch(new Request(new URL('/assets/nc/apple-touch.png', url).toString()));
   if (p === '/robots.txt') return new Response('User-agent: *\nAllow: /$\nDisallow: /nc/\nDisallow: /satis\nDisallow: /kalkulyator\nDisallow: /muqavile\nDisallow: /komendant\nDisallow: /sayt\nSitemap: https://nizami-city.az/sitemap.xml\n', { headers: { 'Content-Type': 'text/plain' } });
-  if (p === '/sitemap.xml') return new Response('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://nizami-city.az/</loc><changefreq>daily</changefreq></url></urlset>', { headers: { 'Content-Type': 'application/xml' } });
-  if (p === '' || p === '/index') { const r = await ctx.env.ASSETS.fetch(new Request(new URL('/nc/site', url).toString(), ctx.request)); const h = new Headers(r.headers); h.set('Cache-Control', 'public, max-age=300'); h.delete('X-Robots-Tag'); return new Response(r.body, { status: r.status, headers: h }); }
+  if (p === '/sitemap.xml') return new Response('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://nizami-city.az/</loc><changefreq>daily</changefreq></url>' + Object.keys(NC_SEO).map(k => `<url><loc>https://nizami-city.az/${k}</loc></url>`).join('') + '</urlset>', { headers: { 'Content-Type': 'application/xml' } });
+  if (p === '' || p === '/index' || NC_PUB.test(p)) {
+    const r = await ctx.env.ASSETS.fetch(new Request(new URL('/nc/site', url).toString(), ctx.request)); const h = new Headers(r.headers); h.set('Cache-Control', 'public, max-age=300'); h.delete('X-Robots-Tag'); h.delete('content-length');
+    const res = new Response(r.body, { status: r.status, headers: h });
+    const seg = p.split('/')[1] || '', m = NC_SEO[seg]; if (!m || !p) return res;
+    const t = (p.match(/^\/binalar\/([a-z])$/i) ? 'Bina ' + p.slice(-1).toUpperCase() + ' — mənzil planları | Nizami City' : m[0]), u = 'https://nizami-city.az' + p;
+    return new HTMLRewriter().on('title', new Title(t)).on('meta[name="description"]', new Meta(m[1])).on('meta[property="og:title"]', new Meta(t)).on('meta[property="og:description"]', new Meta(m[1])).on('link[rel="canonical"]', new Href(u)).transform(res);
+  }
   return Response.redirect(url.origin + '/', 302);
 }
 export async function onRequest(ctx) {

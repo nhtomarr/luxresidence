@@ -22,7 +22,7 @@
     if (!ok) return msg('Bu hesabın sayt redaktəsinə icazəsi yoxdur.<br><br><a href="/">Sayta qayıt</a>');
     S = JSON.parse(JSON.stringify((window.NC_REMOTE || {}).site || {}));
     bar(); window.ncEditHook = hook;
-    var main = document.getElementById('view'); var k = (location.hash.slice(1) || 'home').split('-')[0];
+    var main = document.getElementById('view'); var k = ((window.ncCurRoute ? window.ncCurRoute() : location.hash.slice(1)) || 'home').split('-')[0];
     hook(k, main); markText(document.querySelector('header')); markText(document.querySelector('footer'));
     addEventListener('beforeunload', function (e) { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
   });
