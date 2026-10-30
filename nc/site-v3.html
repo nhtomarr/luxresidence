@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nizami City — Yasamalda qapalı həyətli yaşayış kompleksi</title>
+<meta name="description" content="Nizami City: Yasamalda, Nizami metrosunun yanında altı bina və avtomobilsiz qapalı həyət. Satışdakı mənzillər, qiymətlər, 6 ay faizsiz daxili kredit, baxışa yazılış.">
+<link rel="canonical" href="https://nizami-city.az/">
+<meta property="og:title" content="Nizami City — Yasamalda qapalı həyətli yaşayış kompleksi">
+<meta property="og:description" content="Altı bina, bir qapalı həyət. 6 ay faizsiz daxili kredit.">
+<meta property="og:image" content="https://nizami-city.az/assets/nc/site/front-1280.webp">
+<meta name="theme-color" content="#f4f5f0">
+<link rel="icon" href="/assets/nc/logo.png"><link rel="apple-touch-icon" href="/assets/nc/apple-touch.png">
+<link rel="preload" href="/assets/nc/fonts/nc-display-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/nc/fonts/nc-text-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/assets/nc/site/front-2560.webp" imagesrcset="/assets/nc/site/front-1280.webp 1280w, /assets/nc/site/front-2560.webp 2560w" imagesizes="100vw">
+<link rel="preconnect" href="https://avqchschbbltnnasabdm.supabase.co" crossorigin>
+<style>@font-face {
+  font-family: 'NC Display';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(/assets/nc/fonts/nc-display-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'NC Display';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(/assets/nc/fonts/nc-display-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'NC Text';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url(/assets/nc/fonts/nc-text-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'NC Text';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url(/assets/nc/fonts/nc-text-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Nizami City — sayt v3: işıqlı, sakit portal üslubu. Brend: zeytun + krem. Şrift: NC Text (Albert Sans), cümlə registri. */
+:root{
+  --bg:#f4f5f0;--card:#ffffff;--soft:#eef0e7;--soft2:#e3e7d8;
+  --ink:#1e241a;--ink2:#555d4c;--mut:#80877a;--line:#e3e6dc;
+  --olive:#3f4d2c;--olive2:#556641;--olive-ink:#ffffff;--tint:#e9eedd;
+  --cream:#f3ecdc;--gold:#b58a3c;
+  --ok:#4f8a3d;--w:#c08a2c;
+  --r:22px;--r2:14px;--r3:999px;
+  --sh:0 1px 2px rgba(30,36,26,.04),0 8px 24px -12px rgba(30,36,26,.12);
+  --sh2:0 2px 4px rgba(30,36,26,.05),0 18px 40px -18px rgba(30,36,26,.22);
+  --ft:'NC Text','NC Display',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --m:clamp(16px,2.6vw,32px);--max:1320px;--hd:78px;
+  color-scheme:light;
+}
+*,*:before,*:after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16.5px/1.55 var(--ft);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--olive2);outline-offset:2px}
+.sr{position:absolute;left:-9999px}.sr:focus{left:12px;top:12px;z-index:99;background:var(--olive);color:#fff;padding:10px 14px;border-radius:10px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--m)}
+.num{font-variant-numeric:tabular-nums}
+.mu{color:var(--mut)}.ink2{color:var(--ink2)}
+h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-.02em;line-height:1.12}
+.h1{font-size:clamp(34px,4.4vw,60px)}
+.h2{font-size:clamp(26px,2.6vw,36px)}
+.h3{font-size:clamp(19px,1.5vw,22px)}
+.lead{font-size:clamp(17px,1.3vw,20px);color:var(--ink2);margin:0}
+.sec{padding:clamp(44px,5vw,72px) 0 0}
+.sec:last-child{padding-bottom:clamp(56px,6vw,90px)}
+.sh{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+
+/* düymələr */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;border-radius:var(--r3);background:var(--olive);color:var(--olive-ink);font-weight:500;font-size:15.5px;transition:background .2s,transform .2s,box-shadow .2s;white-space:nowrap}
+.btn:hover{background:var(--olive2);box-shadow:0 8px 20px -10px rgba(63,77,44,.6)}
+.btn:active{transform:scale(.98)}
+.btn svg{width:18px;height:18px}
+.btn.lt{background:var(--card);color:var(--olive);box-shadow:var(--sh)}
+.btn.lt:hover{background:var(--tint)}
+.btn.tn{background:var(--tint);color:var(--olive)}
+.btn.tn:hover{background:var(--soft2)}
+.btn.sm{min-height:40px;padding:0 16px;font-size:14.5px}
+.lk{display:inline-flex;align-items:center;gap:8px;color:var(--olive);font-weight:500}
+.lk svg{width:18px;height:18px;transition:transform .25s}.lk:hover svg{transform:translateX(4px)}
+.pillbtn{display:inline-flex;align-items:center;gap:10px;min-height:46px;padding:0 20px;border-radius:var(--r3);background:var(--card);color:var(--olive);font-weight:500;box-shadow:var(--sh);transition:box-shadow .2s}
+.pillbtn:hover{box-shadow:var(--sh2)}
+.pillbtn svg{width:18px;height:18px}
+
+/* başlıq */
+.hd{position:sticky;top:0;z-index:50;padding:12px var(--m) 0;max-width:calc(var(--max) + 0px);margin:0 auto}
+.hd-in{display:flex;align-items:center;gap:18px;background:rgba(255,255,255,.96);border-radius:20px;box-shadow:var(--sh);padding:10px 12px 10px 18px;min-height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:19px;letter-spacing:-.01em;white-space:nowrap}
+.brand img{width:34px;height:34px;border-radius:50%;background:#2a2f22;padding:4px}
+.nav{display:flex;gap:4px;margin-left:10px}
+.nav a{padding:8px 12px;border-radius:12px;font-size:15px;color:var(--ink2);transition:background .2s,color .2s}
+.nav a:hover{background:var(--soft);color:var(--ink)}
+.nav a.on{background:var(--tint);color:var(--olive);font-weight:500}
+.hd-r{margin-left:auto;display:flex;align-items:center;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 14px;border-radius:var(--r3);background:var(--soft);color:var(--olive);font-weight:600;font-size:15px}
+.chip svg{width:17px;height:17px}
+.icb{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--olive)}
+.icb svg{width:19px;height:19px}
+.mbtn{display:none}
+.menu{position:fixed;inset:0;z-index:60;background:rgba(30,36,26,.35);opacity:0;pointer-events:none;transition:opacity .25s}
+.menu .pan{position:absolute;top:10px;right:10px;left:10px;background:var(--card);border-radius:22px;padding:18px;box-shadow:var(--sh2);transform:translateY(-12px);transition:transform .3s}
+body.menu-on .menu{opacity:1;pointer-events:auto}body.menu-on .menu .pan{transform:none}
+.menu nav{display:grid;gap:2px;margin:12px 0 16px}
+.menu nav a{padding:13px 12px;border-radius:12px;font-size:17px;font-weight:500}
+.menu nav a:hover,.menu nav a.on{background:var(--soft)}
+@media(max-width:1060px){.nav,.hd .tel-l{display:none}.mbtn{display:grid}.hd-r .btn{display:none}}
+
+/* hero */
+.hero{display:grid;grid-template-columns:2.15fr 1fr;gap:16px;padding-top:18px}
+.slides{position:relative;border-radius:var(--r);overflow:hidden;min-height:clamp(380px,46vw,560px);background:#cfd4c6;box-shadow:var(--sh)}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity .9s ease}
+.slide.on{opacity:1}
+.slide img{width:100%;height:100%;object-fit:cover}
+.slide:after{content:'';position:absolute;inset:0 0 auto;height:55%;background:linear-gradient(to bottom,rgba(244,245,240,.92),rgba(244,245,240,.55) 45%,rgba(244,245,240,0))}
+.hero-t{position:absolute;left:clamp(20px,3vw,40px);top:clamp(20px,3vw,36px);right:20px;z-index:2;max-width:620px}
+.hero-t .lead{margin-top:10px;color:var(--ink2)}
+.hero-dots{position:absolute;left:clamp(20px,3vw,40px);bottom:22px;z-index:2;display:flex;gap:6px;background:rgba(255,255,255,.85);padding:8px 10px;border-radius:var(--r3)}
+.hero-dots button{width:8px;height:8px;border-radius:99px;background:#b7bdac;transition:width .3s,background .3s}
+.hero-dots button.on{width:26px;background:var(--olive)}
+.hero-nav{position:absolute;right:18px;bottom:18px;z-index:2;display:flex;gap:8px}
+.hero-nav button{width:44px;height:44px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:var(--sh);color:var(--olive)}
+.hero-nav svg{width:20px;height:20px}
+.hero-cap{position:absolute;right:18px;top:18px;z-index:2;background:rgba(255,255,255,.88);padding:6px 12px;border-radius:var(--r3);font-size:13.5px;color:var(--ink2)}
+.offer{border-radius:var(--r);background:var(--olive);color:#fff;padding:clamp(22px,2.6vw,32px);display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;box-shadow:var(--sh)}
+.offer h2{font-size:clamp(28px,2.8vw,40px);line-height:1.05}
+.offer p{margin:0;color:rgba(255,255,255,.82)}
+.offer .big{font-size:clamp(56px,6vw,88px);font-weight:600;line-height:.9;letter-spacing:-.03em}
+.offer .btn{background:#fff;color:var(--olive);margin-top:auto;align-self:flex-start}
+.offer .btn:hover{background:var(--cream)}
+.offer .mk{position:absolute;right:-30px;bottom:-30px;width:180px;opacity:.12}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.slides{min-height:440px}.offer{min-height:0}}
+
+/* axtarış */
+.find{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:clamp(20px,2.4vw,30px);margin-top:16px}
+.find-h{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.find-g{display:grid;grid-template-columns:1.2fr 1fr 1fr auto;gap:12px;align-items:end}
+.fld{display:grid;gap:7px}
+.fld>label,.fld>span{font-size:13.5px;color:var(--mut);font-weight:500}
+.sel,.in{width:100%;min-height:50px;border-radius:var(--r2);border:1px solid var(--line);background:var(--card);padding:0 14px;font-size:16px;outline:none;transition:border-color .2s,box-shadow .2s}
+.sel{-webkit-appearance:none;appearance:none;padding-right:38px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23556641' stroke-width='1.8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.sel:focus,.in:focus{border-color:var(--olive2);box-shadow:0 0 0 4px rgba(85,102,65,.14)}
+textarea.in{min-height:110px;padding:12px 14px;resize:vertical}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{min-height:50px;min-width:52px;padding:0 16px;border-radius:var(--r2);background:var(--soft);font-weight:500;color:var(--ink2);transition:background .2s,color .2s}
+.seg button:hover{background:var(--soft2)}
+.seg button.on{background:var(--olive);color:#fff}
+.tabs{display:inline-flex;gap:4px;background:var(--soft);padding:4px;border-radius:var(--r3)}
+.tabs button{min-height:40px;padding:0 16px;border-radius:var(--r3);font-size:14.5px;font-weight:500;color:var(--ink2)}
+.tabs button.on{background:#fff;color:var(--olive);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+@media(max-width:900px){.find-g{grid-template-columns:1fr 1fr}.find-g .btn{grid-column:1/-1}}
+@media(max-width:520px){.find-g{grid-template-columns:1fr}}
+
+/* bina kartları */
+.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.bcard{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);display:flex;flex-direction:column;transition:box-shadow .25s,transform .25s}
+.bcard:hover{box-shadow:var(--sh2);transform:translateY(-3px)}
+.bcard figure{margin:0;aspect-ratio:16/10;overflow:hidden;background:var(--soft);position:relative}
+.bcard figure img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.bcard:hover figure img{transform:scale(1.04)}
+.badge{position:absolute;left:12px;top:12px;display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.95);padding:6px 11px;border-radius:var(--r3);font-size:13px;font-weight:500}
+.badge i{width:8px;height:8px;border-radius:50%}
+.st-ok{background:var(--ok)}.st-w{background:var(--w)}
+.bcard .bd{padding:16px 18px 18px;display:grid;gap:10px;flex:1}
+.bcard .t{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.bcard .meta{display:flex;gap:6px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:6px;background:var(--tint);color:var(--olive);padding:6px 10px;border-radius:10px;font-size:13.5px;font-weight:500}
+.tag.g{background:var(--soft);color:var(--ink2)}
+.bcard .ft{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:4px}
+.bcard .pr{font-weight:600;font-size:18px;text-align:right;line-height:1.15}
+.bcard .pr small{display:block;font-size:12.5px;color:var(--mut);font-weight:400}
+@media(max-width:980px){.bgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.bgrid{grid-template-columns:1fr}}
+
+/* mənzil kartları */
+.ugrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.ucard{background:var(--card);border-radius:18px;box-shadow:var(--sh);padding:16px;display:grid;gap:10px;transition:box-shadow .25s,transform .25s;align-content:start}
+.ucard:hover{box-shadow:var(--sh2);transform:translateY(-2px)}
+.ucard .ph{aspect-ratio:16/10;border-radius:12px;overflow:hidden;background:var(--soft)}
+.ucard .ph img{width:100%;height:100%;object-fit:cover}
+.ucard .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ucard .a{font-size:22px;font-weight:600;letter-spacing:-.02em}
+.ucard .pr{font-weight:600;color:var(--olive)}
+.ucard .ln{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:14px;color:var(--ink2)}
+.ucard .ln span{display:inline-flex;align-items:center;gap:6px}
+.ucard .ln svg{width:15px;height:15px;color:var(--mut)}
+.ucard.sold{opacity:.5;pointer-events:none}
+.rail{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,1fr);gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.rail>*{scroll-snap-align:start}
+@media(min-width:1100px){.rail{grid-auto-columns:calc((100% - 42px)/4)}}
+.rail-w{position:relative}
+.rail-nav{display:flex;gap:8px}
+.rail-nav button{width:42px;height:42px;border-radius:50%;background:#fff;box-shadow:var(--sh);display:grid;place-items:center;color:var(--olive)}
+.rail-nav svg{width:18px;height:18px}
+
+/* promo */
+.promo{border-radius:var(--r);background:var(--cream);display:grid;grid-template-columns:1.1fr 1fr;align-items:center;overflow:hidden;box-shadow:var(--sh)}
+.promo .tx{padding:clamp(26px,4vw,56px);display:grid;gap:16px}
+.promo h2{font-size:clamp(28px,3.2vw,46px);color:var(--olive);line-height:1.05}
+.promo .acts{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px}
+.promo .im{align-self:stretch;position:relative;min-height:300px}
+.promo .im img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;padding:20px}
+@media(max-width:860px){.promo{grid-template-columns:1fr}.promo .im{min-height:240px}}
+
+/* üstünlüklər */
+.feats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.feat{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+.feat figure{margin:0;aspect-ratio:4/3;overflow:hidden}
+.feat figure img{width:100%;height:100%;object-fit:cover}
+.feat .bd{padding:16px 18px 20px;display:grid;gap:6px}
+.feat p{margin:0;color:var(--ink2);font-size:15px}
+@media(max-width:980px){.feats{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.feats{grid-template-columns:1fr}}
+.icons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.icn{background:var(--card);border-radius:16px;padding:14px 16px;display:flex;gap:12px;align-items:center;box-shadow:var(--sh)}
+.icn i{width:40px;height:40px;border-radius:12px;background:var(--tint);color:var(--olive);display:grid;place-items:center;flex:none}
+.icn i svg{width:20px;height:20px}
+.icn b{display:block;font-weight:600;font-size:15px;line-height:1.25}
+.icn span{font-size:13.5px;color:var(--mut);line-height:1.3}
+@media(max-width:980px){.icons{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.icons{grid-template-columns:1fr}}
+
+/* məkan */
+.loc{display:grid;grid-template-columns:1.25fr 1fr;gap:16px}
+.map{border-radius:var(--r);overflow:hidden;min-height:420px;background:var(--soft);box-shadow:var(--sh)}
+.map iframe{width:100%;height:100%;min-height:420px;border:0;display:block}
+.pois{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:8px 8px}
+.poi{display:flex;gap:12px;align-items:center;padding:12px 12px;border-radius:14px}
+.poi+.poi{border-top:1px solid var(--line)}
+.poi i{width:38px;height:38px;border-radius:12px;background:var(--tint);color:var(--olive);display:grid;place-items:center;flex:none;font-style:normal;font-weight:600;font-size:14px}
+.poi b{display:block;font-weight:600;font-size:15.5px}
+.poi span{font-size:13.5px;color:var(--mut)}
+.poi em{margin-left:auto;font-style:normal;font-size:12.5px;color:var(--ink2);background:var(--soft);padding:4px 9px;border-radius:99px;white-space:nowrap}
+@media(max-width:900px){.loc{grid-template-columns:1fr}.map,.map iframe{min-height:320px}}
+
+/* xəbərlər */
+.news{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.ncard{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);display:flex;flex-direction:column;transition:box-shadow .25s}
+.ncard:hover{box-shadow:var(--sh2)}
+.ncard figure{margin:0;aspect-ratio:16/9;overflow:hidden;background:var(--soft)}
+.ncard figure img{width:100%;height:100%;object-fit:cover}
+.ncard .bd{padding:16px 18px 18px;display:grid;gap:8px;flex:1}
+.ncard p{margin:0;color:var(--mut);font-size:14.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ncard .ft{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:6px;font-size:13.5px;color:var(--mut)}
+@media(max-width:980px){.news{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.news{grid-template-columns:1fr}}
+
+/* suallar + əlaqə */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media(max-width:900px){.two{grid-template-columns:1fr}}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:clamp(20px,2.4vw,30px)}
+.qa details{border-top:1px solid var(--line)}
+.qa details:first-child{border-top:0}
+.qa summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 2px;cursor:pointer;font-weight:500;font-size:16.5px}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary i{width:30px;height:30px;border-radius:50%;background:var(--soft);display:grid;place-items:center;flex:none;transition:transform .25s,background .25s;color:var(--olive)}
+.qa summary i svg{width:15px;height:15px}
+.qa details[open] summary i{transform:rotate(45deg);background:var(--tint)}
+.qa .an{padding:0 2px 18px;color:var(--ink2)}
+.frm{display:grid;gap:14px}
+.frm .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.frm .row2{grid-template-columns:1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{min-height:44px;padding:0 14px;border-radius:12px;background:var(--soft);font-size:14.5px;line-height:1.15;color:var(--ink2)}
+.chips button small{display:block;font-size:11.5px;opacity:.75}
+.chips button.on{background:var(--olive);color:#fff}
+.err{color:#a33a1f;font-size:13px;min-height:0}
+.done{display:grid;gap:8px;padding:18px;border-radius:16px;background:var(--tint);color:var(--olive)}
+.done b{font-size:19px}
+.contacts{display:grid;gap:12px;margin-top:18px}
+.contacts a,.contacts div{display:flex;gap:12px;align-items:center}
+.contacts i{width:40px;height:40px;border-radius:12px;background:var(--tint);color:var(--olive);display:grid;place-items:center;flex:none}
+.contacts i svg{width:19px;height:19px}
+.contacts small{display:block;color:var(--mut);font-size:12.5px}
+
+/* altlıq */
+.ft{margin-top:clamp(56px,6vw,90px);background:var(--card);border-radius:28px 28px 0 0;padding:clamp(32px,4vw,52px) 0 0}
+.ft .cols{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:28px}
+.ft h4{font-size:14px;color:var(--mut);font-weight:500;margin:0 0 10px}
+.ft .cols a{display:block;padding:4px 0;color:var(--ink2);font-size:15px}
+.ft .cols a:hover{color:var(--olive)}
+.ft p{margin:10px 0 0;color:var(--ink2);font-size:15px;max-width:34ch}
+.ft .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-top:1px solid var(--line);margin-top:30px;padding:18px 0 22px;font-size:13.5px;color:var(--mut)}
+.soc{display:flex;gap:8px;margin-top:14px}
+@media(max-width:860px){.ft .cols{grid-template-columns:1fr 1fr}.ft .cols>div:first-child{grid-column:1/-1}}
+
+/* daxili səhifələr */
+.ph{padding-top:22px}
+.crumbs{display:flex;gap:8px;flex-wrap:wrap;font-size:14px;color:var(--mut);margin-bottom:14px}
+.crumbs a:hover{color:var(--olive)}
+.ph-card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:clamp(22px,3vw,36px);display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap}
+.ph-card .lead{margin-top:8px;max-width:60ch}
+.stats{display:flex;gap:10px;flex-wrap:wrap}
+.stat{background:var(--soft);border-radius:16px;padding:12px 16px;min-width:110px}
+.stat b{display:block;font-size:24px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.stat span{font-size:13px;color:var(--mut)}
+.fbar{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:18px;display:flex;flex-wrap:wrap;gap:14px 18px;align-items:flex-end;margin-top:16px}
+.fbar .seg button{min-height:44px}
+.fbar .sel{min-height:44px;min-width:170px}
+.cnt{display:flex;justify-content:space-between;align-items:center;margin:20px 2px 12px;gap:12px;flex-wrap:wrap}
+.cnt b{font-size:20px}
+.more{display:flex;justify-content:center;margin-top:20px}
+.empty{background:var(--card);border-radius:var(--r);padding:36px;text-align:center;color:var(--mut);box-shadow:var(--sh)}
+.unit{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;align-items:start;margin-top:16px}
+.unit .gal{border-radius:var(--r);overflow:hidden;aspect-ratio:4/3;box-shadow:var(--sh);background:var(--soft)}
+.unit .gal img{width:100%;height:100%;object-fit:cover}
+.side{position:sticky;top:calc(var(--hd) + 14px);display:grid;gap:14px}
+.kv{display:grid}
+.kv div{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-top:1px solid var(--line);font-size:15.5px}
+.kv div:first-child{border-top:0}
+.kv span{color:var(--mut)}.kv b{font-weight:500;text-align:right}
+.prbox{display:grid;gap:4px}
+.prbox b{font-size:30px;font-weight:600;letter-spacing:-.02em}
+.plan{border-radius:var(--r);background:var(--card);box-shadow:var(--sh);padding:20px}
+.plan svg{width:100%;height:auto}
+@media(max-width:900px){.unit{grid-template-columns:1fr}.side{position:static}}
+.floors{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 4px}
+.floors button{min-width:64px;min-height:56px;border-radius:14px;background:var(--card);box-shadow:var(--sh);display:grid;place-items:center;line-height:1.1;padding:6px 10px}
+.floors button b{font-size:18px}
+.floors button span{font-size:11.5px;color:var(--mut)}
+.floors button.on{background:var(--olive);color:#fff}.floors button.on span{color:rgba(255,255,255,.75)}
+.iso{position:relative;background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:clamp(10px,2vw,26px)}
+.iso img{width:100%;height:auto}
+.hs{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px}
+.hs i{width:14px;height:14px;border-radius:50%;background:var(--olive);box-shadow:0 0 0 5px rgba(63,77,44,.22)}
+.hs span{background:#fff;border-radius:99px;padding:5px 11px;font-size:13px;font-weight:500;box-shadow:var(--sh);white-space:nowrap}
+@media(max-width:620px){.hs span{display:none}}
+.tline{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:700px){.tline{grid-template-columns:1fr}}
+.art{max-width:780px;margin:0 auto}
+.art .cover{border-radius:var(--r);overflow:hidden;aspect-ratio:16/8;margin:18px 0 26px;box-shadow:var(--sh)}
+.art .cover img{width:100%;height:100%;object-fit:cover}
+.art .bd{font-size:18px;line-height:1.7}
+.art .bd h2{font-size:24px;margin:30px 0 10px}
+.art .bd p{margin:0 0 16px}
+.art .bd blockquote{margin:22px 0;padding:16px 20px;border-radius:16px;background:var(--tint);color:var(--olive);font-weight:500}
+.calc{display:grid;gap:16px}
+.rng{display:grid;gap:8px}
+.rng .v{display:flex;justify-content:space-between;font-size:15px}
+.rng .v b{font-weight:600}
+input[type=range]{width:100%;accent-color:var(--olive)}
+.out{background:var(--olive);color:#fff;border-radius:18px;padding:20px;display:grid;gap:8px}
+.out .mon{font-size:36px;font-weight:600;letter-spacing:-.02em}
+.out dl{display:grid;grid-template-columns:1fr auto;gap:6px 14px;margin:0;font-size:14.5px}
+.out dt{opacity:.75}.out dd{margin:0;text-align:right;font-weight:500}
+.ncs-banner{position:fixed;left:12px;right:12px;bottom:12px;z-index:70;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;background:var(--olive);color:#fff;padding:12px 48px 12px 16px;border-radius:16px;box-shadow:var(--sh2);max-width:760px;margin:0 auto;font-weight:500}
+.ncs-banner a{text-decoration:underline}
+.ncs-banner button{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:22px;width:32px;height:32px}
+.fab{position:fixed;right:16px;bottom:16px;z-index:40;display:none}
+@media(max-width:700px){.fab{display:inline-flex;box-shadow:var(--sh2)}}
+.ft .cols a.brand{display:flex;padding:0;color:var(--ink)}
+.ft .soc a{display:grid;padding:0}
+@media(max-width:900px){.unit .side{order:-1}}
+</style>
+</head>
+<body>
+<a class="sr" href="#view">Məzmuna keç</a>
+<header class="hd" id="hd"><div class="hd-in">
+  <a class="brand" href="#home" aria-label="Nizami City — ana səhifə"><img src="/assets/nc/site/mark-cream.png" alt="">Nizami City</a>
+  <nav class="nav" aria-label="Əsas"><a href="#menziller">Mənzillər</a><a href="#binalar">Binalar</a><a href="#kalkulyator">Ödəniş</a><a href="#mekan">Məkan</a><a href="#kommersiya">Kommersiya</a><a href="#bloq">Bloq</a><a href="#elaqe">Əlaqə</a></nav>
+  <div class="hd-r"><a class="chip tel-l" href="tel:*0788"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>*0788</a><a class="btn sm" href="#elaqe">Baxışa yazıl</a>
+<button class="icb mbtn" id="mbtn" aria-label="Menyu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg></button></div>
+</div></header>
+<div class="menu" id="menu"><div class="pan"><div style="display:flex;justify-content:space-between;align-items:center"><span class="brand"><img src="/assets/nc/site/mark-cream.png" alt="">Nizami City</span><button class="icb" data-close aria-label="Bağla"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <nav aria-label="Mobil menyu"><a href="#home">Ana səhifə</a><a href="#menziller">Mənzillər</a><a href="#binalar">Binalar</a><a href="#kalkulyator">Ödəniş</a><a href="#mekan">Məkan</a><a href="#kommersiya">Kommersiya</a><a href="#bloq">Bloq</a><a href="#suallar">Suallar</a><a href="#elaqe">Əlaqə</a></nav>
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="tel:*0788">Zəng: *0788</a><a class="btn tn" href="#elaqe">Baxışa yazıl</a></div></div></div>
+<main id="view" tabindex="-1"></main>
+<footer class="ft" id="ft"></footer>
+<script>window.IMG={"front": "/assets/nc/site/front-2560.webp", "aerial_c": "/assets/nc/site/aerial_c-2560.webp", "corner": "/assets/nc/site/corner-2560.webp", "entrance": "/assets/nc/site/entrance-2560.webp", "tower_r": "/assets/nc/site/tower_r-2560.webp", "street": "/assets/nc/site/street-2560.webp", "tower_l": "/assets/nc/site/tower_l-2560.webp", "aerial": "/assets/nc/site/aerial-2400.webp", "logo": "/assets/nc/site/mark-cream.png"};</script>
+<script>// Nizami City — 3D kompleks modeli (three r128). Sayt və render skripti ortaq istifadə edir.
+// Koordinatlar: x şərq, z cənub; 1 vahid ≈ 0.5 m. Baş plan sxematikdir.
+window.NC_BLD = [
+  { id: 'A', st: 'ok', x: -150, z: -175, w: 150, d: 62 },
+  { id: 'B', st: 'ok', x: 30, z: -175, w: 150, d: 62 },
+  { id: 'C', st: 'ok', x: 200, z: -95, w: 62, d: 150 },
+  { id: 'E', st: 'w', x: 30, z: 175, w: 150, d: 62 },
+  { id: 'F', st: 'w', x: -150, z: 175, w: 150, d: 62 },
+  { id: 'G', st: 'w', x: -232, z: 85, w: 62, d: 120 },
+];
+window.NC_FLOORS = 9; window.NC_FH = 7.4;
+
+</script>
+<script>window.__NC_START=function(){
+// Nizami City — məlumat qatı. İctimai mənbələr: report.az, ipoteka.az, Instagram @nizami.city.
+// Qeyd: mənzil inventarı (bina/mərtəbə/status) NÜMUNƏDİR — real satış bazası Supabase "nizami" sxeminə qoşulanda əvəz olunacaq.
+window.NC = (function () {
+  const CO = {
+    name: 'Nizami City', slogan: 'Xoşbəxtliyi inşa edirik',
+    short: '*0788', phones: ['(050) 700 00 88', '(050) 970 00 88'], tel: ['+994507000088', '+994509700088'],
+    email: 'info@nizamicity.az', addr: 'Cəfər Cabbarlı küç. 31, Nizami m/s, Yasamal r-nu, Bakı',
+    hours: 'B.e.–Cümə 09:00–18:00', ig: 'nizami.city', wa: '994507000088', priceFrom: 2700,
+  };
+  const STAT = {
+    ok: { t: 'Təhvil verilib', c: 'ok', pct: 100 },
+    w: { t: 'Təhvil', c: 'soon', pct: 64 },
+    n: { t: 'Növbəti mərhələ', c: '', pct: 8 },
+  };
+  // Real elanlardan götürülmüş sahələr (ipoteka.az) — plan tipləri
+  const TYPES = [
+    { k: 'T1', r: 1, a: 84.40 }, { k: 'T2a', r: 2, a: 76.50 }, { k: 'T2b', r: 2, a: 122.61 }, { k: 'T2c', r: 2, a: 123.71 },
+    { k: 'T3', r: 3, a: 163.21 }, { k: 'T4a', r: 4, a: 165.30 }, { k: 'T4b', r: 4, a: 206.70 },
+  ];
+  // Otaq paylanması (eksplikasiya) — plan sxemi üçün
+  const ROOMS = {
+    1: { top: [['Qonaq otağı', 30], ['Yataq otağı', 21]], bot: [['Mətbəx', 16], ['Hamam', 7], ['Qarderob', 6], ['Dəhliz', 14]], bal: 6 },
+    2: { top: [['Qonaq otağı', 27], ['Yataq otağı', 18], ['Yataq otağı', 15]], bot: [['Mətbəx', 14], ['Hamam', 6], ['S/Q', 3], ['Dəhliz', 12]], bal: 5 },
+    3: { top: [['Qonaq otağı', 24], ['Yataq otağı', 17], ['Yataq otağı', 14], ['Uşaq otağı', 13]], bot: [['Mətbəx', 12], ['Hamam', 5], ['S/Q', 3], ['Dəhliz', 10]], bal: 4 },
+    4: { top: [['Qonaq otağı', 22], ['Yataq otağı', 15], ['Yataq otağı', 12], ['Uşaq otağı', 11], ['Kabinet', 9]], bot: [['Mətbəx', 11], ['Hamam', 5], ['S/Q', 3], ['Dəhliz', 9]], bal: 4 },
+  };
+  const ORI = ['Cənub', 'Şərq', 'Qərb', 'Şimal']; const ORIAZ = { 'Cənub': 180, 'Şərq': 90, 'Qərb': 270, 'Şimal': 0 };
+  // REAL inventar: Supabase nc_public_units() (satış lövhəsi ilə eyni baza)
+  const R = window.NC_REMOTE || {}, SITE = R.site || {}, CFG = R.cfg || {};
+  const PR = (CFG.presets || []); const pp = re => (PR.find(x => re.test(x.t)) || {}).p;
+  const P_KOT = pp(/kotlovan/i) || (CFG.price || {}).min || 3800, P_TS = pp(/təmirsiz/i) || 3900, P_TL = pp(/təmirli/i) || 4200;
+  if (PR.length) CO.priceFrom = Math.min(...PR.map(x => +x.p).filter(Boolean)); else CO.priceFrom = P_KOT;
+  CO.delivery = '2027';
+  Object.assign(CO, SITE.co || {});
+  (SITE.bld || []).forEach(o => { const B = (window.NC_BLD || []).find(x => x.id === o.id); if (B && o.st) B.st = o.st; });
+  STAT.w.t = 'Təhvil ' + CO.delivery;
+  const UNITS = []; const roomsBy = a => a < 70 ? 1 : a < 105 ? 2 : a < 150 ? 3 : 4; const seq = {};
+  (R.units || []).forEach(x => {
+    const m = /Bina\s+([A-Z])(?:\s*·\s*Giriş\s*(\d+))?/i.exec(x.b || ''); if (!m) return;
+    const bid = m[1].toUpperCase(), B = (window.NC_BLD || []).find(q => q.id === bid); if (!B) return;
+    const a = parseFloat(String(x.a || '').replace(',', '.')); if (!(a > 0)) return;
+    const f = Math.floor(parseFloat(x.f) || 0) || 1; const ent = m[2] ? +m[2] : 0;
+    const k = bid + f; const n = parseInt(x.n) || (seq[k] = (seq[k] || 0) + 1);
+    const r = parseInt(x.r) || roomsBy(a); const c = x.c || '';
+    const ppm = /təmirli/i.test(c) ? P_TL : B.st === 'ok' ? P_TS : P_KOT;
+    const id = `${bid}${ent ? ent : ''}-${f}-${n}`;
+    const oo = (SITE.ori || {})[id];
+    UNITS.push({ id, b: bid, ent, bst: B.st, f, n, r, a, t: '', st: x.s === 'sold' ? 'sold' : x.s === 'bron' ? 'bron' : 'free', ppm, price: Math.round(a * ppm / 100) * 100, ori: oo || '—', ceil: 3.0, c: c.replace(/\s*·\s*Kirayə/i, '') });
+  });
+  UNITS.sort((p, q) => p.b.localeCompare(q.b) || p.f - q.f || p.ent - q.ent || p.n - q.n);
+  if (UNITS.length) window.NC_FLOORS = Math.max(...UNITS.map(u => u.f));
+  const INFRA = [
+    ['Qapalı həyət', 'Avtomobilsiz daxili həyət və uşaq meydançası', 'M3 21h18M5 21V10l7-6 7 6v11M10 21v-5h4v5'],
+    ['2 səviyyəli yeraltı parkinq', 'Liftlər birbaşa parkinqə enir', 'M5 17h14M6 17l1.5-6h9L18 17M7.5 17v2M16.5 17v2'],
+    ['7/24 mühafizə', 'Kameralar və kodlu giriş', 'M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z'],
+    ['Fitnes və SPA', 'Kompleksin daxilində', 'M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12'],
+    ['Supermarket, aptek, kafe', 'Binaların birinci mərtəbəsində', 'M4 6h16l-1.5 9H5.5zM9 20h.01M16 20h.01'],
+    ['Qadın baxım mərkəzi', 'Kompleksin daxilində', 'M12 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM12 11v10M8 17h8'],
+    ['Generator', 'Fasiləsiz enerji təminatı', 'M13 2L4 14h7l-1 8 9-12h-7z'],
+    ['Sürətli liftlər', 'Sərnişin və yük liftləri', 'M7 3h10v18H7zM10 8l2-2 2 2M10 16l2 2 2-2'],
+    ['Optik internet', 'Hər mənzilə', 'M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 20h.01'],
+    ['Yanğın sistemi', 'Avtomatik sistem və su ehtiyatı', 'M12 3c3 4 6 6 6 10a6 6 0 0 1-12 0c0-3 2-5 3-7 1 2 2 3 3 3 0-3-1-4 0-6z'],
+    ['Keramoqranit fasad', 'Uzunömürlü, baxımı asan', 'M4 4h16v16H4zM4 12h16M12 4v16'],
+    ['Təbii qaz', 'Hər mənzildə', 'M12 3c2 3 5 5 5 9a5 5 0 0 1-10 0c0-4 3-6 5-9z'],
+  ];
+  // Sxematik xəritə (koordinatlar 0–800 × 0–550, mütənasib deyil)
+  const POI = [
+    { k: 'M', n: 'Nizami metrosu', d: 'Bir neçə dəqiqəlik piyada yolu', x: 520, y: 240, c: 'Nəqliyyat' },
+    { k: 'T', n: 'Nizami Mall', d: 'Ticarət mərkəzi', x: 575, y: 360, c: 'Alış-veriş' },
+    { k: 'T', n: 'Caspian Plaza', d: 'Biznes və ticarət mərkəzi', x: 300, y: 430, c: 'Alış-veriş' },
+    { k: 'T', n: 'Globus Center', d: 'Ticarət mərkəzi', x: 650, y: 150, c: 'Alış-veriş' },
+    { k: 'S', n: '31 nömrəli məktəb', d: 'Yaxınlıqda', x: 250, y: 165, c: 'Təhsil' },
+    { k: 'S', n: '18 nömrəli məktəb', d: 'Yaxınlıqda', x: 330, y: 110, c: 'Təhsil' },
+    { k: 'P', n: 'Parklar və bulvarlar', d: 'Gəzinti üçün', x: 140, y: 330, c: 'İstirahət' },
+  ];
+  const FAQ = [
+    ['Mənzillər təmirlidir?', 'Hazır binalarda həm təmirli, həm təmirsiz mənzillər var. Tikilən binalarda mənzillər təmirsiz, sərbəst planla təhvil verilir.'],
+    ['Hansı binalar hazırdır?', 'A, B və C binaları təhvil verilib. E, F və G binalarının təhvili ' + CO.delivery + '-ci ilə planlaşdırılır.'],
+    ['Hansı ödəniş variantları var?', 'Nağd ödəniş, daxili kredit (6 ay faizsiz, 12 və 24 ay) və ya ipoteka. Dəqiq şərtləri satış meneceri ilə dəqiqləşdirin.'],
+    ['Kvadratmetr qiyməti nə qədərdir?', !SITE.showPrice ? 'Qiymət mənzilin binasından, mərtəbəsindən və vəziyyətindən asılıdır. Saytda «Qiyməti öyrən» formasını doldurun və ya *0788 nömrəsinə zəng edin — satış meneceri dəqiq qiyməti desin.' : 'Qiymətlər ' + CO.priceFrom.toLocaleString('ru').replace(/,/g,' ') + ' ₼/m²-dən başlayır: tikilən binalarda ' + P_KOT + ', hazır binalarda təmirsiz ' + P_TS + ', təmirli ' + P_TL + ' ₼/m².'],
+    ['Parkinq var?', 'Bəli, kompleksdə 2 səviyyəli yeraltı parkinq var.'],
+    ['Kommersiya sahələri satılır?', 'Bəli, binaların birinci mərtəbələrində qeyri-yaşayış sahələri satışdadır. Kommersiya bölməsindən sorğu göndərin.'],
+    ['Kompleks harada yerləşir?', 'Yasamal rayonu, Nizami m/s, Cəfər Cabbarlı küçəsi 31 — Nizami metrosuna yaxın.'],
+    ['Mənzilə necə baxa bilərəm?', 'Əlaqə bölməsində gün və saat seçin və ya *0788 nömrəsinə zəng edin — baxışı sizin üçün təşkil edək.'],
+  ];
+  const TIMELINE = [
+    ['Mərhələ I', 'A, B, C binaları', 'Tikinti tamamlanıb, mənzillər sakinlərə təhvil verilib.', 'ok'],
+    ['Mərhələ II', 'E, F, G binaları', 'Tikinti davam edir. Təhvil ' + CO.delivery + '-ci ilə planlaşdırılır.', 'w'],
+  ];
+  const GAL = [
+    { src: 'aerial', c: 'Vizuallar', t: 'Hazır binalar — 3D quşbaxışı vizual, mərkəzdə qapalı həyət' },
+    { src: 'front', c: 'Vizuallar', t: 'Küçə fasadı və «Nizami City» girişi' },
+    { src: 'aerial_c', c: 'Vizuallar', t: 'Binalar və giriş portalı' },
+    { src: 'entrance', c: 'Detallar', t: 'Həyətə giriş, terras və kommersiya qalereyası' },
+    { src: 'corner', c: 'Vizuallar', t: 'Künc görünüşü və giriş qapısı' },
+    { src: 'tower_l', c: 'Detallar', t: 'Künc bina: keramoqranit və kərpic fasad' },
+    { src: 'tower_r', c: 'Detallar', t: 'Küçə tərəfi, birinci mərtəbədə vitrinlər' },
+    { src: 'street', c: 'Vizuallar', t: 'Uzun fasad və kommersiya mərtəbəsi' },
+  ];
+  const GCATS = ['Hamısı', 'Vizuallar', 'Detallar', 'Tikinti gedişatı', 'İnteryer'];
+  const BLOG = [
+    { id: 'kredit-ipoteka-nagd', c: 'Maliyyə', d: '2026-10-14', m: 7, img: 'tower_r', t: 'Nağd, daxili kredit, yoxsa ipoteka?', x: 'Eyni mənzili üç fərqli yolla almaq — hər birinin real xərci və kimə uyğun olduğu.',
+      b: `<p>Mənzil alarkən ən böyük sual çox vaxt «hansı mənzil?» yox, «necə ödəyim?» olur. Eyni mənzilin son xərci seçilən ödəniş yolundan asılı olaraq ciddi fərqlənə bilər.</p>
+<h2>Nağd ödəniş</h2><p>Ən sadə yoldur: müqavilə bağlanır, məbləğ ödənilir, əlavə xərc yoxdur. Nağd alışda satış ofisi ilə qiymət barədə danışmaq imkanı da adətən daha genişdir.</p>
+<h2>Daxili kredit</h2><p>Nizami City-də məbləğin 50%-ni ilkin ödəyib, qalan hissəni 24 ayadək hissə-hissə ödəmək mümkündür. Bu yol banka müraciət etmədən, birbaşa tikinti şirkəti ilə razılaşma əsasında işləyir. Aylıq ödəniş müddət qısa olduğu üçün yüksək olur, amma ümumi xərc proqnozlaşdırılandır.</p>
+<blockquote>Qayda: aylıq ödəniş ailə gəlirinin 40%-dən çox olmamalıdır.</blockquote>
+<h2>İpoteka</h2><p>Uzunmüddətli bank krediti aylıq ödənişi azaldır, lakin faiz hesabına ümumi xərci artırır. İpoteka şərtləri bankdan və proqramdan asılıdır, ona görə müraciətdən əvvəl bir neçə bankın təklifini müqayisə edin.</p>
+<h2>Necə qərar verməli?</h2><ol><li>Əlinizdə olan vəsaiti və aylıq ödəyə biləcəyiniz məbləği yazın.</li><li>Saytdakı kalkulyatorda üç variantı eyni mənzil üçün müqayisə edin.</li><li>Son qərardan əvvəl satış ofisində aktual şərtləri dəqiqləşdirin.</li></ol>` },
+    { id: 'temirsiz-menzil', c: 'Təmir', d: '2026-09-28', m: 6, img: 'tower_l', t: 'Təmirsiz mənzil: açarı aldıqdan sonra ilk 90 gün', x: 'Sərbəst planın üstünlüyündən necə yararlanmalı və təmirə hansı ardıcıllıqla başlamalı.',
+      b: `<p>Təmirsiz təhvil verilən mənzil ilk baxışda əlavə iş kimi görünür, amma əslində ən böyük üstünlükdür: məkanı tam öz həyat tərzinizə görə qurursunuz.</p>
+<h2>1–2-ci həftə: ölçü və plan</h2><p>Mənzilin dəqiq ölçüsünü götürün, pəncərələrin, kommunikasiya çıxışlarının yerini qeyd edin. Ailənin gündəlik ssenarisini yazın: kim harada işləyir, uşaqlar harada oynayır, qonaqlar harada qarşılanır.</p>
+<h2>3–4-cü həftə: layihə və smeta</h2><p>Dizayner və ya usta ilə divarların yerini, elektrik nöqtələrini və santexnikanı razılaşdırın. Smetanı mərhələlərə bölün: «qaba» işlər, mühəndis sistemləri, bitirmə işləri.</p>
+<h2>2–3-cü ay: qaba işlər</h2><ul><li>Arakəsmə divarlar</li><li>Elektrik və zəif cərəyan xətləri</li><li>Su və kanalizasiya paylanması</li><li>Suvaq və döşəmə hazırlığı</li></ul>
+<blockquote>Elektrik nöqtələrini mebel planına görə yerləşdirin — sonradan uzatma kabeli ilə yaşamaqdan yaxşıdır.</blockquote>
+<h2>Bitirmə işləri</h2><p>Plitə, laminat, boya və işıqlandırma sona qalır. Bu mərhələdə tələsməyin: material seçimi uzun illər üçündür.</p>` },
+    { id: 'menzil-secimi-12-sual', c: 'Bələdçi', d: '2026-09-10', m: 5, img: 'front', t: 'Mənzil seçərkən özünüzə verməli olduğunuz 12 sual', x: 'Baxışa getməzdən əvvəl bu siyahını yanınıza alın.',
+      b: `<p>Mənzil seçimi emosional qərardır, amma bir neçə düzgün sual səhvdən qoruyur.</p><ol>
+<li>Neçə nəfər yaşayacaq və 5 il sonra bu rəqəm dəyişəcəkmi?</li><li>Hər kəsə ayrıca otaq lazımdırmı?</li><li>Evdən işləyirsinizsə, kabinet üçün yer varmı?</li><li>Pəncərələr hansı tərəfə baxır və gün işığı neçə saat düşür?</li><li>Hansı mərtəbə sizə rahatdır — mənzərə, yoxsa liftdən asılılıq?</li><li>Mətbəx ailənizin ölçüsünə uyğundurmu?</li><li>Saxlama yeri (qarderob, anbar) kifayətdirmi?</li><li>Parkinq lazımdırmı və neçə yer?</li><li>Metro, məktəb, iş yeri neçə dəqiqəlikdir?</li><li>Ödənişi hansı yolla edəcəksiniz və aylıq yük nə qədər olacaq?</li><li>Təmirə nə qədər vaxt və büdcə ayıra bilərsiniz?</li><li>Bina hazırdır, yoxsa tikilir — köçmə tarixi sizə uyğundurmu?</li></ol>
+<p>Saytdakı <b>Mənzil seçici</b> bu sualların bir hissəsini 30 saniyəyə cavablandırıb sizə uyğun variantları göstərir.</p>` },
+    { id: 'gunes-isigi', c: 'Bələdçi', d: '2026-08-22', m: 4, img: 'aerial', t: 'Günəş işığı: pəncərənin istiqaməti niyə vacibdir', x: 'Cənub, şərq, qərb, şimal — Bakıda hər birinin gündəlik həyata təsiri.',
+      b: `<p>Eyni ölçülü iki mənzil pəncərələrin istiqamətinə görə tamamilə fərqli hiss oluna bilər.</p>
+<h2>Cənub</h2><p>Qışda gün boyu işıq, yayda isə günəş yüksəkdə olduğu üçün otağa az düşür. Qonaq otağı üçün ən rahat istiqamətdir.</p>
+<h2>Şərq</h2><p>Səhər günəşi. Yataq otağı və mətbəx üçün yaxşı seçimdir: gün işıqla başlayır, axşam isə otaq sərin qalır.</p>
+<h2>Qərb</h2><p>Günortadan sonra və axşam işığı. Yay aylarında pərdə və kondisioner planlaşdırın.</p>
+<h2>Şimal</h2><p>Bərabər, kölgəli işıq. İş otağı və studiya üçün yaxşıdır, amma qışda daha sərin olur.</p>
+<blockquote>Saytda hər mənzil səhifəsində fəsillərə görə günəş saatlarını görə bilərsiniz.</blockquote>` },
+    { id: 'serbest-planlasdirma', c: 'Dizayn', d: '2026-08-05', m: 5, img: 'aerial_c', t: 'Sərbəst planlaşdırma: 5 işlək ssenari', x: 'Eyni sahədən fərqli həyat tərzləri üçün fərqli mənzillər.',
+      b: `<p>Sərbəst plan o deməkdir ki, daxili divarlar sizin qərarınızdır. Budur ən çox seçilən beş ssenari:</p>
+<h2>1. Açıq mətbəx-qonaq</h2><p>Mətbəx və qonaq otağı birləşir, məkan daha geniş və işıqlı görünür. Güclü sorucu vacibdir.</p>
+<h2>2. Master-otaq</h2><p>Yataq otağına ayrıca hamam və qarderob əlavə olunur. Böyük 3–4 otaqlı mənzillərdə rahat alınır.</p>
+<h2>3. Kabinet</h2><p>Kiçik otaq və ya qonaq otağının bir hissəsi şüşə arakəsmə ilə iş yerinə çevrilir.</p>
+<h2>4. Uşaq zonası</h2><p>İki uşaq otağı arasında ortaq oyun sahəsi — böyüdükcə yenidən bölünə bilər.</p>
+<h2>5. Anbar və camaşırxana</h2><p>Dəhlizdə 2–3 m² ayrılması gündəlik həyatı xeyli asanlaşdırır.</p>` },
+    { id: 'yasamal-heyat', c: 'Məkan', d: '2026-07-18', m: 4, img: 'entrance', t: 'Nizami metrosu ətrafında yaşamaq', x: 'Məktəblər, ticarət mərkəzləri və nəqliyyat — gündəlik həyat bir neçə dəqiqəlik məsafədə.',
+      b: `<p>Nizami City Yasamal rayonunda, Nizami metrosuna yaxın, şəhərin ən canlı hissələrindən birində yerləşir.</p>
+<h2>Nəqliyyat</h2><p>Nizami metrosu bir neçə dəqiqəlik piyada yolundadır, ətrafdakı küçələrdən şəhərin əsas istiqamətlərinə ictimai nəqliyyat işləyir.</p>
+<h2>Təhsil</h2><p>31 və 18 nömrəli məktəblər kompleksin yaxınlığındadır.</p>
+<h2>Alış-veriş</h2><p>Nizami Mall, Caspian Plaza və Globus Center yaxın məsafədədir. Kompleksin öz birinci mərtəbələrində də supermarket, aptek və kafelər var.</p>
+<h2>İstirahət</h2><p>Qapalı həyət gündəlik gəzinti və uşaqlar üçün təhlükəsiz məkandır; yaxınlıqdakı parklar isə daha uzun gəzintilər üçündür.</p>` },
+  ];
+  const pick = (k, d) => Array.isArray(SITE[k]) && SITE[k].length ? SITE[k] : d;
+  const BL = Array.isArray(R.blog) ? R.blog.filter(p => p && p.pub !== false) : BLOG;
+  return { CO, STAT, TYPES, ROOMS, ORIAZ, UNITS, INFRA: pick('infra', INFRA), POI, FAQ: pick('faq', FAQ), TIMELINE: pick('timeline', TIMELINE), GAL: pick('gal', GAL), GCATS, BLOG: BL, DEF: { FAQ, TIMELINE, INFRA, GAL, BLOG } };
+})();
+
+;
+/* Nizami City — sayt v3 (sakit portal üslubu). Məlumat: window.NC (data.js), canlı: runtime.js */
+const { CO, UNITS, FAQ, TIMELINE, BLOG, POI } = window.NC;
+const IMG = window.IMG || {};
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmt = n => Math.round(+n || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+const fm2 = n => (Math.round((+n || 0) * 100) / 100).toString().replace('.', ',');
+const OFF = window.NC_OFF || {};
+const HP = !(((window.NC_REMOTE || {}).site || {}).showPrice);
+if (HP) OFF.kalkulyator = true;
+const TERMS = (((window.NC_REMOTE || {}).cfg || {}).terms || [{ months: 6, surcharge: 0, enabled: true }]).filter(t => t.enabled !== false && +t.months > 0).map(t => ({ m: +t.months, s: +t.surcharge || 0 })).sort((a, b) => a.m - b.m);
+const SUR = m => (TERMS.find(t => t.m === m) || { s: 0 }).s;
+const I = {
+  ar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  al: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>',
+  ph: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>',
+  pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+  pl: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  bld: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5l8-2v18M12 21h8V9l-8-2M8 8v.01M8 12v.01M8 16v.01M16 12v.01M16 16v.01"/></svg>',
+  fl: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M4 15h16M4 10h16M4 5h16"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',
+  clk: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  park: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M10 16V8h3a2.5 2.5 0 0 1 0 5h-3"/></svg>',
+  sh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+  tree: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-6M7 16h10l-5-13z"/></svg>',
+  bag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></svg>',
+  metro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18l4-12 4 8 4-8 4 12"/></svg>',
+  bolt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>',
+  ig: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>',
+  wa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c.5 2 2.5 4 4.5 4.5l1.2-1.2 2 1-.6 1.6c-3.6.4-7.7-3.7-7.3-7.3l1.6-.6 1 2z"/></svg>',
+};
+const roomsT = r => r ? r + ' otaqlı' : 'Studiya';
+const ord = n => { n = Math.abs(Math.round(+n)); const d = n % 10, t = Math.floor(n / 10) % 10; const sf = d ? ['', 'ci', 'ci', 'cü', 'cü', 'ci', 'cı', 'ci', 'ci', 'cu'][d] : t ? ['', 'cu', 'ci', 'cu', 'cı', 'ci', 'cı', 'ci', 'ci', 'cı'][t] : 'cü'; return n + '-' + sf; };
+const bLbl = u => 'Bina ' + u.b + (u.ent ? ' · ' + u.ent + '-ci giriş' : '');
+const stTxt = s => s === 'ok' ? 'Təhvil verilib' : 'Tikilir · ' + CO.delivery;
+const free = UNITS.filter(u => u.st !== 'sold');
+const BLD = (window.NC_BLD || []).filter(b => b.st !== 'n');
+const BPIC = { A: 'tower_l', B: 'tower_r', C: 'entrance', E: 'front', F: 'corner', G: 'street' };
+const bPic = id => BPIC[id] || 'aerial_c';
+const priceT = u => u.st === 'sold' ? 'Satılıb' : HP ? 'Qiymət sorğu ilə' : fmt(u.price) + ' ₼';
+
+/* şəkil */
+const OWN = k => typeof IMG[k] === 'string' && IMG[k].indexOf('/assets/nc/site/' + k + '-') === 0;
+function pic(k, alt, o = {}) {
+  const src = IMG[k] || k || ''; if (!src) return '';
+  const set = OWN(k) ? ` srcset="${src.replace(/-\d+\.webp$/, '-1280.webp')} 1280w, ${src} ${k === 'aerial' ? 2400 : 2560}w" sizes="${o.sizes || '100vw'}"` : '';
+  return `<img src="${esc(src)}"${set} alt="${esc(alt || '')}"${o.eager ? ' fetchpriority="high"' : ' loading="lazy" decoding="async"'}>`;
+}
+const crumbs = (...a) => `<nav class="crumbs" aria-label="Yol"><a href="#home">Ana səhifə</a>${a.map(([t, h]) => `<span aria-hidden="true">/</span>${h ? `<a href="#${h}">${t}</a>` : `<span>${t}</span>`}`).join('')}</nav>`;
+const pHead = (title, sub, extra = '', cr) => `<section class="ph wrap">${crumbs(...(cr || [[title]]))}<div class="ph-card"><div><h1 class="h1">${title}</h1>${sub ? `<p class="lead">${sub}</p>` : ''}</div>${extra}</div></section>`;
+
+/* kartlar */
+function uCard(u, photo) {
+  return `<a class="ucard ${u.st === 'sold' ? 'sold' : ''}" href="#menzil-${u.id}">${photo ? `<div class="ph">${pic(bPic(u.b), bLbl(u), { sizes: '300px' })}</div>` : ''}
+    <div class="top"><span class="a num">${fm2(u.a)} m²</span><span class="pr">${HP ? 'Sorğu ilə' : fmt(u.price) + ' ₼'}</span></div>
+    <div class="ln"><span>${roomsT(u.r)}</span><span>${I.bld}${bLbl(u)}</span><span>${I.fl}${ord(u.f)} mərtəbə</span></div>
+    <div class="ln">${u.c ? `<span class="tag">${esc(u.c)}</span>` : `<span class="tag g">${u.bst === 'ok' ? 'Hazır bina' : 'Tikilir'}</span>`}${u.st === 'bron' ? '<span class="tag g">Bron</span>' : ''}</div></a>`;
+}
+function bCard(b) {
+  const us = UNITS.filter(u => u.b === b.id), fr = us.filter(u => u.st === 'free');
+  const a0 = fr.length ? Math.min(...fr.map(u => u.a)) : 0, a1 = fr.length ? Math.max(...fr.map(u => u.a)) : 0;
+  const rooms = [...new Set(fr.map(u => u.r))].sort().join(', ');
+  return `<a class="bcard" href="#bina-${b.id}"><figure>${pic(bPic(b.id), 'Bina ' + b.id, { sizes: '(max-width:620px) 92vw, 33vw' })}<span class="badge"><i class="${b.st === 'ok' ? 'st-ok' : 'st-w'}"></i>${stTxt(b.st)}</span></figure>
+    <div class="bd"><div class="t"><h3 class="h3">Bina ${b.id}</h3><span class="mu">${fr.length ? fr.length + ' mənzil satışda' : 'Satışda mənzil yoxdur'}</span></div>
+    <div class="meta">${fr.length ? `<span class="tag">${fm2(a0)} – ${fm2(a1)} m²</span>` : ''}${rooms ? `<span class="tag g">${rooms} otaqlı</span>` : ''}</div>
+    <div class="ft"><span class="lk">Mərtəbələrə bax ${I.ar}</span><span class="pr">${HP ? 'Sorğu ilə<small>qiymət</small>' : fr.length ? fmt(Math.min(...fr.map(u => u.price))) + ' ₼<small>başlayaraq</small>' : ''}</span></div></div></a>`;
+}
+
+/* forma */
+const phoneOk = p => String(p).replace(/\D/g, '').length >= 9;
+function bindForm(f, kind, extra, done) {
+  if (!f) return;
+  $$('.chips', f).forEach(c => c.onclick = e => { const b = e.target.closest('button'); if (!b) return; $$('button', c).forEach(x => x.classList.toggle('on', x === b)); });
+  f.onsubmit = e => {
+    e.preventDefault(); const d = Object.assign(Object.fromEntries(new FormData(f)), extra ? extra(f) : {}); let bad = false;
+    $$('.err', f).forEach(x => x.textContent = '');
+    if ('name' in d && String(d.name).trim().length < 2) { $('[data-e=name]', f).textContent = 'Adınızı yazın'; bad = true; }
+    if ('phone' in d && !phoneOk(d.phone)) { $('[data-e=phone]', f).textContent = 'Nömrəni yazın, məsələn 050 700 00 88'; bad = true; }
+    if (bad) return;
+    window.ncLead && window.ncLead(typeof kind === 'function' ? kind() : kind, d);
+    f.outerHTML = `<div class="done" role="status"><b>Sorğunuz qəbul olundu</b><span>${done ? done(d) : 'Satış meneceri qısa zamanda sizə zəng edəcək.'}</span></div>`;
+  };
+}
+const nameFld = id => `<div class="row2"><div class="fld"><label for="${id}N">Adınız</label><input class="in" id="${id}N" name="name" autocomplete="name"><div class="err" data-e="name"></div></div><div class="fld"><label for="${id}P">Telefon</label><input class="in" id="${id}P" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="050 000 00 00"><div class="err" data-e="phone"></div></div></div>`;
+const DAYS = ['Bazar', 'B.e.', 'Ç.a.', 'Çər.', 'C.a.', 'Cümə', 'Şənbə'], MON = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avqust', 'sentyabr', 'oktyabr', 'noyabr', 'dekabr'];
+function leadForm(o = {}) {
+  const days = []; for (let i = 1, d = new Date(); days.length < 6; i++) { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i); if (x.getDay() !== 0) days.push(x); }
+  const isPrice = o.kind === 'price';
+  return `<form class="frm" id="lf" novalidate>${nameFld('lf')}
+    <div class="fld"><span>Nə ilə maraqlanırsınız?</span><div class="chips" data-k="kind"><button type="button" data-v="price" class="${isPrice ? 'on' : ''}">Qiymət</button><button type="button" data-v="viewing" class="${isPrice ? '' : 'on'}">Baxışa gəlmək</button><button type="button" data-v="callback">Zəng edin</button></div></div>
+    ${o.unit ? `<input type="hidden" name="unit" value="${esc(o.unit)}">` : `<div class="fld"><span>Otaq sayı</span><div class="chips" data-k="r"><button type="button" data-v="">Fərq etməz</button>${['1', '2', '3', '4+'].map((t, i) => `<button type="button" data-v="${t}" class="${i === 1 ? 'on' : ''}">${t}</button>`).join('')}</div></div>`}
+    <div class="fld lf-day"><span>Baxış günü</span><div class="chips" data-k="day">${days.map((x, i) => `<button type="button" data-v="${x.toISOString().slice(0, 10)}" class="${i ? '' : 'on'}">${x.getDate()} ${MON[x.getMonth()].slice(0, 3)}<small>${DAYS[x.getDay()]}</small></button>`).join('')}</div></div>
+    <div><button class="btn" type="submit">Göndər ${I.ar}</button></div></form>`;
+}
+function bindLead(root, unit) {
+  const f = $('#lf', root); if (!f) return;
+  const v = k => (($(`[data-k=${k}] .on`, f) || {}).dataset || {}).v;
+  const kind = () => v('kind') || 'viewing';
+  const sync = () => { const d = $('.lf-day', f); if (d) d.style.display = kind() === 'viewing' ? '' : 'none'; };
+  $('[data-k=kind]', f).addEventListener('click', () => setTimeout(sync, 0)); sync();
+  bindForm(f, kind, () => { const k = kind(), u = unit; return { slot: k === 'viewing' ? v('day') : '', msg: (k === 'price' ? 'Qiymət sorğusu' : k === 'viewing' ? 'Baxışa yazılış' : 'Zəng sifarişi') + (u ? ': ' + bLbl(u) + ', ' + ord(u.f) + ' mərtəbə, ' + roomsT(u.r) + ', ' + fm2(u.a) + ' m²' : v('r') ? ': ' + v('r') + ' otaqlı' : '') }; },
+    d => `${esc(d.name)}, sorğunuz qəbul olundu. Satış meneceri qısa zamanda zəng edəcək.`);
+}
+
+/* kalkulyator (qiymətlər açıq olanda) */
+function calcBlock(u) {
+  return `<div class="calc" id="cc">${u ? '' : `<div class="rng"><div class="v"><span>Sahə</span><b><span id="cA">100</span> m²</b></div><input type="range" id="iA" min="40" max="220" value="100"></div><div class="rng"><div class="v"><span>1 m² qiyməti</span><b><span id="cP">${fmt(CO.priceFrom)}</span> ₼</b></div><input type="range" id="iP" min="${CO.priceFrom}" max="${CO.priceFrom + 800}" step="50" value="${CO.priceFrom}"></div>`}
+    <div class="rng"><div class="v"><span>İlkin ödəniş</span><b><span id="cI">50</span>%</b></div><input type="range" id="iI" min="30" max="90" step="5" value="50"></div>
+    <div class="seg" id="iT">${TERMS.map((t, i) => `<button type="button" data-m="${t.m}" class="${i ? '' : 'on'}">${t.m} ay</button>`).join('')}</div>
+    <div class="out"><span>Aylıq ödəniş</span><div class="mon num" id="cM"></div><dl><dt>Mənzilin dəyəri</dt><dd class="num" id="cT"></dd><dt>İlkin ödəniş</dt><dd class="num" id="cD"></dd></dl></div></div>`;
+}
+function bindCalc(root, u) {
+  const c = $('#cc', root); if (!c) return; const st = { a: u ? u.a : 100, p: u ? u.ppm : CO.priceFrom, i: 50, m: TERMS[0] ? TERMS[0].m : 6 };
+  const draw = () => { const tot = st.a * (st.p + SUR(st.m)), d = tot * st.i / 100; $('#cM', c).textContent = fmt((tot - d) / st.m) + ' ₼'; $('#cT', c).textContent = fmt(tot) + ' ₼'; $('#cD', c).textContent = fmt(d) + ' ₼'; $('#cI', c).textContent = st.i; if ($('#cA', c)) { $('#cA', c).textContent = st.a; $('#cP', c).textContent = fmt(st.p); } };
+  [['#iA', 'a'], ['#iP', 'p'], ['#iI', 'i']].forEach(([s, k]) => { const e = $(s, c); if (e) e.oninput = () => { st[k] = +e.value; draw(); }; });
+  $('#iT', c).onclick = e => { const b = e.target.closest('button'); if (!b) return; st.m = +b.dataset.m; $$('#iT button', c).forEach(x => x.classList.toggle('on', x === b)); draw(); };
+  draw();
+}
+
+/* blokları */
+const SLIDES = [['front', 'Nizami City', 'Yasamalda, Nizami metrosunun yanında qapalı həyətli yaşayış kompleksi'], ['aerial_c', 'Qapalı həyət', 'Mərkəzdə avtomobilsiz həyət, uşaq meydançası və istirahət zonası'], ['corner', 'Hazır və tikilən binalar', 'A, B, C binaları təhvil verilib, E, F, G binaları tikilir']];
+function heroBlock() {
+  const t = TERMS[0];
+  return `<section class="wrap"><div class="hero"><div class="slides" id="sl">${SLIDES.map(([k, h, s], i) => `<div class="slide${i ? '' : ' on'}">${pic(k, h, { eager: !i, sizes: '(max-width:900px) 100vw, 66vw' })}</div>`).join('')}
+      <div class="hero-t"><h1 class="h1" id="slH">${SLIDES[0][1]}</h1><p class="lead" id="slS">${SLIDES[0][2]}</p></div>
+      <div class="hero-dots" id="slD">${SLIDES.map((_, i) => `<button type="button" aria-label="Şəkil ${i + 1}" class="${i ? '' : 'on'}"></button>`).join('')}</div>
+      <div class="hero-nav"><button type="button" aria-label="Əvvəlki" data-d="-1">${I.al}</button><button type="button" aria-label="Növbəti" data-d="1">${I.ar}</button></div></div>
+    <div class="offer"><img class="mk" src="/assets/nc/site/mark-cream.png" alt=""><span>Daxili kredit</span><div class="big">${t ? t.m + ' ay' : '0%'}</div><h2>faizsiz ödəniş</h2><p>Mənzili hissə-hissə alın: ilkin ödənişdən sonra qalan məbləği ${t ? t.m + ' ay ərzində faizsiz' : 'hissə-hissə'} ödəyin${TERMS.length > 1 ? ', ' + TERMS.slice(1).map(x => x.m).join(' və ') + ' aylıq variantlar da var' : ''}.</p><a class="btn" href="#elaqe" data-kind="price">${HP ? 'Qiyməti öyrən' : 'Hesabla'} ${I.ar}</a></div></div>
+    ${findBlock()}</section>`;
+}
+function bindHero(root) {
+  const sl = $('#sl', root); if (!sl) return; let i = 0, tm;
+  const go = n => { i = (n + SLIDES.length) % SLIDES.length; $$('.slide', sl).forEach((s, k) => s.classList.toggle('on', k === i)); $$('#slD button', sl).forEach((s, k) => s.classList.toggle('on', k === i)); $('#slH', sl).textContent = SLIDES[i][1]; $('#slS', sl).textContent = SLIDES[i][2]; };
+  const auto = () => { clearInterval(tm); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) tm = setInterval(() => { if (!document.body.contains(sl)) return clearInterval(tm); go(i + 1); }, 6000); };
+  $$('#slD button', sl).forEach((b, k) => b.onclick = () => { go(k); auto(); });
+  $$('.hero-nav button', sl).forEach(b => b.onclick = () => { go(i + +b.dataset.d); auto(); });
+  auto();
+}
+function findBlock() {
+  const bs = BLD.map(b => b.id);
+  return `<div class="find"><div class="find-h"><h2 class="h3" style="font-size:22px">Sizə uyğun mənzili tapın</h2><span class="mu">${free.length} mənzil satışda</span></div>
+    <form class="find-g" id="fd"><div class="fld"><span>Otaq sayı</span><div class="seg" data-k="r">${[[0, 'Hamısı'], [1, '1'], [2, '2'], [3, '3'], [4, '4+']].map(([v, t], i) => `<button type="button" data-v="${v}" class="${i ? '' : 'on'}">${t}</button>`).join('')}</div></div>
+    <div class="fld"><label for="fdB">Bina</label><select class="sel" id="fdB"><option value="">Bütün binalar</option>${bs.map(b => `<option value="${b}">Bina ${b}</option>`).join('')}</select></div>
+    <div class="fld"><label for="fdP">Mərhələ</label><select class="sel" id="fdP"><option value="all">Hamısı</option><option value="ok">Hazır binalar</option><option value="w">Tikilən binalar</option></select></div>
+    <button class="btn" type="submit">Axtar ${I.ar}</button></form></div>`;
+}
+function bindFind(root) {
+  const f = $('#fd', root); if (!f) return; let r = 0;
+  $('[data-k=r]', f).onclick = e => { const b = e.target.closest('button'); if (!b) return; r = +b.dataset.v; $$('[data-k=r] button', f).forEach(x => x.classList.toggle('on', x === b)); };
+  f.onsubmit = e => { e.preventDefault(); resetF(); F.r = r; F.b = $('#fdB', f).value; F.ph = $('#fdP', f).value; location.hash = 'menziller'; };
+}
+function buildingsBlock(full) {
+  const tabs = [['w', 'Tikilən binalar'], ['ok', 'Hazır binalar']];
+  return `<div class="sh"><h2 class="h2">${full ? 'Binalar' : 'Binalar'}</h2><div class="tabs" id="bt">${tabs.map(([v, t], i) => `<button type="button" data-v="${v}" class="${i ? '' : 'on'}">${t}</button>`).join('')}</div></div><div class="bgrid" id="bg"></div>`;
+}
+function bindBuildings(root) {
+  const g = $('#bg', root); if (!g) return;
+  const draw = v => { g.innerHTML = BLD.filter(b => b.st === v).map(bCard).join(''); };
+  $('#bt', root).onclick = e => { const b = e.target.closest('button'); if (!b) return; $$('#bt button', root).forEach(x => x.classList.toggle('on', x === b)); draw(b.dataset.v); };
+  draw('w');
+}
+function offersBlock() {
+  const pickBy = r => free.filter(u => u.st === 'free' && (r === 4 ? u.r >= 4 : u.r === r)).sort((a, b) => a.a - b.a);
+  const L = [1, 2, 3, 4].flatMap(r => pickBy(r).filter((u, i, A) => A.findIndex(x => Math.abs(x.a - u.a) < .5 && x.b === u.b) === i).slice(0, 2));
+  if (!L.length) return '';
+  return `<div class="sh"><h2 class="h2">Satışda olan mənzillər</h2><div style="display:flex;gap:10px;align-items:center"><a class="pillbtn" href="#menziller">Hamısına bax ${I.ar}</a><div class="rail-nav"><button type="button" aria-label="Geri" data-rd="-1">${I.al}</button><button type="button" aria-label="İrəli" data-rd="1">${I.ar}</button></div></div></div>
+    <div class="rail" id="rl">${L.map(u => uCard(u, true)).join('')}</div>`;
+}
+function bindRail(root) { const r = $('#rl', root); if (!r) return; $$('[data-rd]', root).forEach(b => b.onclick = () => r.scrollBy({ left: +b.dataset.rd * (r.clientWidth * .8), behavior: 'smooth' })); }
+const promoBlock = () => `<div class="promo"><div class="tx"><h2>Hazır binalarda açarı bu gün alın</h2><p class="lead">A, B və C binaları tikilib və təhvil verilib. Mənzilə baxın, müqavilədən sonra açarı dərhal təhvil alın.</p>
+  <div class="acts"><a class="btn" href="#menziller" data-ph="ok">Hazır mənzillər ${I.ar}</a><a class="lk" href="#binalar">Baş plana bax ${I.ar}</a></div></div><div class="im">${pic('aerial', 'Hazır binaların 3D vizualı', { sizes: '(max-width:860px) 92vw, 45vw' })}</div></div>`;
+const FEAT = [['aerial_c', 'Qapalı həyət', 'Həyətə yalnız sakinlər daxil olur: avtomobilsiz meydan, uşaq meydançası və istirahət zonası.'], ['street', 'Kommersiya qalereyası', 'Birinci mərtəbələrdə supermarket, aptek, kafe və xidmətlər.'], ['entrance', 'Yeraltı parkinq', 'İki səviyyəli parkinq, liftlər birbaşa parkinqə enir.'], ['tower_r', 'Keramoqranit fasad', 'Uzunömürlü, baxımı asan və illər keçsə də təzə görünən fasad.']];
+const ICONS = [[I.sh, '7/24 mühafizə', 'Kamera və kodlu giriş'], [I.bolt, 'Generator', 'Fasiləsiz enerji'], [I.metro, 'Nizami metrosu', 'Bir neçə dəqiqəlik məsafə'], [I.bag, 'Gündəlik xidmətlər', 'Binaların altında']];
+const featBlock = () => `<div class="sh"><h2 class="h2">Kompleksdə həyat</h2></div><div class="feats">${FEAT.map(([k, t, p]) => `<article class="feat"><figure>${pic(k, t, { sizes: '(max-width:520px) 92vw, 25vw' })}</figure><div class="bd"><h3 class="h3">${t}</h3><p>${p}</p></div></article>`).join('')}</div>
+  <div class="icons">${ICONS.map(([i, b, s]) => `<div class="icn"><i>${i}</i><div><b>${b}</b><span>${s}</span></div></div>`).join('')}</div>`;
+const MAPQ = encodeURIComponent('Nizami City, Cəfər Cabbarlı 31, Bakı');
+const PIC = { 'Nəqliyyat': 'M', 'Alış-veriş': 'T', 'Təhsil': 'S', 'İstirahət': 'P' };
+const locBlock = () => `<div class="sh"><h2 class="h2">Məkan</h2><span class="mu">${esc(CO.addr)}</span></div><div class="loc"><div class="map"><iframe title="Xəritə: Nizami City" loading="lazy" src="https://maps.google.com/maps?q=${MAPQ}&z=15&output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+  <div class="pois">${POI.map(p => `<div class="poi"><i>${PIC[p.c] || '•'}</i><div><b>${esc(p.n)}</b><span>${esc(p.d)}</span></div><em>${esc(p.c)}</em></div>`).join('')}</div></div>`;
+const posts = () => BLOG.slice().sort((a, b) => String(b.d).localeCompare(String(a.d)));
+const dfmt = s => { const d = new Date(s); return isNaN(d) ? esc(s) : `${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}`; };
+const nCard = p => `<a class="ncard" href="#bloq-${esc(p.id)}"><figure>${p.img ? pic(p.img, '', { sizes: '(max-width:620px) 92vw, 33vw' }) : ''}</figure><div class="bd"><h3 class="h3">${esc(p.t)}</h3><p>${esc(p.x || '')}</p><div class="ft"><span class="lk">Ətraflı ${I.ar}</span><span>${dfmt(p.d)}</span></div></div></a>`;
+const newsBlock = () => OFF.bloq || !BLOG.length ? '' : `<div class="sh"><h2 class="h2">Bloq</h2><a class="pillbtn" href="#bloq">Bütün yazılar ${I.ar}</a></div><div class="news">${posts().slice(0, 3).map(nCard).join('')}</div>`;
+const faqList = L => `<div class="qa">${L.map(([q, a], i) => `<details${i ? '' : ' open'}><summary>${esc(q)}<i>${I.pl}</i></summary><div class="an">${esc(a)}</div></details>`).join('')}</div>`;
+const contactsList = () => `<div class="contacts"><a href="tel:${esc(CO.short)}"><i>${I.ph}</i><div><small>Qısa nömrə</small><b>${esc(CO.short)}</b></div></a>${(CO.phones || []).map((p, i) => `<a href="tel:${esc((CO.tel || [])[i] || p)}"><i>${I.ph}</i><div><small>Telefon</small><b>${esc(p)}</b></div></a>`).join('')}<div><i>${I.pin}</i><div><small>Ünvan</small><b>${esc(CO.addr)}</b></div></div><div><i>${I.clk}</i><div><small>İş saatları</small><b>${esc(CO.hours)}</b></div></div>${CO.email ? `<a href="mailto:${esc(CO.email)}"><i>${I.mail}</i><div><small>Email</small><b>${esc(CO.email)}</b></div></a>` : ''}</div>`;
+const contactBlock = (o = {}) => `<div class="two"><div class="card"><h2 class="h2">${o.title || 'Sorğu göndərin'}</h2><p class="lead" style="margin:8px 0 20px">${o.sub || 'Qiymət, baxış və ya ödəniş şərtləri barədə — satış meneceri sizə zəng edəcək.'}</p>${leadForm(o)}</div><div class="card"><h2 class="h2">Əlaqə</h2>${contactsList()}</div></div>`;
+const faqBlock = n => `<div class="two"><div class="card"><h2 class="h2" style="margin-bottom:8px">Suallar</h2>${faqList(n ? FAQ.slice(0, n) : FAQ)}${n && FAQ.length > n ? `<div style="margin-top:14px"><a class="lk" href="#suallar">Bütün suallar ${I.ar}</a></div>` : ''}</div><div class="card" id="visit"><h2 class="h2">Sorğu göndərin</h2><p class="lead" style="margin:8px 0 20px">Qiymət, baxış və ya ödəniş şərtləri barədə — satış meneceri sizə zəng edəcək.</p>${leadForm()}</div></div>`;
+
+/* SƏHİFƏLƏR */
+const pages = {};
+pages.home = () => ({
+  title: 'Nizami City — Yasamalda qapalı həyətli yaşayış kompleksi', html: `${heroBlock()}
+  <section class="sec wrap">${buildingsBlock()}</section>
+  <section class="sec wrap">${offersBlock()}</section>
+  <section class="sec wrap">${promoBlock()}</section>
+  <section class="sec wrap">${featBlock()}</section>
+  <section class="sec wrap">${locBlock()}</section>
+  ${newsBlock() ? `<section class="sec wrap">${newsBlock()}</section>` : ''}
+  <section class="sec wrap">${faqBlock(5)}</section>`,
+  mount(r) { bindHero(r); bindFind(r); bindBuildings(r); bindRail(r); bindLead(r); }
+});
+pages.binalar = () => ({
+  title: 'Binalar — Nizami City', html: `${pHead('Binalar', 'A, B və C binaları təhvil verilib. E, F və G binaları tikilir, təhvil ' + esc(CO.delivery) + '.', `<div class="stats"><div class="stat"><b>${BLD.length}</b><span>bina</span></div><div class="stat"><b>${free.filter(u => u.st === 'free').length}</b><span>satışda</span></div><div class="stat"><b>${window.NC_FLOORS || 10}</b><span>mərtəbə</span></div></div>`)}
+  <section class="sec wrap"><div class="iso">${pic('aerial', 'Hazır binaların 3D vizualı', { sizes: '(max-width:900px) 92vw, 1200px' })}<span class="hs" style="left:47%;top:58%"><i></i><span>Qapalı həyət</span></span><span class="hs" style="left:45%;top:80%"><i></i><span>Kommersiya qalereyası</span></span><span class="hs" style="left:57%;top:88%"><i></i><span>Parkinqə giriş</span></span></div></section>
+  <section class="sec wrap">${buildingsBlock(true)}</section>
+  <section class="sec wrap"><div class="sh"><h2 class="h2">Mərhələlər</h2></div><div class="tline">${TIMELINE.map(([a, b, c, s]) => `<div class="card"><span class="badge" style="position:static;background:var(--soft)"><i class="${s === 'ok' ? 'st-ok' : 'st-w'}"></i>${esc(b)}</span><h3 class="h3" style="margin:12px 0 6px">${esc(a)}</h3><p class="ink2" style="margin:0">${esc(c)}</p></div>`).join('')}</div></section>`,
+  mount(r) { bindBuildings(r); }
+});
+pages.bina = id => {
+  const b = BLD.find(x => x.id === id); if (!b) return pages.binalar();
+  const us = UNITS.filter(u => u.b === id), fls = [...new Set(us.map(u => u.f))].sort((a, c) => c - a);
+  let fl = fls.find(f => us.some(u => u.f === f && u.st === 'free')) || fls[0];
+  return {
+    title: `Bina ${id} — Nizami City`, html: `${pHead('Bina ' + id, stTxt(b.st), `<div class="stats"><div class="stat"><b>${fls.length}</b><span>mərtəbə</span></div><div class="stat"><b>${us.filter(u => u.st === 'free').length}</b><span>satışda</span></div></div>`, [['Binalar', 'binalar'], ['Bina ' + id]])}
+    <section class="sec wrap">${us.length ? `<div class="sh"><h2 class="h2" id="flT"></h2><span class="mu">Mərtəbəni seçin</span></div><div class="floors">${fls.map(f => `<button type="button" data-f="${f}"><b>${f}</b><span>${us.filter(u => u.f === f && u.st === 'free').length} satışda</span></button>`).join('')}</div><div class="ugrid" id="ug" style="margin-top:14px"></div>` : `<div class="empty">Bu binanın mənzilləri hazırda saytda göstərilmir. Satış ofisindən məlumat alın: ${esc(CO.short)}</div>`}</section>
+    <section class="sec wrap">${contactBlock({ title: 'Bina ' + id + ' üzrə sorğu', kind: 'price' })}</section>`,
+    mount(r) {
+      const draw = f => { fl = f; $$('.floors button', r).forEach(x => x.classList.toggle('on', +x.dataset.f === f)); $('#flT', r).textContent = ord(f) + ' mərtəbə'; $('#ug', r).innerHTML = us.filter(u => u.f === f).map(u => uCard(u)).join(''); };
+      if (us.length) { $$('.floors button', r).forEach(x => x.onclick = () => draw(+x.dataset.f)); draw(fl); }
+      bindLead(r);
+    }
+  };
+};
+const F = {}; const resetF = () => Object.assign(F, { r: 0, b: '', ph: 'all', sort: HP ? 'aa' : 'pa', n: 24 }); resetF();
+function filtered() {
+  const L = free.filter(u => (!F.r || (F.r === 4 ? u.r >= 4 : u.r === F.r)) && (!F.b || u.b === F.b) && (F.ph === 'all' || u.bst === F.ph));
+  const s = { pa: (a, b) => a.price - b.price, pd: (a, b) => b.price - a.price, aa: (a, b) => a.a - b.a, ad: (a, b) => b.a - a.a, fd: (a, b) => b.f - a.f }[F.sort]; return L.sort(s);
+}
+pages.menziller = () => ({
+  title: 'Mənzillər — Nizami City', html: `${pHead('Mənzillər', 'Satışda olan bütün mənzillər — satış bazası ilə eyni vaxtda yenilənir.')}
+  <section class="wrap"><div class="fbar">
+    <div class="fld"><span>Otaq</span><div class="seg" data-k="r">${[[0, 'Hamısı'], [1, '1'], [2, '2'], [3, '3'], [4, '4+']].map(([v, t]) => `<button type="button" data-v="${v}">${t}</button>`).join('')}</div></div>
+    <div class="fld"><span>Mərhələ</span><div class="seg" data-k="ph">${[['all', 'Hamısı'], ['ok', 'Hazır'], ['w', 'Tikilən']].map(([v, t]) => `<button type="button" data-v="${v}">${t}</button>`).join('')}</div></div>
+    <div class="fld"><label for="fB">Bina</label><select class="sel" id="fB"><option value="">Bütün binalar</option>${BLD.map(b => `<option value="${b.id}">Bina ${b.id}</option>`).join('')}</select></div>
+    <div class="fld"><label for="fS">Sıralama</label><select class="sel" id="fS">${HP ? '' : '<option value="pa">Qiymət: ucuzdan</option><option value="pd">Qiymət: bahadan</option>'}<option value="aa">Sahə: kiçikdən</option><option value="ad">Sahə: böyükdən</option><option value="fd">Mərtəbə: yuxarıdan</option></select></div></div>
+    <div class="cnt"><div><b class="num" id="fN"></b> <span class="mu">mənzil tapıldı</span></div><button class="lk" type="button" id="fR">Filtrləri sıfırla</button></div>
+    <div class="ugrid" id="fG"></div><div class="more"><button class="btn tn" type="button" id="fM">Daha çox göstər</button></div></section>
+  <section class="sec wrap">${contactBlock({ title: 'Uyğun mənzili birlikdə seçək', kind: 'price' })}</section>`,
+  mount(r) {
+    const sync = () => { $$('.seg[data-k]', r).forEach(s => $$('button', s).forEach(b => b.classList.toggle('on', String(F[s.dataset.k]) === b.dataset.v))); $('#fB', r).value = F.b; $('#fS', r).value = F.sort; };
+    const draw = () => { const L = filtered(); $('#fN', r).textContent = L.length; $('#fG', r).innerHTML = L.slice(0, F.n).map(u => uCard(u)).join('') || '<div class="empty" style="grid-column:1/-1">Bu filtrlərlə satışda mənzil yoxdur.</div>'; $('#fM', r).style.display = L.length > F.n ? '' : 'none'; };
+    $$('.seg[data-k]', r).forEach(s => s.onclick = e => { const b = e.target.closest('button'); if (!b) return; F[s.dataset.k] = s.dataset.k === 'r' ? +b.dataset.v : b.dataset.v; F.n = 24; sync(); draw(); });
+    $('#fB', r).onchange = e => { F.b = e.target.value; F.n = 24; draw(); }; $('#fS', r).onchange = e => { F.sort = e.target.value; draw(); };
+    $('#fR', r).onclick = () => { resetF(); sync(); draw(); }; $('#fM', r).onclick = () => { F.n += 24; draw(); };
+    sync(); draw(); bindLead(r);
+  }
+});
+function plateSvg(u) {
+  const same = UNITS.filter(x => x.b === u.b && x.f === u.f && x.ent === u.ent).sort((a, b) => a.n - b.n), n = Math.max(2, same.length), half = Math.ceil(n / 2), W = 600, cw = (W - 20) / half;
+  return `<svg viewBox="0 0 ${W} 260" role="img" aria-label="Mərtəbədə yerləşmə">${same.map((x, i) => { const top = i < half, k = top ? i : i - half, X = 10 + k * cw, Y = top ? 10 : 150, me = x.id === u.id; return `<rect x="${X + 3}" y="${Y}" width="${cw - 6}" height="100" rx="10" fill="${me ? '#3f4d2c' : x.st === 'sold' ? '#eceee6' : '#dfe4d3'}"/><text x="${X + cw / 2}" y="${Y + 56}" text-anchor="middle" font-family="NC Text, sans-serif" font-size="17" fill="${me ? '#fff' : '#555d4c'}">${x.f}.${x.n}</text>`; }).join('')}<rect x="10" y="118" width="${W - 20}" height="24" rx="8" fill="#f4f5f0"/><text x="${W / 2}" y="135" text-anchor="middle" font-family="NC Text, sans-serif" font-size="13" fill="#80877a">dəhliz və liftlər</text></svg>`;
+}
+pages.menzil = id => {
+  const u = UNITS.find(x => x.id === id); if (!u) return pages.menziller();
+  const sim = free.filter(x => x.id !== u.id && x.r === u.r && x.st === 'free').sort((a, b) => Math.abs(a.a - u.a) - Math.abs(b.a - u.a)).slice(0, 4);
+  return {
+    title: `${roomsT(u.r)}, ${fm2(u.a)} m² — ${bLbl(u)} — Nizami City`, html: `<section class="ph wrap">${crumbs(['Mənzillər', 'menziller'], [bLbl(u)])}
+      <div class="unit"><div style="display:grid;gap:16px"><div class="gal">${pic(bPic(u.b), bLbl(u), { eager: true, sizes: '(max-width:900px) 92vw, 58vw' })}</div><div class="plan"><h3 class="h3" style="margin-bottom:12px">Mərtəbədə yerləşmə</h3>${plateSvg(u)}<p class="mu" style="margin:10px 0 0;font-size:14px">Sxematik göstərilib. Dəqiq plan satış ofisində təqdim olunur.</p></div></div>
+      <div class="side"><div class="card"><h1 class="h2">${roomsT(u.r)}, ${fm2(u.a)} m²</h1><p class="mu" style="margin:6px 0 16px">${bLbl(u)} · ${ord(u.f)} mərtəbə</p>
+        <div class="prbox"><b>${priceT(u)}</b>${!HP && u.st !== 'sold' ? `<span class="mu">${fmt(u.ppm)} ₼/m²</span>` : ''}</div>
+        <div class="kv" style="margin-top:14px">${[['Otaq sayı', u.r], ['Sahə', fm2(u.a) + ' m²'], ['Mərtəbə', `${u.f} / ${window.NC_FLOORS || 10}`], ['Vəziyyət', u.c || (u.bst === 'ok' ? 'Təmirsiz' : 'Tikilir')], ['Təhvil', u.bst === 'ok' ? 'Hazırdır' : CO.delivery], ['Status', u.st === 'bron' ? 'Bron olunub' : u.st === 'sold' ? 'Satılıb' : 'Satışda']].map(([a, b]) => `<div><span>${a}</span><b>${esc(b)}</b></div>`).join('')}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px"><a class="btn" href="#lfw">${HP ? 'Qiyməti öyrən' : 'Baxışa yazıl'} ${I.ar}</a><a class="btn tn" href="tel:${esc(CO.short)}">${I.ph} ${esc(CO.short)}</a></div></div>
+        ${!HP ? `<div class="card"><h3 class="h3" style="margin-bottom:12px">Ödəniş hesabla</h3>${calcBlock(u)}</div>` : ''}</div></div></section>
+    <section class="sec wrap" id="lfw">${contactBlock({ title: HP ? 'Bu mənzilin qiyməti' : 'Bu mənzil üzrə sorğu', sub: 'Nömrənizi yazın — satış meneceri qiymət və ödəniş şərtlərini zəng edib desin.', kind: 'price', unit: u.id })}</section>
+    ${sim.length ? `<section class="sec wrap"><div class="sh"><h2 class="h2">Oxşar mənzillər</h2></div><div class="ugrid">${sim.map(x => uCard(x, true)).join('')}</div></section>` : ''}`,
+    mount(r) { bindCalc(r, u); bindLead(r, u); $$('a[href="#lfw"]', r).forEach(a => a.onclick = e => { e.preventDefault(); $('#lfw', r).scrollIntoView({ behavior: 'smooth' }); }); }
+  };
+};
+pages.kalkulyator = () => ({ title: 'Ödəniş — Nizami City', html: `${pHead('Ödəniş', 'Daxili kredit: ' + TERMS.map(t => t.m + ' ay' + (t.s ? ' (+' + t.s + ' ₼/m²)' : ' faizsiz')).join(', ') + '. Nəticə təxminidir.')}<section class="sec wrap"><div class="two"><div class="card">${calcBlock()}</div><div class="card"><h2 class="h2">Sorğu</h2><p class="lead" style="margin:8px 0 20px">Dəqiq hesablama üçün satış meneceri ilə əlaqə saxlayın.</p>${leadForm({ kind: 'price' })}</div></div></section>`, mount(r) { bindCalc(r); bindLead(r); } });
+pages.mekan = () => ({ title: 'Məkan — Nizami City', html: `${pHead('Məkan', esc(CO.addr))}<section class="sec wrap">${locBlock()}</section><section class="sec wrap">${featBlock()}</section>` });
+pages.kommersiya = () => ({
+  title: 'Kommersiya sahələri — Nizami City', html: `${pHead('Kommersiya sahələri', 'Binaların birinci mərtəbələrində küçəyə açılan qeyri-yaşayış sahələri.')}
+  <section class="sec wrap"><div class="promo"><div class="tx"><h2>Biznesiniz üçün yer</h2><div class="kv">${[['Yerləşmə', 'Birinci mərtəbələr, küçə tərəfi'], ['Müştəri axını', 'Kompleksin sakinləri və metro yolu'], ['Uyğundur', 'Market, aptek, kafe, salon, ofis']].map(([a, b]) => `<div><span>${a}</span><b>${b}</b></div>`).join('')}</div></div><div class="im" style="min-height:340px">${pic('street', 'Kommersiya qalereyası', { sizes: '45vw' }).replace('<img', '<img style="object-fit:cover;padding:0"')}</div></div></section>
+  <section class="sec wrap"><div class="two"><div class="card"><h2 class="h2">Sorğu göndərin</h2><form class="frm" id="cf" novalidate style="margin-top:16px">${nameFld('cf')}<div class="fld"><label for="cfB">Biznes növü və lazım olan sahə</label><input class="in" id="cfB" name="msg" placeholder="Məsələn: kafe, 120 m²"></div><div><button class="btn">Göndər ${I.ar}</button></div></form></div><div class="card"><h2 class="h2">Əlaqə</h2>${contactsList()}</div></div></section>`,
+  mount(r) { bindForm($('#cf', r), 'commercial', null, () => 'Kommersiya meneceri sizə zəng edəcək.'); }
+});
+pages.bloq = () => ({ title: 'Bloq — Nizami City', html: `${pHead('Bloq', 'Mənzil seçimi, ödəniş və Yasamalda həyat haqqında.')}<section class="sec wrap"><div class="news">${posts().map(nCard).join('') || '<div class="empty">Hələ yazı yoxdur.</div>'}</div></section>` });
+pages.post = id => {
+  const p = BLOG.find(x => x.id === id); if (!p) return pages.bloq();
+  return { title: p.t + ' — Nizami City', html: `<section class="ph wrap"><div class="art">${crumbs(['Bloq', 'bloq'], [p.c])}<h1 class="h1" style="font-size:clamp(30px,3.6vw,46px)">${esc(p.t)}</h1><p class="mu" style="margin:10px 0 0">${esc(p.c)} · ${dfmt(p.d)}${p.m ? ' · ' + p.m + ' dəq oxu' : ''}</p>${p.img ? `<div class="cover">${pic(p.img, p.t, { sizes: '780px' })}</div>` : '<div style="height:24px"></div>'}<div class="bd">${p.b || ''}</div></div></section>
+    <section class="sec wrap"><div class="sh"><h2 class="h2">Digər yazılar</h2></div><div class="news">${posts().filter(x => x.id !== id).slice(0, 3).map(nCard).join('')}</div></section>` };
+};
+pages.suallar = () => ({ title: 'Suallar — Nizami City', html: `${pHead('Suallar və cavablar', '')}<section class="sec wrap">${faqBlock()}</section>`, mount(r) { bindLead(r); } });
+pages.elaqe = () => ({ title: 'Əlaqə — Nizami City', html: `${pHead('Əlaqə', 'Satış ofisi: ' + esc(CO.hours))}<section class="sec wrap">${contactBlock({ kind: 'viewing' })}</section><section class="sec wrap">${locBlock()}</section>`, mount(r) { bindLead(r); } });
+
+/* altlıq */
+function footer() {
+  $('#ft').innerHTML = `<div class="wrap"><div class="cols"><div><a class="brand" href="#home"><img src="/assets/nc/site/mark-cream.png" alt="">Nizami City</a><p>${esc(CO.slogan || '')}. ${esc(CO.addr)}</p><div class="soc">${CO.ig ? `<a class="icb" href="https://instagram.com/${esc(CO.ig)}" target="_blank" rel="noopener" aria-label="Instagram">${I.ig}</a>` : ''}${CO.wa ? `<a class="icb" href="https://wa.me/${esc(CO.wa)}" target="_blank" rel="noopener" aria-label="WhatsApp">${I.wa}</a>` : ''}</div></div>
+    <div><h4>Mənzillər</h4><a href="#menziller">Bütün mənzillər</a><a href="#binalar">Binalar</a>${HP ? '' : '<a href="#kalkulyator">Ödəniş</a>'}<a href="#kommersiya">Kommersiya</a></div>
+    <div><h4>Kompleks</h4><a href="#mekan">Məkan</a>${OFF.bloq ? '' : '<a href="#bloq">Bloq</a>'}<a href="#suallar">Suallar</a><a href="#elaqe">Əlaqə</a></div>
+    <div><h4>Əlaqə</h4><a href="tel:${esc(CO.short)}">${esc(CO.short)}</a>${(CO.phones || []).map((p, i) => `<a href="tel:${esc((CO.tel || [])[i] || p)}">${esc(p)}</a>`).join('')}${CO.email ? `<a href="mailto:${esc(CO.email)}">${esc(CO.email)}</a>` : ''}</div></div>
+    <div class="bot"><span>© ${new Date().getFullYear()} Nizami City · City Life MMC</span><span>${esc(CO.hours)}</span></div></div>`;
+}
+
+/* marşrut */
+function parse() {
+  const h = decodeURIComponent(location.hash.slice(1)) || 'home'; let m;
+  if ((m = h.match(/^bina-([A-Z])$/))) return ['bina', m[1]];
+  if ((m = h.match(/^menzil-(.+)$/))) return ['menzil', m[1]];
+  if ((m = h.match(/^bloq-(.+)$/))) return OFF.bloq ? ['home'] : ['post', m[1]];
+  if (h === 'layihe' || h === 'gunes' || h === 'qalereya') return ['binalar'];
+  return [pages[h] && !['bina', 'menzil', 'post'].includes(h) && !OFF[h] ? h : 'home'];
+}
+function render() {
+  const [k, arg] = parse(), pg = pages[k](arg), main = $('#view');
+  main.innerHTML = pg.html; document.title = pg.title || 'Nizami City';
+  const act = k === 'menzil' ? 'menziller' : k === 'bina' ? 'binalar' : k === 'post' ? 'bloq' : k;
+  $$('.nav a, .menu nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + act));
+  scrollTo(0, 0); pg.mount && pg.mount(main);
+  $$('a[data-ph]', main).forEach(a => a.addEventListener('click', () => { resetF(); F.ph = a.dataset.ph; }));
+  try { window.ncAfterRender && window.ncAfterRender(k, main); } catch (e) { }
+  closeMenu();
+}
+addEventListener('hashchange', render);
+const mbtn = $('#mbtn');
+function closeMenu() { document.body.classList.remove('menu-on'); mbtn && mbtn.setAttribute('aria-expanded', 'false'); }
+if (mbtn) mbtn.onclick = () => { const on = !document.body.classList.contains('menu-on'); document.body.classList.toggle('menu-on', on); mbtn.setAttribute('aria-expanded', on); };
+$('#menu').addEventListener('click', e => { if (e.target.id === 'menu' || e.target.closest('[data-close]')) closeMenu(); });
+addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+footer();
+if (HP) $$('a[href="#kalkulyator"]').forEach(a => a.style.display = 'none');
+render();
+
+};</script>
+<script>/* Nizami City sayt — canlı məlumat yükləyicisi + paneldən idarə (lux_kv nc_site / nc_blog / nc_cfg, rpc nc_public_units) */
+(function () {
+  var U = 'https://avqchschbbltnnasabdm.supabase.co', K = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2cWNoc2NoYmJsdG5uYXNhYmRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5NDA2NTAsImV4cCI6MjEwNTUxNjY1MH0.PVxxfLrj8KZH6AUaQQPx5sEqpiGEMDIFy3Mq206OMKI';
+  var H = { apikey: K, Authorization: 'Bearer ' + K, 'Content-Type': 'application/json' };
+  var EDIT = /[?&]edit=1/.test(location.search); window.NC_EDIT = EDIT;
+  function tmo(p, ms) { return Promise.race([p, new Promise(function (r) { setTimeout(function () { r(null); }, ms); })]); }
+  var kv = fetch(U + '/rest/v1/lux_kv?select=key,value&key=in.(nc_site,nc_blog,nc_cfg)', { headers: H }).then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
+  var un = fetch(U + '/rest/v1/rpc/nc_public_units', { method: 'POST', headers: H, body: '{}' }).then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
+
+  // sorğu → nc_leads
+  window.ncLead = function (kind, d) {
+    d = d || {}; var o = {};
+    Object.keys(d).forEach(function (k) { if (['name', 'phone', 'email', 'msg', 'unit', 'slot'].indexOf(k) < 0) o[k] = d[k]; });
+    var body = { kind: String(kind || 'sorğu').slice(0, 60), name: String(d.name || '').slice(0, 120), phone: String(d.phone || '').slice(0, 40), email: String(d.email || '').slice(0, 120) || null, msg: String(d.msg || d.note || '').slice(0, 2000) || null, unit: String(d.unit || '').slice(0, 60) || null, slot: String(d.slot || d.date || '').slice(0, 80) || null, data: Object.assign(o, { page: location.hash.slice(0, 120) }) };
+    return fetch(U + '/rest/v1/nc_leads', { method: 'POST', headers: Object.assign({ Prefer: 'return=minimal' }, H), body: JSON.stringify(body) }).catch(function () { });
+  };
+
+  // mətn / bölmə əvəzləmələri
+  function applyText(root, T) {
+    if (!T || !root) return;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n, L = [];
+    while ((n = w.nextNode())) L.push(n);
+    L.forEach(function (n) {
+      var o = n.__o || n.nodeValue, k = o.trim(); if (!k) return;
+      if (Object.prototype.hasOwnProperty.call(T, k)) { n.__o = o; n.nodeValue = o.replace(k, T[k]); }
+    });
+  }
+  window.ncApplyText = applyText;
+  window.ncAfterRender = function (route, main) {
+    var S = (window.NC_REMOTE || {}).site || {};
+    applyText(main, S.txt);
+    var hid = S.hide || {};
+    Array.prototype.forEach.call(main.children, function (el, i) {
+      var key = route + ':' + i; el.setAttribute('data-ncsec', key);
+      if (hid[key]) { if (EDIT) el.classList.add('nce-hidden'); else el.style.display = 'none'; }
+    });
+    if (window.ncEditHook) try { window.ncEditHook(route, main); } catch (e) { console.error(e); }
+  };
+
+  function maint(S) {
+    var m = S.maintText || 'Sayt yenilənir. Tezliklə qayıdacağıq.';
+    document.body.innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#141712;color:#ece4d2;font:17px \'NC Text\',system-ui,sans-serif;text-align:center;padding:24px"><div style="display:grid;gap:18px;justify-items:center;max-width:460px"><img src="' + (window.IMG && IMG.logo || '') + '" style="width:84px;height:auto" alt=""><h1 style="margin:0;font:400 64px/1 \'NC Display\',serif;text-transform:uppercase">Nizami City</h1><p style="margin:0;opacity:.75;line-height:1.6"></p><a href="tel:*0788" style="color:#c6a66b;text-decoration:none;font-weight:600">*0788</a></div></div>';
+    document.querySelector('p').textContent = m;
+  }
+
+  tmo(Promise.all([kv, un]), 4500).then(function (res) {
+    var R = { site: {}, blog: null, cfg: {}, units: [] };
+    if (res) {
+      (res[0] || []).forEach(function (r) { if (r.key === 'nc_site') R.site = r.value || {}; else if (r.key === 'nc_blog') R.blog = r.value; else if (r.key === 'nc_cfg') R.cfg = r.value || {}; });
+      R.units = Array.isArray(res[1]) ? res[1] : [];
+    }
+    window.NC_REMOTE = R; var S = R.site;
+    if (S.img) Object.keys(S.img).forEach(function (k) { if (S.img[k]) window.IMG[k] = S.img[k]; });
+    window.NC_OFF = S.off || {};
+    if (S.maint && !EDIT) return maint(S);
+    try { window.__NC_START(); } catch (e) { console.error(e); }
+    Object.keys(window.NC_OFF).forEach(function (k) { if (window.NC_OFF[k]) document.querySelectorAll('header a[href="#' + k + '"], footer a[href="#' + k + '"], #menu a[href="#' + k + '"]').forEach(function (a) { a.style.display = 'none'; }); });
+    applyText(document.querySelector('header'), S.txt); applyText(document.querySelector('footer'), S.txt);
+    if (S.banner && S.banner.on && S.banner.t && !EDIT) {
+      var b = document.createElement('div'); b.className = 'ncs-banner';
+      b.innerHTML = '<span></span>' + (S.banner.url ? '<a></a>' : '') + '<button aria-label="Bağla">×</button>';
+      b.querySelector('span').textContent = S.banner.t;
+      if (S.banner.url) { var a = b.querySelector('a'); a.href = S.banner.url; a.textContent = S.banner.btn || 'Ətraflı'; }
+      b.querySelector('button').onclick = function () { b.remove(); };
+      document.body.appendChild(b);
+    }
+    if (EDIT) { var s = document.createElement('script'); s.src = '/nc/site-edit.js?v=' + Date.now(); document.body.appendChild(s); }
+  });
+})();
+</script>
+</body>
+</html>
