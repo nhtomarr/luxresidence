@@ -896,12 +896,14 @@ html[data-theme=dark] .tcard .tpl{background:radial-gradient(circle at 50% 45%,#
 <script>// Nizami City — 3D kompleks modeli (three r128). Sayt və render skripti ortaq istifadə edir.
 // Koordinatlar: x şərq, z cənub; 1 vahid ≈ 0.5 m. Baş plan sxematikdir.
 window.NC_BLD = [
-  { id: 'A', st: 'ok', x: -150, z: -175, w: 150, d: 62 },
-  { id: 'B', st: 'ok', x: 30, z: -175, w: 150, d: 62 },
-  { id: 'C', st: 'ok', x: 200, z: -95, w: 62, d: 150 },
-  { id: 'E', st: 'w', x: 30, z: 175, w: 150, d: 62 },
-  { id: 'F', st: 'w', x: -150, z: 175, w: 150, d: 62 },
-  { id: 'G', st: 'w', x: -232, z: 85, w: 62, d: 120 },
+  // 1-ci məhəllə: A, B, C — ortada öz parkı
+  { id: 'A', st: 'ok', x: -235, z: -112, w: 170, d: 56, q: 1 },
+  { id: 'B', st: 'ok', x: -235, z: 112, w: 170, d: 56, q: 1 },
+  { id: 'C', st: 'ok', x: -350, z: 0, w: 56, d: 168, q: 1 },
+  // 2-ci məhəllə: E, F, G — ortada öz parkı (küçə ilə ayrılır)
+  { id: 'E', st: 'w', x: 235, z: -112, w: 170, d: 56, q: 2 },
+  { id: 'F', st: 'w', x: 235, z: 112, w: 170, d: 56, q: 2 },
+  { id: 'G', st: 'w', x: 350, z: 0, w: 56, d: 168, q: 2 },
 ];
 window.NC_FLOORS = 9; window.NC_FH = 7.4;
 
@@ -974,28 +976,31 @@ window.ncMaq = function (host, o) {
 
   // zəmin
   const ground = new T.Mesh(new T.CircleGeometry(2600, 64), mat(C.ground, 1)); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; S.add(ground);
-  const plate = new T.Mesh(new T.BoxGeometry(600, 2, 500), mat(C.plate, .95)); plate.position.y = 1; plate.receiveShadow = true; S.add(plate);
+  // iki ayrı məhəllə, aralarında küçə; hər birinin ortasında öz parkı
   const roadM = mat(C.road, 1);
-  [[0, -290, 1600, 46], [0, 300, 1600, 46], [-345, 0, 46, 1600], [335, 0, 46, 1600]].forEach(([x, z, w, d]) => { const m = new T.Mesh(new T.PlaneGeometry(w, d), roadM); m.rotation.x = -Math.PI / 2; m.position.set(x, .4, z); m.receiveShadow = true; S.add(m); });
-  const court = new T.Mesh(new T.BoxGeometry(330, 1, 250), mat(C.court, .95)); court.position.set(-12, 2.5, 0); court.receiveShadow = true; S.add(court);
-  const lawnM = mat(C.lawn, 1);
-  [[-110, -55, 100, 60], [-110, 60, 100, 60], [100, -60, 80, 50], [100, 62, 80, 50]].forEach(([x, z, w, d]) => { const m = new T.Mesh(new T.BoxGeometry(w, 1.2, d), lawnM); m.position.set(x, 3.2, z); m.receiveShadow = true; S.add(m); });
-  const play = new T.Mesh(new T.CylinderGeometry(30, 30, 1.6, 64), mat(C.play, .7)); play.position.set(-20, 3.4, 0); play.receiveShadow = true; S.add(play);
-  // ağaclar
+  [[0, -205, 1800, 44], [0, 205, 1800, 44], [0, 0, 44, 1800], [-440, 0, 44, 1800], [440, 0, 44, 1800]].forEach(([x, z, w, d]) => { const m = new T.Mesh(new T.PlaneGeometry(w, d), roadM); m.rotation.x = -Math.PI / 2; m.position.set(x, .4, z); m.receiveShadow = true; S.add(m); });
+  const plM = mat(C.plate, .95), crM = mat(C.court, .95), lawnM = mat(C.lawn, 1), plyM = mat(C.play, .7);
   const tg = new T.IcosahedronGeometry(1, 1), tm = mat(C.tree, 1), trG = new T.CylinderGeometry(.12, .16, 1, 6), trM = mat(0x8a7a62, 1);
-  const tree = (x, z, r) => { const g = new T.Group(); const c = new T.Mesh(tg, tm); c.scale.setScalar(r); c.position.y = r * 1.7; c.castShadow = true; const t = new T.Mesh(trG, trM); t.scale.set(r, r * 1.4, r); t.position.y = r * .7; g.add(t, c); g.position.set(x, 3, z); S.add(g); };
-  for (let i = 0; i < 34; i++) { const a = rnd() * Math.PI * 2, rr = 70 + rnd() * 55; tree(-12 + Math.cos(a) * rr * 1.25, Math.sin(a) * rr * .72, 4 + rnd() * 3); }
-  for (let i = -8; i <= 8; i++) { tree(i * 90, -322, 5); tree(i * 90, 332, 5); }
-  // gecə fənərləri
+  const tree = (x, z, r) => { const g = new T.Group(); const c = new T.Mesh(tg, tm); c.scale.setScalar(r); c.position.y = r * 1.7; c.castShadow = true; const tk = new T.Mesh(trG, trM); tk.scale.set(r, r * 1.4, r); tk.position.y = r * .7; g.add(tk, c); g.position.set(x, 3, z); S.add(g); };
   const lampM = new T.MeshStandardMaterial({ color: lin(0xf6f1e4), emissive: lin(0xffd38a), emissiveIntensity: 0 }); emissives.push([lampM, 2.2]);
   const lampG = new T.SphereGeometry(2.2, 10, 8);
-  for (let i = 0; i < 14; i++) { const a = i / 14 * Math.PI * 2; const m = new T.Mesh(lampG, lampM); m.position.set(-20 + Math.cos(a) * 52, 9, Math.sin(a) * 52); S.add(m); }
+  [-1, 1].forEach(sx => {
+    const cx = sx * 222, px = sx * 200; // məhəllənin və parkın mərkəzi (park açıq tərəfə — küçəyə doğru)
+    const pl = new T.Mesh(new T.BoxGeometry(380, 2, 330), plM); pl.position.set(cx + sx * 10, 1, 0); pl.receiveShadow = true; S.add(pl);
+    const ct = new T.Mesh(new T.BoxGeometry(230, 1, 160), crM); ct.position.set(px, 2.5, 0); ct.receiveShadow = true; S.add(ct);
+    [[-50, -38, 80, 46], [-50, 38, 80, 46], [52, -38, 70, 46], [52, 38, 70, 46]].forEach(([x, z, w, d]) => { const m = new T.Mesh(new T.BoxGeometry(w, 1.2, d), lawnM); m.position.set(px + sx * x, 3.2, z); m.receiveShadow = true; S.add(m); });
+    const ply = new T.Mesh(new T.CylinderGeometry(22, 22, 1.6, 48), plyM); ply.position.set(px, 3.4, 0); ply.receiveShadow = true; S.add(ply);
+    for (let i = 0; i < 22; i++) { const a = rnd() * Math.PI * 2, rr = 42 + rnd() * 40; tree(px + Math.cos(a) * rr * 1.3, Math.sin(a) * rr * .62, 3.5 + rnd() * 2.6); }
+    for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; const m = new T.Mesh(lampG, lampM); m.position.set(px + Math.cos(a) * 36, 9, Math.sin(a) * 36); S.add(m); }
+  });
+  for (let i = -9; i <= 9; i++) { if (Math.abs(i) < 1) continue; tree(i * 90, -232, 5); tree(i * 90, 232, 5); }
+  for (let i = -5; i <= 5; i++) { tree(-26, i * 70, 4.5); tree(26, i * 70, 4.5); }
   // şəhər konteksti — ağ maket blokları
   const cm = mat(C.ctx, 1);
   for (let i = 0; i < 30; i++) {
     const side = i % 4, w = 60 + rnd() * 90, d = 50 + rnd() * 80, h = 14 + rnd() * 70;
     const m = new T.Mesh(new T.BoxGeometry(w, h, d), cm), off = -720 + (i >> 2) * 200 + rnd() * 40;
-    const p = [[off, -430], [off, 440], [-520, off], [510, off]][side]; m.position.set(p[0], h / 2, p[1]); m.castShadow = m.receiveShadow = true; S.add(m);
+    const p = [[off, -330], [off, 340], [-600, off], [600, off]][side]; m.position.set(p[0], h / 2, p[1]); m.castShadow = m.receiveShadow = true; S.add(m);
   }
 
   // binalar
@@ -1027,7 +1032,7 @@ window.ncMaq = function (host, o) {
   const hemi = new T.HemisphereLight(0xfdf9ef, 0x9a947f, .62); S.add(hemi);
   const sun = new T.DirectionalLight(0xfff1dc, 1.25); sun.castShadow = true; S.add(sun); S.add(sun.target);
   const sm = lowGPU ? 1024 : 2048; sun.shadow.mapSize.set(sm, sm);
-  Object.assign(sun.shadow.camera, { left: -560, right: 560, top: 560, bottom: -560, near: 10, far: 3200 }); sun.shadow.bias = -.0005; sun.shadow.radius = 3;
+  Object.assign(sun.shadow.camera, { left: -640, right: 640, top: 640, bottom: -640, near: 10, far: 3200 }); sun.shadow.bias = -.0005; sun.shadow.radius = 3;
   const moon = new T.DirectionalLight(0x9fb2d8, 0); moon.position.set(400, 700, -300); S.add(moon);
   let night = false, sunPos = { az: 200, el: 48 };
   function applyLight() {
@@ -1044,9 +1049,9 @@ window.ncMaq = function (host, o) {
   }
 
   // kamera
-  const cam = new T.PerspectiveCamera(30, 1, 10, 9000), tgt = new T.Vector3(-10, 30, 0);
+  const cam = new T.PerspectiveCamera(30, 1, 10, 9000), tgt = new T.Vector3(0, 30, 0);
   let th = -0.9, ph = 1.25, dist = 2500, dirty = true, alive = true, idle = 0, vis = false, hov = null, sel = null, anim = null, fl = null;
-  const HOME = { tgt: [-10, 30, 0], th: -0.62, ph: 0.6, dist: mob ? 1180 : 1320 };
+  const HOME = { tgt: [0, 30, 0], th: -0.55, ph: 0.62, dist: mob ? 1350 : 1450 };
   const place = () => { cam.position.set(tgt.x + dist * Math.cos(ph) * Math.sin(th), tgt.y + dist * Math.sin(ph), tgt.z + dist * Math.cos(ph) * Math.cos(th)); cam.lookAt(tgt); dirty = true; };
   const size = () => { const W = host.clientWidth, Hh = host.clientHeight; if (!W || !Hh) return; ren.setSize(W, Hh, false); cam.aspect = W / Hh; cam.fov = W < 700 ? 38 : 30; cam.updateProjectionMatrix(); dirty = true; };
   const ro = new ResizeObserver(size); ro.observe(host); size(); place();
@@ -1097,14 +1102,13 @@ window.ncMaq = function (host, o) {
   })(t0);
 
   const TOUR = [
-    { tgt: [-10, 30, 0], th: -0.62, ph: .62, dist: 1350, cap: '9 bina, qapalı həyət' },
-    { tgt: [-20, 0, 0], th: .35, ph: .92, dist: 640, cap: 'Avtomobilsiz qapalı həyət' },
-    { tgt: [-60, 40, -175], th: Math.PI - .25, ph: .3, dist: 700, cap: 'Bina A və B' },
-    { tgt: [200, 40, -95], th: Math.PI / 2 + .2, ph: .26, dist: 560, cap: 'Bina C' },
-    { tgt: [-60, 40, 175], th: .2, ph: .3, dist: 700, cap: 'Bina E və F' },
-    { tgt: [-232, 40, 85], th: -Math.PI / 2 - .2, ph: .26, dist: 560, cap: 'Bina G' },
-    { tgt: [-10, 4, 300], th: .5, ph: .16, dist: 420, cap: 'Birinci mərtəbələrdə kommersiya qalereyası' },
-    { tgt: [-10, 30, 0], th: -0.62, ph: .62, dist: 1350, cap: 'Nizami City — Yasamal' },
+    { tgt: [0, 30, 0], th: -0.55, ph: .62, dist: 1500, cap: '9 bina, qapalı həyət' },
+    { tgt: [-235, 20, 0], th: .5, ph: .7, dist: 680, cap: 'A, B, C binaları — ortada öz parkı' },
+    { tgt: [-200, 0, 0], th: 1.1, ph: .5, dist: 420, cap: 'Avtomobilsiz qapalı həyət' },
+    { tgt: [235, 20, 0], th: -.5, ph: .7, dist: 680, cap: 'E, F, G binaları — ortada öz parkı' },
+    { tgt: [200, 0, 0], th: -1.1, ph: .5, dist: 420, cap: 'Hər məhəllənin öz həyəti' },
+    { tgt: [0, 6, 205], th: .35, ph: .16, dist: 460, cap: 'Birinci mərtəbələrdə kommersiya qalereyası' },
+    { tgt: [0, 30, 0], th: -0.55, ph: .62, dist: 1500, cap: 'Nizami City — Yasamal' },
   ];
   const api = {
     home() { stopTour(); fly(HOME, 1400); },

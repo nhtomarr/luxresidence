@@ -1,12 +1,14 @@
 // Nizami City — 3D kompleks modeli (three r128). Sayt və render skripti ortaq istifadə edir.
 // Koordinatlar: x şərq, z cənub; 1 vahid ≈ 0.5 m. Baş plan sxematikdir.
 window.NC_BLD = [
-  { id: 'A', st: 'ok', x: -150, z: -175, w: 150, d: 62 },
-  { id: 'B', st: 'ok', x: 30, z: -175, w: 150, d: 62 },
-  { id: 'C', st: 'ok', x: 200, z: -95, w: 62, d: 150 },
-  { id: 'E', st: 'w', x: 30, z: 175, w: 150, d: 62 },
-  { id: 'F', st: 'w', x: -150, z: 175, w: 150, d: 62 },
-  { id: 'G', st: 'w', x: -232, z: 85, w: 62, d: 120 },
+  // 1-ci məhəllə: A, B, C — ortada öz parkı
+  { id: 'A', st: 'ok', x: -235, z: -112, w: 170, d: 56, q: 1 },
+  { id: 'B', st: 'ok', x: -235, z: 112, w: 170, d: 56, q: 1 },
+  { id: 'C', st: 'ok', x: -350, z: 0, w: 56, d: 168, q: 1 },
+  // 2-ci məhəllə: E, F, G — ortada öz parkı (küçə ilə ayrılır)
+  { id: 'E', st: 'w', x: 235, z: -112, w: 170, d: 56, q: 2 },
+  { id: 'F', st: 'w', x: 235, z: 112, w: 170, d: 56, q: 2 },
+  { id: 'G', st: 'w', x: 350, z: 0, w: 56, d: 168, q: 2 },
 ];
 window.NC_FLOORS = 9; window.NC_FH = 7.4;
 
