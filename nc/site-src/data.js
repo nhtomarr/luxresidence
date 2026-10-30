@@ -50,7 +50,7 @@ window.NC = (function () {
   UNITS.sort((p, q) => p.b.localeCompare(q.b) || p.f - q.f || p.ent - q.ent || p.n - q.n);
   if (UNITS.length) window.NC_FLOORS = Math.max(...UNITS.map(u => u.f));
   const INFRA = [
-    ['Qapalı həyət', 'Avtomobilsiz daxili həyət və uşaq meydançası', 'M3 21h18M5 21V10l7-6 7 6v11M10 21v-5h4v5'],
+    ['Qapalı həyətlər', 'Avtomobilsiz daxili həyətlər və uşaq meydançaları', 'M3 21h18M5 21V10l7-6 7 6v11M10 21v-5h4v5'],
     ['2 səviyyəli yeraltı parkinq', 'Liftlər birbaşa parkinqə enir', 'M5 17h14M6 17l1.5-6h9L18 17M7.5 17v2M16.5 17v2'],
     ['7/24 mühafizə', 'Kameralar və kodlu giriş', 'M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z'],
     ['Fitnes və SPA', 'Kompleksin daxilində', 'M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12'],
@@ -88,7 +88,7 @@ window.NC = (function () {
     ['Mərhələ II', 'E, F, G binaları', 'Tikinti davam edir. Təhvil ' + CO.delivery + '-ci ilə planlaşdırılır.', 'w'],
   ];
   const GAL = [
-    { src: 'aerial', c: 'Vizuallar', t: 'Hazır binalar — 3D quşbaxışı vizual, mərkəzdə qapalı həyət' },
+    { src: 'aerial', c: 'Vizuallar', t: 'Hazır binalar — 3D quşbaxışı vizual, qapalı həyətlər' },
     { src: 'front', c: 'Vizuallar', t: 'Küçə fasadı və «Nizami City» girişi' },
     { src: 'aerial_c', c: 'Vizuallar', t: 'Binalar və giriş portalı' },
     { src: 'entrance', c: 'Detallar', t: 'Həyətə giriş, terras və kommersiya qalereyası' },

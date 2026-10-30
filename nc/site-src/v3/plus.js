@@ -286,7 +286,7 @@ pages.brosur = () => {
   return { title: 'Broşür — Nizami City', html: `<section class="ph wrap bro-top">${crumbs(['Broşür'])}<div class="ph-card"><div><h1 class="h1">Broşür</h1><p class="lead">Kompleks haqqında əsas məlumat bir səhifədə — çap edin və ya PDF kimi saxlayın.</p></div><button class="btn" type="button" data-print>${I.prn} Çap et / PDF saxla</button></div></section>
   <div class="wrap bro">
     <div class="bro-s bro-cov">${pic('front', 'Nizami City', { sizes: '1200px' })}<div class="bro-cv"><img src="/assets/nc/site/mark-cream.png" alt=""><div><b>Nizami City</b><span>${esc(CO.slogan || 'Yasamalda qapalı həyətli yaşayış kompleksi')}</span></div></div></div>
-    <div class="bro-s bro-g"><div><h2 class="h2">Layihə haqqında</h2><p class="lead" style="margin-top:10px">Yasamalda, Nizami metrosunun yanında altı bina və mərkəzdə avtomobilsiz qapalı həyət. Birinci mərtəbələrdə kommersiya qalereyası, binaların altında iki səviyyəli parkinq.</p>
+    <div class="bro-s bro-g"><div><h2 class="h2">Layihə haqqında</h2><p class="lead" style="margin-top:10px">Yasamalda, Nizami metrosunun yanında 9 bina və avtomobilsiz qapalı həyətlər. Birinci mərtəbələrdə kommersiya qalereyası, binaların altında iki səviyyəli parkinq.</p>
       <div class="nzs">${numbers().map(([n, s]) => `<div class="nz"><b>${n}</b><span>${s}</span></div>`).join('')}</div></div>${pic('aerial', 'Kompleksin 3D vizualı', { sizes: '600px' })}</div>
     <div class="bro-s"><h2 class="h2" style="margin-bottom:14px">Kompleksdə həyat</h2><div class="bro-f">${FEAT.map(([k, tt, p]) => `<div>${pic(k, tt, { sizes: '300px' })}<b>${tt}</b><span>${p}</span></div>`).join('')}</div>
       <div class="bro-i">${ICONS.map(([i, b, s]) => `<div><i>${i}</i><b>${b}</b><span>${s}</span></div>`).join('')}</div></div>
@@ -329,7 +329,7 @@ function bindPlan(r) {
 }
 
 /* rəqəmlər zolağı */
-function numbers() { return [[BLD.length, 'bina'], [NFL, 'mərtəbə'], [2, 'səviyyəli parkinq'], ['7/24', 'mühafizə'], ...(TERMS[0] ? [[TERMS[0].m + ' ay', 'faizsiz ödəniş']] : [])]; }
+function numbers() { return [[9, 'bina'], [NFL, 'mərtəbə'], [2, 'səviyyəli parkinq'], ['7/24', 'mühafizə'], ...(TERMS[0] ? [[TERMS[0].m + ' ay', 'faizsiz ödəniş']] : [])]; }
 const numBlock = () => `<section class="sec wrap" style="padding-top:16px"><div class="nzs">${numbers().map(([n, s]) => `<div class="nz"><b>${n}</b><span>${s}</span></div>`).join('')}<a class="nz nz-a" href="#brosur">${I.doc}<span>Broşürü yüklə (PDF)</span></a></div></section>`;
 
 /* render qarmaqları */

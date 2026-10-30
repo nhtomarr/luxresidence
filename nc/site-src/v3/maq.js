@@ -175,8 +175,8 @@ window.ncMaq = function (host, o) {
   })(t0);
 
   const TOUR = [
-    { tgt: [-10, 30, 0], th: -0.62, ph: .62, dist: 1350, cap: 'Altı bina, bir qapalı həyət' },
-    { tgt: [-20, 0, 0], th: .35, ph: .92, dist: 640, cap: 'Mərkəzdə avtomobilsiz qapalı həyət' },
+    { tgt: [-10, 30, 0], th: -0.62, ph: .62, dist: 1350, cap: '9 bina, qapalı həyət' },
+    { tgt: [-20, 0, 0], th: .35, ph: .92, dist: 640, cap: 'Avtomobilsiz qapalı həyət' },
     { tgt: [-60, 40, -175], th: Math.PI - .25, ph: .3, dist: 700, cap: 'Bina A və B' },
     { tgt: [200, 40, -95], th: Math.PI / 2 + .2, ph: .26, dist: 560, cap: 'Bina C' },
     { tgt: [-60, 40, 175], th: .2, ph: .3, dist: 700, cap: 'Bina E və F' },

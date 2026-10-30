@@ -53,7 +53,7 @@ const NC_APPS = new Set(['satis', 'kalkulyator', 'muqavile', 'komendant', 'sayt'
 const NC_PUB = /^\/(menziller(\/[a-z0-9-]+)?|binalar(\/[a-z])?|mekan|kommersiya|bloq(\/[a-z0-9-]+)?|suallar|elaqe|secilmis|muqayise|odenis|brosur)$/i;
 const NC_SEO = {
   menziller: ['Mənzillər və planlar — Nizami City', 'Nizami City mənzil planları: 1, 2, 3 və 4 otaqlı mənzillər, eksplikasiya, binalar. Qiymət sorğu ilə, 6 ay faizsiz daxili kredit.'],
-  binalar: ['Binalar və 3D baş plan — Nizami City', 'Nizami City-nin altı binası və qapalı həyəti 3D maketdə. Binanı seçin — mənzil planları açılacaq.'],
+  binalar: ['Binalar və 3D baş plan — Nizami City', 'Nizami City-nin binaları və qapalı həyətləri 3D maketdə. Binanı seçin — mənzil planları açılacaq.'],
   mekan: ['Məkan — Nizami City, Yasamal', 'Nizami City Cəfər Cabbarlı küç. 31-də, Nizami metrosunun yanındadır. 3D xəritə, ətraf obyektlər və marşrut.'],
   kommersiya: ['Kommersiya sahələri — Nizami City', 'Nizami City binalarının birinci mərtəbələrində küçəyə açılan kommersiya sahələri.'],
   bloq: ['Bloq — Nizami City', 'Mənzil seçimi, ödəniş və Yasamalda həyat haqqında yazılar.'],
