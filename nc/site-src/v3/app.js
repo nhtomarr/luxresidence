@@ -306,8 +306,9 @@ const featBlock = () => `<div class="sh"><h2 class="h2">Kompleksdə həyat</h2><
   <div class="icons">${ICONS.map(([i, b, s]) => `<div class="icn"><i>${i}</i><div><b>${b}</b><span>${s}</span></div></div>`).join('')}</div>`;
 const MAPQ = encodeURIComponent('Nizami City, Cəfər Cabbarlı 31, Bakı');
 const PIC = { 'Nəqliyyat': 'M', 'Alış-veriş': 'T', 'Təhsil': 'S', 'İstirahət': 'P' };
-const locBlock = () => `<div class="sh"><div><h2 class="h2">Məkan</h2><span class="mu">${esc(CO.addr)}</span></div><div class="tabs loc-t"><button type="button" data-v="nbh" class="on">Ətraf sxemi</button><button type="button" data-v="map">Xəritə</button></div></div><div class="loc"><div class="map"><div data-lv="nbh">${nbhBlock()}</div><div data-lv="map" style="display:none;height:100%"><iframe title="Xəritə: Nizami City" loading="lazy" data-src="https://maps.google.com/maps?q=${MAPQ}&z=15&output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe></div></div>
-  <div class="pois"><div class="dirs"><span class="mu">Yol göstər:</span><a class="tag" href="https://www.google.com/maps/dir/?api=1&destination=${MAPQ}" target="_blank" rel="noopener">Google Maps</a><a class="tag" href="https://waze.com/ul?q=${MAPQ}&navigate=yes" target="_blank" rel="noopener">Waze</a><a class="tag" href="https://yandex.com/maps/?text=${MAPQ}" target="_blank" rel="noopener">Yandex</a></div>${POI.map(p => `<div class="poi"><i>${PIC[p.c] || '•'}</i><div><b>${esc(p.n)}</b><span>${esc(p.d)}</span></div><em>${esc(p.c)}</em></div>`).join('')}</div></div>`;
+const locBlock = () => `<div class="sh"><div><h2 class="h2">Məkan</h2><span class="mu">${esc(CO.addr)}</span></div><div class="tabs loc-t"><button type="button" data-v="m3" class="on">${I.cube} 3D xəritə</button><button type="button" data-v="nbh">Ətraf sxemi</button></div></div>
+  <div data-lv="m3">${cityMap()}</div><div data-lv="nbh" style="display:none"><div class="loc"><div class="map">${nbhBlock()}</div>
+  <div class="pois"><div class="dirs"><span class="mu">Yol göstər:</span><a class="tag" href="https://www.google.com/maps/dir/?api=1&destination=${MAPQ}" target="_blank" rel="noopener">Google Maps</a><a class="tag" href="https://waze.com/ul?q=${MAPQ}&navigate=yes" target="_blank" rel="noopener">Waze</a><a class="tag" href="https://yandex.com/maps/?text=${MAPQ}" target="_blank" rel="noopener">Yandex</a></div>${POI.map(p => `<div class="poi"><i>${PIC[p.c] || '•'}</i><div><b>${esc(p.n)}</b><span>${esc(p.d)}</span></div><em>${esc(p.c)}</em></div>`).join('')}</div></div></div>`;
 const posts = () => BLOG.slice().sort((a, b) => String(b.d).localeCompare(String(a.d)));
 const dfmt = s => { const d = new Date(s); return isNaN(d) ? esc(s) : `${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}`; };
 const nCard = p => `<a class="ncard" href="#bloq-${esc(p.id)}"><figure>${p.img ? pic(p.img, '', { sizes: '(max-width:620px) 92vw, 33vw' }) : ''}</figure><div class="bd"><h3 class="h3">${esc(p.t)}</h3><p>${esc(p.x || '')}</p><div class="ft"><span class="lk">Ətraflı ${I.ar}</span><span>${dfmt(p.d)}</span></div></div></a>`;
@@ -451,7 +452,7 @@ pages.post = id => {
     <section class="sec wrap"><div class="sh"><h2 class="h2">Digər yazılar</h2></div><div class="news">${posts().filter(x => x.id !== id).slice(0, 3).map(nCard).join('')}</div></section>` };
 };
 pages.suallar = () => ({ title: 'Suallar — Nizami City', html: `${pHead('Suallar və cavablar', '')}<section class="sec wrap">${faqBlock()}</section>`, mount(r) { bindLead(r); } });
-pages.elaqe = () => ({ title: 'Əlaqə — Nizami City', html: `${pHead('Əlaqə', 'Satış ofisi: ' + esc(CO.hours))}<section class="sec wrap">${contactBlock({ kind: 'viewing' })}</section><section class="sec wrap">${locBlock()}</section>`, mount(r) { bindLead(r); } });
+pages.elaqe = () => ({ title: 'Əlaqə — Nizami City', html: `${pHead('Əlaqə', 'Satış ofisi: ' + esc(CO.hours))}<section class="sec wrap" style="padding-top:16px">${locBlock()}</section><section class="sec wrap">${contactBlock({ kind: 'viewing' })}</section>`, mount(r) { bindLead(r); } });
 
 /* altlıq */
 function footer() {

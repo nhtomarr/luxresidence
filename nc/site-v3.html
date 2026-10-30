@@ -768,6 +768,91 @@ html[data-theme=dark] .expl i{background:#4a3f22;color:#f2deb3}
 @media print{.pl-card{break-inside:avoid}.plx{grid-template-columns:1.2fr 1fr}}
 .pl-card .lk svg{width:18px;height:18px}.pl-card .lk{white-space:nowrap}
 .expl .tot2{font-size:14px;color:var(--mut)}.expl .tot2 b{color:var(--ink2);font-weight:500}
+
+/* 3D şəhər xəritəsi */
+.cmap{position:relative;height:clamp(560px,46vw,700px);border-radius:28px;overflow:hidden;background:#1d2232;box-shadow:var(--sh2);isolation:isolate}
+.cmap-m{position:absolute;inset:0}
+.cmap-m .mq-load{color:#9aa3b8}
+.cmap-m .mq-load i{border-color:#2f364b;border-top-color:#8fb0ff}
+.cmap.ready .mq-load{display:none}
+.cmap .maplibregl-canvas{outline:none}
+.cmap .maplibregl-ctrl-attrib{background:rgba(29,34,50,.7)!important;color:#8a93a8}
+.cmap .maplibregl-ctrl-attrib a{color:#a9b2c6}
+.cmap-p{position:absolute;left:clamp(16px,3.4vw,50px);top:clamp(16px,3.4vw,46px);bottom:clamp(16px,3.4vw,46px);width:min(400px,calc(100% - 32px));z-index:3;background:#fff;color:#151a26;border-radius:24px;box-shadow:0 30px 60px -24px rgba(0,0,0,.6);padding:28px 26px 10px;display:flex;flex-direction:column;--l:#e7eaf2}
+.cmap-h{display:flex;justify-content:space-between;align-items:center;gap:14px}
+.cmap-h h2{font-size:clamp(28px,2.6vw,38px);font-weight:600;letter-spacing:-.02em}
+.cmap-s{display:flex;align-items:center;gap:6px;background:#f2f4f8;border-radius:14px;padding:0 12px;height:46px;width:min(190px,50%);cursor:text}
+.cmap-s input{border:0;background:none;outline:none;flex:1;min-width:0;font-size:15px;color:#151a26}
+.cmap-s svg{width:20px;height:20px;color:#7d8597;flex:none}
+.cmap-tb{display:flex;gap:28px;margin:24px 0 0;border-bottom:1px solid var(--l)}
+.cmap-tb button{padding:0 0 12px;font-size:16px;font-weight:500;color:#151a26;position:relative}
+.cmap-tb button:after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:3px;border-radius:3px;background:#2f6bff;transform:scaleX(0);transition:transform .25s}
+.cmap-tb button.on:after{transform:none}
+.cmap-tb button:not(.on){color:#5f6779}
+.cmap-l{overflow:auto;flex:1;margin:0 -8px;padding:0 8px;scrollbar-width:thin}
+.cmi{border-bottom:1px solid var(--l)}
+.cmi-h{display:flex;align-items:center;gap:16px;width:100%;text-align:left;padding:18px 0}
+.cmi-h img{width:76px;height:76px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 4px 12px -4px rgba(0,0,0,.25)}
+.cmi-h div{flex:1;min-width:0;display:grid;gap:6px}
+.cmi-h b{font-size:clamp(19px,1.6vw,23px);font-weight:600;letter-spacing:-.01em}
+.cmi-h span{display:flex;align-items:center;gap:8px;color:#5f6779;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmi-h span svg{width:20px;height:20px;color:#2f6bff;flex:none}
+.cmi-h i{width:28px;height:28px;display:grid;place-items:center;color:#151a26;transition:transform .3s}
+.cmi-h i svg{width:22px;height:22px}
+.cmi.op .cmi-h i{transform:rotate(180deg)}
+.cmi.op .cmi-h b{color:#151a26}
+.cmi:not(.op) .cmi-h{opacity:.92}
+.cmi-b{display:none;padding:0 0 18px 92px;gap:8px;font-size:14.5px;color:#3e4557}
+.cmi.op .cmi-b{display:grid;animation:popIn .3s both}
+.cmi-b p{margin:0;display:flex;gap:8px;align-items:flex-start}
+.cmi-b p svg{width:17px;height:17px;flex:none;margin-top:2px;color:#7d8597}
+.cmi-b a:not(.btn){color:#2f6bff;font-weight:500}
+.cmi-a{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.cmn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 0;border-bottom:1px solid var(--l)}
+.cmn i{width:44px;height:44px;border-radius:50%;background:#eef2ff;color:#2f6bff;display:grid;place-items:center;flex:none}
+.cmn i svg{width:21px;height:21px}
+.cmn b{display:block;font-size:16.5px;font-weight:600}
+.cmn span{font-size:14px;color:#5f6779}
+.cmn:hover b,.cmi-h:hover b{color:#2f6bff}
+.cmap-b{position:absolute;z-index:3;width:58px;height:58px;border-radius:50%;background:#fff;color:#2f6bff;display:grid;place-items:center;box-shadow:0 10px 24px -10px rgba(0,0,0,.6);transition:transform .2s}
+.cmap-b:hover{transform:scale(1.05)}
+.cmap-b svg{width:24px;height:24px}
+.cmap-fs{right:22px;top:22px}
+.cmap-me{right:22px;bottom:26px}
+.cmap-me.busy svg{animation:spin 1s linear infinite}
+.cmap-z{position:absolute;right:22px;top:50%;transform:translateY(-50%);z-index:3;background:#fff;border-radius:30px;box-shadow:0 10px 24px -10px rgba(0,0,0,.6);display:grid;padding:4px 0}
+.cmap-z .cmap-b{position:static;box-shadow:none;width:58px;height:50px;border-radius:0}
+.cmap-z .cmap-b+.cmap-b{border-top:1px solid #e7eaf2}
+.cmap:fullscreen,.cmap.cmap-max{height:100vh;border-radius:0}
+.cmap.cmap-max{position:fixed;inset:0;z-index:86}
+.cm-pk{display:block;background:#fff;border-radius:18px;padding:10px 14px 12px;box-shadow:0 14px 30px -12px rgba(0,0,0,.6);text-align:left;width:190px;color:#151a26;position:relative;transition:transform .25s,box-shadow .25s;cursor:pointer;margin-bottom:12px}
+.cm-pk:after{content:'';position:absolute;left:50%;bottom:-7px;width:14px;height:14px;background:#fff;transform:translateX(-50%) rotate(45deg);border-radius:3px}
+.cm-pk div{display:flex;align-items:center;gap:8px}
+.cm-pk img{width:42px;height:42px;border-radius:50%;object-fit:cover;flex:none}
+.cm-pk b{font-size:14.5px;font-weight:600;line-height:1.2}
+.cm-pk span{display:block;margin-top:8px;font-size:14px;line-height:1.3}
+.cm-pk.on{transform:translateY(-6px) scale(1.04);box-shadow:0 0 0 3px #2f6bff,0 20px 40px -14px rgba(0,0,0,.7)}
+.cm-pk:hover{transform:translateY(-4px)}
+.cm-pn{display:grid;justify-items:center;gap:3px;cursor:pointer}
+.cm-pn i{width:26px;height:26px;border-radius:50%;background:#6f8dff;color:#fff;display:grid;place-items:center;box-shadow:0 0 0 3px rgba(111,141,255,.25);transition:transform .2s}
+.cm-pn i svg{width:15px;height:15px}
+.cm-pn span{font-size:12.5px;font-weight:500;color:#d8ddea;text-shadow:0 1px 3px #12151f,0 0 6px #12151f;white-space:nowrap}
+.cm-pn.on i,.cm-pn:hover i{transform:scale(1.25);background:#2f6bff}
+.cm-you{width:20px;height:20px;border-radius:50%;background:#2f6bff;border:3px solid #fff;box-shadow:0 0 0 8px rgba(47,107,255,.25)}
+@media(max-width:900px){
+  .cmap{height:auto;border-radius:22px;display:flex;flex-direction:column;background:var(--card)}
+  .cmap-m{position:relative;height:440px;border-radius:22px 22px 0 0;overflow:hidden;background:#1d2232}
+  .cmap-p{position:relative;left:auto;top:auto;bottom:auto;width:auto;border-radius:0 0 22px 22px;box-shadow:none;padding:20px 18px 6px;max-height:none}
+  .cmap-l{max-height:380px}
+  .cmap-b{width:46px;height:46px}.cmap-z .cmap-b{width:46px;height:42px}
+  .cmap-fs{right:12px;top:12px}.cmap-me{right:12px;top:376px;bottom:auto}.cmap-z{right:12px;top:220px}
+  .cmi-h img{width:60px;height:60px}.cmi-b{padding-left:76px}
+  .cm-pk{width:160px}
+  .cmap-s{width:150px}
+}
+html[data-theme=dark] .cmap-p{background:#fff}
+@media(min-width:901px){.cmap-m.maplibregl-map{position:absolute!important}}
+.cmap-z{overflow:hidden}.cmap-z .cmap-b:hover{transform:none;background:#f2f4f8}
 </style>
 </head>
 <body>
@@ -1510,8 +1595,9 @@ const featBlock = () => `<div class="sh"><h2 class="h2">Kompleksdə həyat</h2><
   <div class="icons">${ICONS.map(([i, b, s]) => `<div class="icn"><i>${i}</i><div><b>${b}</b><span>${s}</span></div></div>`).join('')}</div>`;
 const MAPQ = encodeURIComponent('Nizami City, Cəfər Cabbarlı 31, Bakı');
 const PIC = { 'Nəqliyyat': 'M', 'Alış-veriş': 'T', 'Təhsil': 'S', 'İstirahət': 'P' };
-const locBlock = () => `<div class="sh"><div><h2 class="h2">Məkan</h2><span class="mu">${esc(CO.addr)}</span></div><div class="tabs loc-t"><button type="button" data-v="nbh" class="on">Ətraf sxemi</button><button type="button" data-v="map">Xəritə</button></div></div><div class="loc"><div class="map"><div data-lv="nbh">${nbhBlock()}</div><div data-lv="map" style="display:none;height:100%"><iframe title="Xəritə: Nizami City" loading="lazy" data-src="https://maps.google.com/maps?q=${MAPQ}&z=15&output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe></div></div>
-  <div class="pois"><div class="dirs"><span class="mu">Yol göstər:</span><a class="tag" href="https://www.google.com/maps/dir/?api=1&destination=${MAPQ}" target="_blank" rel="noopener">Google Maps</a><a class="tag" href="https://waze.com/ul?q=${MAPQ}&navigate=yes" target="_blank" rel="noopener">Waze</a><a class="tag" href="https://yandex.com/maps/?text=${MAPQ}" target="_blank" rel="noopener">Yandex</a></div>${POI.map(p => `<div class="poi"><i>${PIC[p.c] || '•'}</i><div><b>${esc(p.n)}</b><span>${esc(p.d)}</span></div><em>${esc(p.c)}</em></div>`).join('')}</div></div>`;
+const locBlock = () => `<div class="sh"><div><h2 class="h2">Məkan</h2><span class="mu">${esc(CO.addr)}</span></div><div class="tabs loc-t"><button type="button" data-v="m3" class="on">${I.cube} 3D xəritə</button><button type="button" data-v="nbh">Ətraf sxemi</button></div></div>
+  <div data-lv="m3">${cityMap()}</div><div data-lv="nbh" style="display:none"><div class="loc"><div class="map">${nbhBlock()}</div>
+  <div class="pois"><div class="dirs"><span class="mu">Yol göstər:</span><a class="tag" href="https://www.google.com/maps/dir/?api=1&destination=${MAPQ}" target="_blank" rel="noopener">Google Maps</a><a class="tag" href="https://waze.com/ul?q=${MAPQ}&navigate=yes" target="_blank" rel="noopener">Waze</a><a class="tag" href="https://yandex.com/maps/?text=${MAPQ}" target="_blank" rel="noopener">Yandex</a></div>${POI.map(p => `<div class="poi"><i>${PIC[p.c] || '•'}</i><div><b>${esc(p.n)}</b><span>${esc(p.d)}</span></div><em>${esc(p.c)}</em></div>`).join('')}</div></div></div>`;
 const posts = () => BLOG.slice().sort((a, b) => String(b.d).localeCompare(String(a.d)));
 const dfmt = s => { const d = new Date(s); return isNaN(d) ? esc(s) : `${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}`; };
 const nCard = p => `<a class="ncard" href="#bloq-${esc(p.id)}"><figure>${p.img ? pic(p.img, '', { sizes: '(max-width:620px) 92vw, 33vw' }) : ''}</figure><div class="bd"><h3 class="h3">${esc(p.t)}</h3><p>${esc(p.x || '')}</p><div class="ft"><span class="lk">Ətraflı ${I.ar}</span><span>${dfmt(p.d)}</span></div></div></a>`;
@@ -1655,7 +1741,7 @@ pages.post = id => {
     <section class="sec wrap"><div class="sh"><h2 class="h2">Digər yazılar</h2></div><div class="news">${posts().filter(x => x.id !== id).slice(0, 3).map(nCard).join('')}</div></section>` };
 };
 pages.suallar = () => ({ title: 'Suallar — Nizami City', html: `${pHead('Suallar və cavablar', '')}<section class="sec wrap">${faqBlock()}</section>`, mount(r) { bindLead(r); } });
-pages.elaqe = () => ({ title: 'Əlaqə — Nizami City', html: `${pHead('Əlaqə', 'Satış ofisi: ' + esc(CO.hours))}<section class="sec wrap">${contactBlock({ kind: 'viewing' })}</section><section class="sec wrap">${locBlock()}</section>`, mount(r) { bindLead(r); } });
+pages.elaqe = () => ({ title: 'Əlaqə — Nizami City', html: `${pHead('Əlaqə', 'Satış ofisi: ' + esc(CO.hours))}<section class="sec wrap" style="padding-top:16px">${locBlock()}</section><section class="sec wrap">${contactBlock({ kind: 'viewing' })}</section>`, mount(r) { bindLead(r); } });
 
 /* altlıq */
 function footer() {
@@ -1927,7 +2013,7 @@ function bindNbh(r) {
   $('#nbF', w).onclick = e => { const b = e.target.closest('button'); if (!b) return; $$('#nbF button', w).forEach(x => x.classList.toggle('on', x === b)); const c = b.dataset.v; $$('.nbh-p', w).forEach(g => g.classList.toggle('off', !!c && g.dataset.c !== c)); card.classList.remove('on'); };
 }
 function bindLocTabs(r) {
-  $$('.loc-t', r).forEach(tb => { tb.onclick = e => { const b = e.target.closest('button'); if (!b) return; const box = tb.closest('section'); $$('button', tb).forEach(x => x.classList.toggle('on', x === b)); $$('[data-lv]', box).forEach(x => x.style.display = x.dataset.lv === b.dataset.v ? '' : 'none'); if (b.dataset.v === 'map') { const f = $('iframe[data-src]', box); if (f) { f.src = f.dataset.src; f.removeAttribute('data-src'); } } }; });
+  $$('.loc-t', r).forEach(tb => { tb.onclick = e => { const b = e.target.closest('button'); if (!b) return; const box = tb.closest('section'); $$('button', tb).forEach(x => x.classList.toggle('on', x === b)); $$('[data-lv]', box).forEach(x => x.style.display = x.dataset.lv === b.dataset.v ? '' : 'none'); if (b.dataset.v === 'm3' && CM) setTimeout(() => CM.resize(), 30); if (b.dataset.v === 'map') { const f = $('iframe[data-src]', box); if (f) { f.src = f.dataset.src; f.removeAttribute('data-src'); } } }; });
   bindNbh(r);
 }
 
@@ -1992,15 +2078,134 @@ function numbers() { return [[BLD.length, 'bina'], [NFL, 'mərtəbə'], [2, 'sə
 const numBlock = () => `<section class="sec wrap" style="padding-top:16px"><div class="nzs">${numbers().map(([n, s]) => `<div class="nz"><b>${n}</b><span>${s}</span></div>`).join('')}<a class="nz nz-a" href="#brosur">${I.doc}<span>Broşürü yüklə (PDF)</span></a></div></section>`;
 
 /* render qarmaqları */
-function beforeRender() { killMaq(); const p = $('#uiP'); if (p) p.remove(); const h = $('#hub'); if (h) h.remove(); }
+function beforeRender() { killMaq(); killCity(); const p = $('#uiP'); if (p) p.remove(); const h = $('#hub'); if (h) h.remove(); }
 function afterRender(k, main) {
-  pageIn(main); reveal(main); fillQR(main); bindLocTabs(main); onScroll();
+  pageIn(main); reveal(main); fillQR(main); bindLocTabs(main); bindCity(main); onScroll();
   document.body.classList.toggle('pg-bro', k === 'brosur');
 }
 // başlıq və altlıq əlavələri
 (() => { const fc = $('.fcall'); if (fc) { fc.removeAttribute('data-callback'); fc.dataset.hub = ''; fc.setAttribute('aria-label', 'Satış ofisi ilə əlaqə'); fc.innerHTML = I.chat + '<span>Sual verin</span>'; }
   const mb = $('.mbar [data-callback]'); if (mb) { mb.removeAttribute('data-callback'); mb.dataset.hub = ''; }
   const fcol = $$('#ft .cols > div')[2]; if (fcol) fcol.insertAdjacentHTML('beforeend', '<a href="#brosur">Broşür (PDF)</a>'); })();
+
+/* ===== 3D şəhər xəritəsi (kristal.az/contact üslubunda): MapLibre + OpenFreeMap, tünd göy palitra ===== */
+const GEO = (() => { const g = String(SITE_.geo || '').match(/(-?\d+\.\d+)\s*[,; ]\s*(-?\d+\.\d+)/); return g ? [+g[2], +g[1]] : [49.8295, 40.3806]; })(); // [lng, lat]
+const PROJ = [
+  { id: 'nc', n: 'Nizami City', sub: '«Nizami» metro stansiyası', ic: 'metro', img: '/assets/nc/site/front-1280.webp', ll: GEO, addr: CO.addr, tel: CO.short, href: '#binalar', more: 'Binalara bax' },
+  { id: 'lux', n: 'LUX Residence', sub: '«Elmlər Akademiyası» metro stansiyası', ic: 'metro', img: '/assets/og-cover.jpg', ll: [49.81879, 40.36664], addr: 'Ə.Ələkbərov, M.Müşfiq, S.Dağlı, İ.Qutqaşınlı küç. kəsişməsi', href: 'https://luxresidence.az', more: 'luxresidence.az', ext: true },
+];
+const NEAR = [
+  { n: 'Nizami metrosu', c: 'Nəqliyyat', ic: 'metro', ll: [49.83002, 40.37932] },
+  { n: 'Nizami Mall', c: 'Alış-veriş', ic: 'bag', ll: [49.83113, 40.37818] },
+  { n: 'Caspian Plaza', c: 'Biznes mərkəzi', ic: 'bld', ll: [49.82881, 40.38543] },
+  { n: 'Globus Center', c: 'Alış-veriş', ic: 'bag', ll: [49.82802, 40.38519] },
+  { n: '18 saylı məktəb', c: 'Təhsil', ic: 'sch', ll: [49.83222, 40.37806] },
+  { n: 'Mehdi Hüseynzadə parkı', c: 'İstirahət', ic: 'tree', ll: [49.82672, 40.38720] },
+  { n: 'Sevil Qazıyeva parkı', c: 'İstirahət', ic: 'tree', ll: [49.83209, 40.38856] },
+];
+I.sch = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-5 9 5-9 5z"/><path d="M7 11v5c3 2 7 2 10 0v-5"/></svg>';
+I.loc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3.5"/><circle cx="12" cy="12" r="8"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>';
+I.chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+const hav = (a, b) => { const R = 6371e3, r = Math.PI / 180, dLa = (b[1] - a[1]) * r, dLo = (b[0] - a[0]) * r, x = Math.sin(dLa / 2) ** 2 + Math.cos(a[1] * r) * Math.cos(b[1] * r) * Math.sin(dLo / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(x)); };
+const distT = m => { const w = Math.max(1, Math.round(m * 1.25 / 80)); return (m < 1000 ? '≈ ' + Math.round(m / 10) * 10 + ' m' : '≈ ' + fm2(Math.round(m / 100) / 10) + ' km') + ' · ' + w + ' dəq piyada'; };
+const dirUrl = ll => `https://www.google.com/maps/dir/?api=1&destination=${ll[1]},${ll[0]}`;
+function cityMap() {
+  return `<div class="cmap" id="cmap"><div class="cmap-m" id="cmapM"><div class="mq-load"><i></i><span>Xəritə yüklənir…</span></div></div>
+    <aside class="cmap-p"><div class="cmap-h"><h2 id="cmT">Layihələr</h2><label class="cmap-s">${'<input id="cmS" placeholder="Axtar" autocomplete="off" aria-label="Axtar">'}${I.srch}</label></div>
+      <div class="cmap-tb" role="tablist"><button type="button" data-t="p" class="on">Layihələr</button><button type="button" data-t="n">Ətraf</button></div>
+      <div class="cmap-l" id="cmL"></div></aside>
+    <button type="button" class="cmap-b cmap-fs" data-cm="fs" aria-label="Tam ekran">${I.fs}</button>
+    <div class="cmap-z"><button type="button" class="cmap-b" data-cm="in" aria-label="Yaxınlaşdır">${I.pl}</button><button type="button" class="cmap-b" data-cm="out" aria-label="Uzaqlaşdır">${I.mi}</button></div>
+    <button type="button" class="cmap-b cmap-me" data-cm="me" aria-label="Mənim yerim">${I.loc}</button></div>`;
+}
+function darkStyle(s) {
+  const P = (l, k, v) => { l.paint = l.paint || {}; l.paint[k] = v; };
+  s.layers = s.layers.filter(l => !/^boundary|natural_earth|shield|^airport|label_country|label_state|poi_r20|poi_r7/.test(l.id));
+  s.layers.forEach(l => {
+    const id = l.id;
+    if (l.type === 'background') P(l, 'background-color', '#1d2232');
+    else if (l.type === 'fill') {
+      if (/water/.test(id)) P(l, 'fill-color', '#1a3049');
+      else if (/park|grass|wood|wetland|pitch/.test(id)) { P(l, 'fill-color', '#22372f'); P(l, 'fill-opacity', .85); if (l.paint['fill-pattern']) delete l.paint['fill-pattern']; }
+      else if (/building/.test(id)) { P(l, 'fill-color', '#272d42'); P(l, 'fill-outline-color', '#272d42'); }
+      else if (/road_area/.test(id)) { delete l.paint['fill-pattern']; P(l, 'fill-color', '#2b3144'); }
+      else P(l, 'fill-color', '#202638');
+    } else if (l.type === 'line') {
+      if (/water/.test(id)) P(l, 'line-color', '#1a3049');
+      else if (/casing/.test(id)) P(l, 'line-color', '#171b27');
+      else if (/rail/.test(id)) P(l, 'line-color', '#363c50');
+      else if (/motorway|trunk_primary/.test(id)) P(l, 'line-color', '#4c556f');
+      else if (/secondary|tertiary/.test(id)) P(l, 'line-color', '#424a62');
+      else if (/path|pedestrian/.test(id)) P(l, 'line-color', '#30364a');
+      else P(l, 'line-color', '#393f55');
+    } else if (l.type === 'fill-extrusion') {
+      P(l, 'fill-extrusion-color', ['interpolate', ['linear'], ['coalesce', ['get', 'render_height'], 0], 0, '#283049', 30, '#323a5a', 80, '#3e4870']);
+      P(l, 'fill-extrusion-opacity', .96);
+      l.minzoom = 13;
+    } else if (l.type === 'symbol') {
+      const poi = /^poi/.test(id);
+      P(l, 'text-color', poi ? '#e6a3a3' : /highway|road/.test(id) ? '#8f98ad' : '#c9cfdc');
+      P(l, 'text-halo-color', '#151925'); P(l, 'text-halo-width', 1.2);
+    }
+  });
+  return s;
+}
+let CM = null;
+function killCity() { if (CM) { try { CM.remove(); } catch (e) { } CM = null; } }
+function bindCity(r) {
+  const box = $('#cmap', r); if (!box) return;
+  const L = $('#cmL', box), S = $('#cmS', box); let tab = 'p', open = 'nc', mk = {}, you = null;
+  const dl = it => it.ll ? distT(hav(GEO, it.ll)) : '';
+  const draw = () => {
+    const q = S.value.trim().toLowerCase();
+    $('#cmT', box).textContent = tab === 'p' ? 'Layihələr' : 'Ətraf';
+    if (tab === 'p') L.innerHTML = PROJ.filter(p => !q || p.n.toLowerCase().includes(q)).map(p => `<div class="cmi${open === p.id ? ' op' : ''}" data-id="${p.id}"><button type="button" class="cmi-h"><img src="${p.img}" alt="" loading="lazy"><div><b>${esc(p.n)}</b><span>${I.metro}${esc(p.sub)}</span></div><i>${I.chev}</i></button>
+      <div class="cmi-b"><p>${I.pin}${esc(p.addr)}</p>${p.tel ? `<p>${I.ph}<a href="tel:${esc(p.tel)}">${esc(p.tel)}</a></p>` : ''}<div class="cmi-a"><a class="btn sm" href="${dirUrl(p.ll)}" target="_blank" rel="noopener">Marşrut ${I.ar}</a><a class="btn tn sm" href="${p.href}"${p.ext ? ' target="_blank" rel="noopener"' : ''}>${esc(p.more)}</a></div></div></div>`).join('') || '<p class="mu" style="padding:14px 0">Heç nə tapılmadı</p>';
+    else L.innerHTML = NEAR.filter(p => !q || (p.n + p.c).toLowerCase().includes(q)).map((p, i) => `<button type="button" class="cmn" data-n="${NEAR.indexOf(p)}"><i>${I[p.ic] || I.pin}</i><div><b>${esc(p.n)}</b><span>${esc(p.c)} · ${dl(p)}</span></div></button>`).join('') || '<p class="mu" style="padding:14px 0">Heç nə tapılmadı</p>';
+  };
+  draw();
+  S.oninput = draw;
+  $('.cmap-tb', box).onclick = e => { const b = e.target.closest('button'); if (!b) return; tab = b.dataset.t; $$('.cmap-tb button', box).forEach(x => x.classList.toggle('on', x === b)); draw(); };
+  const fly = (ll, z = 16.6) => CM && CM.flyTo({ center: ll, zoom: z, pitch: 60, bearing: -18, speed: .9, essential: true });
+  L.onclick = e => {
+    const h = e.target.closest('.cmi-h'); if (h) { const id = h.parentElement.dataset.id; open = open === id ? null : id; draw(); const p = PROJ.find(x => x.id === id); if (open) { fly(p.ll); $$('.cm-pk').forEach(m => m.classList.toggle('on', m.dataset.id === id)); } return; }
+    const n = e.target.closest('.cmn'); if (n) { const p = NEAR[+n.dataset.n]; fly(p.ll, 17); $$('.cm-pn').forEach(m => m.classList.toggle('on', m.dataset.n === n.dataset.n)); }
+  };
+  box.addEventListener('click', e => {
+    const b = e.target.closest('[data-cm]'); if (!b || !CM) return; const a = b.dataset.cm;
+    if (a === 'in') CM.zoomIn(); else if (a === 'out') CM.zoomOut();
+    else if (a === 'fs') { if (document.fullscreenElement) document.exitFullscreen(); else if (box.requestFullscreen) box.requestFullscreen().catch(() => box.classList.toggle('cmap-max')); else box.classList.toggle('cmap-max'); setTimeout(() => CM && CM.resize(), 300); }
+    else if (a === 'me') {
+      if (!navigator.geolocation) return toast('Brauzer yer təyinini dəstəkləmir');
+      b.classList.add('busy');
+      navigator.geolocation.getCurrentPosition(pos => { b.classList.remove('busy'); const ll = [pos.coords.longitude, pos.coords.latitude];
+        if (you) you.remove(); const el = document.createElement('div'); el.className = 'cm-you'; you = new maplibregl.Marker({ element: el }).setLngLat(ll).addTo(CM);
+        const bb = new maplibregl.LngLatBounds(ll, ll).extend(GEO); CM.fitBounds(bb, { padding: { top: 80, bottom: 80, left: innerWidth > 900 ? 460 : 60, right: 80 }, pitch: 45, maxZoom: 16 });
+        toast(`Nizami City-yə ${distT(hav(ll, GEO)).split(' · ')[0]}`, ['Marşrut', dirUrl(GEO)]); },
+      () => { b.classList.remove('busy'); toast('Yerinizi təyin etmək mümkün olmadı'); }, { enableHighAccuracy: true, timeout: 10000 });
+    }
+  });
+  const start = () => {
+    $('link#mlcss') || document.head.insertAdjacentHTML('beforeend', '<link id="mlcss" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css">');
+    Promise.all([loadJs('https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js'), fetch('https://tiles.openfreemap.org/styles/liberty').then(x => x.json())]).then(([, st]) => {
+      if (!document.body.contains(box)) return; killCity();
+      const host = $('#cmapM', box), wide = innerWidth > 900;
+      CM = new maplibregl.Map({ container: host, style: darkStyle(st), center: GEO, zoom: 15.2, pitch: 58, bearing: -30, attributionControl: false, cooperativeGestures: !wide, maxPitch: 75 });
+      if (wide) CM.setPadding({ left: Math.min(460, box.clientWidth * .34), top: 0, right: 0, bottom: 0 });
+      CM.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-left');
+      if (wide) CM.scrollZoom.disable(), host.addEventListener('wheel', e => { if (e.ctrlKey || e.metaKey || document.fullscreenElement) { CM.scrollZoom.enable(); } else { CM.scrollZoom.disable(); } }, { capture: true, passive: true });
+      CM.on('load', () => {
+        box.classList.add('ready');
+        PROJ.forEach(p => { const el = document.createElement('button'); el.type = 'button'; el.className = 'cm-pk' + (p.id === 'nc' ? ' on' : ''); el.dataset.id = p.id; el.innerHTML = `<div><img src="${p.img}" alt=""><b>${esc(p.n)}</b></div><span>${esc(p.sub.replace(' metro stansiyası', ' metro stansiyası'))}</span>`; el.onclick = () => { open = p.id; tab = 'p'; $$('.cmap-tb button', box).forEach(x => x.classList.toggle('on', x.dataset.t === 'p')); draw(); fly(p.ll); $$('.cm-pk').forEach(m => m.classList.toggle('on', m === el)); }; mk[p.id] = new maplibregl.Marker({ element: el, anchor: 'bottom' }).setLngLat(p.ll).addTo(CM); });
+        NEAR.forEach((p, i) => { const el = document.createElement('button'); el.type = 'button'; el.className = 'cm-pn'; el.dataset.n = i; el.innerHTML = `<i>${I[p.ic] || I.pin}</i><span>${esc(p.n)}</span>`; el.onclick = () => { tab = 'n'; $$('.cmap-tb button', box).forEach(x => x.classList.toggle('on', x.dataset.t === 'n')); draw(); fly(p.ll, 17); $$('.cm-pn').forEach(m => m.classList.toggle('on', m === el)); }; new maplibregl.Marker({ element: el, anchor: 'top' }).setLngLat(p.ll).addTo(CM); });
+        if (!NOMO()) CM.easeTo({ zoom: 16.3, bearing: -17, pitch: 62, duration: 3200 });
+      });
+    }).catch(() => { box.classList.add('cmap-fail'); $('#cmapM', box).innerHTML = `<div class="mq-load"><span>Xəritəni yükləmək mümkün olmadı.</span><a class="btn sm" href="${dirUrl(GEO)}" target="_blank" rel="noopener">Google Maps-də aç</a></div>`; });
+  };
+  if (!('IntersectionObserver' in window)) return start();
+  const io = new IntersectionObserver(es => { if (es[0].isIntersecting) { io.disconnect(); start(); } }, { rootMargin: '300px' }); io.observe(box);
+}
+
 render();
 
 };</script>

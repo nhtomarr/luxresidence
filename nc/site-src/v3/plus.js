@@ -229,7 +229,7 @@ function bindNbh(r) {
   $('#nbF', w).onclick = e => { const b = e.target.closest('button'); if (!b) return; $$('#nbF button', w).forEach(x => x.classList.toggle('on', x === b)); const c = b.dataset.v; $$('.nbh-p', w).forEach(g => g.classList.toggle('off', !!c && g.dataset.c !== c)); card.classList.remove('on'); };
 }
 function bindLocTabs(r) {
-  $$('.loc-t', r).forEach(tb => { tb.onclick = e => { const b = e.target.closest('button'); if (!b) return; const box = tb.closest('section'); $$('button', tb).forEach(x => x.classList.toggle('on', x === b)); $$('[data-lv]', box).forEach(x => x.style.display = x.dataset.lv === b.dataset.v ? '' : 'none'); if (b.dataset.v === 'map') { const f = $('iframe[data-src]', box); if (f) { f.src = f.dataset.src; f.removeAttribute('data-src'); } } }; });
+  $$('.loc-t', r).forEach(tb => { tb.onclick = e => { const b = e.target.closest('button'); if (!b) return; const box = tb.closest('section'); $$('button', tb).forEach(x => x.classList.toggle('on', x === b)); $$('[data-lv]', box).forEach(x => x.style.display = x.dataset.lv === b.dataset.v ? '' : 'none'); if (b.dataset.v === 'm3' && CM) setTimeout(() => CM.resize(), 30); if (b.dataset.v === 'map') { const f = $('iframe[data-src]', box); if (f) { f.src = f.dataset.src; f.removeAttribute('data-src'); } } }; });
   bindNbh(r);
 }
 
@@ -294,13 +294,132 @@ function numbers() { return [[BLD.length, 'bina'], [NFL, 'mərtəbə'], [2, 'sə
 const numBlock = () => `<section class="sec wrap" style="padding-top:16px"><div class="nzs">${numbers().map(([n, s]) => `<div class="nz"><b>${n}</b><span>${s}</span></div>`).join('')}<a class="nz nz-a" href="#brosur">${I.doc}<span>Broşürü yüklə (PDF)</span></a></div></section>`;
 
 /* render qarmaqları */
-function beforeRender() { killMaq(); const p = $('#uiP'); if (p) p.remove(); const h = $('#hub'); if (h) h.remove(); }
+function beforeRender() { killMaq(); killCity(); const p = $('#uiP'); if (p) p.remove(); const h = $('#hub'); if (h) h.remove(); }
 function afterRender(k, main) {
-  pageIn(main); reveal(main); fillQR(main); bindLocTabs(main); onScroll();
+  pageIn(main); reveal(main); fillQR(main); bindLocTabs(main); bindCity(main); onScroll();
   document.body.classList.toggle('pg-bro', k === 'brosur');
 }
 // başlıq və altlıq əlavələri
 (() => { const fc = $('.fcall'); if (fc) { fc.removeAttribute('data-callback'); fc.dataset.hub = ''; fc.setAttribute('aria-label', 'Satış ofisi ilə əlaqə'); fc.innerHTML = I.chat + '<span>Sual verin</span>'; }
   const mb = $('.mbar [data-callback]'); if (mb) { mb.removeAttribute('data-callback'); mb.dataset.hub = ''; }
   const fcol = $$('#ft .cols > div')[2]; if (fcol) fcol.insertAdjacentHTML('beforeend', '<a href="#brosur">Broşür (PDF)</a>'); })();
+
+/* ===== 3D şəhər xəritəsi (kristal.az/contact üslubunda): MapLibre + OpenFreeMap, tünd göy palitra ===== */
+const GEO = (() => { const g = String(SITE_.geo || '').match(/(-?\d+\.\d+)\s*[,; ]\s*(-?\d+\.\d+)/); return g ? [+g[2], +g[1]] : [49.8295, 40.3806]; })(); // [lng, lat]
+const PROJ = [
+  { id: 'nc', n: 'Nizami City', sub: '«Nizami» metro stansiyası', ic: 'metro', img: '/assets/nc/site/front-1280.webp', ll: GEO, addr: CO.addr, tel: CO.short, href: '#binalar', more: 'Binalara bax' },
+  { id: 'lux', n: 'LUX Residence', sub: '«Elmlər Akademiyası» metro stansiyası', ic: 'metro', img: '/assets/og-cover.jpg', ll: [49.81879, 40.36664], addr: 'Ə.Ələkbərov, M.Müşfiq, S.Dağlı, İ.Qutqaşınlı küç. kəsişməsi', href: 'https://luxresidence.az', more: 'luxresidence.az', ext: true },
+];
+const NEAR = [
+  { n: 'Nizami metrosu', c: 'Nəqliyyat', ic: 'metro', ll: [49.83002, 40.37932] },
+  { n: 'Nizami Mall', c: 'Alış-veriş', ic: 'bag', ll: [49.83113, 40.37818] },
+  { n: 'Caspian Plaza', c: 'Biznes mərkəzi', ic: 'bld', ll: [49.82881, 40.38543] },
+  { n: 'Globus Center', c: 'Alış-veriş', ic: 'bag', ll: [49.82802, 40.38519] },
+  { n: '18 saylı məktəb', c: 'Təhsil', ic: 'sch', ll: [49.83222, 40.37806] },
+  { n: 'Mehdi Hüseynzadə parkı', c: 'İstirahət', ic: 'tree', ll: [49.82672, 40.38720] },
+  { n: 'Sevil Qazıyeva parkı', c: 'İstirahət', ic: 'tree', ll: [49.83209, 40.38856] },
+];
+I.sch = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-5 9 5-9 5z"/><path d="M7 11v5c3 2 7 2 10 0v-5"/></svg>';
+I.loc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3.5"/><circle cx="12" cy="12" r="8"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>';
+I.chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+const hav = (a, b) => { const R = 6371e3, r = Math.PI / 180, dLa = (b[1] - a[1]) * r, dLo = (b[0] - a[0]) * r, x = Math.sin(dLa / 2) ** 2 + Math.cos(a[1] * r) * Math.cos(b[1] * r) * Math.sin(dLo / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(x)); };
+const distT = m => { const w = Math.max(1, Math.round(m * 1.25 / 80)); return (m < 1000 ? '≈ ' + Math.round(m / 10) * 10 + ' m' : '≈ ' + fm2(Math.round(m / 100) / 10) + ' km') + ' · ' + w + ' dəq piyada'; };
+const dirUrl = ll => `https://www.google.com/maps/dir/?api=1&destination=${ll[1]},${ll[0]}`;
+function cityMap() {
+  return `<div class="cmap" id="cmap"><div class="cmap-m" id="cmapM"><div class="mq-load"><i></i><span>Xəritə yüklənir…</span></div></div>
+    <aside class="cmap-p"><div class="cmap-h"><h2 id="cmT">Layihələr</h2><label class="cmap-s">${'<input id="cmS" placeholder="Axtar" autocomplete="off" aria-label="Axtar">'}${I.srch}</label></div>
+      <div class="cmap-tb" role="tablist"><button type="button" data-t="p" class="on">Layihələr</button><button type="button" data-t="n">Ətraf</button></div>
+      <div class="cmap-l" id="cmL"></div></aside>
+    <button type="button" class="cmap-b cmap-fs" data-cm="fs" aria-label="Tam ekran">${I.fs}</button>
+    <div class="cmap-z"><button type="button" class="cmap-b" data-cm="in" aria-label="Yaxınlaşdır">${I.pl}</button><button type="button" class="cmap-b" data-cm="out" aria-label="Uzaqlaşdır">${I.mi}</button></div>
+    <button type="button" class="cmap-b cmap-me" data-cm="me" aria-label="Mənim yerim">${I.loc}</button></div>`;
+}
+function darkStyle(s) {
+  const P = (l, k, v) => { l.paint = l.paint || {}; l.paint[k] = v; };
+  s.layers = s.layers.filter(l => !/^boundary|natural_earth|shield|^airport|label_country|label_state|poi_r20|poi_r7/.test(l.id));
+  s.layers.forEach(l => {
+    const id = l.id;
+    if (l.type === 'background') P(l, 'background-color', '#1d2232');
+    else if (l.type === 'fill') {
+      if (/water/.test(id)) P(l, 'fill-color', '#1a3049');
+      else if (/park|grass|wood|wetland|pitch/.test(id)) { P(l, 'fill-color', '#22372f'); P(l, 'fill-opacity', .85); if (l.paint['fill-pattern']) delete l.paint['fill-pattern']; }
+      else if (/building/.test(id)) { P(l, 'fill-color', '#272d42'); P(l, 'fill-outline-color', '#272d42'); }
+      else if (/road_area/.test(id)) { delete l.paint['fill-pattern']; P(l, 'fill-color', '#2b3144'); }
+      else P(l, 'fill-color', '#202638');
+    } else if (l.type === 'line') {
+      if (/water/.test(id)) P(l, 'line-color', '#1a3049');
+      else if (/casing/.test(id)) P(l, 'line-color', '#171b27');
+      else if (/rail/.test(id)) P(l, 'line-color', '#363c50');
+      else if (/motorway|trunk_primary/.test(id)) P(l, 'line-color', '#4c556f');
+      else if (/secondary|tertiary/.test(id)) P(l, 'line-color', '#424a62');
+      else if (/path|pedestrian/.test(id)) P(l, 'line-color', '#30364a');
+      else P(l, 'line-color', '#393f55');
+    } else if (l.type === 'fill-extrusion') {
+      P(l, 'fill-extrusion-color', ['interpolate', ['linear'], ['coalesce', ['get', 'render_height'], 0], 0, '#283049', 30, '#323a5a', 80, '#3e4870']);
+      P(l, 'fill-extrusion-opacity', .96);
+      l.minzoom = 13;
+    } else if (l.type === 'symbol') {
+      const poi = /^poi/.test(id);
+      P(l, 'text-color', poi ? '#e6a3a3' : /highway|road/.test(id) ? '#8f98ad' : '#c9cfdc');
+      P(l, 'text-halo-color', '#151925'); P(l, 'text-halo-width', 1.2);
+    }
+  });
+  return s;
+}
+let CM = null;
+function killCity() { if (CM) { try { CM.remove(); } catch (e) { } CM = null; } }
+function bindCity(r) {
+  const box = $('#cmap', r); if (!box) return;
+  const L = $('#cmL', box), S = $('#cmS', box); let tab = 'p', open = 'nc', mk = {}, you = null;
+  const dl = it => it.ll ? distT(hav(GEO, it.ll)) : '';
+  const draw = () => {
+    const q = S.value.trim().toLowerCase();
+    $('#cmT', box).textContent = tab === 'p' ? 'Layihələr' : 'Ətraf';
+    if (tab === 'p') L.innerHTML = PROJ.filter(p => !q || p.n.toLowerCase().includes(q)).map(p => `<div class="cmi${open === p.id ? ' op' : ''}" data-id="${p.id}"><button type="button" class="cmi-h"><img src="${p.img}" alt="" loading="lazy"><div><b>${esc(p.n)}</b><span>${I.metro}${esc(p.sub)}</span></div><i>${I.chev}</i></button>
+      <div class="cmi-b"><p>${I.pin}${esc(p.addr)}</p>${p.tel ? `<p>${I.ph}<a href="tel:${esc(p.tel)}">${esc(p.tel)}</a></p>` : ''}<div class="cmi-a"><a class="btn sm" href="${dirUrl(p.ll)}" target="_blank" rel="noopener">Marşrut ${I.ar}</a><a class="btn tn sm" href="${p.href}"${p.ext ? ' target="_blank" rel="noopener"' : ''}>${esc(p.more)}</a></div></div></div>`).join('') || '<p class="mu" style="padding:14px 0">Heç nə tapılmadı</p>';
+    else L.innerHTML = NEAR.filter(p => !q || (p.n + p.c).toLowerCase().includes(q)).map((p, i) => `<button type="button" class="cmn" data-n="${NEAR.indexOf(p)}"><i>${I[p.ic] || I.pin}</i><div><b>${esc(p.n)}</b><span>${esc(p.c)} · ${dl(p)}</span></div></button>`).join('') || '<p class="mu" style="padding:14px 0">Heç nə tapılmadı</p>';
+  };
+  draw();
+  S.oninput = draw;
+  $('.cmap-tb', box).onclick = e => { const b = e.target.closest('button'); if (!b) return; tab = b.dataset.t; $$('.cmap-tb button', box).forEach(x => x.classList.toggle('on', x === b)); draw(); };
+  const fly = (ll, z = 16.6) => CM && CM.flyTo({ center: ll, zoom: z, pitch: 60, bearing: -18, speed: .9, essential: true });
+  L.onclick = e => {
+    const h = e.target.closest('.cmi-h'); if (h) { const id = h.parentElement.dataset.id; open = open === id ? null : id; draw(); const p = PROJ.find(x => x.id === id); if (open) { fly(p.ll); $$('.cm-pk').forEach(m => m.classList.toggle('on', m.dataset.id === id)); } return; }
+    const n = e.target.closest('.cmn'); if (n) { const p = NEAR[+n.dataset.n]; fly(p.ll, 17); $$('.cm-pn').forEach(m => m.classList.toggle('on', m.dataset.n === n.dataset.n)); }
+  };
+  box.addEventListener('click', e => {
+    const b = e.target.closest('[data-cm]'); if (!b || !CM) return; const a = b.dataset.cm;
+    if (a === 'in') CM.zoomIn(); else if (a === 'out') CM.zoomOut();
+    else if (a === 'fs') { if (document.fullscreenElement) document.exitFullscreen(); else if (box.requestFullscreen) box.requestFullscreen().catch(() => box.classList.toggle('cmap-max')); else box.classList.toggle('cmap-max'); setTimeout(() => CM && CM.resize(), 300); }
+    else if (a === 'me') {
+      if (!navigator.geolocation) return toast('Brauzer yer təyinini dəstəkləmir');
+      b.classList.add('busy');
+      navigator.geolocation.getCurrentPosition(pos => { b.classList.remove('busy'); const ll = [pos.coords.longitude, pos.coords.latitude];
+        if (you) you.remove(); const el = document.createElement('div'); el.className = 'cm-you'; you = new maplibregl.Marker({ element: el }).setLngLat(ll).addTo(CM);
+        const bb = new maplibregl.LngLatBounds(ll, ll).extend(GEO); CM.fitBounds(bb, { padding: { top: 80, bottom: 80, left: innerWidth > 900 ? 460 : 60, right: 80 }, pitch: 45, maxZoom: 16 });
+        toast(`Nizami City-yə ${distT(hav(ll, GEO)).split(' · ')[0]}`, ['Marşrut', dirUrl(GEO)]); },
+      () => { b.classList.remove('busy'); toast('Yerinizi təyin etmək mümkün olmadı'); }, { enableHighAccuracy: true, timeout: 10000 });
+    }
+  });
+  const start = () => {
+    $('link#mlcss') || document.head.insertAdjacentHTML('beforeend', '<link id="mlcss" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css">');
+    Promise.all([loadJs('https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js'), fetch('https://tiles.openfreemap.org/styles/liberty').then(x => x.json())]).then(([, st]) => {
+      if (!document.body.contains(box)) return; killCity();
+      const host = $('#cmapM', box), wide = innerWidth > 900;
+      CM = new maplibregl.Map({ container: host, style: darkStyle(st), center: GEO, zoom: 15.2, pitch: 58, bearing: -30, attributionControl: false, cooperativeGestures: !wide, maxPitch: 75 });
+      if (wide) CM.setPadding({ left: Math.min(460, box.clientWidth * .34), top: 0, right: 0, bottom: 0 });
+      CM.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-left');
+      if (wide) CM.scrollZoom.disable(), host.addEventListener('wheel', e => { if (e.ctrlKey || e.metaKey || document.fullscreenElement) { CM.scrollZoom.enable(); } else { CM.scrollZoom.disable(); } }, { capture: true, passive: true });
+      CM.on('load', () => {
+        box.classList.add('ready');
+        PROJ.forEach(p => { const el = document.createElement('button'); el.type = 'button'; el.className = 'cm-pk' + (p.id === 'nc' ? ' on' : ''); el.dataset.id = p.id; el.innerHTML = `<div><img src="${p.img}" alt=""><b>${esc(p.n)}</b></div><span>${esc(p.sub.replace(' metro stansiyası', ' metro stansiyası'))}</span>`; el.onclick = () => { open = p.id; tab = 'p'; $$('.cmap-tb button', box).forEach(x => x.classList.toggle('on', x.dataset.t === 'p')); draw(); fly(p.ll); $$('.cm-pk').forEach(m => m.classList.toggle('on', m === el)); }; mk[p.id] = new maplibregl.Marker({ element: el, anchor: 'bottom' }).setLngLat(p.ll).addTo(CM); });
+        NEAR.forEach((p, i) => { const el = document.createElement('button'); el.type = 'button'; el.className = 'cm-pn'; el.dataset.n = i; el.innerHTML = `<i>${I[p.ic] || I.pin}</i><span>${esc(p.n)}</span>`; el.onclick = () => { tab = 'n'; $$('.cmap-tb button', box).forEach(x => x.classList.toggle('on', x.dataset.t === 'n')); draw(); fly(p.ll, 17); $$('.cm-pn').forEach(m => m.classList.toggle('on', m === el)); }; new maplibregl.Marker({ element: el, anchor: 'top' }).setLngLat(p.ll).addTo(CM); });
+        if (!NOMO()) CM.easeTo({ zoom: 16.3, bearing: -17, pitch: 62, duration: 3200 });
+      });
+    }).catch(() => { box.classList.add('cmap-fail'); $('#cmapM', box).innerHTML = `<div class="mq-load"><span>Xəritəni yükləmək mümkün olmadı.</span><a class="btn sm" href="${dirUrl(GEO)}" target="_blank" rel="noopener">Google Maps-də aç</a></div>`; });
+  };
+  if (!('IntersectionObserver' in window)) return start();
+  const io = new IntersectionObserver(es => { if (es[0].isIntersecting) { io.disconnect(); start(); } }, { rootMargin: '300px' }); io.observe(box);
+}
+
 render();
