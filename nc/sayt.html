@@ -88,7 +88,7 @@ var SITE={},BLOG=null,DEF={},LEADS=[],TAB='leads',IMGK=[['front','Ana səhifə �
 var TABS=[['leads','Sorğular'],['blog','Bloq'],['co','Məlumatlar'],['faq','Suallar'],['timeline','Mərhələlər'],['img','Şəkillər'],['set','Bölmələr və ayarlar']];
 var SITEURL=/nizami-?city\.az$/.test(location.hostname)?'/':'/nc/site.html';
 var LST={new:'Yeni',contacted:'Əlaqə saxlanılıb',done:'Bağlanıb',spam:'Spam'};
-var KIND={viewing:'Baxış',commercial:'Kommersiya',contact:'Əlaqə',callback:'Zəng sifarişi',unit:'Mənzil sorğusu',price:'Qiymət sorğusu'};
+var KIND={viewing:'Baxış',commercial:'Kommersiya',contact:'Əlaqə',callback:'Zəng sifarişi',unit:'Mənzil sorğusu',price:'Qiymət sorğusu',alert:'Xəbər ver (abunə)'};
 function kindT(k){k=String(k||'');if(k.indexOf('waitlist-')===0)return 'Gözləmə · Bina '+k.slice(9);return KIND[k]||k;}
 function E(s){return NC.esc(s==null?'':String(s));}
 
