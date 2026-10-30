@@ -1,9 +1,9 @@
 <!doctype html><html lang="az"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow"><title>Sayt idarəsi — Nizami City</title>
-<meta name="theme-color" content="#070c18"><link rel="icon" href="/assets/nc/logo.png"><link rel="apple-touch-icon" href="/assets/nc/apple-touch.png">
+<meta name="theme-color" content="#f4f5f0"><link rel="icon" href="/assets/nc/site/mark-olive.png"><link rel="apple-touch-icon" href="/assets/nc/apple-touch.png">
 <link rel="preconnect" href="https://avqchschbbltnnasabdm.supabase.co" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/nc/fonts/fonts.css">
 <link rel="stylesheet" href="/nc/nc.css?v=2">
 <style>
 .py-tabs{margin:4px 0 16px}
@@ -37,15 +37,95 @@
 .py-ov{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid var(--rule);font-size:13.5px}
 .py-ov s{color:var(--mut)}
 @media(max-width:640px){.py-post{grid-template-columns:64px 1fr}.py-post img,.py-post .ph{width:64px;height:48px}.py-post .act{grid-column:1/-1}.py-ov{grid-template-columns:1fr}}
+/* ===== LUX tipli admin qabığı, Nizami City saytının palitrası ===== */
+:root,:root[data-theme="light"],:root[data-theme="dark"]{--bg:#f4f5f0;--bg2:#f8f9f4;--card:#fff;--card2:#eef0e7;--ink:#1e241a;--ink2:#555d4c;--mut:#80877a;--rule:#e3e6dc;--rule2:#d3d8c8;--lime:#3f4d2c;--lime-hi:#556641;--lime-lo:#2f3a20;--on-lime:#fff;--brass:#b58a3c;--ok:#4f8a3d;--warn:#c08a2c;--bad:#b23b3b;--olive:#3f4d2c;--cream:#f3ecdc;--tint:#e9eedd;--f:'NC Text','NC Display',system-ui,-apple-system,'Segoe UI',sans-serif;color-scheme:light}
+html,body{background:var(--bg)}body:before{display:none}
+#app{display:grid;grid-template-columns:262px 1fr;min-height:100vh;max-width:none;padding:0}
+#app[hidden]{display:none}
+.ad-side{background:linear-gradient(180deg,#323f24,#222b18);color:#eef0e4;padding:22px 14px 18px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px;overflow:auto}
+.ad-brand{display:flex;align-items:center;gap:12px;padding:4px 10px 22px;text-decoration:none;color:#fff}
+.ad-brand img{width:42px;height:42px}
+.ad-brand b{display:block;font-size:19px;font-weight:600;letter-spacing:-.01em}
+.ad-brand small{display:block;font-size:10.5px;letter-spacing:.18em;color:#cbd6a8;font-weight:600;margin-top:2px}
+.ad-nav{display:flex;flex-direction:column;gap:3px}
+.ad-nav button,.ad-nav a{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:0;color:#d5dcc4;padding:11px 13px;border-radius:12px;font-size:14.5px;font-weight:500;text-decoration:none;transition:background .15s,color .15s}
+.ad-nav svg{width:19px;height:19px;flex:none}
+.ad-nav button:hover,.ad-nav a:hover{background:rgba(255,255,255,.07);color:#fff}
+.ad-nav button.on{background:var(--cream);color:var(--olive);box-shadow:0 12px 26px -14px rgba(0,0,0,.6)}
+.ad-nav small{margin-left:auto;min-width:20px;height:20px;line-height:20px;text-align:center;border-radius:10px;font-size:11px;font-weight:700;background:rgba(255,255,255,.12);color:#fff;padding:0 6px}
+.ad-nav small:empty{display:none}
+.ad-nav button[data-t=leads] small{background:#d9663e}
+.ad-nav button.on small{background:var(--olive);color:#fff}
+.ad-sep{font-size:10.5px;letter-spacing:.16em;color:#9fae82;font-weight:600;padding:16px 13px 6px}
+.ad-me{margin-top:auto;padding:12px 13px;border-radius:12px;background:rgba(255,255,255,.06);font-size:13px;line-height:1.35}
+.ad-me b{display:block;color:#fff;font-weight:600}.ad-me span{color:#b9c49f;font-size:12px}
+.ad-out{margin-top:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e8eddc;padding:11px;border-radius:12px;font-weight:600;font-size:13px;cursor:pointer}
+.ad-out:hover{background:rgba(255,255,255,.12)}
+.ad-main{padding:30px clamp(16px,3vw,44px) 80px;min-width:0;max-width:1240px}
+.ad-mob{display:none}
+.nc-title{padding:0 0 20px}
+.nc-title h1{font-size:clamp(26px,3.2vw,36px);font-weight:600;letter-spacing:-.025em}
+.nc-title h1 em{background:none;-webkit-background-clip:initial;background-clip:initial;color:var(--olive)}
+.nc-card{background:var(--card);border:1px solid var(--rule);border-radius:20px;box-shadow:0 1px 2px rgba(30,36,26,.04),0 8px 24px -14px rgba(30,36,26,.12)}
+.nc-card h3{font-size:18px;font-weight:600;letter-spacing:-.01em}
+.nc-kpi{background:var(--card);border:1px solid var(--rule);border-radius:18px}
+.nc-kpi b{font-size:30px;font-weight:600;letter-spacing:-.02em}
+.nc-tw{background:var(--card);border:1px solid var(--rule);border-radius:18px}
+.nc-in,.nc-sel,.nc-ta{background:#fff;border-color:var(--rule2)}
+.nc-in:focus,.nc-sel:focus,.nc-ta:focus{border-color:var(--lime-hi);box-shadow:0 0 0 4px rgba(85,102,65,.14)}
+.nc-b.pri{background:var(--olive);color:#fff}.nc-b.pri:hover{background:var(--lime-hi)}
+.py-tg.on{background:var(--olive)}
+.py-st.new{border-color:#d9663e;color:#b2482a}
+.py-pane{animation:adIn .25s}
+@keyframes adIn{from{opacity:0;transform:translateY(6px)}}
+.ad-pt{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:0 0 18px}
+.ad-pt h2{margin:0;font-size:24px;font-weight:600;letter-spacing:-.02em}.ad-pt p{margin:4px 0 0;color:var(--mut);font-size:13.5px}
+.ad-q{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:16px}
+.ad-q a,.ad-q button{display:flex;gap:12px;align-items:center;text-align:left;background:var(--card);border:1px solid var(--rule);border-radius:16px;padding:14px;text-decoration:none;color:var(--ink);cursor:pointer;font:inherit}
+.ad-q a:hover,.ad-q button:hover{border-color:var(--lime-hi)}
+.ad-q i{width:40px;height:40px;border-radius:12px;background:var(--tint);color:var(--olive);display:grid;place-items:center;flex:none;font-style:normal}
+.ad-q i svg{width:20px;height:20px}.ad-q b{display:block;font-size:14.5px}.ad-q span{font-size:12.5px;color:var(--mut)}
+.ad-rl{display:grid;gap:2px}.ad-rl div{display:grid;grid-template-columns:120px 1fr auto;gap:12px;padding:10px 4px;border-bottom:1px solid var(--rule);font-size:14px}.ad-rl div:last-child{border:0}
+.ad-rl small{color:var(--mut)}
+.nc-toast{background:var(--ink);color:#fff}
+@media(max-width:960px){
+ #app{grid-template-columns:1fr}
+ .ad-side{position:fixed;inset:0 auto 0 0;width:270px;z-index:80;transform:translateX(-102%);transition:transform .25s;height:100%}
+ body.ad-open .ad-side{transform:none}
+ body.ad-open .ad-bd{opacity:1;pointer-events:auto}
+ .ad-bd{position:fixed;inset:0;background:rgba(20,24,16,.45);z-index:79;opacity:0;pointer-events:none;transition:opacity .25s}
+ .ad-mob{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:40;background:rgba(244,245,240,.94);backdrop-filter:blur(12px);padding:10px 16px;border-bottom:1px solid var(--rule)}
+ .ad-mob button{width:40px;height:40px;border-radius:12px;border:1px solid var(--rule2);background:#fff;display:grid;place-items:center;color:var(--olive)}
+ .ad-mob img{width:30px;height:30px}.ad-mob b{font-size:16px}
+ .ad-main{padding:18px 16px 90px}
+ .ad-rl div{grid-template-columns:1fr;gap:2px}
+}
 </style>
 <script src="/assets/lux-auth.js?v=1790690641"></script>
 <script src="/nc/nc.js?v=2"></script>
 </head><body>
-<main class="nc-wrap" id="app" hidden>
- <div class="nc-title"><div><h1>Sayt <em>idarəsi</em></h1><p>nizami-city.az · bütün dəyişikliklər saytda dərhal görünür</p></div>
-  <div class="act"><a class="nc-b sm" id="viewBtn" target="_blank" rel="noopener">Sayta bax ↗</a><a class="nc-b sm pri" id="editBtn" target="_blank" rel="noopener">✏️ Saytda redaktə et</a></div></div>
- <div class="nc-seg py-tabs" id="tabs"></div>
+<div class="ad-bd" id="adBd"></div>
+<div id="app" hidden>
+ <aside class="ad-side" id="adSide">
+  <a class="ad-brand" id="adBrand" target="_blank" rel="noopener"><img src="/assets/nc/site/mark-cream.png" alt=""><span><b>Nizami City</b><small>SAYT İDARƏSİ</small></span></a>
+  <nav class="ad-nav" id="tabs"></nav>
+  <div class="ad-sep">SAYT</div>
+  <nav class="ad-nav"><a id="viewBtn" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Sayta bax</a><a id="editBtn" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg>Saytda redaktə et</a></nav>
+  <div class="ad-sep" id="adSysH" style="display:none">DAXİLİ SİSTEMLƏR</div>
+  <nav class="ad-nav" id="adSys"></nav>
+  <div class="ad-me" id="adMe"></div>
+  <button class="ad-out" type="button" onclick="NC.logout()">Çıxış</button>
+ </aside>
+ <div style="min-width:0">
+  <div class="ad-mob"><button type="button" id="adBurger" aria-label="Menyu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><img src="/assets/nc/site/mark-olive.png" alt=""><b id="adMobT">Panel</b></div>
+  <main class="ad-main">
+ <div class="nc-title"><div><h1 id="adT">Panel</h1><p id="adS">nizami-city.az · bütün dəyişikliklər saytda dərhal görünür</p></div></div>
 
+ <section class="py-pane" data-p="panel">
+  <div class="nc-kpis" id="pKpi" style="margin-bottom:16px"></div>
+  <div class="nc-card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><h3 style="margin:0">Son sorğular</h3><button class="nc-b sm" style="margin-left:auto" onclick="tab('leads')">Hamısı →</button></div><div class="ad-rl" id="pRec"></div></div>
+  <div class="ad-q" id="pQ"></div>
+ </section>
  <section class="py-pane" data-p="leads">
   <div class="nc-kpis" id="lKpi" style="margin-bottom:14px"></div>
   <div class="sb-ctl" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px"><select class="nc-sel" id="lSt" style="width:auto"><option value="">Bütün statuslar</option><option value="new">Yeni</option><option value="contacted">Əlaqə saxlanılıb</option><option value="done">Bağlanıb</option><option value="spam">Spam</option></select><input class="nc-in" id="lQ" placeholder="Ad, telefon, mənzil…" style="flex:1;min-width:180px"><button class="nc-b sm" onclick="leadsX()">Excel</button></div>
@@ -60,7 +140,7 @@
   <div class="nc-card"><h3>Əlaqə və əsas məlumatlar</h3><div class="nc-row" id="coF"></div></div>
   <div class="nc-card" style="margin-top:14px"><h3>Elan zolağı (saytın aşağısında)</h3>
    <div class="py-sw"><div><b>Elanı göstər</b><span>Məs. «Noyabr kampaniyası: 6 ay faizsiz»</span></div><button class="py-tg" id="bnOn"></button></div>
-   <div class="nc-row"><div class="nc-f"><label>Mətn</label><input class="nc-in" id="bnT"></div><div class="nc-f"><label>Düymə mətni</label><input class="nc-in" id="bnB" placeholder="Ətraflı"></div><div class="nc-f"><label>Link</label><input class="nc-in" id="bnU" placeholder="#kalkulyator və ya https://…"></div></div></div>
+   <div class="nc-row"><div class="nc-f"><label>Mətn</label><input class="nc-in" id="bnT"></div><div class="nc-f"><label>Düymə mətni</label><input class="nc-in" id="bnB" placeholder="Ətraflı"></div><div class="nc-f"><label>Link</label><input class="nc-in" id="bnU" placeholder="/menziller və ya https://…"></div></div></div>
   <div class="py-save"><button class="nc-b pri" onclick="saveCo()">Yadda saxla</button></div>
  </section>
 
@@ -87,10 +167,13 @@
   <div class="nc-card" style="margin-top:14px"><h3>Saytda edilmiş redaktələr</h3><div id="ovL"></div></div>
   <div class="py-save"><button class="nc-b pri" onclick="saveSet()">Yadda saxla</button></div>
  </section>
-</main>
+  </main>
+ </div>
+</div>
 <script>
 var SITE={},BLOG=null,DEF={},LEADS=[],TAB='leads',IMGK=[['front','Ana səhifə — əsas kadr (fasad)'],['tower_l','«Doqquz bina, bir həyət» — şaquli foto'],['aerial','Hazır binalar — 3D vizual (fonsuz PNG/WebP)'],['aerial_c','Qapalı həyət'],['street','Kommersiya qalereyası'],['tower_r','Fasad'],['entrance','Parkinq və təhlükəsizlik'],['corner','Ərazi (2,87 ha) — tam ekran foto']];
-var TABS=[['leads','Sorğular'],['blog','Bloq'],['co','Məlumatlar'],['faq','Suallar'],['timeline','Mərhələlər'],['img','Şəkillər'],['set','Bölmələr və ayarlar']];
+var TABS=[['panel','Panel'],['leads','Sorğular'],['blog','Bloq'],['co','Məlumatlar'],['faq','Suallar'],['timeline','Mərhələlər'],['img','Şəkillər'],['set','Bölmələr və ayarlar']];
+var TIC={"panel": "<rect x=\"3\" y=\"3\" width=\"7\" height=\"9\" rx=\"1.5\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"5\" rx=\"1.5\"/><rect x=\"14\" y=\"12\" width=\"7\" height=\"9\" rx=\"1.5\"/><rect x=\"3\" y=\"16\" width=\"7\" height=\"5\" rx=\"1.5\"/>", "leads": "<path d=\"M4 4h16v12H8l-4 4V4z\"/><path d=\"M8 9h8M8 13h5\"/>", "blog": "<path d=\"M4 4h13v16H6a2 2 0 0 1-2-2V4z\"/><path d=\"M17 8h3v10a2 2 0 0 1-2 2M8 8h5M8 12h5M8 16h5\"/>", "co": "<path d=\"M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2\"/>", "faq": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01\"/>", "timeline": "<path d=\"M4 6h16M4 12h10M4 18h6\"/><circle cx=\"18\" cy=\"12\" r=\"2\"/><circle cx=\"14\" cy=\"18\" r=\"2\"/>", "img": "<rect x=\"3\" y=\"4\" width=\"18\" height=\"16\" rx=\"2\"/><circle cx=\"9\" cy=\"10\" r=\"2\"/><path d=\"M21 16l-5-5-9 9\"/>", "set": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1\"/>"},TSUB={panel:'Ümumi baxış',leads:'Saytdan gələn müraciətlər: qiymət, baxış, zəng',blog:'Bloq yazıları',co:'Əlaqə məlumatları və elan zolağı',faq:'Tez-tez verilən suallar',timeline:'Mərhələlər və binaların statusu',img:'Saytın əsas şəkilləri',set:'Bölmələr, göstəricilər, xəritə və texniki rejim'};
 var SITEURL=/nizami-?city\.az$/.test(location.hostname)?'/':'/nc/site.html';
 var LST={new:'Yeni',contacted:'Əlaqə saxlanılıb',done:'Bağlanıb',spam:'Spam'};
 var KIND={viewing:'Baxış',commercial:'Kommersiya',contact:'Əlaqə',callback:'Zəng sifarişi',unit:'Mənzil sorğusu',price:'Qiymət sorğusu',alert:'Xəbər ver (abunə)'};
@@ -98,18 +181,30 @@ function kindT(k){k=String(k||'');if(k.indexOf('waitlist-')===0)return 'Gözləm
 function E(s){return NC.esc(s==null?'':String(s));}
 
 function start(){NC.$('viewBtn').href=SITEURL;NC.$('editBtn').href=SITEURL+'?edit=1';
- NC.$('tabs').innerHTML=TABS.map(function(t){return '<button data-t="'+t[0]+'">'+t[1]+'<small id="tc_'+t[0]+'"></small></button>';}).join('');
+ NC.$('tabs').innerHTML=TABS.map(function(t){return '<button type="button" data-t="'+t[0]+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(TIC[t[0]]||'')+'</svg>'+t[1]+'<small id="tc_'+t[0]+'"></small></button>';}).join('');
+ NC.$('adBrand').href=SITEURL;adShell();
  NC.$('tabs').querySelectorAll('button').forEach(function(b){b.onclick=function(){tab(b.dataset.t);};});
  var q=new URLSearchParams(location.search).get('t');
  Promise.all([NC.kv('nc_site'),NC.kv('nc_blog'),fetch('/nc/site-defaults.json?v='+Date.now()).then(function(r){return r.json();}).catch(function(){return {};})]).then(function(r){
   SITE=(r[0]&&r[0].value)||{};BLOG=r[1]&&r[1].value;DEF=r[2]||{};NC.$('app').hidden=false;
-  tab(q||(NC.can('nc_site')?'leads':'leads'));loadLeads();drawAll();
+  tab(q||'panel');loadLeads();drawAll();
  }).catch(function(e){NC.toast('Yüklənmədi: '+e.message);});
 }
-function tab(t){TAB=t;document.querySelectorAll('.py-pane').forEach(function(p){p.classList.toggle('on',p.dataset.p===t);});NC.$('tabs').querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t);});}
+function tab(t){TAB=t;var tt=TABS.find(function(x){return x[0]===t;});NC.$('adT').textContent=tt?tt[1]:'Panel';NC.$('adMobT').textContent=tt?tt[1]:'Panel';NC.$('adS').textContent=TSUB[t]||'';document.body.classList.remove('ad-open');scrollTo(0,0);if(t==='panel')drawPanel();document.querySelectorAll('.py-pane').forEach(function(p){p.classList.toggle('on',p.dataset.p===t);});NC.$('tabs').querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t);});}
 function drawAll(){drawBlog();drawCo();['faq','timeline','infra','gal'].forEach(drawList);drawBld();drawImgs();drawSet();}
 async function fresh(){var r=await NC.kv('nc_site');return (r&&r.value)||{};}
 async function put(fn){try{var V=await fresh();fn(V);await NC.kvSave('nc_site',V);SITE=V;NC.toast('Yadda saxlanıldı ✓');drawAll();}catch(e){NC.toast('Xəta: '+e.message);}}
+
+/* ---------- qabıq: yan menyu, istifadəçi, daxili sistemlər ---------- */
+function adShell(){var m=NC.me||{};NC.$('adMe').innerHTML='<b>'+E(m.full_name||m.email||'')+'</b><span>'+E(m.email||'')+'</span>';
+ var SYS=[['satis','Satış lövhəsi',['nc_sales','nc_sales_edit','nc_contracts'],'<path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-5h6v5"/>'],['muqavile','Müqavilələr',['nc_contracts'],'<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h6M9 17h6"/>'],['komendant','Komendantlıq',['nc_komendant','nc_komendant_kassa'],'<path d="M3 21h18M5 21V8l7-5 7 5v13"/><path d="M10 21v-6h4v6"/>']].filter(function(x){return NC.can(x[2]);});
+ NC.$('adSys').innerHTML=SYS.map(function(x){return '<a href="'+NC.base()+x[0]+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+x[3]+'</svg>'+x[1]+'</a>';}).join('');NC.$('adSysH').style.display=SYS.length?'':'none';
+ NC.$('adBurger').onclick=function(){document.body.classList.toggle('ad-open');};NC.$('adBd').onclick=function(){document.body.classList.remove('ad-open');};}
+function drawPanel(){if(!NC.$('pKpi'))return;var n=LEADS.filter(function(x){return x.status==='new';}).length,wk=Date.now()-7*864e5,off=Object.keys(SITE.off||{}).filter(function(k){return SITE.off[k];}).length;
+ NC.$('pKpi').innerHTML='<div class="nc-kpi"><b style="color:#b2482a">'+n+'</b><span>yeni sorğu</span></div><div class="nc-kpi"><b>'+LEADS.filter(function(x){return new Date(x.created_at)>wk;}).length+'</b><span>son 7 gündə sorğu</span></div><div class="nc-kpi"><b>'+posts().filter(function(p){return p.pub!==false;}).length+'</b><span>bloq yazısı</span></div><div class="nc-kpi"><b>'+(SITE.showPrice?'Açıq':'Gizli')+'</b><span>qiymətlər</span></div><div class="nc-kpi"><b>'+(SITE.maint?'Bağlı':'Aktiv')+'</b><span>sayt'+(off?' · '+off+' bölmə söndürülüb':'')+'</span></div>';
+ NC.$('pRec').innerHTML=LEADS.slice(0,6).map(function(x){var d=new Date(x.created_at);return '<div><small>'+d.toLocaleDateString('az-AZ')+' '+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'})+'</small><span><b>'+E(x.name)+'</b> · <a href="tel:'+E(String(x.phone||'').replace(/[^\d+]/g,''))+'">'+E(x.phone)+'</a><br><small>'+E(kindT(x.kind))+(x.msg?' — '+E(String(x.msg).slice(0,90)):'')+'</small></span><small>'+E(LST[x.status]||x.status)+'</small></div>';}).join('')||'<p class="mut" style="font-size:13px;margin:6px 0">Hələ sorğu yoxdur</p>';
+ var Q=[['blog','Yeni bloq yazısı','Xəbər, kampaniya, məqalə','<path d="M12 5v14M5 12h14"/>','postEd(-1)'],['img','Şəkilləri dəyiş','Ana səhifə və bölmə şəkilləri','<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>','tab(\'img\')'],['co','Əlaqə və elan zolağı','Telefon, ünvan, kampaniya zolağı','<path d="M4 6h16v10H8l-4 4z"/>','tab(\'co\')'],['set','Saytda nə göstərilsin','Qiymət, status, xəritə','<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>','tab(\'set\')']];
+ NC.$('pQ').innerHTML=Q.map(function(q){return '<button type="button" onclick="'+q[4]+'"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+q[3]+'</svg></i><span><b>'+q[1]+'</b><span>'+q[2]+'</span></span></button>';}).join('')+'<a href="'+SITEURL+'?edit=1" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></i><span><b>Saytda redaktə et</b><span>Mətnləri birbaşa saytda dəyiş</span></span></a>';}
 
 /* ---------- sorğular ---------- */
 function loadLeads(){NC.sb.from('nc_leads').select('*').order('id',{ascending:false}).limit(500).then(function(r){if(r.error){NC.toast(r.error.message);return;}LEADS=r.data||[];drawLeads();});}
@@ -120,6 +215,7 @@ function drawLeads(){var st=NC.$('lSt').value,q=NC.$('lQ').value.trim().toLowerC
  NC.$('lKpi').innerHTML='<div class="nc-kpi"><b style="color:var(--lime)">'+n+'</b><span>yeni</span></div><div class="nc-kpi"><b>'+LEADS.filter(function(x){return new Date(x.created_at)>wk;}).length+'</b><span>son 7 gün</span></div><div class="nc-kpi"><b>'+LEADS.length+'</b><span>cəmi</span></div>';
  NC.$('lBody').innerHTML=L.map(function(x){var d=new Date(x.created_at);
   return '<tr><td class="num">'+d.toLocaleDateString('az-AZ')+'<small>'+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'})+'</small></td><td>'+E(kindT(x.kind))+'</td><td><b>'+E(x.name)+'</b><small><a href="tel:'+E(String(x.phone||'').replace(/[^\d+]/g,''))+'">'+E(x.phone)+'</a>'+(x.email?' · '+E(x.email):'')+'</small></td><td>'+E(x.unit||'')+'<small>'+E(x.slot||'')+'</small></td><td style="max-width:280px">'+E(x.msg||'')+(x.data&&Object.keys(x.data).filter(function(k){return k!=='page';}).length?'<small>'+E(Object.keys(x.data).filter(function(k){return k!=='page';}).map(function(k){return k+': '+x.data[k];}).join(' · '))+'</small>':'')+'</td><td><select class="py-st '+x.status+'" data-id="'+x.id+'">'+Object.keys(LST).map(function(k){return '<option value="'+k+'"'+(k===x.status?' selected':'')+'>'+LST[k]+'</option>';}).join('')+'</select></td></tr>';}).join('')||'<tr><td colspan="6" class="nc-empty">Sorğu yoxdur</td></tr>';
+ if(TAB==='panel')drawPanel();
  NC.$('lBody').querySelectorAll('.py-st').forEach(function(s){s.onchange=function(){var id=+s.dataset.id;NC.sb.from('nc_leads').update({status:s.value,handled_by:NC.me&&NC.me.id,updated_at:new Date().toISOString()}).eq('id',id).then(function(r){if(r.error)return NC.toast(r.error.message);var x=LEADS.find(function(l){return l.id===id;});if(x)x.status=s.value;drawLeads();});};});
 }
 NC.$('lSt').onchange=drawLeads;NC.$('lQ').oninput=drawLeads;
@@ -204,7 +300,7 @@ function rmImg(k){put(function(V){if(V.img)delete V.img[k];});}
 /* ---------- bölmələr / ayarlar ---------- */
 var OFF={};
 function drawSet(){OFF=Object.assign({},SITE.off||{});
- NC.$('pgF').innerHTML=(DEF.pages||[]).map(function(p){return '<div class="py-sw"><div><b>'+p[1]+'</b><span>#'+p[0]+'</span></div><button class="py-tg'+(OFF[p[0]]?'':' on')+'" data-pg="'+p[0]+'"></button></div>';}).join('');
+ NC.$('pgF').innerHTML=(DEF.pages||[]).map(function(p){return '<div class="py-sw"><div><b>'+p[1]+'</b><span>nizami-city.az/'+(p[0]==='kalkulyator'?'odenis':p[0])+'</span></div><button class="py-tg'+(OFF[p[0]]?'':' on')+'" data-pg="'+p[0]+'"></button></div>';}).join('');
  NC.$('pgF').querySelectorAll('[data-pg]').forEach(function(b){b.onclick=function(){b.classList.toggle('on');OFF[b.dataset.pg]=!b.classList.contains('on');};});
  NC.$('mtOn').classList.toggle('on',!!SITE.maint);NC.$('prOn').classList.toggle('on',!!SITE.showPrice);NC.$('stOn').classList.toggle('on',!!SITE.showStatus);NC.$('dlOn').classList.toggle('on',!!SITE.showDelivery);NC.$('skOn').classList.toggle('on',!!SITE.showStock);NC.$('mtT').value=SITE.maintText||'';NC.$('geoIn').value=SITE.geo||'';
  var T=SITE.txt||{},H=SITE.hide||{},rows=Object.keys(T).map(function(k){return '<div class="py-ov"><s>'+E(k)+'</s><span>'+E(T[k])+'</span><button class="nc-b sm" onclick="rmOv(\'txt\','+JSON.stringify(k).replace(/"/g,'&quot;')+')">Geri qaytar</button></div>';}).concat(Object.keys(H).filter(function(k){return H[k];}).map(function(k){return '<div class="py-ov"><span>Gizlədilmiş bölmə</span><span class="mut">'+E(k.replace(':',' · bölmə #'))+'</span><button class="nc-b sm" onclick="rmOv(\'hide\','+JSON.stringify(k).replace(/"/g,'&quot;')+')">Göstər</button></div>';}));
@@ -213,7 +309,6 @@ NC.$('mtOn').onclick=function(){this.classList.toggle('on');};['prOn','stOn','dl
 function rmOv(g,k){put(function(V){if(V[g])delete V[g][k];});}
 function saveSet(){put(function(V){var o={};Object.keys(OFF).forEach(function(k){if(OFF[k])o[k]=true;});V.off=o;V.maint=NC.$('mtOn').classList.contains('on');V.showPrice=NC.$('prOn').classList.contains('on');V.showStatus=NC.$('stOn').classList.contains('on');V.showDelivery=NC.$('dlOn').classList.contains('on');V.showStock=NC.$('skOn').classList.contains('on');V.maintText=NC.$('mtT').value.trim();V.geo=NC.$('geoIn').value.trim();});}
 
-NC.header('sayt','Sayt idarəsi');
-NC.auth({perms:['nc_site'],title:'Sayt idarəsi',onReady:start});
+luxAuth({perms:['nc_site'],title:'Sayt idarəsi',sub:'Nizami City hesabınızla daxil olun',logo:'/assets/nc/site/mark-olive.png',accent:'#3f4d2c',noAdminLink:true,onReady:function(sb,me,tok){NC.sb=sb;NC.me=me;NC.tok=tok;start();}});
 </script>
 </body></html>
