@@ -56,6 +56,8 @@ async function nizamiHost(ctx, url) {
   if (url.hostname.startsWith('www.')) { url.hostname = url.hostname.slice(4); return Response.redirect(url.toString(), 301); }
   const app = p.slice(1);
   if (NC_APPS.has(app)) return noindex(await ctx.env.ASSETS.fetch(new Request(new URL('/nc/' + app, url).toString(), ctx.request)));
+  // ictimai sayt yalnız kök ünvanda: /nc/site, /nc/site-v3 → / (# hissəsi brauzerdə qalır)
+  if (p === '/nc' || p === '/nc/site' || p === '/nc/site-v3') return Response.redirect(url.origin + '/' + url.search, 301);
   if (p.startsWith('/nc/') || p.startsWith('/assets/') || p === '/auth-ok') return ctx.next();
   if (p === '/favicon.ico' || p === '/apple-touch-icon.png') return ctx.env.ASSETS.fetch(new Request(new URL('/assets/nc/apple-touch.png', url).toString()));
   if (p === '/robots.txt') return new Response('User-agent: *\nAllow: /$\nDisallow: /nc/\nDisallow: /satis\nDisallow: /kalkulyator\nDisallow: /muqavile\nDisallow: /komendant\nDisallow: /sayt\nSitemap: https://nizami-city.az/sitemap.xml\n', { headers: { 'Content-Type': 'text/plain' } });
