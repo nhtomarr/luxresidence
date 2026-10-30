@@ -75,6 +75,7 @@
 
  <section class="py-pane" data-p="set">
   <div class="nc-card"><h3>Bölmələr — yandır / söndür</h3><div id="pgF"></div></div>
+  <div class="nc-card" style="margin-top:14px"><h3>Qiymətlər</h3><div class="py-sw"><div><b>Qiymətləri saytda göstər</b><span>Söndürülü olanda saytda heç bir qiymət görünmür, kalkulyator gizlənir — hər yerdə «Qiymət sorğu ilə» və sorğu forması çıxır.</span></div><button class="py-tg" id="prOn"></button></div></div>
   <div class="nc-card" style="margin-top:14px"><h3>Texniki rejim</h3>
    <div class="py-sw"><div><b>Saytı bağla (texniki işlər)</b><span>Ziyarətçilər yalnız mesaj görür. Redaktə rejimi işləyir.</span></div><button class="py-tg" id="mtOn"></button></div>
    <div class="nc-f"><label>Mesaj</label><input class="nc-in" id="mtT" placeholder="Sayt yenilənir. Tezliklə qayıdacağıq."></div></div>
@@ -87,7 +88,7 @@ var SITE={},BLOG=null,DEF={},LEADS=[],TAB='leads',IMGK=[['front','Ana səhifə �
 var TABS=[['leads','Sorğular'],['blog','Bloq'],['co','Məlumatlar'],['faq','Suallar'],['timeline','Mərhələlər'],['img','Şəkillər'],['set','Bölmələr və ayarlar']];
 var SITEURL=/nizami-?city\.az$/.test(location.hostname)?'/':'/nc/site.html';
 var LST={new:'Yeni',contacted:'Əlaqə saxlanılıb',done:'Bağlanıb',spam:'Spam'};
-var KIND={viewing:'Baxış',commercial:'Kommersiya',contact:'Əlaqə',callback:'Zəng sifarişi',unit:'Mənzil sorğusu'};
+var KIND={viewing:'Baxış',commercial:'Kommersiya',contact:'Əlaqə',callback:'Zəng sifarişi',unit:'Mənzil sorğusu',price:'Qiymət sorğusu'};
 function kindT(k){k=String(k||'');if(k.indexOf('waitlist-')===0)return 'Gözləmə · Bina '+k.slice(9);return KIND[k]||k;}
 function E(s){return NC.esc(s==null?'':String(s));}
 
@@ -200,12 +201,12 @@ var OFF={};
 function drawSet(){OFF=Object.assign({},SITE.off||{});
  NC.$('pgF').innerHTML=(DEF.pages||[]).map(function(p){return '<div class="py-sw"><div><b>'+p[1]+'</b><span>#'+p[0]+'</span></div><button class="py-tg'+(OFF[p[0]]?'':' on')+'" data-pg="'+p[0]+'"></button></div>';}).join('');
  NC.$('pgF').querySelectorAll('[data-pg]').forEach(function(b){b.onclick=function(){b.classList.toggle('on');OFF[b.dataset.pg]=!b.classList.contains('on');};});
- NC.$('mtOn').classList.toggle('on',!!SITE.maint);NC.$('mtT').value=SITE.maintText||'';
+ NC.$('mtOn').classList.toggle('on',!!SITE.maint);NC.$('prOn').classList.toggle('on',!!SITE.showPrice);NC.$('mtT').value=SITE.maintText||'';
  var T=SITE.txt||{},H=SITE.hide||{},rows=Object.keys(T).map(function(k){return '<div class="py-ov"><s>'+E(k)+'</s><span>'+E(T[k])+'</span><button class="nc-b sm" onclick="rmOv(\'txt\','+JSON.stringify(k).replace(/"/g,'&quot;')+')">Geri qaytar</button></div>';}).concat(Object.keys(H).filter(function(k){return H[k];}).map(function(k){return '<div class="py-ov"><span>Gizlədilmiş bölmə</span><span class="mut">'+E(k.replace(':',' · bölmə #'))+'</span><button class="nc-b sm" onclick="rmOv(\'hide\','+JSON.stringify(k).replace(/"/g,'&quot;')+')">Göstər</button></div>';}));
  NC.$('ovL').innerHTML=rows.join('')||'<p class="mut" style="font-size:13px;margin:0">Hələ redaktə yoxdur. «✏️ Saytda redaktə et» ilə saytın istənilən mətnini dəyişə, bölmələri gizlədə, şəkilləri əvəz edə bilərsiniz.</p>';}
-NC.$('mtOn').onclick=function(){this.classList.toggle('on');};
+NC.$('mtOn').onclick=function(){this.classList.toggle('on');};NC.$('prOn').onclick=function(){this.classList.toggle('on');};
 function rmOv(g,k){put(function(V){if(V[g])delete V[g][k];});}
-function saveSet(){put(function(V){var o={};Object.keys(OFF).forEach(function(k){if(OFF[k])o[k]=true;});V.off=o;V.maint=NC.$('mtOn').classList.contains('on');V.maintText=NC.$('mtT').value.trim();});}
+function saveSet(){put(function(V){var o={};Object.keys(OFF).forEach(function(k){if(OFF[k])o[k]=true;});V.off=o;V.maint=NC.$('mtOn').classList.contains('on');V.showPrice=NC.$('prOn').classList.contains('on');V.maintText=NC.$('mtT').value.trim();});}
 
 NC.header('sayt','Sayt idarəsi');
 NC.auth({perms:['nc_site'],title:'Sayt idarəsi',onReady:start});

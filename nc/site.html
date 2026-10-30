@@ -7,7 +7,7 @@
 <meta name="description" content="Nizami City: Yasamalda, Nizami metrosunun yanında altı bina və avtomobilsiz qapalı həyət. Satışdakı mənzillər, qiymətlər, 6 ay faizsiz daxili kredit, baxışa yazılış.">
 <link rel="canonical" href="https://nizami-city.az/">
 <meta property="og:title" content="Nizami City — Yasamalda qapalı həyətli yaşayış kompleksi">
-<meta property="og:description" content="Altı bina, bir qapalı həyət. Mənzillər 3 800 ₼/m²-dən.">
+<meta property="og:description" content="Altı bina, bir qapalı həyət. 6 ay faizsiz daxili kredit.">
 <meta property="og:image" content="https://nizami-city.az/assets/nc/site/front-1280.webp">
 <meta name="theme-color" content="#141712">
 <link rel="icon" href="/assets/nc/logo.png"><link rel="apple-touch-icon" href="/assets/nc/apple-touch.png">
@@ -765,8 +765,8 @@ window.NC = (function () {
   const FAQ = [
     ['Mənzillər təmirlidir?', 'Hazır binalarda həm təmirli, həm təmirsiz mənzillər var. Tikilən binalarda mənzillər təmirsiz, sərbəst planla təhvil verilir.'],
     ['Hansı binalar hazırdır?', 'A, B və C binaları təhvil verilib. E, F və G binalarının təhvili ' + CO.delivery + '-ci ilə planlaşdırılır.'],
-    ['Hansı ödəniş variantları var?', 'Nağd ödəniş, daxili kredit (6 ay faizsiz, 12 və 24 ay) və ya ipoteka. Saytdakı kalkulyatorda öz variantınızı hesablayın.'],
-    ['Kvadratmetr qiyməti nə qədərdir?', 'Qiymətlər ' + CO.priceFrom.toLocaleString('ru').replace(/,/g,' ') + ' ₼/m²-dən başlayır: tikilən binalarda ' + P_KOT + ', hazır binalarda təmirsiz ' + P_TS + ', təmirli ' + P_TL + ' ₼/m².'],
+    ['Hansı ödəniş variantları var?', 'Nağd ödəniş, daxili kredit (6 ay faizsiz, 12 və 24 ay) və ya ipoteka. Dəqiq şərtləri satış meneceri ilə dəqiqləşdirin.'],
+    ['Kvadratmetr qiyməti nə qədərdir?', !SITE.showPrice ? 'Qiymət mənzilin binasından, mərtəbəsindən və vəziyyətindən asılıdır. Saytda «Qiyməti öyrən» formasını doldurun və ya *0788 nömrəsinə zəng edin — satış meneceri dəqiq qiyməti desin.' : 'Qiymətlər ' + CO.priceFrom.toLocaleString('ru').replace(/,/g,' ') + ' ₼/m²-dən başlayır: tikilən binalarda ' + P_KOT + ', hazır binalarda təmirsiz ' + P_TS + ', təmirli ' + P_TL + ' ₼/m².'],
     ['Parkinq var?', 'Bəli, kompleksdə 2 səviyyəli yeraltı parkinq var.'],
     ['Kommersiya sahələri satılır?', 'Bəli, binaların birinci mərtəbələrində qeyri-yaşayış sahələri satışdadır. Kommersiya bölməsindən sorğu göndərin.'],
     ['Kompleks harada yerləşir?', 'Yasamal rayonu, Nizami m/s, Cəfər Cabbarlı küçəsi 31 — Nizami metrosuna yaxın.'],
@@ -842,6 +842,10 @@ const fmt = n => Math.round(+n || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g,
 const fm2 = n => (Math.round((+n || 0) * 100) / 100).toString().replace('.', ',');
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const OFF = window.NC_OFF || {};
+// Qiymətlər: paneldən «Qiymətləri göstər» yandırılmayıbsa gizlidir — yalnız sorğu ilə
+const HP = !(((window.NC_REMOTE || {}).site || {}).showPrice);
+if (HP) OFF.kalkulyator = true;
+const PRQ = 'Sorğu ilə';
 const AR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>';
 const TERMS = (((window.NC_REMOTE || {}).cfg || {}).terms || [{ months: 6, surcharge: 0, enabled: true }, { months: 12, surcharge: 200, enabled: true }]).filter(t => t.enabled !== false && +t.months > 0).map(t => ({ m: +t.months, s: +t.surcharge || 0 })).sort((a, b) => a.m - b.m);
 const SUR = m => (TERMS.find(t => t.m === m) || { s: 0 }).s;
@@ -866,7 +870,7 @@ const lines = (arr, cls = '') => arr.map(t => `<span class="ln ${cls}"><span>${t
 const crumbs = (...a) => `<nav class="crumbs" aria-label="Yol"><a href="#home">Ana səhifə</a>${a.map(([t, h]) => `<span aria-hidden="true">/</span>${h ? `<a href="#${h}">${t}</a>` : `<span>${t}</span>`}`).join('')}</nav>`;
 const pHead = (title, sub, paper, extra = '') => `<section class="ph-h w ${paper ? 'paper' : 'f0'}">${crumbs([title])}<div class="row2"><h1 class="d h1" data-r>${title}</h1>${extra}</div>${sub ? `<p class="lead" style="margin-top:28px" data-r>${sub}</p>` : ''}</section>`;
 function unitRow(u) {
-  return `<a class="row" href="#menzil-${u.id}"><span class="c1"><b>${roomsT(u.r)}, ${fm2(u.a)} m²</b><small class="mu sm">${bLbl(u)} · ${ord(u.f)} mərtəbə</small></span><span class="c2 mu">${bLbl(u)}</span><span class="c3 mu">${ord(u.f)} mərtəbə</span><span class="pr num">${fmt(u.price)} ₼</span>${AR}</a>`;
+  return `<a class="row" href="#menzil-${u.id}"><span class="c1"><b>${roomsT(u.r)}, ${fm2(u.a)} m²</b><small class="mu sm">${bLbl(u)} · ${ord(u.f)} mərtəbə</small></span><span class="c2 mu">${bLbl(u)}</span><span class="c3 mu">${ord(u.f)} mərtəbə</span><span class="pr num">${HP ? PRQ : fmt(u.price) + ' ₼'}</span>${AR}</a>`;
 }
 
 /* ---------- forma ---------- */
@@ -935,6 +939,23 @@ function bindCalc(root) {
 }
 function tween(el, to) { const from = +(el.dataset.v || 0); el.dataset.v = to; if (RM || !window.gsap) { el.textContent = fmt(to); return; } const o = { v: from }; gsap.to(o, { v: to, duration: .7, ease: 'power3.out', onUpdate: () => el.textContent = fmt(o.v) }); }
 
+/* ---------- qiymət sorğusu (qiymətlər gizli olanda) ---------- */
+function priceBlock(u) {
+  return `<div class="visit"><div class="info"><h2 class="d h2">${lines(u ? ['Bu mənzilin', 'qiyməti'] : ['Qiyməti', 'öyrənin'])}</h2>
+    <p class="lead" data-r>${u ? 'Nömrənizi yazın — satış meneceri bu mənzilin qiymətini və ödəniş şərtlərini sizə zəng edib desin.' : 'Qiymət mənzilin binasından, mərtəbəsindən və vəziyyətindən asılıdır. Nömrənizi yazın — satış meneceri sizə uyğun mənzilləri və qiymətləri desin.'}</p>
+    <p class="p" data-r>${TERMS.length ? TERMS[0].m + ' ay faizsiz daxili kredit' + (TERMS.length > 1 ? ', ' + TERMS.slice(1).map(t => t.m).join(' və ') + ' ay müddətinə də' : '') + ' mümkündür. ' : ''}Zəng: <a href="tel:${esc(CO.short)}">${esc(CO.short)}</a></p></div>
+    <div data-r><form class="frm" id="pqf" novalidate>
+      <div class="fld"><label for="pqN">Adınız</label><input class="in" id="pqN" name="name" autocomplete="name"><div class="err" data-e="name"></div></div>
+      <div class="fld"><label for="pqP">Telefon</label><input class="in" id="pqP" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="050 000 00 00"><div class="err" data-e="phone"></div></div>
+      ${u ? `<input type="hidden" name="unit" value="${esc(u.id)}">` : `<div class="fld"><span>Neçə otaq?</span><div class="chips" data-k="r">${['1', '2', '3', '4+'].map((t, i) => `<button type="button" data-v="${t}" class="${i === 1 ? 'on' : ''}">${t} otaq</button>`).join('')}</div></div>`}
+      <div><button class="btn" type="submit">Qiyməti öyrən ${AR}</button></div></form></div></div>`;
+}
+function bindPrice(root, u) {
+  const f = $('#pqf', root); if (!f) return;
+  $$('.chips', f).forEach(c => c.onclick = e => { const b = e.target.closest('button'); if (!b) return; $$('button', c).forEach(x => x.classList.toggle('on', x === b)); });
+  bindForm(f, 'price', () => u ? { msg: 'Qiymət sorğusu: ' + bLbl(u) + ', ' + ord(u.f) + ' mərtəbə, ' + roomsT(u.r) + ', ' + fm2(u.a) + ' m²' } : { msg: 'Qiymət sorğusu: ' + (($('[data-k=r] .on', f) || {}).dataset || {}).v + ' otaqlı' }, d => `${esc(d.name)}, sorğunuz qəbul olundu. Satış meneceri qısa zamanda zəng edib qiyməti deyəcək.`);
+}
+
 /* ---------- mənzil seçici ---------- */
 const SELST = { r: 0, ph: 'all' };
 function selBlock() {
@@ -954,7 +975,7 @@ function bindSel(root) {
     const a0 = Math.min(...L.map(u => u.a)), a1 = Math.max(...L.map(u => u.a)), p0 = minPrice(L), t = TERMS[0];
     const cheap = L[0], mon = t ? cheap.a * (cheap.ppm + t.s) / 2 / t.m : 0;
     R.innerHTML = `<div class="big"><b class="num" id="sN">${L.length}</b><span>mənzil<br>satışda</span></div>
-      <div class="ln2"><div><small>Sahə</small>${fm2(a0)}–${fm2(a1)} m²</div><div><small>Qiymət</small>${fmt(p0)} ₼-dən</div>${t ? `<div><small>50% ilkin, ${t.m} ay${t.s ? '' : ' faizsiz'}</small>ayda ${fmt(mon)} ₼-dən</div>` : ''}</div>
+      <div class="ln2"><div><small>Sahə</small>${fm2(a0)}–${fm2(a1)} m²</div>${HP ? `<div><small>Qiymət</small>sorğu ilə</div>${t ? `<div><small>Ödəniş</small>${t.m} ay faizsiz daxili kredit</div>` : ''}` : `<div><small>Qiymət</small>${fmt(p0)} ₼-dən</div>${t ? `<div><small>50% ilkin, ${t.m} ay${t.s ? '' : ' faizsiz'}</small>ayda ${fmt(mon)} ₼-dən</div>` : ''}`}</div>
       <div class="rows">${L.slice(0, 4).map(unitRow).join('')}</div>
       <div><a class="btn ol" href="#menziller" id="sAll">Bütün ${L.length} mənzil ${AR}</a></div>`;
     $('#sAll', R).onclick = () => { resetF(); F.r = SELST.r; F.ph = SELST.ph; };
@@ -1055,7 +1076,7 @@ pages.home = () => {
   <section class="hero" id="hero"><div class="hero-m">${pic('front', 'Nizami City: küçə fasadı və həyətə giriş portalı', { eager: true })}</div><div class="hero-s t"></div><div class="hero-s"></div>
     <div class="hero-c"><div class="hero-row"><div class="hero-l"><p class="lead hx">Yasamalda, Nizami metrosunun yanında: altı bina və avtomobilsiz qapalı həyət.</p>
       <div class="hero-act hx"><a class="btn" href="#menziller">Mənzil seç ${AR}</a><a class="lk" href="#visit">Baxışa yazıl</a></div></div>
-      <div class="hero-f hx"><b class="num">${fmt(CO.priceFrom)} ₼/m²-dən</b><span>${t ? '50% ilkin ödənişlə ' + t.m + ' ay faizsiz' : 'daxili kredit'}</span></div></div>
+      <div class="hero-f hx">${HP ? `<b>${t ? t.m + ' ay faizsiz' : 'Daxili kredit'}</b><span>daxili kredit · qiymət sorğu ilə</span>` : `<b class="num">${fmt(CO.priceFrom)} ₼/m²-dən</b><span>${t ? '50% ilkin ödənişlə ' + t.m + ' ay faizsiz' : 'daxili kredit'}</span>`}</div></div>
       <h1 class="d hero-t"><span class="ln"><span>Nizami</span></span><span class="ln"><span>City</span></span></h1></div></section>
   <section class="sec w paper"><div class="intro"><h2 class="d h2">${lines(['Altı bina,', 'bir həyət'])}</h2>
     <div class="ph clip">${pic('tower_l', 'Nizami City: künc bina, kommersiya mərtəbəsi', { cls: 'par', sizes: '(max-width:860px) 80vw, 42vw' })}</div>
@@ -1066,12 +1087,12 @@ pages.home = () => {
   <section class="sec w paper">${selBlock()}</section>
   <section class="sec w f0">${featBlock()}</section>
   ${statBlock()}
-  <section class="sec w paper"><div class="pay"><div class="tx"><h2 class="d h2">${lines(['Ödənişi', 'özünüz qurun'])}</h2><p class="lead" data-r>${TERMS.map(t => t.m + ' ay' + (t.s ? ' (+' + t.s + ' ₼/m²)' : ' faizsiz')).join(', ')} daxili kredit və ya ipoteka.</p><div data-r><a class="lk" href="#kalkulyator">Ətraflı kalkulyator ${AR}</a></div></div>${calcBlock()}</div></section>
+  ${HP ? `<section class="sec w paper" id="prq">${priceBlock()}</section>` : ''}${HP ? '' : `<section class="sec w paper"><div class="pay"><div class="tx"><h2 class="d h2">${lines(['Ödənişi', 'özünüz qurun'])}</h2><p class="lead" data-r>${TERMS.map(t => t.m + ' ay' + (t.s ? ' (+' + t.s + ' ₼/m²)' : ' faizsiz')).join(', ')} daxili kredit və ya ipoteka.</p><div data-r><a class="lk" href="#kalkulyator">Ətraflı kalkulyator ${AR}</a></div></div>${calcBlock()}</div></section>`}
   <section class="sec w f1">${locBlock()}</section>
   ${OFF.bloq || !BLOG.length ? '' : `<section class="sec w paper"><div class="bl-h"><h2 class="d h2">${lines(['Bloq'])}</h2><a class="lk" href="#bloq" data-r>Bütün yazılar ${AR}</a></div><div class="posts">${posts().slice(0, 3).map(postRow).join('')}</div></section>`}
   <section class="sec w f0">${faqBlock(6)}</section>
   <section class="sec w paper" id="visit">${visitBlock()}</section>`,
-    mount(root) { bindScene(root); bindMp(root); bindSel(root); bindCalc(root); bindVisit(root); }
+    mount(root) { bindScene(root); bindMp(root); bindSel(root); bindCalc(root); bindPrice(root); bindVisit(root); }
   };
 };
 pages.binalar = () => ({
@@ -1096,7 +1117,7 @@ pages.bina = id => {
       <div><div class="cnt"><h2 class="d h3" id="flT"></h2><span class="mu sm"><span class="pill"><i class="st-w"></i>Bron</span> &nbsp; Satılmış mənzillər solğun göstərilir</span></div><div class="units" id="uGrid"></div></div></div></section>`,
     mount(root) {
       const draw = f => { fl = f; sessionStorage_set('nc_fl_' + id, f); $$('.floors button', root).forEach(x => x.classList.toggle('on', +x.dataset.f === f)); $('#flT', root).textContent = ord(f) + ' mərtəbə';
-        $('#uGrid', root).innerHTML = us.filter(u => u.f === f).map(u => `<a class="ub ${u.st}" href="#menzil-${u.id}"${u.st === 'sold' ? ' aria-disabled="true" tabindex="-1"' : ''}><span class="mu sm">${u.ent ? u.ent + '-ci giriş · ' : ''}№ ${u.f}.${u.n}</span><b class="num">${fm2(u.a)} m²</b><span>${roomsT(u.r)}${u.c ? ' · ' + esc(u.c) : ''}</span><strong class="num">${u.st === 'sold' ? 'Satılıb' : fmt(u.price) + ' ₼'}${u.st === 'bron' ? ' · bron' : ''}</strong></a>`).join('');
+        $('#uGrid', root).innerHTML = us.filter(u => u.f === f).map(u => `<a class="ub ${u.st}" href="#menzil-${u.id}"${u.st === 'sold' ? ' aria-disabled="true" tabindex="-1"' : ''}><span class="mu sm">${u.ent ? u.ent + '-ci giriş · ' : ''}№ ${u.f}.${u.n}</span><b class="num">${fm2(u.a)} m²</b><span>${roomsT(u.r)}${u.c ? ' · ' + esc(u.c) : ''}</span><strong class="num">${u.st === 'sold' ? 'Satılıb' : HP ? PRQ : fmt(u.price) + ' ₼'}${u.st === 'bron' ? ' · bron' : ''}</strong></a>`).join('');
         if (window.gsap && !RM) gsap.from($$('.ub', root), { y: 18, opacity: 0, stagger: .025, duration: .5, ease: 'power3.out' }); };
       $$('.floors button', root).forEach(x => x.onclick = () => draw(+x.dataset.f)); draw(fl);
     }
@@ -1106,7 +1127,7 @@ function sessionStorage_get(k) { try { return sessionStorage.getItem(k); } catch
 function sessionStorage_set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) { } }
 
 /* kataloq */
-const F = {}; const resetF = () => Object.assign(F, { r: 0, b: '', ph: 'all', pmax: 0, sort: 'pa', n: 24 }); resetF();
+const F = {}; const resetF = () => Object.assign(F, { r: 0, b: '', ph: 'all', pmax: 0, sort: HP ? 'aa' : 'pa', n: 24 }); resetF();
 function filtered() {
   const L = free.filter(u => (!F.r || (F.r === 4 ? u.r >= 4 : u.r === F.r)) && (!F.b || u.b === F.b) && (F.ph === 'all' || u.bst === F.ph) && (!F.pmax || u.price <= F.pmax));
   const s = { pa: (a, b) => a.price - b.price, pd: (a, b) => b.price - a.price, aa: (a, b) => a.a - b.a, ad: (a, b) => b.a - a.a, fd: (a, b) => b.f - a.f }[F.sort]; return L.sort(s);
@@ -1119,15 +1140,15 @@ pages.menziller = () => {
       <div class="grp"><span>Otaq</span><div class="seg" data-k="r">${[[0, 'Hamısı'], [1, '1'], [2, '2'], [3, '3'], [4, '4+']].map(([v, t]) => `<button type="button" data-v="${v}">${t}</button>`).join('')}</div></div>
       <div class="grp"><span>Mərhələ</span><div class="seg" data-k="ph">${[['all', 'Hamısı'], ['ok', 'Hazır'], ['w', 'Tikilən']].map(([v, t]) => `<button type="button" data-v="${v}">${t}</button>`).join('')}</div></div>
       <div class="grp"><span>Bina</span><select id="fB" aria-label="Bina"><option value="">Bütün binalar</option>${bs.map(b => `<option value="${b}">Bina ${b}</option>`).join('')}</select></div>
-      <div class="grp rg"><span>Büdcə: <b id="fPv"></b></span><input type="range" id="fP" min="100000" max="${mx}" step="10000" aria-label="Maksimum qiymət"></div>
-      <div class="grp"><span>Sıralama</span><select id="fS" aria-label="Sıralama"><option value="pa">Qiymət: ucuzdan</option><option value="pd">Qiymət: bahadan</option><option value="aa">Sahə: kiçikdən</option><option value="ad">Sahə: böyükdən</option><option value="fd">Mərtəbə: yuxarıdan</option></select></div></div>
+      <div class="grp rg"${HP ? ' style="display:none"' : ''}><span>Büdcə: <b id="fPv"></b></span><input type="range" id="fP" min="100000" max="${mx}" step="10000" aria-label="Maksimum qiymət"></div>
+      <div class="grp"><span>Sıralama</span><select id="fS" aria-label="Sıralama">${HP ? '' : '<option value="pa">Qiymət: ucuzdan</option><option value="pd">Qiymət: bahadan</option>'}<option value="aa">Sahə: kiçikdən</option><option value="ad">Sahə: böyükdən</option><option value="fd">Mərtəbə: yuxarıdan</option></select></div></div>
       <div class="cnt"><div><b class="num" id="fN"></b> <span class="mu">mənzil tapıldı</span></div><button class="lk" type="button" id="fR">Filtrləri sıfırla</button></div>
       <table class="tbl"><thead><tr><th>Mənzil</th><th class="hm">Bina</th><th class="hm">Mərtəbə</th><th class="hm">Vəziyyət</th><th class="r">Qiymət</th></tr></thead><tbody id="fT"></tbody></table>
       <div class="more"><button class="btn ol" type="button" id="fM">Daha çox göstər</button></div></section>`,
     mount(root) {
       const sync = () => { $$('.seg[data-k]', root).forEach(s => $$('button', s).forEach(b => b.classList.toggle('on', String(F[s.dataset.k]) === b.dataset.v))); $('#fB', root).value = F.b; $('#fS', root).value = F.sort; const p = $('#fP', root); p.value = F.pmax || p.max; p.style.setProperty('--p', ((p.value - p.min) / (p.max - p.min) * 100) + '%'); $('#fPv', root).textContent = F.pmax ? fmt(F.pmax) + ' ₼-dək' : 'istənilən'; };
       const draw = () => { const L = filtered(); $('#fN', root).textContent = L.length;
-        $('#fT', root).innerHTML = L.slice(0, F.n).map(u => `<tr data-go="${u.id}" tabindex="0"><td><b>${roomsT(u.r)}, ${fm2(u.a)} m²</b><div class="mu sm">${bLbl(u)} · ${ord(u.f)} mərtəbə</div></td><td class="hm">${bLbl(u)}</td><td class="hm num">${u.f}</td><td class="hm"><span class="pill"><i class="${stCls(u.bst)}"></i>${u.c ? esc(u.c) : u.bst === 'ok' ? 'Hazır' : 'Tikilir'}</span></td><td class="r num"><b>${fmt(u.price)} ₼</b><div class="mu sm">${fmt(u.ppm)} ₼/m²</div></td></tr>`).join('') || `<tr><td colspan="5" class="empty">Bu filtrlərlə satışda mənzil yoxdur.</td></tr>`;
+        $('#fT', root).innerHTML = L.slice(0, F.n).map(u => `<tr data-go="${u.id}" tabindex="0"><td><b>${roomsT(u.r)}, ${fm2(u.a)} m²</b><div class="mu sm">${bLbl(u)} · ${ord(u.f)} mərtəbə</div></td><td class="hm">${bLbl(u)}</td><td class="hm num">${u.f}</td><td class="hm"><span class="pill"><i class="${stCls(u.bst)}"></i>${u.c ? esc(u.c) : u.bst === 'ok' ? 'Hazır' : 'Tikilir'}</span></td><td class="r num">${HP ? `<b>${PRQ}</b>` : `<b>${fmt(u.price)} ₼</b><div class="mu sm">${fmt(u.ppm)} ₼/m²</div>`}</td></tr>`).join('') || `<tr><td colspan="5" class="empty">Bu filtrlərlə satışda mənzil yoxdur.</td></tr>`;
         $('#fM', root).style.display = L.length > F.n ? '' : 'none';
         $$('#fT tr[data-go]', root).forEach(tr => { tr.onclick = () => location.hash = 'menzil-' + tr.dataset.go; tr.onkeydown = e => { if (e.key === 'Enter') tr.onclick(); }; }); };
       $$('.seg[data-k]', root).forEach(s => s.onclick = e => { const b = e.target.closest('button'); if (!b) return; const k = s.dataset.k; F[k] = k === 'r' ? +b.dataset.v : b.dataset.v; F.n = 24; sync(); draw(); });
@@ -1148,14 +1169,14 @@ pages.menzil = id => {
   const sim = free.filter(x => x.id !== u.id && x.r === u.r).sort((a, b) => Math.abs(a.a - u.a) - Math.abs(b.a - u.a)).slice(0, 4);
   return {
     title: `${roomsT(u.r)}, ${fm2(u.a)} m² — ${bLbl(u)} — Nizami City`, html: `<section class="ph-h w paper">${crumbs(['Mənzillər', 'menziller'], [bLbl(u)])}
-      <div class="unit"><div><h1 class="d h1">${lines([roomsT(u.r) + ',', fm2(u.a) + ' <span class="lc">m²</span>'])}</h1><p class="pr num" data-r>${u.st === 'sold' ? 'Satılıb' : fmt(u.price) + ' ₼'}</p><p class="mu" data-r>${fmt(u.ppm)} ₼/m² · ${u.st === 'bron' ? 'bron olunub' : u.st === 'sold' ? 'satılıb' : 'satışda'}</p>
+      <div class="unit"><div><h1 class="d h1">${lines([roomsT(u.r) + ',', fm2(u.a) + ' <span class="lc">m²</span>'])}</h1><p class="pr num" data-r>${u.st === 'sold' ? 'Satılıb' : HP ? 'Qiymət sorğu ilə' : fmt(u.price) + ' ₼'}</p><p class="mu" data-r>${HP ? '' : fmt(u.ppm) + ' ₼/m² · '}${u.st === 'bron' ? 'bron olunub' : u.st === 'sold' ? 'satılıb' : 'satışda'}</p>
         <div class="kv" data-r>${[['Bina', bLbl(u)], ['Mərtəbə', `${u.f} / ${window.NC_FLOORS || 10}`], ['Otaq sayı', u.r], ['Sahə', fm2(u.a) + ' m²'], ['Vəziyyət', u.c || (u.bst === 'ok' ? 'Təmirsiz' : 'Tikilir')], ['Təhvil', u.bst === 'ok' ? 'Hazırdır' : CO.delivery], ['Pəncərələr', u.ori && u.ori !== '—' ? u.ori : 'Satış ofisində dəqiqləşdirin']].map(([a, b]) => `<div><span>${a}</span><b>${esc(b)}</b></div>`).join('')}</div>
         <div class="acts" data-r><a class="btn" href="#v">Baxışa yazıl ${AR}</a><a class="btn ol" href="tel:${esc(CO.short)}">Zəng: ${esc(CO.short)}</a></div></div>
       <div style="display:grid;gap:6px;align-content:start"><div class="plate" data-r>${plateSvg(u)}<p>Mərtəbədə yerləşmə sxemi. Dəqiq plan satış ofisində təqdim olunur.</p></div><figure class="clip" style="margin:0;aspect-ratio:4/3;overflow:hidden">${pic(u.bst === 'ok' ? 'tower_l' : 'corner', 'Nizami City binaları', { cls: 'par', sizes: '(max-width:900px) 92vw, 40vw', style: 'width:100%;height:100%;object-fit:cover' })}</figure></div></div></section>
-    <section class="sec w f1"><div class="pay"><div class="tx"><h2 class="d h2">${lines(['Bu mənzil', 'üçün ödəniş'])}</h2><p class="lead" data-r>İlkin ödənişi və müddəti seçin — aylıq məbləğ dərhal hesablanır.</p></div>${calcBlock({ unit: u, sched: true })}</div></section>
+    ${HP ? `<section class="sec w f1" id="prq">${priceBlock(u)}</section>` : `<section class="sec w f1"><div class="pay"><div class="tx"><h2 class="d h2">${lines(['Bu mənzil', 'üçün ödəniş'])}</h2><p class="lead" data-r>İlkin ödənişi və müddəti seçin — aylıq məbləğ dərhal hesablanır.</p></div>${calcBlock({ unit: u, sched: true })}</div></section>`}
     ${sim.length ? `<section class="sec w paper"><h2 class="d h2" style="margin-bottom:48px">${lines(['Oxşar mənzillər'])}</h2><div class="rows">${sim.map(unitRow).join('')}</div></section>` : ''}
     <section class="sec w f0" id="v">${visitBlock(u.id)}</section>`,
-    mount(root) { bindCalc(root); bindVisit(root, u.id); const a = $('a[href="#v"]', root); if (a) a.onclick = e => { e.preventDefault(); scrollToEl($('#v', root)); }; }
+    mount(root) { bindCalc(root); bindPrice(root, u); bindVisit(root, u.id); const a = $('a[href="#v"]', root); if (a) a.onclick = e => { e.preventDefault(); scrollToEl($('#v', root)); }; }
   };
 };
 pages.kalkulyator = () => ({
@@ -1284,6 +1305,7 @@ function motion(root, k) {
 
 /* ---------- başlanğıc ---------- */
 footer();
+if (HP) $$('a[href="#kalkulyator"]').forEach(a => a.style.display = 'none');
 function boot() {
   const ready = () => window.gsap && window.ScrollTrigger;
   const go = () => {

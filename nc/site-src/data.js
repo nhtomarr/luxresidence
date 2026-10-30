@@ -76,8 +76,8 @@ window.NC = (function () {
   const FAQ = [
     ['Mənzillər təmirlidir?', 'Hazır binalarda həm təmirli, həm təmirsiz mənzillər var. Tikilən binalarda mənzillər təmirsiz, sərbəst planla təhvil verilir.'],
     ['Hansı binalar hazırdır?', 'A, B və C binaları təhvil verilib. E, F və G binalarının təhvili ' + CO.delivery + '-ci ilə planlaşdırılır.'],
-    ['Hansı ödəniş variantları var?', 'Nağd ödəniş, daxili kredit (6 ay faizsiz, 12 və 24 ay) və ya ipoteka. Saytdakı kalkulyatorda öz variantınızı hesablayın.'],
-    ['Kvadratmetr qiyməti nə qədərdir?', 'Qiymətlər ' + CO.priceFrom.toLocaleString('ru').replace(/,/g,' ') + ' ₼/m²-dən başlayır: tikilən binalarda ' + P_KOT + ', hazır binalarda təmirsiz ' + P_TS + ', təmirli ' + P_TL + ' ₼/m².'],
+    ['Hansı ödəniş variantları var?', 'Nağd ödəniş, daxili kredit (6 ay faizsiz, 12 və 24 ay) və ya ipoteka. Dəqiq şərtləri satış meneceri ilə dəqiqləşdirin.'],
+    ['Kvadratmetr qiyməti nə qədərdir?', !SITE.showPrice ? 'Qiymət mənzilin binasından, mərtəbəsindən və vəziyyətindən asılıdır. Saytda «Qiyməti öyrən» formasını doldurun və ya *0788 nömrəsinə zəng edin — satış meneceri dəqiq qiyməti desin.' : 'Qiymətlər ' + CO.priceFrom.toLocaleString('ru').replace(/,/g,' ') + ' ₼/m²-dən başlayır: tikilən binalarda ' + P_KOT + ', hazır binalarda təmirsiz ' + P_TS + ', təmirli ' + P_TL + ' ₼/m².'],
     ['Parkinq var?', 'Bəli, kompleksdə 2 səviyyəli yeraltı parkinq var.'],
     ['Kommersiya sahələri satılır?', 'Bəli, binaların birinci mərtəbələrində qeyri-yaşayış sahələri satışdadır. Kommersiya bölməsindən sorğu göndərin.'],
     ['Kompleks harada yerləşir?', 'Yasamal rayonu, Nizami m/s, Cəfər Cabbarlı küçəsi 31 — Nizami metrosuna yaxın.'],
