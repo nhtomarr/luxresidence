@@ -189,7 +189,7 @@ function quiz() {
 }
 /* 3: axtarış */
 function search() {
-  const m = modal(`<div class="srch"><div class="srch-in">${I.srch}<input id="sq" placeholder="Axtar: «2 otaq», «Bina E», «85 m²», «ipoteka»…" autocomplete="off" aria-label="Axtarış"></div><div id="sr" class="srch-r"></div></div>`, 'top');
+  const m = modal(`<div class="srch"><div class="srch-in">${I.srch}<input id="sq" placeholder="Axtar: «2 otaq», «Bina E», «85 m²», «daxili kredit»…" autocomplete="off" aria-label="Axtarış"></div><div id="sr" class="srch-r"></div></div>`, 'top');
   const inp = $('#sq', m), out = $('#sr', m);
   const PAGES = [['Mənzillər', 'menziller'], ['Binalar', 'binalar'], ['Məkan', 'mekan'], ['Kommersiya sahələri', 'kommersiya'], ['Bloq', 'bloq'], ['Suallar', 'suallar'], ['Əlaqə və baxış', 'elaqe'], ['Seçilmişlər', 'secilmis'], ['Müqayisə', 'muqayise']].filter(([, h]) => !OFF[h]);
   const norm = t => String(t).toLowerCase().replace(/ı/g, 'i').replace(/ə/g, 'e').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g');
@@ -330,7 +330,7 @@ pages.home = () => ({
   mount(r) { bindHero(r); heroFx(r); bindFind(r); bindMaqHome(r); bindBuildings(r); bindRail(r); bindPlan(r); bindLead(r); bindLb(r); }
 });
 pages.binalar = () => ({
-  title: 'Binalar — Nizami City', html: `${pHead('Binalar', SHOW_ST ? 'A, B və C binaları təhvil verilib. E, F və G binaları tikilir' + (SHOW_DEL ? ', təhvil ' + esc(CO.delivery) : '') + '.' : '9 bina, qapalı həyət. Binanı seçin — mərtəbələr və mənzillər açılacaq.', `<div class="stats"><div class="stat"><b>${BLD.length}</b><span>bina</span></div>${SHOW_STOCK ? `<div class="stat"><b>${free.filter(u => u.st === 'free').length}</b><span>satışda</span></div>` : ''}<div class="stat"><b>${window.NC_FLOORS || 10}</b><span>mərtəbə</span></div></div>`)}
+  title: 'Binalar — Nizami City', html: `${pHead('Binalar', SHOW_ST ? 'A, B və C binaları təhvil verilib. E, F və G binaları tikilir' + (SHOW_DEL ? ', təhvil ' + esc(CO.delivery) : '') + '.' : '9 bina, qapalı həyət. Binanı seçin — mərtəbələr və mənzillər açılacaq.', `<div class="stats"><div class="stat"><b>${BLD.length}</b><span>bina</span></div>${SHOW_STOCK ? `<div class="stat"><b>${free.filter(u => u.st === 'free').length}</b><span>satışda</span></div>` : ''}<div class="stat"><b>9</b><span>mərtəbə</span></div></div>`)}
   <section class="sec wrap"><div class="sh"><h2 class="h2">Baş plan</h2><div class="tabs" id="bpT"><button type="button" data-v="3d" class="on">${I.cube} 3D maket</button><button type="button" data-v="img">Vizual</button></div></div><div data-bp="3d">${maqHtml('mqH')}</div><div data-bp="img" style="display:none"><div class="iso" data-lb="iso">${pic('aerial', 'Hazır binaların 3D vizualı', { sizes: '(max-width:900px) 92vw, 1200px' })}<span class="hs" style="left:47%;top:58%"><i></i><span>Qapalı həyətlər</span></span><span class="hs" style="left:45%;top:80%"><i></i><span>Kommersiya qalereyası</span></span><span class="hs" style="left:57%;top:88%"><i></i><span>Parkinqə giriş</span></span></div></div></section>
   <section class="sec wrap">${buildingsBlock(true)}</section>
   ${SHOW_ST ? '' : '<!--'}<section class="sec wrap"><div class="sh"><h2 class="h2">Mərhələlər</h2></div><div class="tline">${TIMELINE.map(([a, b, c, s]) => `<div class="card"><span class="badge" style="position:static;background:var(--soft)"><i class="${s === 'ok' ? 'st-ok' : 'st-w'}"></i>${esc(b)}</span><h3 class="h3" style="margin:12px 0 6px">${esc(a)}</h3><p class="ink2" style="margin:0">${esc(c)}</p></div>`).join('')}</div></section>${SHOW_ST ? '' : '-->'}`,
@@ -342,7 +342,7 @@ pages.bina = id => {
   let fl = fls.find(f => us.some(u => u.f === f && u.st === 'free')) || fls[0], view = 'fl';
   const sold = us.filter(u => u.st === 'sold').length;
   return {
-    title: `Bina ${id} — Nizami City`, html: `${pHead('Bina ' + id, stTxt(b.st), `<div class="stats"><div class="stat"><b>${fls.length}</b><span>mərtəbə</span></div>${SHOW_STOCK ? `<div class="stat"><b>${us.filter(u => u.st === 'free').length}</b><span>satışda</span></div>${us.length ? `<div class="stat"><b>${Math.round(sold * 100 / us.length)}%</b><span>satılıb</span></div>` : ''}` : ''}</div>`, [['Binalar', 'binalar'], ['Bina ' + id]])}
+    title: `Bina ${id} — Nizami City`, html: `${pHead('Bina ' + id, stTxt(b.st), `<div class="stats"><div class="stat"><b>9</b><span>mərtəbə</span></div>${SHOW_STOCK ? `<div class="stat"><b>${us.filter(u => u.st === 'free').length}</b><span>satışda</span></div>${us.length ? `<div class="stat"><b>${Math.round(sold * 100 / us.length)}%</b><span>satılıb</span></div>` : ''}` : ''}</div>`, [['Binalar', 'binalar'], ['Bina ' + id]])}
     <section class="sec wrap">${maqHtml('mqB', { sm: true, tour: false })}</section>
     <section class="sec wrap">${us.length ? `<div class="sh"><h2 class="h2" id="flT"></h2><div class="tabs" id="bv"${SHOW_STOCK ? '' : ' style="display:none"'}><button type="button" data-v="fl" class="on">Mənzil planları</button>${SHOW_STOCK ? `<button type="button" data-v="ch">${I.grid} Şahmatka</button>` : ''}</div></div><div id="bvb"></div>` : `<div class="empty">Bu binanın mənzilləri hazırda saytda göstərilmir. Satış ofisindən məlumat alın: ${esc(CO.short)}</div>`}</section>
     <section class="sec wrap">${contactBlock({ title: 'Bina ' + id + ' üzrə sorğu', kind: 'price' })}</section>`,
@@ -441,6 +441,7 @@ pages.kommersiya = () => ({
 });
 pages.bloq = () => ({ title: 'Bloq — Nizami City', html: `${pHead('Bloq', 'Mənzil seçimi, ödəniş və Yasamalda həyat haqqında.')}<section class="sec wrap"><div class="news">${posts().map(nCard).join('') || '<div class="empty">Hələ yazı yoxdur.</div>'}</div></section>` });
 pages.post = id => {
+  if (id === 'kredit-ipoteka-nagd') id = 'nagd-ve-daxili-kredit';
   const p = BLOG.find(x => x.id === id); if (!p) return pages.bloq();
   return { title: p.t + ' — Nizami City', html: `<section class="ph wrap"><div class="art">${crumbs(['Bloq', 'bloq'], [p.c])}<h1 class="h1" style="font-size:clamp(30px,3.6vw,46px)">${esc(p.t)}</h1><p class="mu" style="margin:10px 0 0">${esc(p.c)} · ${dfmt(p.d)}${p.m ? ' · ' + p.m + ' dəq oxu' : ''}</p>${p.img ? `<div class="cover">${pic(p.img, p.t, { sizes: '780px' })}</div>` : '<div style="height:24px"></div>'}<div class="bd">${p.b || ''}</div></div></section>
     <section class="sec wrap"><div class="sh"><h2 class="h2">Digər yazılar</h2></div><div class="news">${posts().filter(x => x.id !== id).slice(0, 3).map(nCard).join('')}</div></section>` };

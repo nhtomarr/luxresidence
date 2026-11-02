@@ -4,8 +4,8 @@ window.NC = (function () {
   const CO = {
     name: 'Nizami City', slogan: 'Xoşbəxtliyi inşa edirik',
     short: '*0788', phones: ['(050) 700 00 88', '(050) 970 00 88'], tel: ['+994507000088', '+994509700088'],
-    email: 'info@nizamicity.az', addr: 'Cəfər Cabbarlı küç. 31, Nizami m/s, Yasamal r-nu, Bakı',
-    hours: 'B.e.–Cümə 09:00–18:00', ig: 'nizami.city', wa: '994507000088', priceFrom: 2700,
+    email: 'nizamicity.az@gmail.com', addr: 'Cəfər Cabbarlı küç. 31, Nizami m/s, Yasamal r-nu, Bakı',
+    hours: 'B.e.–Şənbə 09:00–18:00, Bazar 10:00–18:00', ig: 'nizami.city', wa: '994507000088', priceFrom: 2700,
   };
   const STAT = {
     ok: { t: 'Təhvil verilib', c: 'ok', pct: 100 },
@@ -76,7 +76,7 @@ window.NC = (function () {
   const FAQ = [
     ['Mənzillər təmirlidir?', 'Satışda həm təmirli, həm White Box, həm də təmirsiz (sərbəst planlı) mənzillər var. Kataloqda «Vəziyyət» filtri ilə seçə bilərsiniz.'],
     ['Hansı binalar hazırdır?', (SITE.showStatus && SITE.showDelivery ? 'A, B və C binaları təhvil verilib. E, F və G binalarının təhvili ' + CO.delivery + '-ci ilə planlaşdırılır.' : 'A, B və C binaları təhvil verilib, mənzillərə dərhal baxmaq olar. Digər binalar üzrə ətraflı məlumatı satış ofisindən alın.')],
-    ['Hansı ödəniş variantları var?', 'Nağd ödəniş, daxili kredit (6 ay faizsiz, 12 və 24 ay) və ya ipoteka. Dəqiq şərtləri satış meneceri ilə dəqiqləşdirin.'],
+    ['Hansı ödəniş variantları var?', 'Nağd ödəniş, və ya daxili kredit (6 ay faizsiz, 12 və 24 ay). Dəqiq şərtləri satış meneceri ilə dəqiqləşdirin.'],
     ['Kvadratmetr qiyməti nə qədərdir?', !SITE.showPrice ? 'Qiymət mənzilin binasından, mərtəbəsindən və vəziyyətindən asılıdır. Saytda «Qiyməti öyrən» formasını doldurun və ya *0788 nömrəsinə zəng edin — satış meneceri dəqiq qiyməti desin.' : 'Qiymətlər ' + CO.priceFrom.toLocaleString('ru').replace(/,/g,' ') + ' ₼/m²-dən başlayır: tikilən binalarda ' + P_KOT + ', hazır binalarda təmirsiz ' + P_TS + ', təmirli ' + P_TL + ' ₼/m².'],
     ['Parkinq var?', 'Bəli, kompleksdə 2 səviyyəli yeraltı parkinq var.'],
     ['Kommersiya sahələri satılır?', 'Bəli, binaların birinci mərtəbələrində qeyri-yaşayış sahələri satışdadır. Kommersiya bölməsindən sorğu göndərin.'],
@@ -99,13 +99,12 @@ window.NC = (function () {
   ];
   const GCATS = ['Hamısı', 'Vizuallar', 'Detallar', 'Tikinti gedişatı', 'İnteryer'];
   const BLOG = [
-    { id: 'kredit-ipoteka-nagd', c: 'Maliyyə', d: '2026-10-14', m: 7, img: 'tower_r', t: 'Nağd, daxili kredit, yoxsa ipoteka?', x: 'Eyni mənzili üç fərqli yolla almaq — hər birinin real xərci və kimə uyğun olduğu.',
+    { id: 'nagd-ve-daxili-kredit', c: 'Maliyyə', d: '2026-10-14', m: 5, img: 'tower_r', t: 'Nağd ödəniş, yoxsa daxili kredit?', x: 'Eyni mənzili iki yolla almaq — hər birinin xüsusiyyəti və kimə uyğun olduğu.',
       b: `<p>Mənzil alarkən ən böyük sual çox vaxt «hansı mənzil?» yox, «necə ödəyim?» olur. Eyni mənzilin son xərci seçilən ödəniş yolundan asılı olaraq ciddi fərqlənə bilər.</p>
 <h2>Nağd ödəniş</h2><p>Ən sadə yoldur: müqavilə bağlanır, məbləğ ödənilir, əlavə xərc yoxdur. Nağd alışda satış ofisi ilə qiymət barədə danışmaq imkanı da adətən daha genişdir.</p>
 <h2>Daxili kredit</h2><p>Nizami City-də məbləğin 50%-ni ilkin ödəyib, qalan hissəni 24 ayadək hissə-hissə ödəmək mümkündür. Bu yol banka müraciət etmədən, birbaşa tikinti şirkəti ilə razılaşma əsasında işləyir. Aylıq ödəniş müddət qısa olduğu üçün yüksək olur, amma ümumi xərc proqnozlaşdırılandır.</p>
 <blockquote>Qayda: aylıq ödəniş ailə gəlirinin 40%-dən çox olmamalıdır.</blockquote>
-<h2>İpoteka</h2><p>Uzunmüddətli bank krediti aylıq ödənişi azaldır, lakin faiz hesabına ümumi xərci artırır. İpoteka şərtləri bankdan və proqramdan asılıdır, ona görə müraciətdən əvvəl bir neçə bankın təklifini müqayisə edin.</p>
-<h2>Necə qərar verməli?</h2><ol><li>Əlinizdə olan vəsaiti və aylıq ödəyə biləcəyiniz məbləği yazın.</li><li>Saytdakı kalkulyatorda üç variantı eyni mənzil üçün müqayisə edin.</li><li>Son qərardan əvvəl satış ofisində aktual şərtləri dəqiqləşdirin.</li></ol>` },
+<h2>Necə qərar verməli?</h2><ol><li>Əlinizdə olan vəsaiti və aylıq ödəyə biləcəyiniz məbləği yazın.</li><li>Saytdakı ödəniş planında ilkin ödənişi və müddəti seçib aylıq bölgünü görün.</li><li>Son qərardan əvvəl satış ofisində aktual şərtləri dəqiqləşdirin.</li></ol>` },
     { id: 'temirsiz-menzil', c: 'Təmir', d: '2026-09-28', m: 6, img: 'tower_l', t: 'Təmirsiz mənzil: açarı aldıqdan sonra ilk 90 gün', x: 'Sərbəst planın üstünlüyündən necə yararlanmalı və təmirə hansı ardıcıllıqla başlamalı.',
       b: `<p>Təmirsiz təhvil verilən mənzil ilk baxışda əlavə iş kimi görünür, amma əslində ən böyük üstünlükdür: məkanı tam öz həyat tərzinizə görə qurursunuz.</p>
 <h2>1–2-ci həftə: ölçü və plan</h2><p>Mənzilin dəqiq ölçüsünü götürün, pəncərələrin, kommunikasiya çıxışlarının yerini qeyd edin. Ailənin gündəlik ssenarisini yazın: kim harada işləyir, uşaqlar harada oynayır, qonaqlar harada qarşılanır.</p>

@@ -290,14 +290,14 @@ pages.brosur = () => {
       <div class="nzs">${numbers().map(([n, s]) => `<div class="nz"><b>${n}</b><span>${s}</span></div>`).join('')}</div></div>${pic('aerial', 'Kompleksin 3D vizualı', { sizes: '600px' })}</div>
     <div class="bro-s"><h2 class="h2" style="margin-bottom:14px">Kompleksdə həyat</h2><div class="bro-f">${FEAT.map(([k, tt, p]) => `<div>${pic(k, tt, { sizes: '300px' })}<b>${tt}</b><span>${p}</span></div>`).join('')}</div>
       <div class="bro-i">${ICONS.map(([i, b, s]) => `<div><i>${i}</i><b>${b}</b><span>${s}</span></div>`).join('')}</div></div>
-    <div class="bro-s bro-g"><div><h2 class="h2">Ödəniş</h2><p class="lead" style="margin-top:10px">Nağd ödəniş, ipoteka və ya daxili kredit: ${t ? 'ilkin ödənişdən sonra qalan məbləğ ' + t.m + ' ay faizsiz' : 'hissə-hissə'}${TERMS.length > 1 ? ', həmçinin ' + TERMS.slice(1).map(x => x.m).join(' və ') + ' aylıq variantlar' : ''}. Qiymət və şərtləri satış meneceri dəqiqləşdirir.</p>
+    <div class="bro-s bro-g"><div><h2 class="h2">Ödəniş</h2><p class="lead" style="margin-top:10px">Nağd ödəniş və ya daxili kredit: ${t ? 'ilkin ödənişdən sonra qalan məbləğ ' + t.m + ' ay faizsiz' : 'hissə-hissə'}${TERMS.length > 1 ? ', həmçinin ' + TERMS.slice(1).map(x => x.m).join(' və ') + ' aylıq variantlar' : ''}. Qiymət və şərtləri satış meneceri dəqiqləşdirir.</p>
       <h2 class="h2" style="margin-top:22px">Məkan</h2><ul class="bro-l">${POI.map(p => `<li><b>${esc(p.n)}</b> — ${esc(p.d)}</li>`).join('')}</ul></div>
       <div class="bro-c"><h2 class="h2">Əlaqə</h2>${contactsList()}<div class="bro-qr"><div data-qr="${esc(site)}"></div><span>Saytda mənzilləri və 3D maketi görmək üçün skan edin</span></div></div></div>
   </div>`, mount(r) { fillQR(r); } };
 };
 
 /* ===== 19: sürətli sual / əlaqə mərkəzi ===== */
-const QQ = ['Qiymətlər barədə məlumat almaq istəyirəm', 'Mənzilə baxışa gəlmək istəyirəm', 'Ödəniş şərtləri (daxili kredit, ipoteka) barədə', 'Hazır mənzillər barədə', 'Kommersiya sahəsi ilə maraqlanıram'];
+const QQ = ['Qiymətlər barədə məlumat almaq istəyirəm', 'Mənzilə baxışa gəlmək istəyirəm', 'Ödəniş şərtləri (daxili kredit) barədə', 'Hazır mənzillər barədə', 'Kommersiya sahəsi ilə maraqlanıram'];
 function hub() {
   const ex = $('#hub'); if (ex) { ex.remove(); return; }
   const p = document.createElement('div'); p.className = 'hub'; p.id = 'hub'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-label', 'Satış ofisi ilə əlaqə');
@@ -329,7 +329,7 @@ function bindPlan(r) {
 }
 
 /* rəqəmlər zolağı */
-function numbers() { return [[9, 'bina'], [NFL, 'mərtəbə'], [2, 'səviyyəli parkinq'], ['7/24', 'mühafizə'], ...(TERMS[0] ? [[TERMS[0].m + ' ay', 'faizsiz ödəniş']] : [])]; }
+function numbers() { return [[9, 'bina'], [9, 'mərtəbə'], [2, 'səviyyəli parkinq'], ['7/24', 'mühafizə'], ...(TERMS[0] ? [[TERMS[0].m + ' ay', 'faizsiz ödəniş']] : [])]; }
 const numBlock = () => `<section class="sec wrap" style="padding-top:16px"><div class="nzs">${numbers().map(([n, s]) => `<div class="nz"><b>${n}</b><span>${s}</span></div>`).join('')}<a class="nz nz-a" href="#brosur">${I.doc}<span>Broşürü yüklə (PDF)</span></a></div></section>`;
 
 /* render qarmaqları */
