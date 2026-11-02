@@ -5,7 +5,7 @@ window.NC = (function () {
     name: 'Nizami City', slogan: 'Xoşbəxtliyi inşa edirik',
     short: '*0788', phones: ['(050) 700 00 88', '(050) 970 00 88'], tel: ['+994507000088', '+994509700088'],
     email: 'nizamicity.az@gmail.com', addr: 'Cəfər Cabbarlı küç. 31, Nizami m/s, Yasamal r-nu, Bakı',
-    hours: 'B.e.–Şənbə 09:00–18:00, Bazar 10:00–18:00', ig: 'nizami.city', wa: '994507000088', priceFrom: 2700,
+    hours: 'B.e.–Şənbə 09:00–18:00, Bazar 10:00–18:00', ig: 'nizami.city', wa: '994509700088', priceFrom: 2700,
   };
   const STAT = {
     ok: { t: 'Təhvil verilib', c: 'ok', pct: 100 },

@@ -55,7 +55,7 @@ const priceT = u => u.st === 'sold' ? 'Satılıb' : HP ? 'Qiymət sorğu ilə' :
 const condOf = u => /təmirli/i.test(u.c || '') ? 'Təmirli' : /white/i.test(u.c || '') ? 'White Box' : 'Təmirsiz';
 const uById = id => UNITS.find(x => x.id === id);
 const uTitle = u => `${roomsT(u.r)}, ${fm2(u.a)} m² — ${bLbl(u)}, ${ord(u.f)} mərtəbə`;
-const WA = () => String(CO.wa || '994507000088').replace(/\D/g, '');
+const WA = () => String(CO.wa || '994509700088').replace(/\D/g, '');
 
 /* 1–4: yaddaş — seçilmişlər, müqayisə, son baxılanlar */
 const LS = { get(k, d) { try { const v = JSON.parse(localStorage.getItem('nc_' + k)); return v == null ? d : v; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('nc_' + k, JSON.stringify(v)); } catch (e) { } } };
