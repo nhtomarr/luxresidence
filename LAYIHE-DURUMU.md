@@ -362,3 +362,11 @@ Nümunə məlumat (demo=true): Bina 4/5, 10 material, 3 təchizatçı, 12 smeta 
 Mənbə: nc/site-src/v3/{app.js, plus.js, maq.js, app.css, plus.css}. build.py: APP=app.js+plus.js, CSS=app.css+plus.css, %MAQ%=maq.js, MODEL-ə ncSunPos əlavə olunur. render() → beforeRender()/afterRender() (plus.js).
 20 əlavə: işıqlı 3D maket (three r128, yalnız görünəndə CDN-dən), virtual tur, günəş/kölgə (Bakı koord.), gecə görünüşü, bina səhifəsində 3D + mərtəbə sinxronu, mənzildə 3D yer, izometrik mərtəbə (CSS 3D), kinematik hero, səhifə keçidi/irəliləyiş zolağı, yumşaq görünmə + sayğaclar, kartlarda 3D meyl, tünd tema (defolt açıq), əlçatanlıq (şrift/kontrast/animasiya), ətraf sxemi (filtrli), baxış saatı, zəng vaxtı, QR (qrcode-generator 1.4.4), #brosur (çap/PDF), "Sual verin" əlaqə mərkəzi (WhatsApp hazır suallar), ödəniş planı (faizlə, qiymətsiz).
 Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html) hələ v2-dir — təsdiqdən sonra `python3 build.py` (NC_OUT-suz).
+
+## DAMAFON SAKİNLƏRİ (4 noy 2026, ofis-v129)
+- Problem: eyni ZKTeco terminalında (NYU7261304234) sakin breloku basanda maaş kassir ekranına «PIN 1001 · tanınmır» düşürdü.
+- Cədvəllər: `bio_residents` (pin=100000+id, full_name, phone, unit_id→km_units, unit_label, card, templates, active), `bio_door_logs` (qapı jurnalı). RLS açıq, oxu yalnız RPC ilə.
+- `bio_scan`: PIN bio_residents-dədirsə (və işçi deyilsə) → bio_door_logs, maaş jurnalına YAZILMIR. `bio_template` / `bio_dev_user_save` sakin şablonu/brelokunu bio_residents-ə yazır. `pay_scans` köhnə sakin qeydlərini göstərmir.
+- RPC: bio_res_save(p jsonb), bio_res_active, bio_res_delete, bio_res_push, bio_res_list, bio_door_list, bio_unit_find. İcazə bio_res_ok() = office_pay_ok() or km_staff().
+- UI: Maaş verilişi → «🔑 Damafon sakinləri» tabı (əlavə et, mənzil axtarışı, brelok, barmaq/üz yaz, söndür, sil, qapı jurnalı).
+- Miqrasiya: supabase/migrations/20261104_bio_residents_intercom.sql. Test sakini PIN 1001 (brelok 11259893) siyahıya köçürülür.
