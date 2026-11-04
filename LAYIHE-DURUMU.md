@@ -370,3 +370,4 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - RPC: bio_res_save(p jsonb), bio_res_active, bio_res_delete, bio_res_push, bio_res_list, bio_door_list, bio_unit_find. İcazə bio_res_ok() = office_pay_ok() or km_staff().
 - UI: Maaş verilişi → «🔑 Damafon sakinləri» tabı (əlavə et, mənzil axtarışı, brelok, barmaq/üz yaz, söndür, sil, qapı jurnalı).
 - Miqrasiya: supabase/migrations/20261104_bio_residents_intercom.sql. Test sakini PIN 1001 (brelok 11259893) siyahıya köçürülür.
+- v130: «Sakin əlavə et → Yadda saxla» → avtomatik `bio_res_enroll` (ENROLL_BIO TYPE=1, yalnız son 5 dəq onlayn cihazlara) → cihaz ekranında barmaq qeydiyyatı açılır; panel canlı izləyir (bio_res_cmds, bio_res_n). ENROLL_FP bu cihazda Return=6 verdi; ENROLL_BIO gözləyib vaxt bitəndə Return=-1003.
