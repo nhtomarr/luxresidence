@@ -2536,17 +2536,17 @@ function payRes(){var b=$('pyBody');b.innerHTML='<div class="muted small">Yükl�
 }).catch(err);}
 function payResForm(id){var x=id?(PAY.res||[]).find(function(r){return r.id===id;})||{}:{};var w=document.createElement('div');w.id='pyResDlg';w.style.cssText='position:fixed;inset:0;z-index:100001;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px';
  w.innerHTML='<div class="card" style="width:100%;max-width:440px;max-height:90vh;overflow:auto"><h3 style="margin:0 0 12px">'+(id?'Sakini düzəlt':'Yeni sakin')+'</h3>'+
- '<label class="small">Ad, soyad *</label><input id="rsN" value="'+esc(x.full_name||'')+'" style="width:100%;margin-bottom:8px">'+
+ '<label class="small"><b>🔑 Brelok</b> — breloku oxuducuya toxundurun və ya üzərindəki nömrəni yazın</label><input id="rsC" inputmode="numeric" autocomplete="off" value="'+esc(x.card||'')+'" placeholder="məs. 0011259893" style="width:100%;margin-bottom:10px;font-size:20px;letter-spacing:1px">'+'<label class="small">Ad, soyad *</label><input id="rsN" value="'+esc(x.full_name||'')+'" style="width:100%;margin-bottom:8px">'+
  '<label class="small">Telefon</label><input id="rsP" value="'+esc(x.phone||'')+'" placeholder="+994 …" style="width:100%;margin-bottom:8px">'+
  '<label class="small">Mənzil (LUX — nömrə və ya sahib adı ilə axtar)</label><input id="rsU" value="'+esc(x.unit_label||'')+'" placeholder="məs. 4-4" style="width:100%"><div id="rsUL" class="small" style="margin:4px 0 8px"></div>'+
- '<label class="small">Brelok nömrəsi (üzərində yazılan rəqəmlər)</label><input id="rsC" inputmode="numeric" value="'+esc(x.card||'')+'" placeholder="boş qalsa — breloku cihazda oxudun" style="width:100%;margin-bottom:8px">'+
- '<label class="small">Qeyd</label><input id="rsT" value="'+esc(x.note||'')+'" style="width:100%;margin-bottom:12px">'+(id?'':'<p class="small muted" style="margin:0 0 12px">Yadda saxlayan kimi cihazın ekranında barmaq qeydiyyatı açılacaq — sakin cihazın yanında olsun.</p>')+
+ 
+ '<label class="small">Qeyd</label><input id="rsT" value="'+esc(x.note||'')+'" style="width:100%;margin-bottom:12px">'+
  '<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost sm" onclick="document.getElementById(\'pyResDlg\').remove()">Ləğv et</button><button class="btn sm" id="rsSave">Yadda saxla və cihaza göndər</button></div></div>';
- document.body.appendChild(w);var uid=x.unit_id||null,ui=$('rsU'),ul=$('rsUL'),t;
+ document.body.appendChild(w);var uid=x.unit_id||null,ui=$('rsU'),ul=$('rsUL'),t,cc=$('rsC');setTimeout(function(){(id?$('rsN'):cc).focus();},50);cc.onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();$('rsN').focus();}};
  ui.oninput=function(){uid=null;clearTimeout(t);var q=ui.value.trim();if(q.length<1){ul.innerHTML='';return;}t=setTimeout(function(){run(sb.rpc('bio_unit_find',{q:q})).then(function(U){ul.innerHTML=(U||[]).map(function(u){return '<a href="#" data-id="'+u.id+'" data-l="'+esc(u.number)+'" style="display:inline-block;margin:2px 6px 2px 0">B'+u.bina+' · '+esc(u.number)+(u.who?' ('+esc(u.who)+')':'')+'</a>';}).join('')||'<span class="muted">tapılmadı — mətn kimi yazılacaq</span>';
   ul.querySelectorAll('a').forEach(function(a){a.onclick=function(e){e.preventDefault();uid=+a.dataset.id;ui.value=a.dataset.l;ul.innerHTML='<span class="py-s v">seçildi</span>';};});}).catch(function(){});},300);};
  $('rsSave').onclick=function(){var p={id:id||null,full_name:$('rsN').value,phone:$('rsP').value,unit_id:uid,unit_label:ui.value,card:$('rsC').value,note:$('rsT').value};
-  run(sb.rpc('bio_res_save',{p:p})).then(function(rid){w.remove();if(id){toast('Yeniləndi, cihaza göndərildi');payRes();}else{payRes();payResEnroll(rid,p.full_name);}}).catch(err);};}
+  run(sb.rpc('bio_res_save',{p:p})).then(function(rid){w.remove();toast(id?'Yeniləndi, cihaza göndərildi':(p.card?'Sakin əlavə olundu — brelok cihazda aktivdir':'Sakin əlavə olundu (brelok yazılmayıb)'));payRes();}).catch(err);};}
 function payResPush(id){var x=(PAY.res||[]).find(function(r){return r.id===id;})||{};payResEnroll(id,x.full_name||'');}
 /* yaradan kimi cihazın ekranında barmaq qeydiyyatı açılır (ENROLL_BIO), canlı izlənir */
 function payResEnroll(id,nm){clearInterval(PAY.enT);var d=$('pyEnr');if(d)d.remove();d=document.createElement('div');d.id='pyEnr';d.style.cssText='position:fixed;inset:0;z-index:100002;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:16px';

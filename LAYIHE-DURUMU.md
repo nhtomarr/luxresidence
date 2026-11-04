@@ -371,3 +371,4 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - UI: Maaş verilişi → «🔑 Damafon sakinləri» tabı (əlavə et, mənzil axtarışı, brelok, barmaq/üz yaz, söndür, sil, qapı jurnalı).
 - Miqrasiya: supabase/migrations/20261104_bio_residents_intercom.sql. Test sakini PIN 1001 (brelok 11259893) siyahıya köçürülür.
 - v130: «Sakin əlavə et → Yadda saxla» → avtomatik `bio_res_enroll` (ENROLL_BIO TYPE=1, yalnız son 5 dəq onlayn cihazlara) → cihaz ekranında barmaq qeydiyyatı açılır; panel canlı izləyir (bio_res_cmds, bio_res_n). ENROLL_FP bu cihazda Return=6 verdi; ENROLL_BIO gözləyib vaxt bitəndə Return=-1003.
+- v131: sakinlər brelokla — formada brelok ilk sahədir (autofocus, USB brelok oxuducu klaviatura kimi yazır, Enter → ad). Yaradanda avtomatik barmaq qeydiyyatı söndürüldü (👆 Barmaq yaz düyməsi qalır). ENROLL_MF (uzaqdan kart qeydiyyatı) bu cihazda -1003 (gözləyib vaxt bitdi) — ekranda nə göstərdiyi təsdiqlənməyib.
