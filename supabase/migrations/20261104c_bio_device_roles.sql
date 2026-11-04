@@ -1,9 +1,7 @@
 -- Cihaz rolları (bio_devices.info->>'role'): maas (maaş verilişi) / damafon (sakinlər + gələcəkdə işçi gəliş-gediş) / hamisi (test)
 update public.bio_devices set info=coalesce(info,'{}'::jsonb)||'{"role":"hamisi"}' where sn='NYU7261304234';
 
--- işçi əmrləri → maaş cihazlarına; sakin əmrləri → damafon cihazlarına
-create or replace function public._bio_cmd(p_cmd text) returns void language sql security definer set search_path=public as $$
- insert into bio_cmds(sn,cmd,created_by) select sn,p_cmd,auth.uid() from bio_devices where allowed and coalesce(info->>'role','maas') in ('maas','hamisi') $$;
+-- işçilər (barmaq) → bütün cihazlara (_bio_cmd dəyişmir); sakinlər (brelok) → yalnız damafon cihazlarına
 create or replace function public._bio_cmd_res(p_cmd text) returns void language sql security definer set search_path=public as $$
  insert into bio_cmds(sn,cmd,created_by) select sn,p_cmd,auth.uid() from bio_devices where allowed and coalesce(info->>'role','maas') in ('damafon','hamisi') $$;
 revoke execute on function public._bio_cmd_res(text) from public, anon, authenticated;
@@ -58,7 +56,31 @@ begin if not office_pay_ok() then raise exception 'icazə yoxdur'; end if;
  update bio_devices set info=coalesce(info,'{}'::jsonb)||jsonb_build_object('role',p_role) where sn=p_sn; end $$;
 grant execute on function public.bio_dev_role(text,text) to authenticated;
 
--- damafon cihazında işçi basması maaşa toxunmur (gələcəkdə gəliş-gediş)
+
+-- Cihaz 2-də işçi barmağı → davamiyyət (ilk basma gəliş, ≥10 dəq sonrakı basma çıxış; son basma qalır)
+create or replace function public._bio_att(p_emp bigint, p_at timestamptz, p_sn text) returns text language plpgsql security definer set search_path=public as $$
+declare cfg office_config; emp office_employees; rec office_attendance; d date; nowb timestamp; hrs time[]; late int:=0; early int:=0; ts timestamptz:=coalesce(p_at,now()); loc bigint; tm text; begin
+ select * into emp from office_employees where id=p_emp; if emp.id is null then return 'tanınmır'; end if;
+ select * into cfg from office_config where id=1;
+ nowb := ts at time zone 'Asia/Baku'; d := nowb::date; tm := to_char(nowb,'HH24:MI');
+ hrs := office_day_hours(emp, d);
+ select nullif(info->>'location_id','')::bigint into loc from bio_devices where sn=p_sn;
+ select * into rec from office_attendance where employee_id=p_emp and day=d;
+ if rec.check_in is null then
+  late := greatest(0, floor(extract(epoch from (nowb - (d + hrs[1])))/60)::int); if late <= coalesce(cfg.grace_min,0) then late := 0; end if;
+  insert into office_attendance(employee_id,day,check_in,late_min,source,location_id) values(p_emp,d,ts,late,'barmaq',coalesce(loc,emp.location_id))
+   on conflict (employee_id,day) do update set check_in=excluded.check_in, late_min=excluded.late_min, source='barmaq';
+  begin perform tg_notify('🟢 <b>'||emp.full_name||'</b> gəldi · '||tm||' · barmaq izi'||case when late>0 then ' · <i>'||late||' dəq gecikmə</i>' else ' · vaxtında' end); exception when others then null; end;
+  return 'gəliş';
+ end if;
+ if ts - rec.check_in < interval '10 minutes' then return 'təkrar'; end if;
+ early := greatest(0, floor(extract(epoch from ((d + hrs[2]) - nowb))/60)::int);
+ update office_attendance set check_out=ts, early_min=early, worked_min=greatest(0,floor(extract(epoch from (ts-check_in))/60)::int) where id=rec.id;
+ begin perform tg_notify('🔴 <b>'||emp.full_name||'</b> getdi · '||tm||' · barmaq izi'||case when early>0 then ' · '||early||' dəq tez' else '' end); exception when others then null; end;
+ return 'çıxış'; end $$;
+revoke execute on function public._bio_att(bigint,timestamptz,text) from public, anon, authenticated;
+
+-- damafon cihazında işçi basması maaşa toxunmur → davamiyyət
 create or replace function public.bio_scan(p_sn text, p_pin text, p_at timestamp with time zone, p_verify integer, p_raw text)
  returns text language plpgsql security definer set search_path to 'public' as $function$
 declare emp bigint; u bio_users; r office_payroll; lid bigint; rs bio_residents; drole text; begin
@@ -70,8 +92,14 @@ declare emp bigint; u bio_users; r office_payroll; lid bigint; rs bio_residents;
   return 'sakin';
  end if;
  if drole='damafon' then
-  insert into bio_door_logs(sn,pin,at,verify,raw,result) values(p_sn,p_pin,p_at,p_verify,left(p_raw,500),'işçi') on conflict (sn,pin,at) do nothing;
-  return 'işçi (damafon)';
+  select employee_id into emp from bio_users where pin=p_pin;
+  if emp is null then emp := case when p_pin ~ '^\d+$' and length(p_pin)<10 then p_pin::bigint end; end if;
+  if emp is not null and exists(select 1 from office_employees where id=emp) then
+   insert into bio_door_logs(sn,pin,at,verify,raw,result) values(p_sn,p_pin,p_at,p_verify,left(p_raw,500),'işçi · '||_bio_att(emp,p_at,p_sn)) on conflict (sn,pin,at) do nothing;
+   return 'davamiyyət';
+  end if;
+  insert into bio_door_logs(sn,pin,at,verify,raw,result) values(p_sn,p_pin,p_at,p_verify,left(p_raw,500),'tanınmır') on conflict (sn,pin,at) do nothing;
+  return 'tanınmır';
  end if;
  insert into bio_logs(sn,pin,at,verify,raw) values(p_sn,p_pin,p_at,p_verify,left(p_raw,500)) on conflict (sn,pin,at) do nothing returning id into lid;
  if lid is null then return 'dublikat'; end if;
@@ -98,3 +126,11 @@ declare emp bigint; u bio_users; r office_payroll; lid bigint; rs bio_residents;
 end $function$;
 revoke execute on function public.bio_scan(text,text,timestamptz,integer,text) from public, anon, authenticated;
 grant execute on function public.bio_scan(text,text,timestamptz,integer,text) to service_role;
+
+-- qapı jurnalında işçi adı da görünsün
+create or replace function public.bio_door_list(p_limit int default 50) returns jsonb language sql stable security definer set search_path=public as $$
+ select case when bio_res_ok() then coalesce(jsonb_agg(x order by x.id desc),'[]') end from (
+  select l.id, l.at, l.sn, l.pin, l.verify, l.result, coalesce(r.full_name, e.full_name, 'PIN '||l.pin) name, coalesce(r.unit_label,u.number, case when e.id is not null then 'işçi' end) unit_label
+  from bio_door_logs l left join bio_residents r on r.id=l.resident_id left join km_units u on u.id=r.unit_id
+  left join office_employees e on l.resident_id is null and l.pin ~ '^\d{1,9}$' and e.id=l.pin::bigint
+  order by l.id desc limit least(p_limit,300)) x $$;
