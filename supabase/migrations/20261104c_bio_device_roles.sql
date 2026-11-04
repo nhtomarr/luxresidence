@@ -134,3 +134,15 @@ create or replace function public.bio_door_list(p_limit int default 50) returns 
   from bio_door_logs l left join bio_residents r on r.id=l.resident_id left join km_units u on u.id=r.unit_id
   left join office_employees e on l.resident_id is null and l.pin ~ '^\d{1,9}$' and e.id=l.pin::bigint
   order by l.id desc limit least(p_limit,300)) x $$;
+
+-- 🚪 paneldən qapını aç (AC_UNLOCK) — yalnız son 30 san onlayn olan damafon cihazına; kim açdığı jurnala yazılır
+create or replace function public.bio_door_open(p_sn text default null) returns jsonb language plpgsql security definer set search_path=public as $$
+declare res jsonb; who text; begin if not bio_res_ok() then raise exception 'icazə yoxdur'; end if;
+ select coalesce((select full_name from office_employees where user_id=auth.uid() limit 1),'panel') into who;
+ with ins as (insert into bio_cmds(sn,cmd,created_by)
+   select sn,'AC_UNLOCK',auth.uid() from bio_devices where allowed and coalesce(info->>'role','maas') in ('damafon','hamisi') and (p_sn is null or sn=p_sn) and last_seen > now()-interval '30 seconds' returning id, sn)
+ select coalesce(jsonb_agg(jsonb_build_object('id',id,'sn',sn)),'[]') into res from ins;
+ if res='[]'::jsonb then raise exception 'Cihaz 2 hazırda onlayn deyil — qapı açıla bilmir'; end if;
+ insert into bio_door_logs(sn,pin,at,verify,raw,result) select x->>'sn','panel',now(),-1,who,'🚪 paneldən açıldı · '||who from jsonb_array_elements(res) x;
+ return res; end $$;
+grant execute on function public.bio_door_open(text) to authenticated;

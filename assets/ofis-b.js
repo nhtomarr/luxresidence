@@ -2525,7 +2525,7 @@ function payBio(id,blk){var r=blk?prompt(_pyEmp(id).full_name+' bloklansın? Bar
 /* ---- damafon sakinləri (v129): sakin basmaları maaş jurnalına düşmür ---- */
 function payRes(quiet){var b=$('pyBody');if(!b)return;if(!quiet)b.innerHTML='<div class="muted small">Yüklənir…</div>';Promise.all([run(sb.rpc('bio_res_list')),run(sb.rpc('bio_door_list',{p_limit:DAM.tab==='log'?100:1}))]).then(function(r){var R=r[0]||[],L=r[1]||[];PAY.res=R;var q=(PAY.resQ||'').toLowerCase();
  var F=R.filter(function(x){return !q||(x.full_name+' '+(x.unit_label||'')+' '+(x.phone||'')+' '+(x.card||'')+' '+x.pin).toLowerCase().indexOf(q)>=0;});
- var vb={1:'barmaq',4:'brelok',15:'üz',0:'şifrə'};
+ var vb={1:'barmaq',4:'brelok',15:'üz',0:'şifrə','-1':'panel'};
  var LIST='<div class="card" style="margin-bottom:12px"><p class="small" style="margin:0">Sakini əlavə edin → cihazın ekranında brelok qeydiyyatı açılır → breloku <b>1 dəfə</b> toxundurun. Sakinlər yalnız <b>Cihaz 2</b>-yə (damafon) yazılır, maaşa heç bir aidiyyəti yoxdur.</p></div>'+
  '<div class="py-bar"><button class="btn sm" onclick="payResForm()">+ Sakin əlavə et</button> <input id="pyResQ" placeholder="Axtar: ad, mənzil, brelok…" value="'+esc(PAY.resQ||'')+'" style="flex:1;min-width:180px"> <span class="small muted">'+R.length+' sakin · '+R.filter(function(x){return x.active;}).length+' aktiv</span></div>'+
  '<div class="py-wrap"><table class="py-t"><thead><tr><th>Sakin</th><th>Mənzil</th><th>PIN</th><th>Brelok</th><th>Barmaq/üz</th><th>Son giriş</th><th>Status</th><th></th></tr></thead><tbody>'+
@@ -2580,10 +2580,16 @@ function payResAct(id,on){if(!on&&!confirm('Sakin söndürülsün? Cihazdan sili
 function payResDel(id){if(!confirm('Sakin tam silinsin? Cihazdan da silinəcək.'))return;run(sb.rpc('bio_res_delete',{p_id:id})).then(function(){toast('Silindi');payRes();}).catch(err);}
 /* ---- 🔑 Damafon (Cihaz 2) — maaşdan ayrı bölmə ---- */
 var DAM={tab:'res'};
+function damDoor(){var b=$('damOpenBtn');if(!b||b.disabled)return;if(!confirm('Qapı açılsın?'))return;b.disabled=true;var t0=b.textContent;b.textContent='⏳ Açılır…';
+ var done=function(m,ok){b.textContent=m;b.style.background=ok?'#30D158':'#FF453A';setTimeout(function(){b.disabled=false;b.textContent=t0;b.style.background='#30D158';},3000);};
+ run(sb.rpc('bio_door_open',{p_sn:null})).then(function(C){var ids=(C||[]).map(function(c){return c.id;}),n=0;var iv=setInterval(function(){n++;run(sb.rpc('bio_res_cmds',{p_ids:ids})).then(function(S){S=S||[];
+  if(S.some(function(c){return c.status==='ok';})){clearInterval(iv);done('✅ Qapı açıldı',true);try{navigator.vibrate&&navigator.vibrate(60);}catch(_){}if(DAM.tab==='log')payRes(1);}
+  else if(S.length&&S.every(function(c){return c.status==='err';})){clearInterval(iv);done('✖ Cihaz rədd etdi');}
+  else if(n>15){clearInterval(iv);done('✖ Cavab gəlmədi');}}).catch(function(){});},1000);}).catch(function(e){b.disabled=false;b.textContent=t0;err(e);});}
 function damCan(){if(damCan.p)return damCan.p;damCan.p=run(sb.rpc('bio_res_ok')).then(function(r){return !!r;}).catch(function(){damCan.p=null;return false;});return damCan.p;}
 function damOpen(tab){damCan().then(function(ok){if(!ok){toast('Bu bölməyə icazəniz yoxdur');return;}if(tab)DAM.tab=tab;
  var w=$('payApp');if(!w){w=document.createElement('div');w.id='payApp';document.body.appendChild(w);}
- w.innerHTML='<div class="py-hd"><h2>🔑 Damafon · Cihaz 2</h2><button class="btn ghost sm py-x" onclick="payClose()">Bağla ✕</button></div><div class="py-in"><div class="py-tabs">'+
+ w.innerHTML='<div class="py-hd"><h2>🔑 Damafon · Cihaz 2</h2><button id="damOpenBtn" class="btn" style="margin-left:auto;background:#30D158;border-color:#30D158;color:#fff;font-weight:700" onclick="damDoor()">🚪 Qapını aç</button><button class="btn ghost sm py-x" style="margin-left:8px" onclick="payClose()">Bağla ✕</button></div><div class="py-in"><div class="py-tabs">'+
   [['res','Sakinlər'],['log','Qapı jurnalı']].map(function(t){return '<button data-t="'+t[0]+'" class="'+(DAM.tab===t[0]?'on':'')+'">'+t[1]+'</button>';}).join('')+'</div><div id="pyBody"></div></div>';
  w.querySelectorAll('.py-tabs button').forEach(function(b){b.onclick=function(){DAM.tab=b.dataset.t;damOpen();};});
  clearInterval(PAY.timer);payRes();if(DAM.tab==='log')PAY.timer=setInterval(function(){if(!$('pyBody')){clearInterval(PAY.timer);return;}payRes(1);},5000);});}
