@@ -1,21 +1,23 @@
-/* Nizami City — daxili sistemlər (satış, kalkulyator, müqavilə, komendant). Saytın kinematik qaranlıq dizaynı. */
+/* Nizami City — daxili sistemlər (satış, kalkulyator, müqavilə, komendant, panel). nizami-city.az saytının palitrası: zeytun + krem, NC şriftləri. */
+@import url(/assets/nc/fonts/fonts.css);
 :root{
-  --bg:#070c18;--bg2:#0b1324;--card:#111b31;--card2:#1a2742;--ink:#f3f2ea;--ink2:#c9cdd8;--mut:#8a93a8;--rule:rgba(214,222,240,.12);--rule2:rgba(214,222,240,.2);
-  --lime:#c2cd3f;--lime-hi:#dde66e;--lime-lo:#8e9a24;--brass:#c19a55;--on-lime:#0b1324;
-  --ok:#9fd25a;--warn:#f0a63a;--bad:#ff6b5e;
-  --f:"Inter",-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,sans-serif;
+  --bg:#f4f5f0;--bg2:#fbfbf8;--card:#fff;--card2:#eef0e7;--ink:#1e241a;--ink2:#555d4c;--mut:#80877a;--rule:#e3e6dc;--rule2:#d3d8c8;
+  --lime:#3f4d2c;--lime-hi:#556641;--lime-lo:#2f3a20;--brass:#b58a3c;--on-lime:#fff;--olive:#3f4d2c;--cream:#f3ecdc;--tint:#e9eedd;
+  --ok:#4f8a3d;--warn:#c08a2c;--bad:#b23b3b;
+  --f:'NC Text','NC Display',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;--fd:'NC Display','NC Text',Georgia,serif;
   --r:22px;--r2:14px;--ease:cubic-bezier(.25,.1,.25,1);--spring:cubic-bezier(.2,.8,.1,1);
-  --s-satisda:#c2cd3f;--s-satilib:#33415e;--s-investor:#c19a55;--s-bron:#e07a5f;--s-sakin:#8f7bd6;--s-fond:#4f8fd9;--s-satilmir:#3a3f4a;--s-qeyri:#252f45;
-  color-scheme:dark;
+  --sh:0 1px 2px rgba(30,36,26,.04),0 8px 24px -12px rgba(30,36,26,.12);
+  --s-satisda:#e6edd3;--s-satilib:#4f6b3a;--s-investor:#b58a3c;--s-bron:#b8664a;--s-sakin:#d9b24c;--s-fond:#5b7fa6;--s-satilmir:#4a4f45;--s-qeyri:#e3e6dc;
+  color-scheme:light;
 }
-:root[data-theme="light"]{
-  --bg:#f3f2ea;--bg2:#fbfaf5;--card:#fff;--card2:#eceee4;--ink:#0f1a33;--ink2:#2d3a57;--mut:#66708a;--rule:rgba(15,26,51,.1);--rule2:rgba(15,26,51,.18);
-  --lime:#9aa827;--lime-hi:#b6c23c;--lime-lo:#7f8c1a;--on-lime:#0b1324;--s-satilib:#8d98ae;--s-qeyri:#d9dccf;--s-satilmir:#b7bcc6;color-scheme:light;
+:root[data-theme="dark"]{
+  --bg:#141912;--bg2:#1a2016;--card:#1f2619;--card2:#283120;--ink:#eef0e4;--ink2:#c5cbb8;--mut:#8f9784;--rule:rgba(238,240,228,.1);--rule2:rgba(238,240,228,.18);
+  --lime:#a9bb7c;--lime-hi:#bfcf93;--lime-lo:#8a9d5e;--on-lime:#141912;--s-satisda:#3b4a2a;--s-qeyri:#283120;--s-satilmir:#3a3f35;color-scheme:dark;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;background:var(--bg)}
 body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font:400 15px/1.45 var(--f);letter-spacing:-.006em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-body:before{content:"";position:fixed;inset:-20% -10% auto;height:70vh;pointer-events:none;z-index:-1;background:radial-gradient(60% 60% at 75% 0%,rgba(194,205,63,.09),transparent 70%),radial-gradient(50% 60% at 10% 10%,rgba(79,143,217,.08),transparent 70%)}
+body:before{content:"";position:fixed;inset:-20% -10% auto;height:70vh;pointer-events:none;z-index:-1;opacity:0;background:radial-gradient(60% 60% at 75% 0%,rgba(194,205,63,.09),transparent 70%),radial-gradient(50% 60% at 10% 10%,rgba(79,143,217,.08),transparent 70%)}
 a{color:inherit}button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 ::selection{background:var(--lime);color:var(--on-lime)}
@@ -23,8 +25,8 @@ button{cursor:pointer}
 /* üst panel */
 .nc-hd{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 78%,transparent);-webkit-backdrop-filter:saturate(1.6) blur(18px);backdrop-filter:saturate(1.6) blur(18px);border-bottom:1px solid var(--rule);padding-top:env(safe-area-inset-top)}
 .nc-hd .in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:14px;height:60px;padding:0 max(16px,env(safe-area-inset-left))}
-.nc-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:650;letter-spacing:-.02em;font-size:16px;white-space:nowrap}
-.nc-brand img{width:32px;height:32px;border-radius:50%}
+.nc-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--fd);font-weight:500;letter-spacing:-.01em;font-size:18px;white-space:nowrap}
+.nc-brand img{width:auto;height:30px;border-radius:0}
 .nc-brand small{display:block;font-size:11.5px;font-weight:500;color:var(--mut);letter-spacing:0}
 .nc-nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
 .nc-nav::-webkit-scrollbar{display:none}
@@ -38,8 +40,8 @@ button{cursor:pointer}
 @media(max-width:760px){.nc-hd{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--bg)}.nc-kpis{grid-template-columns:repeat(3,1fr);gap:8px}.nc-kpi{padding:12px}.nc-kpi b{font-size:21px}.nc-nav{position:fixed;left:0;right:0;bottom:0;margin:0;justify-content:space-around;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid var(--rule);z-index:60}.nc-nav a{font-size:12px;padding:8px 10px}.nc-nav .nc-lo{display:none}.nc-nav .ln{display:none}.nc-nav .sh{display:inline}.nc-nav a{flex:1;text-align:center}.nc-hd .in{gap:8px}.nc-brand{margin-right:auto}.nc-brand small{display:none}}
 /* başlıq */
 .nc-title{padding:34px 0 18px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 24px}
-.nc-title h1{margin:0;font-size:clamp(28px,4.4vw,46px);font-weight:650;letter-spacing:-.035em;line-height:1.02}
-.nc-title h1 em{font-style:normal;background:linear-gradient(100deg,var(--lime-hi),var(--lime) 45%,var(--lime-lo));-webkit-background-clip:text;background-clip:text;color:transparent}
+.nc-title h1{margin:0;font-family:var(--fd);font-size:clamp(30px,4.6vw,48px);font-weight:400;letter-spacing:-.02em;line-height:1.02}
+.nc-title h1 em{font-style:italic;color:var(--lime)}
 .nc-title p{margin:6px 0 0;color:var(--mut);font-size:15px}
 .nc-title .act{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
 /* düymələr */
@@ -98,15 +100,16 @@ button{cursor:pointer}
 .nc-pill i{width:8px;height:8px;border-radius:50%;background:currentColor}
 .nc-empty{padding:40px 20px;text-align:center;color:var(--mut)}
 .mut{color:var(--mut)}.num{font-variant-numeric:tabular-nums}
-/* giriş ekranı (lux-auth üstündən) */
-#luxAuth{background:radial-gradient(90% 70% at 80% 0%,rgba(194,205,63,.16),transparent 60%),radial-gradient(80% 80% at 0% 100%,rgba(79,143,217,.14),transparent 60%),#070c18!important}
-#luxAuth form{background:rgba(17,27,49,.82)!important;border:1px solid rgba(214,222,240,.14);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-radius:28px!important;padding:34px 28px!important;box-shadow:0 50px 100px -40px rgba(0,0,0,.8)!important}
+/* giriş ekranı (lux-auth üstündən) — saytın zeytun panel üslubu */
+#luxAuth{background:radial-gradient(90% 70% at 80% 0%,rgba(181,138,60,.18),transparent 60%),linear-gradient(180deg,#323f24,#1c2414)!important}
+#luxAuth form{background:#fbfaf5!important;border:1px solid #e3e6dc;border-radius:28px!important;padding:34px 28px!important;box-shadow:0 50px 100px -40px rgba(0,0,0,.6)!important}
 #luxAuth img{height:72px!important;border-radius:50%}
-#luxAuth h3{font:650 23px var(--f)!important;letter-spacing:-.03em;color:#f3f2ea!important}
-#luxAuth p,#luxAuth .rm,#luxAuth a{color:#8a93a8!important}
-#luxAuth input:not([type=checkbox]){background:#0b1324!important;border:1px solid rgba(214,222,240,.18)!important;color:#f3f2ea!important;border-radius:14px!important}
-#luxAuth button{border-radius:99px!important;color:#0b1324!important;font-weight:650!important}
-.lux-me{background:rgba(17,27,49,.92)!important;border:1px solid rgba(214,222,240,.14);bottom:calc(12px + env(safe-area-inset-bottom))!important}
-.lux-me button{background:#c2cd3f!important;color:#0b1324!important}
+#luxAuth h3{font:400 26px var(--fd)!important;letter-spacing:-.02em;color:#1e241a!important}
+#luxAuth p,#luxAuth .rm,#luxAuth a{color:#80877a!important}
+#luxAuth input:not([type=checkbox]){background:#fff!important;border:1px solid #d3d8c8!important;color:#1e241a!important;border-radius:14px!important}
+#luxAuth button{border-radius:99px!important;background:#3f4d2c!important;color:#fff!important;font-weight:650!important}
+.lux-me{background:#fff!important;border:1px solid #e3e6dc;bottom:calc(12px + env(safe-area-inset-bottom))!important}
+.lux-me button{background:#3f4d2c!important;color:#fff!important}
 @media(max-width:760px){.lux-me{display:none!important}}
 @media print{.nc-hd,.nc-nav,.lux-me,.noprint{display:none!important}body:before{display:none}}
+@media(max-width:760px){.nc-kpis{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.nc-kpi{padding:12px}.nc-kpi b{font-size:21px}}

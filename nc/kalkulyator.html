@@ -1,11 +1,10 @@
 <!doctype html><html lang="az"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow"><title>Ödəniş kalkulyatoru — Nizami City</title>
-<meta name="theme-color" content="#070c18"><link rel="icon" href="/assets/nc/logo.png"><link rel="apple-touch-icon" href="/assets/nc/apple-touch.png">
+<meta name="theme-color" content="#2a3520"><link rel="icon" href="/assets/nc/logo.png"><link rel="apple-touch-icon" href="/assets/nc/apple-touch.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="NC Kalkulyator">
 <link rel="preconnect" href="https://avqchschbbltnnasabdm.supabase.co" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/nc/nc.css?v=2">
+<link rel="stylesheet" href="/nc/nc.css?v=3">
 <style>
 .kg{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:start}
 @media(max-width:900px){.kg{grid-template-columns:1fr}}
@@ -29,52 +28,52 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 .pick{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 @media(max-width:560px){.pick{grid-template-columns:1fr}}
 .picked{display:none;margin-top:10px;font-size:13px;padding:10px 14px;border-radius:12px;background:color-mix(in srgb,var(--lime) 12%,transparent);border:1px solid color-mix(in srgb,var(--lime) 35%,transparent)}
-.res{position:sticky;top:76px;background:linear-gradient(160deg,#16223d,#0b1324 60%);border:1px solid rgba(214,222,240,.14);border-radius:28px;padding:26px;overflow:hidden;color:#f3f2ea}
+.res{position:sticky;top:76px;background:linear-gradient(160deg,#556641,#2a3520 60%);border:1px solid rgba(238,240,228,.14);border-radius:28px;padding:26px;overflow:hidden;color:#f3f2ea}
 .res:before{content:"";position:absolute;right:-30%;top:-40%;width:80%;height:80%;background:radial-gradient(circle,rgba(194,205,63,.28),transparent 65%);pointer-events:none}
-.res .k{font-size:13px;color:#8a93a8;font-weight:600}
+.res .k{font-size:13px;color:#aab19d;font-weight:600}
 .res .big{font-size:clamp(34px,4.6vw,46px);font-weight:700;letter-spacing:-.04em;line-height:1.05;margin:6px 0 4px;font-variant-numeric:tabular-nums}
-.res .big small{font-size:18px;color:#8a93a8;font-weight:600}
-.res .sub{font-size:13.5px;color:#c9cdd8}
-.rr{display:flex;justify-content:space-between;padding:13px 0;border-top:1px solid rgba(214,222,240,.1);font-size:14.5px}
+.res .big small{font-size:18px;color:#aab19d;font-weight:600}
+.res .sub{font-size:13.5px;color:#d6dacb}
+.rr{display:flex;justify-content:space-between;padding:13px 0;border-top:1px solid rgba(238,240,228,.1);font-size:14.5px}
 .rr b{font-variant-numeric:tabular-nums}
-.mon{margin:16px 0 14px;padding:18px;border-radius:20px;background:#c2cd3f;color:#0b1324;display:flex;justify-content:space-between;align-items:baseline}
+.mon{margin:16px 0 14px;padding:18px;border-radius:20px;background:#e8d7a8;color:#2a3520;display:flex;justify-content:space-between;align-items:baseline}
 .mon>span{font-weight:650;font-size:14px}.mon b{font-size:30px;font-weight:750;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 .res .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.res .nc-b{background:rgba(255,255,255,.06);border-color:rgba(214,222,240,.2);color:#f3f2ea}
-.res .nc-b.pri{background:#f3f2ea;color:#0b1324;border-color:#f3f2ea}
-.disc{font-size:12px;color:#8a93a8;margin-top:14px;line-height:1.5}
+.res .nc-b{background:rgba(255,255,255,.06);border-color:rgba(238,240,228,.2);color:#f3f2ea}
+.res .nc-b.pri{background:#f3f2ea;color:#2a3520;border-color:#f3f2ea}
+.disc{font-size:12px;color:#aab19d;margin-top:14px;line-height:1.5}
 .sample{display:none;margin:0 0 14px;padding:10px 14px;border-radius:14px;background:rgba(240,166,58,.12);border:1px solid rgba(240,166,58,.35);color:#f0c27a;font-size:13px;font-weight:550}
 .plan{display:flex;align-items:center;gap:12px;border:1px dashed var(--rule2);border-radius:16px;padding:14px;cursor:pointer;color:var(--mut);font-size:13.5px}
 .plan img{width:64px;height:64px;object-fit:cover;border-radius:10px;background:#fff}
 .sched{max-height:260px;overflow:auto;margin-top:10px}
 /* təklif vərəqi (PDF) */
-#offer{position:fixed;left:-99999px;top:0;width:794px;background:#fbfaf5;color:#0f1a33;font-family:Inter,sans-serif;padding:0}
-#offer .oh{background:#070c18;color:#f3f2ea;padding:34px 46px 30px;display:flex;align-items:center;gap:16px}
+#offer{position:fixed;left:-99999px;top:0;width:794px;background:#fbfaf5;color:#1e241a;font-family:"NC Text",sans-serif;padding:0}
+#offer .oh{background:#2a3520;color:#f3f2ea;padding:34px 46px 30px;display:flex;align-items:center;gap:16px}
 #offer .oh img{width:58px;height:58px;border-radius:50%}
 #offer .oh .t b{display:block;font-size:24px;letter-spacing:-.03em}
-#offer .oh .t span{font-size:12px;letter-spacing:.2em;color:#c2cd3f;font-weight:700}
-#offer .oh .d{margin-left:auto;font-size:13px;color:#8a93a8}
-#offer .ph{height:210px;background:#0b1324 center/cover no-repeat}
+#offer .oh .t span{font-size:12px;letter-spacing:.2em;color:#e8d7a8;font-weight:700}
+#offer .oh .d{margin-left:auto;font-size:13px;color:#aab19d}
+#offer .ph{height:210px;background:#2a3520 center/cover no-repeat}
 #offer .bd{padding:30px 46px 34px}
 #offer h2{margin:0 0 4px;font-size:30px;letter-spacing:-.035em}
-#offer .u{font-size:14px;color:#66708a;margin-bottom:20px}
+#offer .u{font-size:14px;color:#80877a;margin-bottom:20px}
 #offer .cells{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 #offer .c{background:#eceee4;border-radius:14px;padding:12px 14px}
-#offer .c span{display:block;font-size:11px;color:#66708a;font-weight:600}
+#offer .c span{display:block;font-size:11px;color:#80877a;font-weight:600}
 #offer .c b{font-size:17px}
 #offer .bar{display:flex;justify-content:space-between;align-items:center;border-radius:16px;padding:16px 20px;margin-bottom:10px;font-size:15px;font-weight:600}
 #offer .bar b{font-size:22px;letter-spacing:-.02em}
-#offer .dk{background:#0f1a33;color:#f3f2ea}#offer .lm{background:#c2cd3f;color:#0b1324}
+#offer .dk{background:#1e241a;color:#f3f2ea}#offer .lm{background:#e8d7a8;color:#2a3520}
 #offer .row{display:flex;justify-content:space-between;padding:8px 4px;font-size:14px;border-bottom:1px solid #e1e3d8}
 #offer .pl{margin-top:16px;text-align:center}#offer .pl img{max-width:100%;max-height:360px}
-#offer .ft{margin-top:20px;padding-top:14px;border-top:1px solid #d8dbcf;font-size:12px;color:#66708a;line-height:1.6}
-#share{position:fixed;left:-99999px;top:0;width:1080px;background:#070c18;color:#f3f2ea;font-family:Inter,sans-serif}
+#offer .ft{margin-top:20px;padding-top:14px;border-top:1px solid #e3e6dc;font-size:12px;color:#80877a;line-height:1.6}
+#share{position:fixed;left:-99999px;top:0;width:1080px;background:#2a3520;color:#f3f2ea;font-family:"NC Text",sans-serif}
 </style>
 <script src="/assets/lux-auth.js?v=1790690641"></script>
-<script src="/nc/nc.js?v=2"></script>
+<script src="/nc/nc.js?v=3"></script>
 </head><body>
 <main class="nc-wrap" id="app" hidden>
- <div class="nc-title"><div><h1>Ödəniş <em>kalkulyatoru</em></h1><p>Mənzili seç, şərtləri qur — aylıq ödənişi və təklifi dərhal al.</p></div><div class="act"><button class="nc-b sm" id="admBtn" style="display:none" onclick="openAdm()">Ayarlar</button></div></div>
+ <div class="nc-title"><div><h1>Ödəniş <em>kalkulyatoru</em></h1><p>Mənzili seç, şərtləri qur — aylıq ödənişi və təklifi dərhal al.</p></div><div class="act"><a class="nc-b sm" id="toSb">Satış lövhəsi</a><a class="nc-b sm" id="admBtn" style="display:none">Ayarlar (panel)</a></div></div>
  <div class="sample" id="sample">Qiymətlər nümunədir — satış rəhbəri «Ayarlar»dan real 1 m² qiymətini daxil etməlidir.</div>
  <div class="kg">
   <section class="nc-card">
@@ -108,11 +107,11 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
   <div class="row"><span>İlkin ödəniş</span><b id="qDown"></b></div><div class="row"><span>Qalıq məbləğ</span><b id="qRem"></b></div>
   <div class="pl" id="qPlan" style="display:none"><img id="qPlanImg" alt=""></div>
   <div class="ft">Təklif bu gün üçün keçərlidir; yekun şərtlər satış ofisində təsdiqlənir.<br><b>Satış ofisi:</b> *0788 · (050) 700 00 88 · (050) 970 00 88 · Cəfər Cabbarlı küç. 31, Yasamal · nizami-city.az</div></div></div>
-<div id="share"><div style="height:470px;background:url(/assets/nc/offer.jpg) center/cover;position:relative"><div style="position:absolute;inset:auto 0 0;height:220px;background:linear-gradient(180deg,rgba(7,12,24,0),#070c18)"></div></div>
- <div style="text-align:center;padding:0 80px"><img src="/assets/nc/logo.png" style="width:110px;height:110px;border-radius:50%;display:block;margin:-40px auto 0;position:relative"><div style="font-size:16px;letter-spacing:.4em;color:#c2cd3f;margin-top:16px;font-weight:700">XOŞBƏXTLİYİ İNŞA EDİRİK</div></div>
- <div style="text-align:center;padding:44px 80px 0"><div style="font-size:21px;letter-spacing:.22em;color:#8a93a8;font-weight:600">AYLIQ ÖDƏNİŞ</div><div style="font-weight:800;font-size:110px;line-height:1;letter-spacing:-.04em;margin-top:12px"><span id="sMon"></span> ₼</div><div style="font-size:26px;color:#c9cdd8;margin-top:18px" id="sMeta"></div></div>
- <div style="margin:44px 80px 70px;border-top:1px solid rgba(214,222,240,.16);padding-top:24px;font-size:27px;color:#c9cdd8" id="sRows"></div>
- <div style="background:#c2cd3f;color:#0b1324;text-align:center;padding:26px;font-size:24px;font-weight:700">*0788 · nizami-city.az</div></div>
+<div id="share"><div style="height:470px;background:url(/assets/nc/offer.jpg) center/cover;position:relative"><div style="position:absolute;inset:auto 0 0;height:220px;background:linear-gradient(180deg,rgba(42,53,32,0),#2a3520)"></div></div>
+ <div style="text-align:center;padding:0 80px"><img src="/assets/nc/logo.png" style="width:110px;height:110px;border-radius:50%;display:block;margin:-40px auto 0;position:relative"><div style="font-size:16px;letter-spacing:.4em;color:#e8d7a8;margin-top:16px;font-weight:700">XOŞBƏXTLİYİ İNŞA EDİRİK</div></div>
+ <div style="text-align:center;padding:44px 80px 0"><div style="font-size:21px;letter-spacing:.22em;color:#aab19d;font-weight:600">AYLIQ ÖDƏNİŞ</div><div style="font-weight:800;font-size:110px;line-height:1;letter-spacing:-.04em;margin-top:12px"><span id="sMon"></span> ₼</div><div style="font-size:26px;color:#d6dacb;margin-top:18px" id="sMeta"></div></div>
+ <div style="margin:44px 80px 70px;border-top:1px solid rgba(238,240,228,.16);padding-top:24px;font-size:27px;color:#d6dacb" id="sRows"></div>
+ <div style="background:#e8d7a8;color:#2a3520;text-align:center;padding:26px;font-size:24px;font-weight:700">*0788 · nizami-city.az</div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script>
@@ -163,26 +162,8 @@ function shot(el){fillOffer();return (document.fonts?document.fonts.ready:Promis
 function dl(blob,name){var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(function(){URL.revokeObjectURL(u);},1500);}
 $('bPdf').onclick=function(){var b=this;b.disabled=true;b.textContent='Hazırlanır…';shot($('offer')).then(function(cv){var J=window.jspdf.jsPDF,pdf=new J({unit:'pt',format:'a4'}),w=595.28,h=cv.height*w/cv.width;pdf.addImage(cv.toDataURL('image/jpeg',.92),'JPEG',0,0,w,Math.min(h,841.89));pdf.save('Nizami-City-teklif-'+NC.today()+'.pdf');}).catch(function(e){NC.toast('PDF alınmadı: '+e.message);}).then(function(){b.disabled=false;b.textContent='PDF təklif';});};
 $('bPng').onclick=function(){var b=this;b.disabled=true;shot($('share')).then(function(cv){cv.toBlob(function(bl){dl(bl,'Nizami-City-teklif.png');},'image/png');}).catch(function(e){NC.toast('Alınmadı: '+e.message);}).then(function(){b.disabled=false;});};
-/* ayarlar */
-function openAdm(){var t=CFG.terms.slice().sort(function(a,b){return a.months-b.months;});
- var h=NC.mh('Kalkulyator ayarları','Dəyişikliklər bütün satış menecerlərinə tətbiq olunur')+
- '<div class="nc-card" style="margin-bottom:12px"><h3>1 m² qiyməti</h3><div class="nc-row"><div class="nc-f"><label>Default</label><input class="nc-in" id="cPd" type="number" value="'+CFG.price.def+'"></div><div class="nc-f"><label>Minimum</label><input class="nc-in" id="cPmin" type="number" value="'+CFG.price.min+'"></div><div class="nc-f"><label>Maksimum</label><input class="nc-in" id="cPmax" type="number" value="'+CFG.price.max+'"></div></div>'+
- '<p class="mut" style="font-size:12.5px;margin:12px 0 8px">Binaya görə qiymət (boş qalsa default işlənir):</p><div class="nc-row">'+Object.keys(SALES).map(function(b,i){return '<div class="nc-f"><label>'+NC.esc(short(b))+'</label><input class="nc-in bp" data-b="'+NC.esc(b)+'" type="number" value="'+((CFG.bprice||{})[b]||'')+'"></div>';}).join('')+'</div></div>'+
- '<div class="nc-card" style="margin-bottom:12px"><h3>Hazır qiymətlər (düymələr)</h3><div id="cPr">'+(CFG.presets||[]).map(prow).join('')+'</div><button class="nc-b sm" style="margin-top:8px" onclick="document.getElementById(\'cPr\').insertAdjacentHTML(\'beforeend\',prow({t:\'\',p:\'\'}))">+ Qiymət</button></div>'+
- '<div class="nc-card" style="margin-bottom:12px"><h3>Daxili kredit — müddət və 1 m² artımı</h3><div id="cT">'+t.map(trow).join('')+'</div><button class="nc-b sm" style="margin-top:8px" onclick="document.getElementById(\'cT\').insertAdjacentHTML(\'beforeend\',trow({months:\'\',surcharge:0,enabled:true}))">+ Müddət</button></div>'+
- '<div class="nc-card"><h3>Digər</h3><div class="nc-row"><div class="nc-f"><label>İlkin ödəniş default (%)</label><input class="nc-in" id="cD" type="number" value="'+CFG.downDef+'"></div><div class="nc-f"><label>İpoteka faizi (%)</label><input class="nc-in" id="cR" type="number" step="0.1" value="'+CFG.mortgageRate+'"></div><div class="nc-f"><label>Sahə min / max</label><div style="display:flex;gap:6px"><input class="nc-in" id="cAmin" type="number" value="'+CFG.area.min+'"><input class="nc-in" id="cAmax" type="number" value="'+CFG.area.max+'"></div></div></div>'+
- '<label style="display:flex;gap:10px;align-items:center;margin-top:12px;font-size:14px"><input type="checkbox" id="cM" '+(CFG.mortgageEnabled?'checked':'')+'> İpoteka rejimi aktiv</label><label style="display:flex;gap:10px;align-items:center;margin-top:8px;font-size:14px"><input type="checkbox" id="cS" '+(CFG.sample?'checked':'')+'> «Nümunə qiymət» xəbərdarlığını göstər</label></div>'+
- '<div class="mf"><button class="nc-b" onclick="NC.close()">Ləğv et</button><button class="nc-b pri" id="cSave">Yadda saxla</button></div>';
- NC.modal(h,{wide:true});$('cSave').onclick=saveAdm;}
-function prow(x){return '<div class="nc-row pr" style="grid-template-columns:2fr 1fr;margin-bottom:8px"><input class="nc-in pt" placeholder="Ad (məs. Kotlovan)" value="'+NC.esc(x.t)+'"><input class="nc-in pp" type="number" placeholder="₼/m²" value="'+x.p+'"></div>';}
-function trow(t){return '<div class="nc-row tr" style="grid-template-columns:1fr 1fr auto;align-items:end;margin-bottom:8px"><div class="nc-f"><label>Müddət (ay)</label><input class="nc-in tm" type="number" value="'+t.months+'"></div><div class="nc-f"><label>Artım (₼/m²)</label><input class="nc-in ts" type="number" value="'+t.surcharge+'"></div><label style="display:flex;gap:6px;align-items:center;height:44px;font-size:13px"><input type="checkbox" class="te" '+(t.enabled!==false?'checked':'')+'> aktiv</label></div>';}
-function saveAdm(){var n={area:{min:+$('cAmin').value||45,max:+$('cAmax').value||220,def:CFG.area.def},price:{def:+$('cPd').value,min:+$('cPmin').value,max:+$('cPmax').value},downDef:+$('cD').value||40,mortgageRate:+$('cR').value||0,mortgageEnabled:$('cM').checked,sample:$('cS').checked,bprice:{},terms:[]};
- n.presets=[];document.querySelectorAll('#cPr .pr').forEach(function(r){var t=r.querySelector('.pt').value.trim(),v=+r.querySelector('.pp').value;if(t&&v>0)n.presets.push({t:t,p:v});});document.querySelectorAll('.bp').forEach(function(i){if(+i.value)n.bprice[i.dataset.b]=+i.value;});document.querySelectorAll('#cT .tr').forEach(function(r){var m=+r.querySelector('.tm').value;if(m>0)n.terms.push({months:m,surcharge:+r.querySelector('.ts').value||0,enabled:r.querySelector('.te').checked});});
- if(!(n.price.min>0&&n.price.max>n.price.min)){NC.toast('Qiymət hüdudları düzgün deyil');return;}if(!n.terms.length){NC.toast('Ən azı bir müddət olmalıdır');return;}
- n.price.def=Math.min(n.price.max,Math.max(n.price.min,n.price.def||n.price.min));
- NC.kvSave('nc_cfg',n).then(function(){CFG=n;ST.price=n.price.def;ST.down=n.downDef;ST.rate=n.mortgageRate;NC.close();applyCfg();NC.toast('Ayarlar yadda saxlanıldı');}).catch(function(e){NC.toast('Xəta: '+e.message);});}
 function start(){Promise.all([NC.kv('nc_cfg'),NC.kv('nc_sales').catch(function(){return null;})]).then(function(r){CFG=Object.assign({},DEF,(r[0]&&r[0].value)||{});SALES=(r[1]&&r[1].value)||{};
- ST.price=CFG.price.def;ST.down=CFG.downDef;ST.area=CFG.area.def;ST.rate=CFG.mortgageRate;$('admBtn').style.display=NC.can('nc_calc_admin')?'':'none';$('app').hidden=false;applyCfg();initPick();
+ ST.price=CFG.price.def;ST.down=CFG.downDef;ST.area=CFG.area.def;ST.rate=CFG.mortgageRate;$('admBtn').style.display=NC.can('nc_calc_admin')?'':'none';$('admBtn').href=NC.base()+'admin?t=calc';$('toSb').href=NC.base()+'satis';$('toSb').style.display=NC.can(['nc_sales','nc_sales_edit','nc_contracts'])?'':'none';$('app').hidden=false;applyCfg();initPick();
  var q=new URLSearchParams(location.search);if(q.get('area')){var a=+q.get('area'),b=Object.keys(SALES).find(function(k){return q.get('u')&&q.get('u').indexOf(short(k))===0;});pickUnit(q.get('u')||'',a,b);}
  }).catch(function(e){NC.toast('Yüklənmədi: '+e.message);});}
 NC.header('kalkulyator','Ödəniş kalkulyatoru');

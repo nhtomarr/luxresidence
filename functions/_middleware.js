@@ -49,7 +49,8 @@ class Title { constructor(v) { this.v = v; } element(el) { el.setInnerContent(th
 class Append { constructor(h) { this.h = h; } element(el) { el.append(this.h, { html: true }); } }
 const LEAD = { 1: 'geniş planlı 3 və 4 otaqlı mənzillər', 3: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 4: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 5: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 6: '3, 4, 5 və 6-cı binalarla ortaq mənzil planları', 10: '1 və 3 otaqlı mənzillər', 11: '1 və 3 otaqlı mənzillər' };
 const NC_HOSTS = new Set(['nizami-city.az', 'www.nizami-city.az', 'nizamicity.az', 'www.nizamicity.az']);
-const NC_APPS = new Set(['satis', 'kalkulyator', 'muqavile', 'komendant', 'sayt']);
+const NC_APPS = new Set(['satis', 'kalkulyator', 'muqavile', 'komendant', 'sayt', 'admin']);
+const NC_FILE = { admin: 'sayt' };
 const NC_PUB = /^\/(menziller(\/[a-z0-9-]+)?|binalar(\/[a-z])?|mekan|kommersiya|bloq(\/[a-z0-9-]+)?|suallar|elaqe|secilmis|muqayise|odenis|brosur)$/i;
 const NC_SEO = {
   menziller: ['Mənzillər və planlar — Nizami City', 'Nizami City mənzil planları: 1, 2, 3 və 4 otaqlı mənzillər, eksplikasiya, binalar. Qiymət sorğu ilə, 6 ay faizsiz daxili kredit.'],
@@ -66,12 +67,12 @@ async function nizamiHost(ctx, url) {
   const noindex = (r) => { const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); };
   if (url.hostname.startsWith('www.')) { url.hostname = url.hostname.slice(4); return Response.redirect(url.toString(), 301); }
   const app = p.slice(1);
-  if (NC_APPS.has(app)) return noindex(await ctx.env.ASSETS.fetch(new Request(new URL('/nc/' + app, url).toString(), ctx.request)));
+  if (NC_APPS.has(app)) return noindex(await ctx.env.ASSETS.fetch(new Request(new URL('/nc/' + (NC_FILE[app] || app), url).toString(), ctx.request)));
   // ictimai sayt yalnız kök ünvanda: /nc/site, /nc/site-v3 → / (# hissəsi brauzerdə qalır)
   if (p === '/nc' || p === '/nc/site' || p === '/nc/site-v3') return Response.redirect(url.origin + '/' + url.search, 301);
   if (p.startsWith('/nc/') || p.startsWith('/assets/') || p === '/auth-ok') return ctx.next();
   if (p === '/favicon.ico' || p === '/apple-touch-icon.png') return ctx.env.ASSETS.fetch(new Request(new URL('/assets/nc/apple-touch.png', url).toString()));
-  if (p === '/robots.txt') return new Response('User-agent: *\nAllow: /$\nDisallow: /nc/\nDisallow: /satis\nDisallow: /kalkulyator\nDisallow: /muqavile\nDisallow: /komendant\nDisallow: /sayt\nSitemap: https://nizami-city.az/sitemap.xml\n', { headers: { 'Content-Type': 'text/plain' } });
+  if (p === '/robots.txt') return new Response('User-agent: *\nAllow: /$\nDisallow: /nc/\nDisallow: /satis\nDisallow: /kalkulyator\nDisallow: /muqavile\nDisallow: /komendant\nDisallow: /sayt\nDisallow: /admin\nSitemap: https://nizami-city.az/sitemap.xml\n', { headers: { 'Content-Type': 'text/plain' } });
   if (p === '/sitemap.xml') return new Response('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://nizami-city.az/</loc><changefreq>daily</changefreq></url>' + Object.keys(NC_SEO).map(k => `<url><loc>https://nizami-city.az/${k}</loc></url>`).join('') + '</urlset>', { headers: { 'Content-Type': 'application/xml' } });
   if (p === '' || p === '/index' || NC_PUB.test(p)) {
     const r = await ctx.env.ASSETS.fetch(new Request(new URL('/nc/site', url).toString(), ctx.request)); const h = new Headers(r.headers); h.set('Cache-Control', 'public, max-age=300'); h.delete('X-Robots-Tag'); h.delete('content-length');
@@ -92,6 +93,7 @@ export async function onRequest(ctx) {
   if (url.hostname === 'techizat.pilothayat.az') return techizatHost(ctx, url);
   // ---- Nizami City daxili sistemləri (nizamicity.az) ----
   if (NC_HOSTS.has(url.hostname)) return nizamiHost(ctx, url);
+  if (url.pathname === '/nc/admin' || url.pathname === '/nc/admin.html') { const r = await ctx.env.ASSETS.fetch(new Request(new URL('/nc/sayt', url).toString(), ctx.request)); const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); }
   if (url.pathname === '/nc' || url.pathname.startsWith('/nc/')) { const r = await ctx.next(); const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); }
   // köhnə ünvan → yeni domen (domen aktiv olandan sonra OFFICE_LIVE=true)
   if (OFFICE_LIVE && (url.pathname === '/ofis' || url.pathname === '/ofis.html')) return Response.redirect('https://' + OFFICE_PRIMARY + '/' + url.search, 301);

@@ -1,10 +1,10 @@
 <!doctype html><html lang="az"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="robots" content="noindex,nofollow"><title>Sayt idarəsi — Nizami City</title>
+<meta name="robots" content="noindex,nofollow"><title>İdarə paneli — Nizami City</title>
 <meta name="theme-color" content="#f4f5f0"><link rel="icon" href="/assets/nc/site/mark-olive.png"><link rel="apple-touch-icon" href="/assets/nc/apple-touch.png">
 <link rel="preconnect" href="https://avqchschbbltnnasabdm.supabase.co" crossorigin>
 <link rel="stylesheet" href="/assets/nc/fonts/fonts.css">
-<link rel="stylesheet" href="/nc/nc.css?v=2">
+<link rel="stylesheet" href="/nc/nc.css?v=3">
 <style>
 .py-tabs{margin:4px 0 16px}
 .py-pane{display:none}.py-pane.on{display:block}
@@ -100,14 +100,47 @@ html,body{background:var(--bg)}body:before{display:none}
  .ad-main{padding:18px 16px 90px}
  .ad-rl div{grid-template-columns:1fr;gap:2px}
 }
+/* ===== satış lövhəsi redaktoru + kalkulyator ayarları ===== */
+.py-sbar{padding:16px 18px}
+.py-sb1{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.py-sb1 .nc-sel{width:auto;height:38px;border-radius:99px;font-size:13.5px;padding:0 14px}
+.py-sb1 .grow{flex:1}
+.py-hint{font-size:12.5px;color:var(--mut);margin:12px 0 0;line-height:1.5}
+.py-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink2);margin:0 0 10px}
+.py-leg span{display:inline-flex;align-items:center;gap:6px}.py-leg i{width:11px;height:11px;border-radius:3px}
+.py-sgrid{padding:16px 14px;overflow-x:auto}
+.py-fr{display:flex;align-items:stretch;gap:6px;margin-bottom:6px;min-width:min-content}
+.py-fx{flex:none;width:26px;border:0;background:none;color:var(--mut);font-size:16px;border-radius:8px;cursor:pointer}.py-fx:hover{background:#f6e3dc;color:#b23b3b}
+.py-fl{flex:none;min-width:48px;padding:0 6px;display:grid;place-items:center;font-size:12.5px;font-weight:650;color:var(--ink2);border:1px dashed var(--rule2);border-radius:10px;cursor:pointer;background:none}
+.py-fl:hover{border-color:var(--olive);color:var(--olive)}
+.py-u{flex:none;width:84px;height:54px;border-radius:12px;border:1px solid transparent;display:flex;flex-direction:column;justify-content:center;padding:0 10px;position:relative;cursor:pointer;text-align:left;color:#fff;transition:transform .15s}
+.py-u:hover{transform:translateY(-2px)}
+.py-u b{font-size:13.5px;font-weight:650;line-height:1.1}.py-u small{font-size:11px;opacity:.85}
+.py-u.s-satisda{background:var(--s-satisda);color:var(--ink);border-color:rgba(63,77,44,.35)}
+.py-u.s-sakin{color:#2b2410}
+.py-u .cd{position:absolute;top:5px;right:6px;font-size:9px;font-weight:700;padding:1px 4px;border-radius:4px;background:rgba(0,0,0,.18)}
+.py-u.s-satisda .cd{background:rgba(63,77,44,.14)}
+.py-u.dim{opacity:.18}
+.py-add{flex:none;width:40px;border-radius:12px;border:1px dashed var(--rule2);background:none;color:var(--mut);font-size:18px;cursor:pointer}.py-add:hover{border-color:var(--olive);color:var(--olive)}
+.py-gb{flex:1;min-width:220px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:12.5px;font-weight:600;color:var(--mut);background:repeating-linear-gradient(135deg,var(--card2),var(--card2) 8px,transparent 8px,transparent 16px);border:1px dashed var(--rule2);cursor:pointer}
+.py-stc{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 14px}
+.py-stc button{height:36px;padding:0 13px;border-radius:99px;border:1px solid var(--rule2);background:#fff;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:7px;cursor:pointer}
+.py-stc button i{width:10px;height:10px;border-radius:50%}
+.py-stc button.on{background:var(--olive);color:#fff;border-color:var(--olive)}
+.py-av{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.py-av button{text-align:left;background:var(--bg2);border:1px solid var(--rule);border-radius:12px;padding:10px 12px;cursor:pointer;font-size:13px}
+.py-av button b{display:block;font-size:14px}.py-av button:hover{border-color:var(--olive)}
+.py-trow{display:grid;grid-template-columns:1fr 1fr auto auto;gap:10px;align-items:end;margin-bottom:8px}
+.py-prow{display:grid;grid-template-columns:2fr 1fr auto;gap:10px;align-items:center;margin-bottom:8px}
+@media(max-width:640px){.py-trow{grid-template-columns:1fr 1fr}.py-u{width:76px}}
 </style>
 <script src="/assets/lux-auth.js?v=1790690641"></script>
-<script src="/nc/nc.js?v=2"></script>
+<script src="/nc/nc.js?v=3"></script>
 </head><body>
 <div class="ad-bd" id="adBd"></div>
 <div id="app" hidden>
  <aside class="ad-side" id="adSide">
-  <a class="ad-brand" id="adBrand" target="_blank" rel="noopener"><img src="/assets/nc/site/mark-cream.png" alt=""><span><b>Nizami City</b><small>SAYT İDARƏSİ</small></span></a>
+  <a class="ad-brand" id="adBrand" target="_blank" rel="noopener"><img src="/assets/nc/site/mark-cream.png" alt=""><span><b>Nizami City</b><small>İDARƏ PANELİ</small></span></a>
   <nav class="ad-nav" id="tabs"></nav>
   <div class="ad-sep">SAYT</div>
   <nav class="ad-nav"><a id="viewBtn" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Sayta bax</a><a id="editBtn" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg>Saytda redaktə et</a></nav>
@@ -125,6 +158,36 @@ html,body{background:var(--bg)}body:before{display:none}
   <div class="nc-kpis" id="pKpi" style="margin-bottom:16px"></div>
   <div class="nc-card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><h3 style="margin:0">Son sorğular</h3><button class="nc-b sm" style="margin-left:auto" onclick="tab('leads')">Hamısı →</button></div><div class="ad-rl" id="pRec"></div></div>
   <div class="ad-q" id="pQ"></div>
+ </section>
+ <section class="py-pane" data-p="sales">
+  <div class="nc-card py-sbar">
+   <div class="py-sb1"><select class="nc-sel" id="sBld"></select>
+    <select class="nc-sel" id="sFs"><option value="">Bütün statuslar</option></select>
+    <select class="nc-sel" id="sFr"><option value="">Bütün otaqlar</option></select>
+    <span class="grow"></span>
+    <button class="nc-b sm" onclick="sAddFloor(false)">+ Mərtəbə</button><button class="nc-b sm" id="sMansBtn" onclick="sAddFloor(true)">+ Mansard</button>
+    <button class="nc-b sm" onclick="sExcel()">Excel</button><button class="nc-b sm" onclick="sPrint()">PDF / Çap</button></div>
+   <p class="py-hint">Xanaya <b>klik</b> → status, otaq, sahə, vəziyyət və qeyd. Sətrin sonundakı <b>+</b> yeni mənzil əlavə edir. Mərtəbə <b>nömrəsinə klik</b> → adını dəyiş (məs. Mansard). <b>×</b> → mərtəbəni sil. Dəyişikliklər <b>/satis</b> lövhəsində və saytda dərhal görünür.</p>
+  </div>
+  <div class="nc-kpis" id="sKpi" style="margin:14px 0"></div>
+  <div class="py-leg" id="sLeg"></div>
+  <div class="nc-card py-sgrid" id="sGrid"></div>
+  <div class="nc-card" style="margin-top:14px"><h3>Boş mənzil axtarışı — bütün binalar</h3>
+   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><select class="nc-sel" id="avR" style="width:auto"><option value="">Bütün otaqlar</option></select><select class="nc-sel" id="avC" style="width:auto"><option value="">İstənilən vəziyyət</option><option>Təmirli</option><option>White Box</option></select><input class="nc-in" id="avA" inputmode="decimal" placeholder="Sahə (m²) ± 5" style="width:170px"><button class="nc-b sm pri" onclick="sAvail()">Axtar</button></div>
+   <div id="avOut" style="margin-top:10px"></div></div>
+ </section>
+ <section class="py-pane" data-p="calc">
+  <div class="nc-card"><h3>1 m² qiyməti</h3>
+   <div class="nc-row"><div class="nc-f"><label>Default (₼)</label><input class="nc-in" id="cPd" type="number"></div><div class="nc-f"><label>Minimum (₼)</label><input class="nc-in" id="cPmin" type="number"></div><div class="nc-f"><label>Maksimum (₼)</label><input class="nc-in" id="cPmax" type="number"></div></div>
+   <p class="py-hint" style="margin-top:14px">Binaya görə qiymət (boş qalsa default işlənir):</p><div class="nc-row" id="cBp"></div></div>
+  <div class="nc-card" style="margin-top:14px"><h3>Hazır qiymətlər (kalkulyatordakı düymələr)</h3><div id="cPr"></div><button class="nc-b sm" style="margin-top:8px" onclick="cAddPr()">+ Qiymət</button></div>
+  <div class="nc-card" style="margin-top:14px"><h3>Daxili kredit — müddət və 1 m² artımı</h3><div id="cT"></div><button class="nc-b sm" style="margin-top:8px" onclick="cAddT()">+ Müddət</button></div>
+  <div class="nc-card" style="margin-top:14px"><h3>Digər</h3>
+   <div class="nc-row"><div class="nc-f"><label>İlkin ödəniş default (%)</label><input class="nc-in" id="cD" type="number"></div><div class="nc-f"><label>Sahə minimum (m²)</label><input class="nc-in" id="cAmin" type="number"></div><div class="nc-f"><label>Sahə maksimum (m²)</label><input class="nc-in" id="cAmax" type="number"></div><div class="nc-f"><label>Sahə default (m²)</label><input class="nc-in" id="cAdef" type="number"></div></div>
+   <div class="py-sw"><div><b>İpoteka rejimi</b><span>Nizami City-də ipoteka yoxdur — söndürülü saxlayın</span></div><button type="button" class="py-tg" id="cM"></button></div>
+   <div class="py-sw"><div><b>İpoteka faizi (%)</b><span>Yalnız ipoteka rejimi açıq olanda işlənir</span></div><input class="nc-in" id="cR" type="number" step="0.1" style="width:110px"></div>
+   <div class="py-sw"><div><b>«Nümunə qiymət» xəbərdarlığı</b><span>Kalkulyatorun yuxarısında göstərilir</span></div><button type="button" class="py-tg" id="cS"></button></div></div>
+  <div class="py-save"><button class="nc-b" onclick="drawCalc()">Ləğv et</button><button class="nc-b pri" onclick="saveCalc()">Yadda saxla</button></div>
  </section>
  <section class="py-pane" data-p="leads">
   <div class="nc-kpis" id="lKpi" style="margin-bottom:14px"></div>
@@ -172,8 +235,9 @@ html,body{background:var(--bg)}body:before{display:none}
 </div>
 <script>
 var SITE={},BLOG=null,DEF={},LEADS=[],TAB='leads',IMGK=[['front','Ana səhifə — əsas kadr (fasad)'],['tower_l','«9 bina, qapalı həyət» — şaquli foto'],['aerial','Hazır binalar — 3D vizual (fonsuz PNG/WebP)'],['aerial_c','Qapalı həyətlər'],['street','Kommersiya qalereyası'],['tower_r','Fasad'],['entrance','Parkinq və təhlükəsizlik'],['corner','Ərazi (2,87 ha) — tam ekran foto']];
-var TABS=[['panel','Panel'],['leads','Sorğular'],['blog','Bloq'],['co','Məlumatlar'],['faq','Suallar'],['timeline','Mərhələlər'],['img','Şəkillər'],['set','Bölmələr və ayarlar']];
-var TIC={"panel": "<rect x=\"3\" y=\"3\" width=\"7\" height=\"9\" rx=\"1.5\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"5\" rx=\"1.5\"/><rect x=\"14\" y=\"12\" width=\"7\" height=\"9\" rx=\"1.5\"/><rect x=\"3\" y=\"16\" width=\"7\" height=\"5\" rx=\"1.5\"/>", "leads": "<path d=\"M4 4h16v12H8l-4 4V4z\"/><path d=\"M8 9h8M8 13h5\"/>", "blog": "<path d=\"M4 4h13v16H6a2 2 0 0 1-2-2V4z\"/><path d=\"M17 8h3v10a2 2 0 0 1-2 2M8 8h5M8 12h5M8 16h5\"/>", "co": "<path d=\"M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2\"/>", "faq": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01\"/>", "timeline": "<path d=\"M4 6h16M4 12h10M4 18h6\"/><circle cx=\"18\" cy=\"12\" r=\"2\"/><circle cx=\"14\" cy=\"18\" r=\"2\"/>", "img": "<rect x=\"3\" y=\"4\" width=\"18\" height=\"16\" rx=\"2\"/><circle cx=\"9\" cy=\"10\" r=\"2\"/><path d=\"M21 16l-5-5-9 9\"/>", "set": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1\"/>"},TSUB={panel:'Ümumi baxış',leads:'Saytdan gələn müraciətlər: qiymət, baxış, zəng',blog:'Bloq yazıları',co:'Əlaqə məlumatları və elan zolağı',faq:'Tez-tez verilən suallar',timeline:'Mərhələlər və binaların statusu',img:'Saytın əsas şəkilləri',set:'Bölmələr, göstəricilər, xəritə və texniki rejim'};
+var TABS=[['panel','Panel'],['sales','Satış lövhəsi'],['calc','Kalkulyator'],['leads','Sorğular'],['blog','Bloq'],['co','Məlumatlar'],['faq','Suallar'],['timeline','Mərhələlər'],['img','Şəkillər'],['set','Bölmələr və ayarlar']];
+var TIC={"sales":"<path d=\"M3 21h18M5 21V7l7-4 7 4v14\"/><path d=\"M9 21v-5h6v5M9 10h.01M15 10h.01\"/>","calc":"<rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\"/><path d=\"M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M8 18h2M12 18h2M16 15v3\"/>","panel": "<rect x=\"3\" y=\"3\" width=\"7\" height=\"9\" rx=\"1.5\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"5\" rx=\"1.5\"/><rect x=\"14\" y=\"12\" width=\"7\" height=\"9\" rx=\"1.5\"/><rect x=\"3\" y=\"16\" width=\"7\" height=\"5\" rx=\"1.5\"/>", "leads": "<path d=\"M4 4h16v12H8l-4 4V4z\"/><path d=\"M8 9h8M8 13h5\"/>", "blog": "<path d=\"M4 4h13v16H6a2 2 0 0 1-2-2V4z\"/><path d=\"M17 8h3v10a2 2 0 0 1-2 2M8 8h5M8 12h5M8 16h5\"/>", "co": "<path d=\"M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2\"/>", "faq": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01\"/>", "timeline": "<path d=\"M4 6h16M4 12h10M4 18h6\"/><circle cx=\"18\" cy=\"12\" r=\"2\"/><circle cx=\"14\" cy=\"18\" r=\"2\"/>", "img": "<rect x=\"3\" y=\"4\" width=\"18\" height=\"16\" rx=\"2\"/><circle cx=\"9\" cy=\"10\" r=\"2\"/><path d=\"M21 16l-5-5-9 9\"/>", "set": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1\"/>"},TSUB={panel:'Ümumi baxış',sales:'Mənzillərin statusu, otaq, sahə — /satis lövhəsi yalnız baxış üçündür, redaktə buradadır',calc:'Ödəniş kalkulyatorunun qiymətləri, müddətləri və hazır düymələri',leads:'Saytdan gələn müraciətlər: qiymət, baxış, zəng',blog:'Bloq yazıları',co:'Əlaqə məlumatları və elan zolağı',faq:'Tez-tez verilən suallar',timeline:'Mərhələlər və binaların statusu',img:'Saytın əsas şəkilləri',set:'Bölmələr, göstəricilər, xəritə və texniki rejim'};
+var TPERM={sales:'nc_sales_edit',calc:'nc_calc_admin'};function tcan(t){return NC.can(TPERM[t]||'nc_site');}
 var SITEURL=/nizami-?city\.az$/.test(location.hostname)?'/':'/nc/site.html';
 var LST={new:'Yeni',contacted:'Əlaqə saxlanılıb',done:'Bağlanıb',spam:'Spam'};
 var KIND={viewing:'Baxış',commercial:'Kommersiya',contact:'Əlaqə',callback:'Zəng sifarişi',unit:'Mənzil sorğusu',price:'Qiymət sorğusu',alert:'Xəbər ver (abunə)'};
@@ -181,23 +245,28 @@ function kindT(k){k=String(k||'');if(k.indexOf('waitlist-')===0)return 'Gözləm
 function E(s){return NC.esc(s==null?'':String(s));}
 
 function start(){NC.$('viewBtn').href=SITEURL;NC.$('editBtn').href=SITEURL+'?edit=1';
+ TABS=TABS.filter(function(t){return tcan(t[0]);});var SITEOK=NC.can('nc_site');if(!SITEOK){NC.$('editBtn').style.display='none';}
  NC.$('tabs').innerHTML=TABS.map(function(t){return '<button type="button" data-t="'+t[0]+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(TIC[t[0]]||'')+'</svg>'+t[1]+'<small id="tc_'+t[0]+'"></small></button>';}).join('');
  NC.$('adBrand').href=SITEURL;adShell();
  NC.$('tabs').querySelectorAll('button').forEach(function(b){b.onclick=function(){tab(b.dataset.t);};});
  var q=new URLSearchParams(location.search).get('t');
+ var first=(TABS[0]||['panel'])[0];if(q&&!TABS.some(function(t){return t[0]===q;}))q=null;
+ var P=[];if(NC.can('nc_sales_edit')||NC.can('nc_calc_admin'))P.push(sLoad());if(NC.can('nc_calc_admin'))P.push(cLoad());
+ Promise.all(P).then(function(){var u=new URLSearchParams(location.search);if(q==='sales'&&u.get('b')&&SD.res[u.get('b')]){SM='res';SB=u.get('b');NC.$('sBld').value='res::'+SB;sDraw();if(u.get('f')!=null&&u.get('i')!=null)sUnit(u.get('f'),+u.get('i'));}});
+ if(!SITEOK){NC.$('app').hidden=false;tab(q||first);return;}
  Promise.all([NC.kv('nc_site'),NC.kv('nc_blog'),fetch('/nc/site-defaults.json?v='+Date.now()).then(function(r){return r.json();}).catch(function(){return {};})]).then(function(r){
   SITE=(r[0]&&r[0].value)||{};BLOG=r[1]&&r[1].value;DEF=r[2]||{};NC.$('app').hidden=false;
-  tab(q||'panel');loadLeads();drawAll();
+  tab(q||first);loadLeads();drawAll();
  }).catch(function(e){NC.toast('Yüklənmədi: '+e.message);});
 }
-function tab(t){TAB=t;var tt=TABS.find(function(x){return x[0]===t;});NC.$('adT').textContent=tt?tt[1]:'Panel';NC.$('adMobT').textContent=tt?tt[1]:'Panel';NC.$('adS').textContent=TSUB[t]||'';document.body.classList.remove('ad-open');scrollTo(0,0);if(t==='panel')drawPanel();document.querySelectorAll('.py-pane').forEach(function(p){p.classList.toggle('on',p.dataset.p===t);});NC.$('tabs').querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t);});}
+function tab(t){TAB=t;var tt=TABS.find(function(x){return x[0]===t;});NC.$('adT').textContent=tt?tt[1]:'Panel';NC.$('adMobT').textContent=tt?tt[1]:'Panel';NC.$('adS').textContent=TSUB[t]||'';document.body.classList.remove('ad-open');scrollTo(0,0);if(t==='panel')drawPanel();if(t==='sales')sDraw();if(t==='calc')drawCalc();document.querySelectorAll('.py-pane').forEach(function(p){p.classList.toggle('on',p.dataset.p===t);});NC.$('tabs').querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t);});}
 function drawAll(){drawBlog();drawCo();['faq','timeline','infra','gal'].forEach(drawList);drawBld();drawImgs();drawSet();}
 async function fresh(){var r=await NC.kv('nc_site');return (r&&r.value)||{};}
 async function put(fn){try{var V=await fresh();fn(V);await NC.kvSave('nc_site',V);SITE=V;NC.toast('Yadda saxlanıldı ✓');drawAll();}catch(e){NC.toast('Xəta: '+e.message);}}
 
 /* ---------- qabıq: yan menyu, istifadəçi, daxili sistemlər ---------- */
 function adShell(){var m=NC.me||{};NC.$('adMe').innerHTML='<b>'+E(m.full_name||m.email||'')+'</b><span>'+E(m.email||'')+'</span>';
- var SYS=[['satis','Satış lövhəsi',['nc_sales','nc_sales_edit','nc_contracts'],'<path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-5h6v5"/>'],['muqavile','Müqavilələr',['nc_contracts'],'<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h6M9 17h6"/>'],['komendant','Komendantlıq',['nc_komendant','nc_komendant_kassa'],'<path d="M3 21h18M5 21V8l7-5 7 5v13"/><path d="M10 21v-6h4v6"/>']].filter(function(x){return NC.can(x[2]);});
+ var SYS=[['satis','Satış lövhəsi',['nc_sales','nc_sales_edit','nc_contracts'],'<path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-5h6v5"/>'],['kalkulyator','Kalkulyator',['nc_calc','nc_calc_admin'],'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2"/>'],['muqavile','Müqavilələr',['nc_contracts'],'<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h6M9 17h6"/>'],['komendant','Komendantlıq',['nc_komendant','nc_komendant_kassa'],'<path d="M3 21h18M5 21V8l7-5 7 5v13"/><path d="M10 21v-6h4v6"/>']].filter(function(x){return NC.can(x[2]);});
  NC.$('adSys').innerHTML=SYS.map(function(x){return '<a href="'+NC.base()+x[0]+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+x[3]+'</svg>'+x[1]+'</a>';}).join('');NC.$('adSysH').style.display=SYS.length?'':'none';
  NC.$('adBurger').onclick=function(){document.body.classList.toggle('ad-open');};NC.$('adBd').onclick=function(){document.body.classList.remove('ad-open');};}
 function drawPanel(){if(!NC.$('pKpi'))return;var n=LEADS.filter(function(x){return x.status==='new';}).length,wk=Date.now()-7*864e5,off=Object.keys(SITE.off||{}).filter(function(k){return SITE.off[k];}).length;
@@ -309,6 +378,106 @@ NC.$('mtOn').onclick=function(){this.classList.toggle('on');};['prOn','stOn','dl
 function rmOv(g,k){put(function(V){if(V[g])delete V[g][k];});}
 function saveSet(){put(function(V){var o={};Object.keys(OFF).forEach(function(k){if(OFF[k])o[k]=true;});V.off=o;V.maint=NC.$('mtOn').classList.contains('on');V.showPrice=NC.$('prOn').classList.contains('on');V.showStatus=NC.$('stOn').classList.contains('on');V.showDelivery=NC.$('dlOn').classList.contains('on');V.showStock=NC.$('skOn').classList.contains('on');V.maintText=NC.$('mtT').value.trim();V.geo=NC.$('geoIn').value.trim();});}
 
-luxAuth({perms:['nc_site'],title:'Sayt idarəsi',sub:'Nizami City hesabınızla daxil olun',logo:'/assets/nc/site/mark-olive.png',accent:'#3f4d2c',noAdminLink:true,onReady:function(sb,me,tok){NC.sb=sb;NC.me=me;NC.tok=tok;start();}});
+
+/* ---------- Satış lövhəsi — redaktə yalnız buradadır (LUX admin məntiqi) ---------- */
+var SD={res:{},com:{},gar:{}},SKEY={res:'nc_sales',com:'nc_commercial',gar:'nc_garage'},SM='res',SB='';
+var SORD=['satisda','satilib','investor','bron','sakin','fond','satilmir'],CONDS=['','Təmirli','White Box','Təmirli · Kirayə','Qara karkas'];
+function STN(k){return NC.ST[k]?NC.ST[k][0]:k==='qeyri'?'Qeyri-yaşayış':k==='zirzemi'?'Zirzəmi':k;}
+function STC(k){return NC.ST[k]?NC.ST[k][1]:'#9aa08f';}
+function sShort(b){return String(b).replace('Bina ','').replace(' · Giriş ',' · ');}
+function sFl(b,f){var l=b.labels&&b.labels[f];return l?(l==='M'?'Mansard':l==='1·II'?'1-ci mərtəbə, II səviyyə':l):(Number(f)<0?'Zirzəmi':f+'-cı mərtəbə');}
+function sLab(b,f){return b.labels&&b.labels[f]?b.labels[f]:(Number(f)<0?'Z':f);}
+function sNow(){return new Date().toLocaleString('az-AZ',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+function sReal(u){return u.s!=='qeyri'&&u.s!=='zirzemi';}
+function sLoad(){return Promise.all([NC.kv('nc_sales'),NC.kv('nc_commercial').catch(function(){return null;}),NC.kv('nc_garage').catch(function(){return null;})]).then(function(r){
+ SD.res=(r[0]&&r[0].value)||{};SD.com=(r[1]&&r[1].value)||{};SD.gar=(r[2]&&r[2].value)||{};if(!SB||!SD[SM][SB]){SM='res';SB=Object.keys(SD.res)[0]||'';}sFill();sDraw();}).catch(function(e){NC.toast('Satış lövhəsi yüklənmədi: '+e.message);});}
+function sFill(){var g=function(m,lab,pre){var k=Object.keys(SD[m]);return k.length?'<optgroup label="'+lab+'">'+k.map(function(b){return '<option value="'+m+'::'+E(b)+'">'+E(pre+b)+'</option>';}).join('')+'</optgroup>':'';};
+ var sel=NC.$('sBld');sel.innerHTML=g('res','Yaşayış','')+g('com','Qeyri-yaşayış','Qeyri-yaşayış · ')+g('gar','Qaraj','Qaraj · ');sel.value=SM+'::'+SB;
+ sel.onchange=function(){var v=sel.value.split('::');SM=v[0];SB=v.slice(1).join('::');sDraw();};
+ NC.$('sFs').innerHTML='<option value="">Bütün statuslar</option>'+SORD.map(function(k){return '<option value="'+k+'">'+STN(k)+'</option>';}).join('');
+ var rs={};Object.keys(SD.res).forEach(function(b){var rw=SD.res[b].rows||{};Object.keys(rw).forEach(function(f){(rw[f]||[]).forEach(function(u){if(u.room)rs[u.room]=1;});});});
+ var ro='<option value="">Bütün otaqlar</option>'+Object.keys(rs).sort().map(function(r){return '<option value="'+E(r)+'">'+E(r)+' otaqlı</option>';}).join('');NC.$('sFr').innerHTML=ro;NC.$('avR').innerHTML=ro;
+ NC.$('sFs').onchange=sDraw;NC.$('sFr').onchange=sDraw;}
+function sDraw(){if(!NC.$('sGrid'))return;var b=SD[SM][SB];NC.$('sMansBtn').style.display=SM==='res'?'':'none';NC.$('sFr').style.display=SM==='res'?'':'none';
+ if(!b||!b.rows){NC.$('sGrid').innerHTML='<p class="mut">Məlumat yoxdur</p>';NC.$('sKpi').innerHTML='';return;}
+ var c={},n=0;Object.keys(b.rows).forEach(function(f){(b.rows[f]||[]).forEach(function(u){if(!sReal(u))return;n++;c[u.s]=(c[u.s]||0)+1;});});
+ var aT=0,aS=0;Object.keys(SD.res).forEach(function(k){var rw=SD.res[k].rows||{};Object.keys(rw).forEach(function(f){(rw[f]||[]).forEach(function(u){if(!sReal(u))return;aT++;if(u.s==='satilib')aS++;});});});
+ NC.$('sKpi').innerHTML='<div class="nc-kpi"><b>'+n+'</b><span>'+(SM==='gar'?'qaraj yeri':SM==='com'?'obyekt':'mənzil')+' · '+E(sShort(SB))+'</span></div><div class="nc-kpi"><b style="color:var(--olive)">'+(c.satisda||0)+'</b><span>satışda</span></div><div class="nc-kpi"><b>'+(c.satilib||0)+'</b><span>satılıb</span></div><div class="nc-kpi"><b>'+((c.sakin||0)+(c.investor||0))+'</b><span>sakin + investor</span></div><div class="nc-kpi"><b>'+aT+'</b><span>bütün binalar · '+(aT?Math.round(aS*100/aT):0)+'% satılıb</span></div>';
+ NC.$('sLeg').innerHTML=SORD.map(function(k){return '<span><i style="background:'+STC(k)+(k==='satisda'?';border:1px solid rgba(63,77,44,.4)':'')+'"></i>'+STN(k)+' · '+(c[k]||0)+'</span>';}).join('');
+ var fs=NC.$('sFs').value,fr=NC.$('sFr').value,h='';
+ Object.keys(b.rows).sort(function(x,y){return Number(y)-Number(x);}).forEach(function(f){var us=b.rows[f]||[];var fa=' data-f="'+E(f)+'"';
+  h+='<div class="py-fr"><button class="py-fx" data-a="delf"'+fa+' title="Mərtəbəni sil">×</button><button class="py-fl" data-a="ren"'+fa+' title="Adını dəyiş">'+E(sLab(b,f))+'</button>';
+  if(us.length&&us.every(function(u){return u.s==='zirzemi';})){h+='<div class="py-gb" data-a="conv"'+fa+' title="Yaşayış mərtəbəsinə çevir">Zirzəmi</div></div>';return;}
+  if(us.length&&us.every(function(u){return u.s==='qeyri';})){h+='<div class="py-gb" data-a="conv"'+fa+' title="Yaşayış mərtəbəsinə çevir">Qeyri-yaşayış sahəsi</div></div>';return;}
+  us.forEach(function(u,i){var m=(!fs||u.s===fs)&&(!fr||String(u.room)===fr);var cd=(u.c||'').indexOf('Təmirli')>=0?'T':(u.c||'').indexOf('White')>=0?'WB':(u.c||'').indexOf('karkas')>=0?'QK':'';
+   h+='<button class="py-u s-'+E(u.s)+(m?'':' dim')+'" data-a="u"'+fa+' data-i="'+i+'" style="'+(u.s==='satisda'?'':'background:'+STC(u.s))+'" title="№'+E(u.n)+' · '+E(STN(u.s))+(u.note?' · '+E(u.note):'')+'"><b>'+(SM==='res'&&u.room?E(u.room)+' otaq':'№ '+E(u.n))+'</b><small>'+(u.area&&u.s!=='sakin'?E(u.area)+' m²':E(STN(u.s)))+'</small>'+(cd?'<span class="cd">'+cd+'</span>':'')+(u.note?'<span class="cd" style="left:6px;right:auto">✎</span>':'')+'</button>';});
+  h+='<button class="py-add" data-a="add"'+fa+' title="Mənzil əlavə et">+</button></div>';});
+ var g=NC.$('sGrid');g.innerHTML=h;g.onclick=function(e){var t=e.target.closest('[data-a]');if(!t)return;var a=t.dataset.a,f=t.dataset.f;
+  if(a==='u')sUnit(f,+t.dataset.i);else if(a==='add')sAddUnit(f);else if(a==='ren')sRen(f);else if(a==='delf')sDelFloor(f);else if(a==='conv')sConv(f);};}
+function sPut(fn,msg){var m=SM,bk=SB,key=SKEY[m];return NC.kv(key).then(function(r){var V=(r&&r.value)||{};if(!V[bk]||!V[bk].rows)throw new Error('Blok tapılmadı — səhifəni yeniləyin');if(fn(V[bk],V)===false)return;
+  return NC.kvSave(key,V).then(function(){SD[m]=V;sDraw();NC.toast(msg||'Yadda saxlanıldı ✓');});}).catch(function(e){NC.toast('Xəta: '+e.message);});}
+function sUnit(f,i){var b=SD[SM][SB];var u=b&&b.rows[f]&&b.rows[f][i];if(!u)return NC.toast('Mənzil tapılmadı');var sel=u.s,cs=CONDS.slice();if(u.c&&cs.indexOf(u.c)<0)cs.push(u.c);
+ var h=NC.mh(E(sShort(SB))+' · '+E(sFl(b,f))+' · №'+E(u.n),'Status və məlumatlar — dəyişiklik lövhədə və saytda dərhal görünür')+
+ '<div class="nc-f"><label>Status</label></div><div class="py-stc" id="eSt">'+SORD.concat(['qeyri']).map(function(k){return '<button type="button" data-k="'+k+'" class="'+(k===u.s?'on':'')+'"><i style="background:'+STC(k)+'"></i>'+STN(k)+'</button>';}).join('')+'</div>'+
+ '<div class="nc-row"><div class="nc-f"><label>№</label><input class="nc-in" id="eNo" value="'+E(u.n)+'"></div>'+(SM==='res'?'<div class="nc-f"><label>Otaq sayı</label><input class="nc-in" id="eR" inputmode="numeric" value="'+E(u.room)+'"></div>':'')+'<div class="nc-f"><label>Sahə (m²)</label><input class="nc-in" id="eA" inputmode="decimal" value="'+E(u.area)+'"></div>'+
+ (SM==='res'?'<div class="nc-f"><label>Vəziyyət</label><select class="nc-sel" id="eC">'+cs.map(function(v){return '<option value="'+E(v)+'"'+(v===(u.c||'')?' selected':'')+'>'+(v?E(v):'—')+'</option>';}).join('')+'</select></div>':'')+'</div>'+
+ '<div class="nc-f" style="margin-top:12px"><label>Daxili qeyd</label><input class="nc-in" id="eN" value="'+E(u.note||'')+'" placeholder="Alıcı, bron müddəti və s."></div>'+
+ (u.by?'<p class="py-hint">Son dəyişiklik: '+E(u.by)+' · '+E(u.at||'')+'</p>':'')+
+ '<div class="mf"><button class="nc-b bad" id="eDel">Sil</button><span style="flex:1"></span><button class="nc-b" onclick="NC.close()">Bağla</button><button class="nc-b pri" id="eSave">Yadda saxla</button></div>';
+ var box=NC.modal(h);box.querySelectorAll('#eSt button').forEach(function(x){x.onclick=function(){sel=x.dataset.k;box.querySelectorAll('#eSt button').forEach(function(y){y.classList.toggle('on',y===x);});};});
+ var n0=String(u.n);
+ NC.$('eSave').onclick=function(){var no=NC.$('eNo').value.trim()||n0,ar=NC.$('eA').value.trim().replace(',','.'),rm=NC.$('eR')?NC.$('eR').value.trim():null,cc=NC.$('eC')?NC.$('eC').value:null,nt=NC.$('eN').value.trim();
+  if(ar&&isNaN(+ar))return NC.toast('Sahə rəqəm olmalıdır');var ch='';
+  sPut(function(B){var t=B.rows[f]&&B.rows[f][i];if(!t||String(t.n)!==n0)throw new Error('Bu mənzil başqası tərəfindən dəyişdirilib — səhifəni yeniləyin');
+   if(t.s!==sel)ch=' · '+STN(t.s)+' → '+STN(sel);t.s=sel;t.n=no;t.area=ar;if(rm!==null)t.room=rm;if(cc!==null){if(cc)t.c=cc;else delete t.c;}if(nt)t.note=nt;else delete t.note;t.by=(NC.me&&(NC.me.full_name||NC.me.email))||'';t.at=sNow();},'Yadda saxlanıldı ✓').then(function(){NC.close();});};
+ NC.$('eDel').onclick=function(){if(!confirm('№'+n0+' silinsin? Bu əməliyyat geri qaytarılmır.'))return;sPut(function(B){var t=B.rows[f]&&B.rows[f][i];if(!t||String(t.n)!==n0)throw new Error('Mənzil tapılmadı — səhifəni yeniləyin');B.rows[f].splice(i,1);},'Silindi ✓').then(function(){NC.close();});};}
+function sAddUnit(f){sPut(function(B){var a=B.rows[f]||(B.rows[f]=[]);if(a.length===1&&!sReal(a[0]))a.length=0;var mx=a.reduce(function(x,u){return Math.max(x,+u.n||0);},0);a.push({n:String(mx+1),s:'satisda',area:'',room:''});},'Mənzil əlavə olundu ✓');}
+function sRen(f){var b=SD[SM][SB],cur=(b.labels&&b.labels[f])||'';var v=prompt('Mərtəbənin adı (məs. M = Mansard). Boş qoysanız, nömrə ('+f+') göstəriləcək:',cur);if(v===null)return;v=v.trim().slice(0,20);
+ sPut(function(B){if(!B.labels)B.labels={};if(v)B.labels[f]=v;else delete B.labels[f];if(!Object.keys(B.labels).length)delete B.labels;},'Mərtəbə adı dəyişdi ✓');}
+function sDelFloor(f){var b=SD[SM][SB],us=b.rows[f]||[],real=us.filter(sReal),busy=real.filter(function(u){return u.s!=='satisda';}).length;var nm=sFl(b,f);
+ if(!confirm(us.length?(nm+' silinsin? İçində '+real.length+' obyekt var'+(busy?' ('+busy+' satılıb/sakin/investor və s.)':'')+'. Geri qaytarılmır.'):(nm+' boşdur. Silinsin?')))return;if(busy&&!confirm('Əminsiniz? '+busy+' statuslu obyekt də silinəcək.'))return;
+ sPut(function(B){delete B.rows[f];if(B.labels){delete B.labels[f];if(!Object.keys(B.labels).length)delete B.labels;}},nm+' silindi ✓');}
+function sConv(f){if(!confirm('Bu mərtəbə yaşayış mərtəbəsinə çevrilsin?'))return;sPut(function(B){B.rows[f]=[{n:'1',s:'satisda',area:'',room:''}];},'Çevrildi ✓');}
+function sAddFloor(mans){if(!SB)return NC.toast('Bina seçin');sPut(function(B){var L=B.labels||{},ks=Object.keys(B.rows),mk=ks.find(function(k){return L[k]==='M'||/^mansard$/i.test(L[k]||'');});
+  var mx=ks.filter(function(k){return k!==mk&&k!=='1.5';}).reduce(function(a,k){return Math.max(a,Math.floor(+k)||0);},0);
+  if(mans){if(mk)throw new Error('Bu binada mansard artıq var');var k=String(mx+1);B.rows[k]=[{n:'1',s:'satisda',area:'',room:''}];B.labels=Object.assign({},L);B.labels[k]='M';return;}
+  var nf=String(mx+1);if(mk&&mk===nf){var mrow=B.rows[mk];delete B.rows[mk];B.rows[String(mx+2)]=mrow;B.labels=Object.assign({},L);delete B.labels[mk];B.labels[String(mx+2)]='M';}
+  B.rows[nf]=[{n:'1',s:'satisda',area:'',room:''}];},mans?'Mansard əlavə olundu ✓':'Mərtəbə əlavə olundu ✓');}
+function sAll(){var o=[];['res','com','gar'].forEach(function(m){Object.keys(SD[m]).forEach(function(bn){var rw=SD[m][bn].rows||{};Object.keys(rw).sort(function(x,y){return Number(x)-Number(y);}).forEach(function(f){(rw[f]||[]).forEach(function(u,i){if(sReal(u))o.push({m:m,b:bn,f:f,i:i,u:u,B:SD[m][bn]});});});});});return o;}
+function sExcel(){NC.xlsx(function(){var out=[['Növ','Bina','Mərtəbə','№','Otaq','Sahə (m²)','Status','Vəziyyət','Qeyd','Son dəyişiklik']],MN={res:'Yaşayış',com:'Qeyri-yaşayış',gar:'Qaraj'};
+ sAll().forEach(function(x){out.push([MN[x.m],x.b,sFl(x.B,x.f),x.u.n,x.u.room?+x.u.room||x.u.room:'',x.u.area?+x.u.area||x.u.area:'',STN(x.u.s),x.u.c||'',x.u.note||'',x.u.by?x.u.by+' · '+(x.u.at||''):'']);});
+ var ws=XLSX.utils.aoa_to_sheet(out);ws['!cols']=[{wch:12},{wch:18},{wch:22},{wch:5},{wch:6},{wch:10},{wch:11},{wch:16},{wch:30},{wch:26}];var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Satış lövhəsi');XLSX.writeFile(wb,'Nizami-City-satis-'+NC.today()+'.xlsx');});}
+function sPrint(){var A=sAll().filter(function(x){return x.m==='res';}),G={};A.forEach(function(x){(G[x.b]=G[x.b]||[]).push(x);});var tc={};A.forEach(function(x){tc[x.u.s]=(tc[x.u.s]||0)+1;});
+ var h='<!doctype html><html lang="az"><head><meta charset="utf-8"><title>Nizami City — Satış lövhəsi '+NC.today()+'</title><style>@page{margin:12mm}body{font-family:Arial,sans-serif;color:#1e241a;margin:0}.hd{display:flex;align-items:center;gap:14px;background:#3f4d2c;color:#fff;padding:14px 18px}.hd img{height:44px}.hd b{font:600 22px Georgia,serif;display:block}.hd span{font-size:12px;color:#e8d7a8}.hd .d{margin-left:auto;text-align:right;font-size:12px}h2{font:600 16px Georgia,serif;background:#eef0e7;padding:7px 12px;margin:16px 0 4px}table{border-collapse:collapse;width:100%;font-size:10.5px}th{background:#556641;color:#fff;text-align:left;padding:5px 8px}td{padding:4px 8px;border-bottom:1px solid #e3e6dc}.s{font-size:11.5px;margin:4px 0}.st{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}</style></head><body>';
+ h+='<div class="hd"><img src="'+location.origin+'/assets/nc/site/mark-cream.png"><div><b>Nizami City</b><span>Satış lövhəsi — mənzil şkalası</span></div><div class="d">Tarix<br><b style="font-size:15px">'+NC.dmy(NC.today())+'</b></div></div>';
+ h+='<p class="s"><b>'+A.length+'</b> mənzil · '+SORD.filter(function(k){return tc[k];}).map(function(k){return tc[k]+' '+STN(k).toLowerCase();}).join(' · ')+'</p>';
+ Object.keys(G).forEach(function(bn){var L=G[bn],c={};L.forEach(function(x){c[x.u.s]=(c[x.u.s]||0)+1;});h+='<h2>'+E(bn)+' <small style="font:400 12px Arial">· '+L.length+' mənzil · '+SORD.filter(function(k){return c[k];}).map(function(k){return c[k]+' '+STN(k).toLowerCase();}).join(' · ')+'</small></h2><table><thead><tr><th>Mərtəbə</th><th>№</th><th>Otaq</th><th>Sahə, m²</th><th>Status</th><th>Vəziyyət</th></tr></thead><tbody>';
+  L.slice().sort(function(a,b){return Number(b.f)-Number(a.f)||a.i-b.i;}).forEach(function(x){h+='<tr><td>'+E(sFl(x.B,x.f))+'</td><td>'+E(x.u.n)+'</td><td>'+E(x.u.room||'')+'</td><td>'+E(x.u.s==='sakin'?'':x.u.area||'')+'</td><td><span class="st" style="background:'+({satisda:'#c9d6a6',satilib:'#4f6b3a',investor:'#b58a3c',bron:'#b8664a',sakin:'#d9b24c',fond:'#5b7fa6',satilmir:'#4a4f45'}[x.u.s]||'#999')+'"></span>'+E(STN(x.u.s))+'</td><td>'+E(x.u.c||'')+'</td></tr>';});h+='</tbody></table>';});
+ h+='<script>onload=function(){setTimeout(function(){print();},400);}<\/script></body></html>';var w=open('','_blank');if(!w)return NC.toast('Pəncərə bloklandı — açılan pəncərələrə icazə verin');w.document.write(h);w.document.close();}
+function sAvail(){var r=NC.$('avR').value,c=NC.$('avC').value,a=parseFloat((NC.$('avA').value||'').replace(',','.'));var L=sAll().filter(function(x){return x.m==='res'&&x.u.s==='satisda'&&(!r||String(x.u.room)===r)&&(!c||(x.u.c||'').indexOf(c)>=0)&&(!a||Math.abs((parseFloat(x.u.area)||0)-a)<=5);});
+ NC.$('avOut').innerHTML=L.length?'<p class="py-hint" style="margin:0 0 8px">'+L.length+' boş mənzil tapıldı</p><div class="py-av">'+L.slice(0,120).map(function(x){return '<button type="button" data-b="'+E(x.b)+'" data-f="'+E(x.f)+'" data-i="'+x.i+'"><b>'+E(sShort(x.b))+' · '+E(sFl(x.B,x.f))+' · №'+E(x.u.n)+'</b>'+(x.u.room?E(x.u.room)+' otaq · ':'')+(x.u.area?E(x.u.area)+' m²':'')+(x.u.c?' · '+E(x.u.c):'')+'</button>';}).join('')+'</div>':'<p class="mut" style="font-size:13px">Uyğun boş mənzil yoxdur</p>';
+ NC.$('avOut').querySelectorAll('button').forEach(function(x){x.onclick=function(){SM='res';SB=x.dataset.b;NC.$('sBld').value='res::'+SB;sDraw();sUnit(x.dataset.f,+x.dataset.i);};});}
+
+/* ---------- Kalkulyator ayarları (nc_cfg) ---------- */
+var CF=null,CDEF={area:{min:40,max:220,def:85},price:{min:3800,max:4500,def:3800},downDef:50,presets:[],mortgageRate:8,mortgageEnabled:false,terms:[{months:6,surcharge:0,enabled:true}],bprice:{},sample:false};
+function cLoad(){return NC.kv('nc_cfg').then(function(r){CF=Object.assign({},CDEF,(r&&r.value)||{});drawCalc();}).catch(function(e){NC.toast('Kalkulyator ayarları yüklənmədi: '+e.message);});}
+function cPrRow(x){return '<div class="py-prow"><input class="nc-in pt" placeholder="Ad (məs. Hazır bina · təmirli)" value="'+E(x.t)+'"><input class="nc-in pp" type="number" placeholder="₼/m²" value="'+E(x.p)+'"><button type="button" class="py-ib" onclick="this.parentNode.remove()" title="Sil">×</button></div>';}
+function cTRow(t){return '<div class="py-trow"><div class="nc-f"><label>Müddət (ay)</label><input class="nc-in tm" type="number" value="'+E(t.months)+'"></div><div class="nc-f"><label>Artım (₼/m²)</label><input class="nc-in ts" type="number" value="'+E(t.surcharge)+'"></div><label style="display:flex;gap:6px;align-items:center;height:44px;font-size:13px"><input type="checkbox" class="te" '+(t.enabled!==false?'checked':'')+'> aktiv</label><button type="button" class="py-ib" style="height:44px" onclick="this.parentNode.remove()" title="Sil">×</button></div>';}
+function cAddPr(){NC.$('cPr').insertAdjacentHTML('beforeend',cPrRow({t:'',p:''}));}
+function cAddT(){NC.$('cT').insertAdjacentHTML('beforeend',cTRow({months:'',surcharge:0,enabled:true}));}
+function drawCalc(){if(!CF||!NC.$('cPd'))return;NC.$('cPd').value=CF.price.def;NC.$('cPmin').value=CF.price.min;NC.$('cPmax').value=CF.price.max;
+ var bs=Object.keys(SD.res).length?Object.keys(SD.res):Object.keys(CF.bprice||{});NC.$('cBp').innerHTML=bs.map(function(b){return '<div class="nc-f"><label>'+E(sShort(b))+'</label><input class="nc-in bp" data-b="'+E(b)+'" type="number" placeholder="'+CF.price.def+'" value="'+E((CF.bprice||{})[b]||'')+'"></div>';}).join('')||'<p class="mut" style="font-size:13px">Binalar siyahısı yoxdur</p>';
+ NC.$('cPr').innerHTML=(CF.presets||[]).map(cPrRow).join('');NC.$('cT').innerHTML=(CF.terms||[]).slice().sort(function(a,b){return a.months-b.months;}).map(cTRow).join('');
+ NC.$('cD').value=CF.downDef;NC.$('cAmin').value=CF.area.min;NC.$('cAmax').value=CF.area.max;NC.$('cAdef').value=CF.area.def;NC.$('cR').value=CF.mortgageRate;
+ NC.$('cM').classList.toggle('on',!!CF.mortgageEnabled);NC.$('cS').classList.toggle('on',!!CF.sample);NC.$('cM').onclick=NC.$('cS').onclick=function(){this.classList.toggle('on');};}
+function saveCalc(){var n={area:{min:+NC.$('cAmin').value||40,max:+NC.$('cAmax').value||220,def:+NC.$('cAdef').value||85},price:{def:+NC.$('cPd').value,min:+NC.$('cPmin').value,max:+NC.$('cPmax').value},downDef:+NC.$('cD').value||0,mortgageRate:+NC.$('cR').value||0,mortgageEnabled:NC.$('cM').classList.contains('on'),sample:NC.$('cS').classList.contains('on'),bprice:{},presets:[],terms:[]};
+ document.querySelectorAll('#cPr .py-prow').forEach(function(r){var t=r.querySelector('.pt').value.trim(),v=+r.querySelector('.pp').value;if(t&&v>0)n.presets.push({t:t,p:v});});
+ document.querySelectorAll('#cBp .bp').forEach(function(i){if(+i.value)n.bprice[i.dataset.b]=+i.value;});
+ document.querySelectorAll('#cT .py-trow').forEach(function(r){var m=+r.querySelector('.tm').value;if(m>0)n.terms.push({months:m,surcharge:+r.querySelector('.ts').value||0,enabled:r.querySelector('.te').checked});});
+ if(!(n.price.min>0&&n.price.max>n.price.min))return NC.toast('Qiymət hüdudları düzgün deyil');if(!n.terms.length)return NC.toast('Ən azı bir müddət olmalıdır');if(n.area.max<=n.area.min)return NC.toast('Sahə hüdudları düzgün deyil');
+ n.price.def=Math.min(n.price.max,Math.max(n.price.min,n.price.def||n.price.min));n.area.def=Math.min(n.area.max,Math.max(n.area.min,n.area.def));n.terms.sort(function(a,b){return a.months-b.months;});
+ NC.kvSave('nc_cfg',n).then(function(){CF=n;drawCalc();NC.toast('Kalkulyator ayarları yadda saxlanıldı ✓');}).catch(function(e){NC.toast('Xəta: '+e.message);});}
+
+luxAuth({perms:['nc_site','nc_sales_edit','nc_calc_admin'],title:'İdarə paneli',sub:'Nizami City hesabınızla daxil olun',logo:'/assets/nc/site/mark-olive.png',accent:'#3f4d2c',noAdminLink:true,onReady:function(sb,me,tok){NC.sb=sb;NC.me=me;NC.tok=tok;start();}});
 </script>
 </body></html>
