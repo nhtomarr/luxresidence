@@ -37,7 +37,7 @@ luxAuth({perms:['ofis','ofis_admin','ofis_owner','dev'],title:'Baş Ofis',sub:'�
 function start(){$('app').style.display='';var _bl=document.getElementById('bootload');if(_bl)_bl.style.display='none';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
  $('meBox').innerHTML='<b>'+esc(PREVIEW?'Afiq Rəhmanov':(ME.full_name||ME.email))+'</b>'+(PREVIEW?'Sahibkar':ME.is_admin?'Sistem admini':DEV?'Developer':OWNER?'Sahibkar':MGR?'İdarəçi':'İşçi');
  $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href=OFB();});};
- if(ME.is_admin||DEV){var pv=document.createElement('button');pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';pv.onclick=function(){location.href=PREVIEW?OFB():OFB('?baxis=sahibkar');};$('outBtn').parentNode.insertBefore(pv,$('outBtn'));}
+ if((ME.is_admin||DEV)&&!$('pvBtn')){var pv=document.createElement('button');pv.id='pvBtn';pv.className='out';pv.textContent=PREVIEW?'✕ Sahibkar görünüşündən çıx':'👁 Sahibkar kimi bax';pv.onclick=function(){location.href=PREVIEW?OFB():OFB('?baxis=sahibkar');};$('outBtn').parentNode.insertBefore(pv,$('outBtn'));}
  if(PREVIEW){var bn=document.createElement('div');bn.className='pvbar';bn.innerHTML='👁 Sahibkarın görəcəyi ekran (önizləmə). Sahibkar yalnız baxır, heç nəyi dəyişə bilmir.';document.body.insertBefore(bn,$('app'));}
  var tabs;
  if(OWNER)tabs=[['boss','Nəzarət'],['chat','💬 Çat'],['feed','📣 Lent'],['remind','🔔 Xatırlat'],['asst','🎯 Assistent'],['oprofil','Profil']];
