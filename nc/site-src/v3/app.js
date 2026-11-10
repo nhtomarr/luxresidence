@@ -127,7 +127,7 @@ function leadForm(o = {}) {
   return `<form class="frm" id="lf" novalidate>${nameFld('lf')}
     <div class="fld"><span>Nə ilə maraqlanırsınız?</span><div class="chips" data-k="kind"><button type="button" data-v="price" class="${isPrice ? 'on' : ''}">Qiymət</button><button type="button" data-v="viewing" class="${isPrice ? '' : 'on'}">Baxışa gəlmək</button><button type="button" data-v="callback">Zəng edin</button></div></div>
     ${o.unit ? `<input type="hidden" name="unit" value="${esc(o.unit)}">` : `<div class="fld"><span>Otaq sayı</span><div class="chips" data-k="r"><button type="button" data-v="">Fərq etməz</button>${['1', '2', '3', '4+'].map((t, i) => `<button type="button" data-v="${t}" class="${i === 1 ? 'on' : ''}">${t}</button>`).join('')}</div></div>`}
-    <div class="fld lf-day"><span>Baxış günü</span><div class="chips" data-k="day">${days.map((x, i) => `<button type="button" data-v="${x.toISOString().slice(0, 10)}" class="${i ? '' : 'on'}">${x.getDate()} ${MON[x.getMonth()].slice(0, 3)}<small>${DAYS[x.getDay()]}</small></button>`).join('')}</div></div>
+    <div class="fld lf-day"><span>Baxış günü</span><div class="chips" data-k="day">${days.map((x, i) => `<button type="button" data-v="${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}" class="${i ? '' : 'on'}">${x.getDate()} ${MON[x.getMonth()].slice(0, 3)}<small>${DAYS[x.getDay()]}</small></button>`).join('')}</div></div>
     <div class="fld lf-day"><span>${I.cal} Saat</span><div class="chips" data-k="tm">${HOURS.map((h, i) => `<button type="button" data-v="${h}" class="${i === 1 ? 'on' : ''}">${h}</button>`).join('')}</div></div>
     <div><button class="btn" type="submit">Göndər ${I.ar}</button></div></form>`;
 }

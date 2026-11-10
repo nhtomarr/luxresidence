@@ -133,6 +133,7 @@ html,body{background:var(--bg)}body:before{display:none}
 .py-trow{display:grid;grid-template-columns:1fr 1fr auto auto;gap:10px;align-items:end;margin-bottom:8px}
 .py-prow{display:grid;grid-template-columns:2fr 1fr auto;gap:10px;align-items:center;margin-bottom:8px}
 @media(max-width:640px){.py-trow{grid-template-columns:1fr 1fr}.py-u{width:76px}}
+.nc-cp{border:0;background:none;padding:2px 4px;margin-left:4px;vertical-align:-3px;color:var(--mut,#888);cursor:pointer;border-radius:6px}.nc-cp:hover{color:inherit;background:rgba(0,0,0,.06)}.nc-cp svg{width:15px;height:15px;display:block}
 </style>
 <script src="/assets/lux-auth.js?v=1790690641"></script>
 <script src="/nc/nc.js?v=3"></script>
@@ -191,7 +192,7 @@ html,body{background:var(--bg)}body:before{display:none}
  </section>
  <section class="py-pane" data-p="leads">
   <div class="nc-kpis" id="lKpi" style="margin-bottom:14px"></div>
-  <div class="sb-ctl" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px"><select class="nc-sel" id="lSt" style="width:auto"><option value="">Bütün statuslar</option><option value="new">Yeni</option><option value="contacted">Əlaqə saxlanılıb</option><option value="done">Bağlanıb</option><option value="spam">Spam</option></select><input class="nc-in" id="lQ" placeholder="Ad, telefon, mənzil…" style="flex:1;min-width:180px"><button class="nc-b sm" onclick="leadsX()">Excel</button></div>
+  <div class="sb-ctl" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px"><select class="nc-sel" id="lSt" style="width:auto"><option value="">Bütün statuslar</option><option value="new">Yeni</option><option value="contacted">Əlaqə saxlanılıb</option><option value="done">Bağlanıb</option><option value="spam">Spam</option></select><input class="nc-in" id="lQ" placeholder="Ad, telefon, mənzil…" style="flex:1;min-width:180px"><button class="nc-b sm" onclick="leadsCopy()" title="Siyahıdakı ad və nömrələri kopyala">Kopyala</button><button class="nc-b sm" onclick="leadsX()">Excel</button></div>
   <div class="nc-tw"><table class="nc-tbl py-lead"><thead><tr><th>Tarix</th><th>Növ</th><th>Ad / telefon</th><th>Mənzil / vaxt</th><th>Mesaj</th><th>Status</th></tr></thead><tbody id="lBody"></tbody></table></div>
  </section>
 
@@ -283,11 +284,17 @@ function drawLeads(){var st=NC.$('lSt').value,q=NC.$('lQ').value.trim().toLowerC
  var wk=Date.now()-7*864e5;
  NC.$('lKpi').innerHTML='<div class="nc-kpi"><b style="color:var(--lime)">'+n+'</b><span>yeni</span></div><div class="nc-kpi"><b>'+LEADS.filter(function(x){return new Date(x.created_at)>wk;}).length+'</b><span>son 7 gün</span></div><div class="nc-kpi"><b>'+LEADS.length+'</b><span>cəmi</span></div>';
  NC.$('lBody').innerHTML=L.map(function(x){var d=new Date(x.created_at);
-  return '<tr><td class="num">'+d.toLocaleDateString('az-AZ')+'<small>'+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'})+'</small></td><td>'+E(kindT(x.kind))+'</td><td><b>'+E(x.name)+'</b><small><a href="tel:'+E(String(x.phone||'').replace(/[^\d+]/g,''))+'">'+E(x.phone)+'</a>'+(x.email?' · '+E(x.email):'')+'</small></td><td>'+E(x.unit||'')+'<small>'+E(x.slot||'')+'</small></td><td style="max-width:280px">'+E(x.msg||'')+(x.data&&Object.keys(x.data).filter(function(k){return k!=='page';}).length?'<small>'+E(Object.keys(x.data).filter(function(k){return k!=='page';}).map(function(k){return k+': '+x.data[k];}).join(' · '))+'</small>':'')+'</td><td><select class="py-st '+x.status+'" data-id="'+x.id+'">'+Object.keys(LST).map(function(k){return '<option value="'+k+'"'+(k===x.status?' selected':'')+'>'+LST[k]+'</option>';}).join('')+'</select></td></tr>';}).join('')||'<tr><td colspan="6" class="nc-empty">Sorğu yoxdur</td></tr>';
+  return '<tr><td class="num">'+d.toLocaleDateString('az-AZ')+'<small>'+d.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'})+'</small></td><td>'+E(kindT(x.kind))+'</td><td><b>'+E(x.name)+'</b><button type="button" class="nc-cp" data-cp="'+x.id+'" title="Ad və nömrəni kopyala" aria-label="Ad və nömrəni kopyala"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button><small><a href="tel:'+E(String(x.phone||'').replace(/[^\d+]/g,''))+'">'+E(x.phone)+'</a>'+(x.email?' · '+E(x.email):'')+'</small></td><td>'+E(x.unit||'')+'<small>'+E(x.slot||'')+'</small></td><td style="max-width:280px">'+E(x.msg||'')+(x.data&&Object.keys(x.data).filter(function(k){return k!=='page';}).length?'<small>'+E(Object.keys(x.data).filter(function(k){return k!=='page';}).map(function(k){return k+': '+x.data[k];}).join(' · '))+'</small>':'')+'</td><td><select class="py-st '+x.status+'" data-id="'+x.id+'">'+Object.keys(LST).map(function(k){return '<option value="'+k+'"'+(k===x.status?' selected':'')+'>'+LST[k]+'</option>';}).join('')+'</select></td></tr>';}).join('')||'<tr><td colspan="6" class="nc-empty">Sorğu yoxdur</td></tr>';
  if(TAB==='panel')drawPanel();
+ NC.$('lBody').querySelectorAll('.nc-cp').forEach(function(b){b.onclick=function(){var x=LEADS.find(function(l){return l.id===+b.dataset.cp;});if(x)cpText(leadLine(x),'Kopyalandı');};});
  NC.$('lBody').querySelectorAll('.py-st').forEach(function(s){s.onchange=function(){var id=+s.dataset.id;NC.sb.from('nc_leads').update({status:s.value,handled_by:NC.me&&NC.me.id,updated_at:new Date().toISOString()}).eq('id',id).then(function(r){if(r.error)return NC.toast(r.error.message);var x=LEADS.find(function(l){return l.id===id;});if(x)x.status=s.value;drawLeads();});};});
 }
 NC.$('lSt').onchange=drawLeads;NC.$('lQ').oninput=drawLeads;
+// Ad + nömrə kopyalama (WhatsApp-a ötürmək üçün)
+function leadPhone(p){p=String(p||'').replace(/[^\d+]/g,'');if(/^\d{9}$/.test(p))p='0'+p;return p;}
+function leadLine(x){return String(x.name||'').trim()+' — '+leadPhone(x.phone);}
+function cpText(t,ok){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){NC.toast(ok);}).catch(function(){window.prompt('Kopyala:',t);});}
+function leadsCopy(){var st=NC.$('lSt').value,q=NC.$('lQ').value.trim().toLowerCase();var L=LEADS.filter(function(x){return (!st||x.status===st)&&(!q||[x.name,x.phone,x.unit,x.msg,x.email].join(' ').toLowerCase().indexOf(q)>=0);});if(!L.length)return NC.toast('Siyahı boşdur');cpText(L.map(leadLine).join('\n'),L.length+' nəfər kopyalandı');}
 function leadsX(){NC.xlsx(function(){var a=[['Tarix','Növ','Ad','Telefon','Email','Mənzil','Vaxt','Mesaj','Status']].concat(LEADS.map(function(x){return [new Date(x.created_at).toLocaleString('az-AZ'),kindT(x.kind),x.name,x.phone,x.email||'',x.unit||'',x.slot||'',x.msg||'',LST[x.status]||x.status];}));var ws=XLSX.utils.aoa_to_sheet(a),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Sorğular');XLSX.writeFile(wb,'Nizami-City-sorgular-'+NC.today()+'.xlsx');});}
 
 /* ---------- şəkil yükləmə ---------- */
