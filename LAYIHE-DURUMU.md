@@ -396,3 +396,4 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - (10.11) Baxış günü səhvi: toISOString() Bakı vaxtında bir gün geri yazırdı → yerli tarix. Köhnə 2 sorğu (id 6, 8) +1 gün düzəldildi.
 - (10.11) trg_nc_lead: yeni sorğu handled_by = Aysel (a.teymurzada@), Telegram xəbəri tg_notify ilə (yalnız Nihat). Mövcud 10 yeni sorğu da Ayselə yazıldı.
 - (10.11) Nihatın sözü ilə Ayseldən nc_sales_edit götürüldü: mənzil statusunu yalnız admin dəyişir (RLS: nc_sales/nc_commercial/nc_garage yazmaq nc_sales_edit tələb edir). Satış lövhəsinə baxış, kalkulyator, müqavilə, komendant, sayt paneli qalır.
+- (10.11) App rejimi: nc/{satis,kalkulyator,muqavile,komendant,sayt}.webmanifest (display standalone, scope '/', start_url /nc/<app>), apple-mobile-web-app meta, standalone-da daxili target=_blank linklər eyni pəncərədə açılır. Aysel planşetində ana ekrana əlavə edir.
