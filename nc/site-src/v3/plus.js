@@ -314,7 +314,7 @@ document.addEventListener('click', e => { const h = e.target.closest('[data-hub]
 /* ===== 20: ödəniş planı (faizlə, qiymətsiz) ===== */
 function planBlock() {
   return `<div class="plan-card"><div class="plan-tx"><h2 class="h2">Ödəniş planınızı qurun</h2><p class="lead" style="margin-top:8px">İlkin ödənişi və müddəti seçin — qalan məbləğin aylara necə bölündüyünü görün.</p>
-    <div class="rng" style="margin-top:20px"><div class="v"><span>İlkin ödəniş</span><b><span id="pdI">50</span>%</b></div><input type="range" id="pdR" min="30" max="90" step="5" value="50" aria-label="İlkin ödəniş faizi"></div>
+    <div class="rng" style="margin-top:20px"><div class="v"><span>İlkin ödəniş</span><b><span id="pdI">50</span>%</b></div><input type="range" id="pdR" min="${DMIN}" max="90" step="5" value="50" aria-label="İlkin ödəniş faizi"></div>
     <div class="seg" id="pdT" style="margin-top:14px">${TERMS.map((t, i) => `<button type="button" data-m="${t.m}" class="${i ? '' : 'on'}">${t.m} ay${t.s ? '' : ' · 0%'}</button>`).join('')}</div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px"><a class="btn" href="#elaqe" data-kind="price">Dəqiq hesablama alın ${I.ar}</a></div></div>
     <div class="plan-vz"><div class="pv-bar" id="pdB"></div><div class="pv-leg" id="pdL"></div><p class="mu" id="pdN" style="font-size:13.5px;margin:12px 0 0"></p></div></div>`;

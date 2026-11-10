@@ -11,6 +11,9 @@ const HP = !SITE_.showPrice;
 // Paneldən idarə olunan göstəricilər (defolt: gizli)
 const SHOW_ST = !!SITE_.showStatus, SHOW_DEL = SHOW_ST && !!SITE_.showDelivery, SHOW_STOCK = !!SITE_.showStock;
 if (HP) OFF.kalkulyator = true;
+// İlkin ödənişin minimumu (paneldən, nc_cfg.downMin)
+const AR = ((((window.NC_REMOTE || {}).cfg || {}).area) || {}), AMIN = +AR.min || 40, AMAX = +AR.max || 220;
+const DMIN = Math.max(10, +(((window.NC_REMOTE || {}).cfg || {}).downMin) || 30);
 const TERMS = (((window.NC_REMOTE || {}).cfg || {}).terms || [{ months: 6, surcharge: 0, enabled: true }]).filter(t => t.enabled !== false && +t.months > 0).map(t => ({ m: +t.months, s: +t.surcharge || 0 })).sort((a, b) => a.m - b.m);
 const SUR = m => (TERMS.find(t => t.m === m) || { s: 0 }).s;
 const I = {
@@ -143,8 +146,8 @@ function bindLead(root, unit) {
 
 /* kalkulyator (qiymətlər açıq olanda) */
 function calcBlock(u) {
-  return `<div class="calc" id="cc">${u ? '' : `<div class="rng"><div class="v"><span>Sahə</span><b><span id="cA">100</span> m²</b></div><input type="range" id="iA" min="40" max="220" value="100"></div><div class="rng"><div class="v"><span>1 m² qiyməti</span><b><span id="cP">${fmt(CO.priceFrom)}</span> ₼</b></div><input type="range" id="iP" min="${CO.priceFrom}" max="${CO.priceFrom + 800}" step="50" value="${CO.priceFrom}"></div>`}
-    <div class="rng"><div class="v"><span>İlkin ödəniş</span><b><span id="cI">50</span>%</b></div><input type="range" id="iI" min="30" max="90" step="5" value="50"></div>
+  return `<div class="calc" id="cc">${u ? '' : `<div class="rng"><div class="v"><span>Sahə</span><b><span id="cA">100</span> m²</b></div><input type="range" id="iA" min="${AMIN}" max="${AMAX}" value="${Math.min(AMAX, Math.max(AMIN, 100))}"></div><div class="rng"><div class="v"><span>1 m² qiyməti</span><b><span id="cP">${fmt(CO.priceFrom)}</span> ₼</b></div><input type="range" id="iP" min="${CO.priceFrom}" max="${CO.priceFrom + 800}" step="50" value="${CO.priceFrom}"></div>`}
+    <div class="rng"><div class="v"><span>İlkin ödəniş</span><b><span id="cI">50</span>%</b></div><input type="range" id="iI" min="${DMIN}" max="90" step="5" value="50"></div>
     <div class="seg" id="iT">${TERMS.map((t, i) => `<button type="button" data-m="${t.m}" class="${i ? '' : 'on'}">${t.m} ay</button>`).join('')}</div>
     <div class="out"><span>Aylıq ödəniş</span><div class="mon num" id="cM"></div><dl><dt>Mənzilin dəyəri</dt><dd class="num" id="cT"></dd><dt>İlkin ödəniş</dt><dd class="num" id="cD"></dd></dl></div></div>`;
 }
