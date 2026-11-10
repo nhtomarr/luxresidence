@@ -105,7 +105,7 @@ function openOuting(){modal('<div class="mhead"><h3>🚶 İş vaxtı çıxış</
  '<div class="field"><label>Hara və nə üçün</label><input id="oN" maxlength="200" placeholder="məs: Kapital Bank — ödəniş sənədləri"></div><button class="btn" style="width:100%" id="oBtn" onclick="outingStart()">Çıxışı qeyd et</button>');}
 /* Yer: əvvəl dəqiq GPS; alınmasa (vaxt bitdi / siqnal yoxdur) daha az dəqiq, son 2 dəq-lik yerlə yenidən cəhd. İcazə rədd edilibsə dərhal null. */
 function geoFix(ok,fail){if(!navigator.geolocation)return fail(0);var g=navigator.geolocation;
- g.getCurrentPosition(ok,function(e){if(e&&e.code===1){window._geoErr='1 '+(e.message||'');return fail(1);}g.getCurrentPosition(ok,function(e2){window._geoErr=(e2&&e2.code)+' '+((e2&&e2.message)||'');fail((e2&&e2.code)||2);},{enableHighAccuracy:false,timeout:15000,maximumAge:120000});},{enableHighAccuracy:true,timeout:10000,maximumAge:30000});}
+ g.getCurrentPosition(ok,function(e){if(e&&e.code===1){window._geoErr='1 '+(e.message||'');return fail(1);}g.getCurrentPosition(ok,function(e2){window._geoErr=(e2&&e2.code)+' '+((e2&&e2.message)||'');fail((e2&&e2.code)||2);},{enableHighAccuracy:false,timeout:15000,maximumAge:20000});},{enableHighAccuracy:true,timeout:15000,maximumAge:0});}
 /* Düymə basılan anda (kamera ilə birlikdə) yer icazəsini soruş və yeri əvvəlcədən al */
 var _geoPos=null,_geoAt=0;
 function geoWarm(){_geoPos=null;geoFix(function(p){_geoPos=p;_geoAt=Date.now();},function(){});}
