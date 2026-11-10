@@ -392,3 +392,6 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - (10.11) Hesab: a.teymurzada@nizami-city.az — Aysel Teymurzadə, Nizami City satış direktoru, bütün nc_* icazələri (admin@ ilə eyni). Köhnə aysel.teymurzade@pilothayat.az (ofis, deaktiv) toxunulmadı.
 - (10.11) Saytda planı olmayan mənzil tipləri gizlədildi (plus.js: uniqT/tCard/sim — t.plan şərti). Siyahıda 28 tip qaldı. Satış lövhəsi, bina şahmatı və birbaşa #menzil linkləri dəyişmədi. Geri qaytarmaq: uniqT-dən 't.plan &&' sil.
 - (10.11) nc_sales: G·2 Giriş 2, 2–9 mərtəbə, 7-ci mənzil (110,12 / 110) otaq 2 → 3 (Nihatın sözü ilə; plan 110,15 — 2 yataq + zal).
+- (10.11) Sorğular: hər sətirdə «ad — nömrə» kopyalama ikonu + «Kopyala» düyməsi (filtrə uyğun hamısı, sətir-sətir). 9 rəqəmli nömrəyə 0 əlavə olunur.
+- (10.11) Baxış günü səhvi: toISOString() Bakı vaxtında bir gün geri yazırdı → yerli tarix. Köhnə 2 sorğu (id 6, 8) +1 gün düzəldildi.
+- (10.11) trg_nc_lead: yeni sorğu handled_by = Aysel (a.teymurzada@), Telegram xəbəri tg_notify ilə (yalnız Nihat). Mövcud 10 yeni sorğu da Ayselə yazıldı.
