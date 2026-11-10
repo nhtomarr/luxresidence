@@ -389,3 +389,4 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - Nəticə: G-də 100 mənzil, C-də 8 mənzil plan aldı. Əvvəl G-dəki 65,12/65,21/53,52 səhvən 65,00/53,83 planına düşürdü — düzəldi.
 - Hələ plansız: A (34), B (23), C (~85), F (10), E 172,1.
 - (10.11) Nihat: C və G planları eynidir → ncPlan C-ni G kimi işləyir (±0,45). C-də 37 mənzil plan alır, 83 hələ plansız (sahələri heç bir plana yaxın deyil).
+- (10.11) Hesab: a.teymurzada@nizami-city.az — Aysel Teymurzadə, Nizami City satış direktoru, bütün nc_* icazələri (admin@ ilə eyni). Köhnə aysel.teymurzade@pilothayat.az (ofis, deaktiv) toxunulmadı.
