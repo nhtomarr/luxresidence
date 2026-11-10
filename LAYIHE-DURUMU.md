@@ -383,3 +383,8 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - İdarə paneli: nizami-city.az/admin (= /sayt, fayl nc/sayt.html; luxresidence.az/nc/admin da işləyir). Yeni tablar: «Satış lövhəsi» (nc_sales_edit — LUX admin redaktoru: klik → status/№/otaq/sahə/vəziyyət/qeyd, + mənzil, + mərtəbə, + mansard, mərtəbə adı, mərtəbə sil, çevir, Excel, PDF/çap, boş mənzil axtarışı; dəyişiklik təzə nc_sales üzərində tətbiq olunur, by/at yazılır) və «Kalkulyator» (nc_calc_admin — nc_cfg). Tablar icazəyə görə görünür; giriş icazəsi nc_site | nc_sales_edit | nc_calc_admin. Dərin link: /admin?t=sales&b=<bina>&f=<mərtəbə>&i=<index>.
 - Dizayn: nc/nc.css saytın zeytun/krem palitrası + NC Display/NC Text (assets/nc/fonts/fonts.css), standart açıq tema (tünd — zeytun-tünd). nc.css/nc.js ?v=3. Komendant: nc/build_komendant.py OL xəritəsi ilə zeytun palitrası.
 - C binası (Giriş 1, 2) nc_sales-a əlavə olundu (04.11.2026 şkalası); ehtiyat: lux_kv.nc_sales_bak_20261105.
+
+## 10 noy 2026 — Nizami City: G binası üçün 13 yeni plan
+- plans.js: 53,52 / 55,10 / 65,12 / 65,21 / 78,13 / 80,73 / 82,02 / 109,32 / 110,15 / 115,84 / 118,21 / 118,52 / 122,61 (qrup `G`). ncPlan: G → G+BFG planları ±0,45; C → yalnız G planları ±0,05 (8 mənzil); A/E, B/F dəyişmədi. Şəkillər 1080×1350 postlardan kəsilib, fon şəffaf. img yolu `?v=2`.
+- Nəticə: G-də 100 mənzil, C-də 8 mənzil plan aldı. Əvvəl G-dəki 65,12/65,21/53,52 səhvən 65,00/53,83 planına düşürdü — düzəldi.
+- Hələ plansız: A (34), B (23), C (~85), F (10), E 172,1.
