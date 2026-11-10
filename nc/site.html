@@ -2311,11 +2311,13 @@ Object.values(TYPES).forEach(t => {
   t.pmin = Math.min(...t.units.map(u => u.price || Infinity));
 });
 const typeOf = u => TYPES[tKey(u)] || { key: tKey(u), a: +u.a, r: u.r, units: [u], blds: [u.b], plan: window.ncPlan(u.a, u.b), rep: u, conds: [u.c || condOf(u)], nFree: u.st === 'free' ? 1 : 0, pmin: u.price };
-const uniqT = L => { const s = new Set(), o = []; L.forEach(u => { const t = typeOf(u); if (!s.has(t.key)) { s.add(t.key); o.push(t); } }); return o; };
+// Planı (şəkli) olmayan mənzil tipləri saytda göstərilmir (10.11, Nihat)
+const uniqT = L => { const s = new Set(), o = []; L.forEach(u => { const t = typeOf(u); if (t.plan && !s.has(t.key)) { s.add(t.key); o.push(t); } }); return o; };
 const tTitle = t => `${roomsT(t.r)} · ${fm2(t.a)} m²`;
 const bList = L => L.map(b => 'Bina ' + b).join(', ');
 const PLSVG = '<svg viewBox="0 0 120 90" class="tpl-ph" aria-hidden="true"><rect x="8" y="8" width="104" height="74" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><path d="M50 8v30H8M50 56v26M80 38h32M80 38v44M50 38h12" fill="none" stroke="currentColor" stroke-width="3"/></svg>';
 function tCard(t, blds) {
+  if (!t.plan) return '';
   const r = t.rep, bl = blds || t.blds;
   return `<article class="ucard tcard"><a class="ulnk" href="#plan-${t.key}" aria-label="${esc(tTitle(t))}"></a>
     <div class="tpl">${t.plan ? `<img src="${t.plan.img}" alt="${esc(roomsT(t.r))} mənzil planı, ${fm2(t.a)} m²" loading="lazy" decoding="async">` : `${PLSVG}<span>Plan satış ofisində</span>`}</div>
@@ -2329,7 +2331,7 @@ function typesGrid(units, filterB) { return uniqT(units).sort((a, b) => a.r - b.
 pages.tip = key => {
   const t = TYPES[key]; if (!t) return pages.menziller();
   const u = t.rep, url = location.origin + toPath('plan-' + t.key);
-  const sim = Object.values(TYPES).filter(x => x.key !== t.key && x.r === t.r).sort((a, b) => Math.abs(a.a - t.a) - Math.abs(b.a - t.a)).slice(0, 4);
+  const sim = Object.values(TYPES).filter(x => x.plan && x.key !== t.key && x.r === t.r).sort((a, b) => Math.abs(a.a - t.a) - Math.abs(b.a - t.a)).slice(0, 4);
   const msg = `${tTitle(t)} (${bList(t.blds)})`;
   return {
     title: `${roomsT(t.r)} mənzil, ${fm2(t.a)} m² — Nizami City`, html: `<section class="ph wrap">${crumbs(['Mənzillər', 'menziller'], [tTitle(t)])}
