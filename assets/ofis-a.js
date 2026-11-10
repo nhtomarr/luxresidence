@@ -106,6 +106,9 @@ function openOuting(){modal('<div class="mhead"><h3>🚶 İş vaxtı çıxış</
 /* Yer: əvvəl dəqiq GPS; alınmasa (vaxt bitdi / siqnal yoxdur) daha az dəqiq, son 2 dəq-lik yerlə yenidən cəhd. İcazə rədd edilibsə dərhal null. */
 function geoFix(ok,fail){if(!navigator.geolocation)return fail(0);var g=navigator.geolocation;
  g.getCurrentPosition(ok,function(e){if(e&&e.code===1){window._geoErr='1 '+(e.message||'');return fail(1);}g.getCurrentPosition(ok,function(e2){window._geoErr=(e2&&e2.code)+' '+((e2&&e2.message)||'');fail((e2&&e2.code)||2);},{enableHighAccuracy:false,timeout:15000,maximumAge:120000});},{enableHighAccuracy:true,timeout:10000,maximumAge:30000});}
+/* Düymə basılan anda (kamera ilə birlikdə) yer icazəsini soruş və yeri əvvəlcədən al */
+var _geoPos=null,_geoAt=0;
+function geoWarm(){_geoPos=null;geoFix(function(p){_geoPos=p;_geoAt=Date.now();},function(){});}
 function geoGet(cb){geoFix(function(p){cb(p.coords.latitude,p.coords.longitude);},function(){cb(null,null);});}
 function outingStart(){var k=(document.querySelector('input[name=oK]:checked')||{}).value,n=$('oN').value.trim();if(!n)return toast('Hara və nə üçün getdiyinizi yazın');$('oBtn').disabled=true;toast('Yer yoxlanılır…');
  geoGet(function(la,ln){sb.rpc('office_outing_start',{p_kind:k,p_note:n,p_lat:la,p_lng:ln}).then(function(r){if(r.error)throw r.error;closeModal();toast(r.data.msg);renderToday();}).catch(function(e){var b=$('oBtn');if(b)b.disabled=false;err(e);});});}
@@ -646,7 +649,7 @@ function asstEdit(id,cur){var t=prompt('İşi düzəlt:',cur);if(t==null)return;
 var _scanKind='in';
 function loadJsQR(){return new Promise(function(res,rej){if(window.jsQR)return res();var sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';sc.onload=function(){res();};sc.onerror=function(){rej(new Error('QR oxuyucu yüklənmədi'));};document.head.appendChild(sc);});}
 function stopCam(){if(scan._st){scan._st.getTracks().forEach(function(t){t.stop();});scan._st=null;}scan._on=false;}
-function scan(kind){_scanKind=kind;
+function scan(kind){_scanKind=kind;geoWarm();
  modal('<div class="mhead"><h3>'+(kind==='in'?'Gəliş':'Çıxış')+' — QR skan</h3><button class="x" onclick="stopCam();closeModal()">×</button></div>'+
   '<div style="position:relative"><video id="cam" playsinline muted autoplay style="width:100%;border-radius:14px;background:#000;aspect-ratio:1;object-fit:cover"></video><div style="position:absolute;inset:18%;border:3px solid rgba(255,255,255,.85);border-radius:16px;pointer-events:none"></div></div>'+
   '<p class="muted small" id="camMsg" style="margin-top:8px">Kamera açılır… İcazə soruşulsa, <b>“İcazə ver”</b> basın.</p>');
@@ -672,6 +675,7 @@ function autoCheck(token){history.replaceState(null,'',OFB());if(!EMP){toast('He
   if(kind==='out'&&!confirm('Çıxışı qeyd edək?'))return;doCheck(kind,token);}).catch(err);}
 function doCheck(kind,token){toast('Yer yoxlanılır…');var _scanAt=new Date().toISOString();
  function send(lat,lng){sb.rpc('office_check',{p_kind:kind,p_token:token,p_lat:lat,p_lng:lng,p_at:_scanAt}).then(function(r){if(r.error)throw r.error;var msg=(r.data&&r.data.msg)||'Qeyd olundu';toast(msg);renderToday();return selfieCapture(kind).then(function(){renderToday();}).catch(function(){});}).catch(err);}
+ if(_geoPos&&Date.now()-_geoAt<180000)return send(_geoPos.coords.latitude,_geoPos.coords.longitude);
  geoFix(function(p){send(p.coords.latitude,p.coords.longitude);},function(c){toast(c===1?'Yerə icazə verilməyib (kod 1): Ayarlar → Gizlilik → Konum Servisleri':'GPS cavab vermədi (kod '+(window._geoErr||c)+')');setTimeout(function(){send(null,null);},2500);});}
 
 /* ---------- PANEL ---------- */
