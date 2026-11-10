@@ -121,7 +121,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script>
 var $=NC.$,CFG=null,SALES={},ST={area:85,price:2000,down:40,pay:'internal',rate:8,months:36,plan:null,unit:''};
-var DEF={area:{min:45,max:220,def:85},price:{min:3800,max:4500,def:3800},downDef:50,presets:[{t:'Kotlovan',p:3800},{t:'Hazır bina · təmirsiz',p:3900},{t:'Hazır bina · təmirli',p:4200}],mortgageRate:8,mortgageEnabled:true,terms:[{months:6,surcharge:0,enabled:true},{months:12,surcharge:200,enabled:true},{months:24,surcharge:400,enabled:true},{months:36,surcharge:600,enabled:true}],bprice:{}};
+var DEF={area:{min:55,max:220,def:85},price:{min:3700,max:4500,def:3800},downDef:50,presets:[{t:'Kotlovan',p:3800},{t:'Hazır bina · təmirsiz',p:3900},{t:'Hazır bina · təmirli',p:4200}],mortgageRate:8,mortgageEnabled:false,terms:[{months:6,surcharge:0,enabled:true},{months:12,surcharge:200,enabled:true},{months:18,surcharge:300,enabled:true},{months:24,surcharge:400,enabled:true}],bprice:{}};
 function f0(n){return NC.fmt(Math.round(n));}
 function sur(m){var t=CFG.terms.find(function(t){return +t.months===m;});return t?(+t.surcharge||0):0;}
 function calc(){var s=ST.pay==='internal'&&ST.down<100?sur(ST.months):0,e=ST.price+s,t=ST.area*e,d=t*ST.down/100,r=Math.max(0,t-d),n=Math.max(1,ST.months),m=0;
