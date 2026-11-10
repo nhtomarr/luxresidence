@@ -37,7 +37,7 @@ window.NC_PLANS = (function () {
   const BFG = ['53.83', '65.00', '76.50', '113.00', '121.82', '163.21'];
   const GN = ['53.52', '55.10', '65.12', '65.21', '78.13', '80.73', '82.02', '109.32', '110.15', '115.84', '118.21', '118.52', '122.61'];
   const R = {};
-  Object.keys(P).forEach(a => { R[a] = { a: +a, rooms: P[a], g: GN.includes(a) ? 'G' : BFG.includes(a) ? 'BFG' : 'AE', img: '/assets/nc/plans/plan-' + a.replace('.', '_') + '.png' }; });
+  Object.keys(P).forEach(a => { R[a] = { a: +a, rooms: P[a], g: GN.includes(a) ? 'G' : BFG.includes(a) ? 'BFG' : 'AE', img: '/assets/nc/plans/plan-' + a.replace('.', '_') + '.png?v=2' }; });
   return R;
 })();
 // Planlar A və E binalarına aiddir. Dəqiq uyğunluq, yoxdursa ±0,3 m² daxilində ən yaxın plan (məs. 128,74 → 129,00; 154,53 → 154,76).
