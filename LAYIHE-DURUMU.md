@@ -395,3 +395,4 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - (10.11) Sorğular: hər sətirdə «ad — nömrə» kopyalama ikonu + «Kopyala» düyməsi (filtrə uyğun hamısı, sətir-sətir). 9 rəqəmli nömrəyə 0 əlavə olunur.
 - (10.11) Baxış günü səhvi: toISOString() Bakı vaxtında bir gün geri yazırdı → yerli tarix. Köhnə 2 sorğu (id 6, 8) +1 gün düzəldildi.
 - (10.11) trg_nc_lead: yeni sorğu handled_by = Aysel (a.teymurzada@), Telegram xəbəri tg_notify ilə (yalnız Nihat). Mövcud 10 yeni sorğu da Ayselə yazıldı.
+- (10.11) Nihatın sözü ilə Ayseldən nc_sales_edit götürüldü: mənzil statusunu yalnız admin dəyişir (RLS: nc_sales/nc_commercial/nc_garage yazmaq nc_sales_edit tələb edir). Satış lövhəsinə baxış, kalkulyator, müqavilə, komendant, sayt paneli qalır.
