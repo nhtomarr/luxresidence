@@ -391,3 +391,4 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - (10.11) Nihat: C və G planları eynidir → ncPlan C-ni G kimi işləyir (±0,45). C-də 37 mənzil plan alır, 83 hələ plansız (sahələri heç bir plana yaxın deyil).
 - (10.11) Hesab: a.teymurzada@nizami-city.az — Aysel Teymurzadə, Nizami City satış direktoru, bütün nc_* icazələri (admin@ ilə eyni). Köhnə aysel.teymurzade@pilothayat.az (ofis, deaktiv) toxunulmadı.
 - (10.11) Saytda planı olmayan mənzil tipləri gizlədildi (plus.js: uniqT/tCard/sim — t.plan şərti). Siyahıda 28 tip qaldı. Satış lövhəsi, bina şahmatı və birbaşa #menzil linkləri dəyişmədi. Geri qaytarmaq: uniqT-dən 't.plan &&' sil.
+- (10.11) nc_sales: G·2 Giriş 2, 2–9 mərtəbə, 7-ci mənzil (110,12 / 110) otaq 2 → 3 (Nihatın sözü ilə; plan 110,15 — 2 yataq + zal).
