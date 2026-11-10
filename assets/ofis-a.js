@@ -103,7 +103,10 @@ function renderOutingBox(){var b=$('tOut');if(!b)return;if(MYOUT)trkStart();else
 function openOuting(){modal('<div class="mhead"><h3>🚶 İş vaxtı çıxış</h3><button class="x" onclick="closeModal()">×</button></div><p class="muted small" style="margin-bottom:10px">Ofisdən müvəqqəti çıxanda qeyd edin — dəftərə yazmağa ehtiyac yoxdur. Çıxış müddətində yeriniz <b>avtomatik</b> qeyd olunur (tətbiq açıq olduqca) və çatdığınız yer özü müəyyən edilir. Qayıdanda <b>“Ofisə qayıtdım”</b> basın. İzləmə yalnız çıxış müddətində aparılır və məlumatı yalnız rəhbərlik görür.</p>'+
  '<div class="field"><label>Növ</label><div class="okinds"><label><input type="radio" name="oK" value="is" checked><span>💼 İşlə bağlı<small>görüş, bank, obyekt, sənəd</small></span></label><label><input type="radio" name="oK" value="sexsi"><span>🙋 Şəxsi<small>iş vaxtından çıxılır</small></span></label></div></div>'+
  '<div class="field"><label>Hara və nə üçün</label><input id="oN" maxlength="200" placeholder="məs: Kapital Bank — ödəniş sənədləri"></div><button class="btn" style="width:100%" id="oBtn" onclick="outingStart()">Çıxışı qeyd et</button>');}
-function geoGet(cb){if(!navigator.geolocation)return cb(null,null);navigator.geolocation.getCurrentPosition(function(p){cb(p.coords.latitude,p.coords.longitude);},function(){cb(null,null);},{enableHighAccuracy:true,timeout:12000,maximumAge:0});}
+/* Yer: əvvəl dəqiq GPS; alınmasa (vaxt bitdi / siqnal yoxdur) daha az dəqiq, son 2 dəq-lik yerlə yenidən cəhd. İcazə rədd edilibsə dərhal null. */
+function geoFix(ok,fail){if(!navigator.geolocation)return fail(0);var g=navigator.geolocation;
+ g.getCurrentPosition(ok,function(e){if(e&&e.code===1)return fail(1);g.getCurrentPosition(ok,function(e2){fail((e2&&e2.code)||2);},{enableHighAccuracy:false,timeout:15000,maximumAge:120000});},{enableHighAccuracy:true,timeout:10000,maximumAge:30000});}
+function geoGet(cb){geoFix(function(p){cb(p.coords.latitude,p.coords.longitude);},function(){cb(null,null);});}
 function outingStart(){var k=(document.querySelector('input[name=oK]:checked')||{}).value,n=$('oN').value.trim();if(!n)return toast('Hara və nə üçün getdiyinizi yazın');$('oBtn').disabled=true;toast('Yer yoxlanılır…');
  geoGet(function(la,ln){sb.rpc('office_outing_start',{p_kind:k,p_note:n,p_lat:la,p_lng:ln}).then(function(r){if(r.error)throw r.error;closeModal();toast(r.data.msg);renderToday();}).catch(function(e){var b=$('oBtn');if(b)b.disabled=false;err(e);});});}
 /* ---------- Çıxış zamanı avtomatik yer izləmə (yalnız açıq çıxış müddətində) ---------- */
@@ -669,8 +672,7 @@ function autoCheck(token){history.replaceState(null,'',OFB());if(!EMP){toast('He
   if(kind==='out'&&!confirm('Çıxışı qeyd edək?'))return;doCheck(kind,token);}).catch(err);}
 function doCheck(kind,token){toast('Yer yoxlanılır…');var _scanAt=new Date().toISOString();
  function send(lat,lng){sb.rpc('office_check',{p_kind:kind,p_token:token,p_lat:lat,p_lng:lng,p_at:_scanAt}).then(function(r){if(r.error)throw r.error;var msg=(r.data&&r.data.msg)||'Qeyd olundu';toast(msg);renderToday();return selfieCapture(kind).then(function(){renderToday();}).catch(function(){});}).catch(err);}
- if(!navigator.geolocation)return send(null,null);
- navigator.geolocation.getCurrentPosition(function(p){send(p.coords.latitude,p.coords.longitude);},function(){send(null,null);},{enableHighAccuracy:true,timeout:12000,maximumAge:0});}
+ geoFix(function(p){send(p.coords.latitude,p.coords.longitude);},function(c){if(c===1)toast('Yerə icazə verilməyib: Ayarlar → Safari → Konum → İzin Ver');send(null,null);});}
 
 /* ---------- PANEL ---------- */
 function renderPanel(){var d=today();$('pDate').textContent=new Date().toLocaleDateString('az-AZ',{timeZone:TZ,day:'numeric',month:'long',year:'numeric'});
