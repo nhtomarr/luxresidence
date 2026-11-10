@@ -388,3 +388,4 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - plans.js: 53,52 / 55,10 / 65,12 / 65,21 / 78,13 / 80,73 / 82,02 / 109,32 / 110,15 / 115,84 / 118,21 / 118,52 / 122,61 (qrup `G`). ncPlan: G → G+BFG planları ±0,45; C → yalnız G planları ±0,05 (8 mənzil); A/E, B/F dəyişmədi. Şəkillər 1080×1350 postlardan kəsilib, fon şəffaf. img yolu `?v=2`.
 - Nəticə: G-də 100 mənzil, C-də 8 mənzil plan aldı. Əvvəl G-dəki 65,12/65,21/53,52 səhvən 65,00/53,83 planına düşürdü — düzəldi.
 - Hələ plansız: A (34), B (23), C (~85), F (10), E 172,1.
+- (10.11) Nihat: C və G planları eynidir → ncPlan C-ni G kimi işləyir (±0,45). C-də 37 mənzil plan alır, 83 hələ plansız (sahələri heç bir plana yaxın deyil).

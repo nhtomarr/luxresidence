@@ -19,7 +19,7 @@ window.NC_PLANS = (function () {
     '121.82': [[H, 13.06], [D, 7.88], [M, 22.08], [Z, 29.14], [S, 5.66], [Y, 16.37], [Y, 19.48], [C, 4.32], [E, 3.83]],
     '163.21': [[H, 18.44], [M, 21.15], [Z, 42.00], [S, 5.91], [S, 5.98], [Q, 10.19], [Q, 7.81], [Y, 19.98], [Y, 17.06], [E, 7.29], [E, 7.40]],
     '206.70': [[H, 15.55], [D, 12.55], [M, 19.50], [Z, 32.82], [S, 7.01], [S, 5.47], [Y, 29.66], [Y, 18.74], [Y, 18.33], [Q, 4.72], [Q, 7.66], [Q, 7.35], ['İnventar', 6.18], [E, 8.85], [E, 12.31]],
-    // G binası (2026-11 planları). C binasında yalnız sahə dəqiq üst-üstə düşəndə (±0,05) göstərilir
+    // G binası (2026-11 planları). C binası da (planlar eynidir)
     '53.52': [[M, 10.04], [Z, 20.62], [S, 4.00], [Y, 14.34], [E, 6.32]],
     '55.10': [[H, 10.14], [Z, 20.42], [S, 4.00], [Y, 14.14], [E, 6.40]],
     '65.12': [[H, 13.15], [Z, 19.37], [S, 7.73], [Y, 18.15], [E, 6.72]],
@@ -45,10 +45,11 @@ window.NC_PLANS = (function () {
 // A, E planları A və E binalarına; B, F, G planları B, F, G binalarına aiddir. Dəqiq uyğunluq, yoxdursa yaxın plan:
 // A/E üçün ±0,3 m² (128,74 → 129,00), B/F/G üçün ±0,45 m² (54,13 → 53,83; 162,91 → 163,21). Satış bazasındakı sahə dəyişmir.
 window.ncPlan = function (area, b) {
-  // G planları yalnız G-yə (±0,45), C-yə isə yalnız dəqiq sahə ilə (±0,05) bağlanır
-  const g = !b ? null : /^[AE]$/.test(b) ? 'AE' : /^[BFG]$/.test(b) ? 'BFG' : b === 'C' ? 'C' : 'x'; if (g === 'x') return null;
-  const ok = p => !g || (g === 'C' ? p.g === 'G' : p.g === g || (b === 'G' && p.g === 'G'));
+  // C və G binalarının planları eynidir: C də G kimi işlənir (G + B/F/G planları, ±0,45 m²)
+  if (b === 'C') b = 'G';
+  const g = !b ? null : /^[AE]$/.test(b) ? 'AE' : /^[BFG]$/.test(b) ? 'BFG' : 'x'; if (g === 'x') return null;
+  const ok = p => !g || p.g === g || (b === 'G' && p.g === 'G');
   const a = +area, P = window.NC_PLANS, ex = P[a.toFixed(2)]; if (ex && ok(ex)) return ex;
-  const tol = g === 'C' ? 0.0501 : g === 'BFG' ? 0.4501 : 0.3001; let best = null, d = tol;
+  const tol = g === 'BFG' ? 0.4501 : 0.3001; let best = null, d = tol;
   Object.keys(P).forEach(k => { if (!ok(P[k])) return; const x = Math.abs(+k - a); if (x <= d) { d = x; best = P[k]; } }); return best;
 };
