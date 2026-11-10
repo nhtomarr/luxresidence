@@ -19,10 +19,25 @@ window.NC_PLANS = (function () {
     '121.82': [[H, 13.06], [D, 7.88], [M, 22.08], [Z, 29.14], [S, 5.66], [Y, 16.37], [Y, 19.48], [C, 4.32], [E, 3.83]],
     '163.21': [[H, 18.44], [M, 21.15], [Z, 42.00], [S, 5.91], [S, 5.98], [Q, 10.19], [Q, 7.81], [Y, 19.98], [Y, 17.06], [E, 7.29], [E, 7.40]],
     '206.70': [[H, 15.55], [D, 12.55], [M, 19.50], [Z, 32.82], [S, 7.01], [S, 5.47], [Y, 29.66], [Y, 18.74], [Y, 18.33], [Q, 4.72], [Q, 7.66], [Q, 7.35], ['İnventar', 6.18], [E, 8.85], [E, 12.31]],
+    // G binası (2026-11 planları). C binasında yalnız sahə dəqiq üst-üstə düşəndə (±0,05) göstərilir
+    '53.52': [[M, 10.04], [Z, 20.62], [S, 4.00], [Y, 14.34], [E, 6.32]],
+    '55.10': [[H, 10.14], [Z, 20.42], [S, 4.00], [Y, 14.14], [E, 6.40]],
+    '65.12': [[H, 13.15], [Z, 19.37], [S, 7.73], [Y, 18.15], [E, 6.72]],
+    '65.21': [[H, 10.62], [Z, 24.44], [S, 6.07], [Y, 17.57], [E, 6.51]],
+    '78.13': [[H, 11.24], [Z, 24.81], [S, 6.99], [Y, 20.86], [Q, 5.18], ['İnventar', 2.54], [E, 6.51]],
+    '80.73': [[H, 12.01], [M, 13.24], [Z, 21.55], [S, 5.69], [Y, 21.73], [E, 6.51]],
+    '82.02': [[H, 12.38], [Z, 25.66], [S, 7.35], [Y, 21.42], [Q, 5.47], [E, 6.74]],
+    '109.32': [[H, 10.10], [D, 8.07], [M, 16.77], [Z, 25.72], [S, 4.09], [S, 4.58], [Y, 15.84], [Y, 15.27], [E, 8.88]],
+    '110.15': [[H, 17.78], [M, 16.66], [Z, 26.37], [S, 4.48], [S, 3.74], [Y, 16.24], [Y, 16.02], [E, 8.86]],
+    '115.84': [[H, 17.98], [M, 20.30], [Z, 32.30], [S, 5.31], [Y, 22.30], [Q, 4.74], [Q, 6.40], [E, 6.51]],
+    '118.21': [[H, 8.72], [D, 10.93], [M, 17.22], [Z, 26.06], [S, 3.33], [S, 5.57], [Y, 16.68], [Y, 20.81], [E, 8.88]],
+    '118.52': [[H, 8.42], [D, 12.02], [M, 16.95], [Z, 25.49], [S, 3.59], [S, 5.21], [Y, 17.01], [Y, 20.95], [E, 8.88]],
+    '122.61': [[H, 8.32], [D, 8.92], [M, 19.15], [Z, 28.09], [S, 6.16], [Y, 29.84], [Q, 11.39], [Q, 4.20], [E, 6.54]],
   };
   const BFG = ['53.83', '65.00', '76.50', '113.00', '121.82', '163.21'];
+  const GN = ['53.52', '55.10', '65.12', '65.21', '78.13', '80.73', '82.02', '109.32', '110.15', '115.84', '118.21', '118.52', '122.61'];
   const R = {};
-  Object.keys(P).forEach(a => { R[a] = { a: +a, rooms: P[a], g: BFG.includes(a) ? 'BFG' : 'AE', img: '/assets/nc/plans/plan-' + a.replace('.', '_') + '.png' }; });
+  Object.keys(P).forEach(a => { R[a] = { a: +a, rooms: P[a], g: GN.includes(a) ? 'G' : BFG.includes(a) ? 'BFG' : 'AE', img: '/assets/nc/plans/plan-' + a.replace('.', '_') + '.png' }; });
   return R;
 })();
 // Planlar A və E binalarına aiddir. Dəqiq uyğunluq, yoxdursa ±0,3 m² daxilində ən yaxın plan (məs. 128,74 → 129,00; 154,53 → 154,76).
@@ -30,8 +45,10 @@ window.NC_PLANS = (function () {
 // A, E planları A və E binalarına; B, F, G planları B, F, G binalarına aiddir. Dəqiq uyğunluq, yoxdursa yaxın plan:
 // A/E üçün ±0,3 m² (128,74 → 129,00), B/F/G üçün ±0,45 m² (54,13 → 53,83; 162,91 → 163,21). Satış bazasındakı sahə dəyişmir.
 window.ncPlan = function (area, b) {
-  const g = !b ? null : /^[AE]$/.test(b) ? 'AE' : /^[BFG]$/.test(b) ? 'BFG' : 'x'; if (g === 'x') return null;
-  const a = +area, P = window.NC_PLANS, ex = P[a.toFixed(2)]; if (ex && (!g || ex.g === g)) return ex;
-  const tol = g === 'BFG' ? 0.4501 : 0.3001; let best = null, d = tol;
-  Object.keys(P).forEach(k => { if (g && P[k].g !== g) return; const x = Math.abs(+k - a); if (x <= d) { d = x; best = P[k]; } }); return best;
+  // G planları yalnız G-yə (±0,45), C-yə isə yalnız dəqiq sahə ilə (±0,05) bağlanır
+  const g = !b ? null : /^[AE]$/.test(b) ? 'AE' : /^[BFG]$/.test(b) ? 'BFG' : b === 'C' ? 'C' : 'x'; if (g === 'x') return null;
+  const ok = p => !g || (g === 'C' ? p.g === 'G' : p.g === g || (b === 'G' && p.g === 'G'));
+  const a = +area, P = window.NC_PLANS, ex = P[a.toFixed(2)]; if (ex && ok(ex)) return ex;
+  const tol = g === 'C' ? 0.0501 : g === 'BFG' ? 0.4501 : 0.3001; let best = null, d = tol;
+  Object.keys(P).forEach(k => { if (!ok(P[k])) return; const x = Math.abs(+k - a); if (x <= d) { d = x; best = P[k]; } }); return best;
 };
