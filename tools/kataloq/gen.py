@@ -11,7 +11,7 @@ def az(x): return f'{x:,.2f}'.replace(',', ' ').replace('.', ',')
 def area(a): return a.replace('.', ',')
 
 # Otaq sayına görə rəng: qum → terrakota → gil → espresso (hamısı brend paletindən)
-TONE = {1:('#e9cfb1','#d7a77a'), 2:('#e2a07a','#ba4d2c'), 3:('#b8623f','#7f3a22'), 4:('#5a3a2a','#251712')}
+TONE = {1:('#e3a582','#cf7550'), 2:('#d47a52','#ba4d2c'), 3:('#c0573a','#9a3c20'), 4:('#a5452a','#7d2f18')}  # yalnız LUX terrakota çalarları
 
 css_common = '''
 @font-face{font-family:PF;src:url(fonts/Playfair%20Display/PlayfairDisplay[wght].ttf) format('truetype');font-weight:400 900}
@@ -34,7 +34,7 @@ sup{font-size:.5em;vertical-align:.7em;line-height:0}
 
 # ---------- A: «Səhər işığı» — krem fon, terrakota-qızılı yumşaq gradient ----------
 css_a = '''
-.pg{background:radial-gradient(120mm 90mm at 92% 4%,rgba(201,138,78,.22),transparent 70%),radial-gradient(140mm 110mm at 0% 100%,rgba(186,77,44,.12),transparent 70%),linear-gradient(170deg,#fbf8f4 0%,#f4ebe1 100%);color:#2a1d14}
+.pg{background:radial-gradient(120mm 90mm at 92% 4%,rgba(201,138,78,.22),transparent 70%),radial-gradient(140mm 110mm at 0% 100%,rgba(186,77,44,.12),transparent 70%),linear-gradient(170deg,#faf6f1 0%,#f3e9de 100%);color:#2a1d14}
 .ap{padding:16mm 16mm 14mm}
 .ap .k{font-size:7.5pt;letter-spacing:.22em;text-transform:uppercase;color:#9a3c20;display:flex;gap:4mm;align-items:center}
 .ap .k i{flex:0 0 10mm;height:1px;background:#ba4d2c}
@@ -125,8 +125,8 @@ css_a += """
 .sec .num{font-family:PF;font-size:110pt;line-height:.8;color:transparent;-webkit-text-stroke:1px #ba4d2c;opacity:.5}
 .sec h2{font-family:PF;font-weight:500;font-size:44pt;line-height:1;margin-top:8mm}
 .sec h2 em{font-style:italic;color:#ba4d2c;font-weight:400}
-.sec .key{margin-top:auto;border-radius:4mm;overflow:hidden;background:#fff;padding:5mm;box-shadow:0 5mm 12mm rgba(60,35,20,.10)}
-.sec .key img{width:100%;display:block;filter:grayscale(1) sepia(.35) contrast(1.05) brightness(1.03)}
+.sec .key{margin-top:auto;border-radius:4mm;overflow:hidden;background:#fbf6f0;padding:5mm;box-shadow:0 5mm 12mm rgba(60,35,20,.10)}
+.sec .key img{width:100%;display:block}
 .sec .list{display:flex;flex-wrap:wrap;gap:2.5mm;margin-top:8mm}
 .sec .list span{font-size:8.5pt;padding:1.8mm 3.5mm;border-radius:10mm;border:1px solid #e0cfbd;background:rgba(255,255,255,.55)}
 .sec .list span b{font-weight:600;color:#9a3c20;margin-right:1.5mm}
@@ -156,7 +156,7 @@ def ap_page(g, r, a, img, rooms, pno):
 <h1>{OTAQ[r].split()[0]} <em>otaqlı</em></h1>
 <div class="sub">{area(a)} m² · mənzil planı</div>
 <div class="chip" style="background:linear-gradient(145deg,{t0},{t1})"><b>{r}</b>otaq</div>
-<div class="plan"><img src="plans/{img}.webp"></div>
+<div class="plan"><img src="pplans/p-{a}.png"></div>
 <div class="bot"><ul class="rooms">{rooms_html(rooms[:half])}</ul><ul class="rooms" start="{half+1}">{''.join(f'<li><span class="n">{i:02d}</span><span class="r">{x}</span><span class="v">{az(v)} m²</span></li>' for i,(x,v) in enumerate(rooms[half:],half+1))}</ul>{foot}</div>
 </section>'''
     return f'''<section class="pg ap">
@@ -164,7 +164,7 @@ def ap_page(g, r, a, img, rooms, pno):
 <div class="k">{bname}</div>
 <div class="big">{r}<small>{'otaqlı mənzil'}</small></div>
 <div class="ar"><span>Ümumi sahə</span>{area(a)} m²</div></div>
-<div class="main"><div class="plan"><img src="plans/{img}.webp"></div>
+<div class="main"><div class="plan"><img src="pplans/p-{a}.png"></div>
 <ul class="rooms">{rooms_html(rooms)}</ul>{foot}</div>
 </section>'''
 
