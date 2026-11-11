@@ -794,7 +794,7 @@ body.modal-open #waFab,body.modal-open #waTip{display:none}
 <div id="maintScreen" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#2a1b12,#4a2a18);color:#f5ece1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;font-family:-apple-system,'Inter',system-ui,sans-serif">
   <div style="font-family:Georgia,serif;font-size:clamp(28px,6vw,52px);color:#e8c9a0;letter-spacing:.04em;margin-bottom:10px">LUX Residence</div>
   <div style="width:54px;height:2px;background:#ba7a4c;margin:14px 0 26px"></div>
-  <h1 style="font-family:Georgia,serif;font-size:clamp(22px,4vw,34px);margin:0 0 14px;font-weight:600">Sayt baxımdadır</h1>
+  <div role="heading" aria-level="2" style="font-family:Georgia,serif;font-size:clamp(22px,4vw,34px);margin:0 0 14px;font-weight:600">Sayt baxımdadır</div>
   <p style="max-width:440px;line-height:1.7;color:#d8c3ad;font-size:clamp(14px,2.2vw,17px);margin:0 0 26px">Hazırda saytda yeniləmə işləri aparılır. Tezliklə yenidən xidmətinizdəyik. Anlayışınıza görə təşəkkür edirik.</p>
   <div style="font-size:14px;color:#c9ad92">Əlaqə: <a href="tel:+994508090088" style="color:#e8c9a0;text-decoration:none;font-weight:600">+994 50 809 00 88</a></div>
 </div>
@@ -836,9 +836,9 @@ body.modal-open #waFab,body.modal-open #waTip{display:none}
     <div class="sec-head"><div><div class="eyebrow-d">Xəbərlər</div><h2 class="h2">Son yeniliklər</h2></div></div>
     <div class="marquee"><div class="mq-track" id="newsMq"></div></div>
   </div></section>
-  <section class="sec"><div class="wrap">
+  <section class="sec" id="partnersSec" hidden><div class="wrap">
     <div class="sec-head" style="justify-content:center;text-align:center;flex-direction:column;align-items:center;"><div class="eyebrow-d">Tərəfdaşlar</div><h2 class="h2">Etibarlı brendlərlə</h2></div>
-    <div class="partners-box"><div class="marquee"><div class="mq-track" id="partnersMq"><div class="pt">TƏRƏFDAŞ 1</div><div class="pt">TƏRƏFDAŞ 2</div><div class="pt">TƏRƏFDAŞ 3</div><div class="pt">TƏRƏFDAŞ 4</div><div class="pt">TƏRƏFDAŞ 5</div><div class="pt">TƏRƏFDAŞ 6</div><div class="pt">TƏRƏFDAŞ 1</div><div class="pt">TƏRƏFDAŞ 2</div><div class="pt">TƏRƏFDAŞ 3</div><div class="pt">TƏRƏFDAŞ 4</div><div class="pt">TƏRƏFDAŞ 5</div><div class="pt">TƏRƏFDAŞ 6</div></div></div></div>
+    <div class="partners-box"><div class="marquee"><div class="mq-track" id="partnersMq"></div></div></div>
   </div></section>
   <section class="sec finder-sec"><div class="wrap"><div class="finder">
     <div class="fd-head"><h2>Xəyalınızdakı mənzili tapın</h2><a href="/planlar" class="fd-all">Bütün planlar →</a></div>
@@ -1065,7 +1065,7 @@ function newsCard(n){return `<div class="news-card" data-newsid="${n.slug||n.id}
 function renderNews(){const mq=document.getElementById('newsMq');var _mqN=NEWS.slice(0,8);if(mq)mq.innerHTML=_mqN.map(newsCard).join('')+_mqN.map(newsCard).join('');const g=document.getElementById('newsGrid');if(g)g.innerHTML=NEWS.map(newsCard).join('');}
 renderNews();
 var _lsP=LS('lux_partners');
-function renderPartners(){var el=document.getElementById('partnersMq');if(!el||!_lsP||!_lsP.length)return;var one=_lsP.map(function(p){return p.logo?('<div class="pt"><img src="'+p.logo+'" alt="'+(p.name||'')+'" style="max-height:70px;max-width:130px;object-fit:contain;"></div>'):('<div class="pt">'+(p.name||'')+'</div>');}).join('');el.innerHTML=one+one;}
+function renderPartners(){var el=document.getElementById('partnersMq'),sec=document.getElementById('partnersSec');if(!el||!_lsP||!_lsP.length){if(sec)sec.hidden=true;return;}if(sec)sec.hidden=false;var one=_lsP.map(function(p){return p.logo?('<div class="pt"><img src="'+p.logo+'" alt="'+(p.name||'')+'" style="max-height:70px;max-width:130px;object-fit:contain;"></div>'):('<div class="pt">'+(p.name||'')+'</div>');}).join('');el.innerHTML=one+one;}
 renderPartners();
 var _ICI=['<rect x="5" y="3" width="14" height="13" rx="2.5"/><path d="M5 11h14M8.5 20l-1.5 2M15.5 20l1.5 2M8.5 16h.01M15.5 16h.01"/>','<path d="M12 3.5 22 8l-10 4.5L2 8l10-4.5z"/><path d="M6 10.5V15c0 1.6 2.7 3 6 3s6-1.4 6-3v-4.5"/>','<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8" stroke-width="2"/>','<path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>'];
 function applyContent(){var C=LS('lux_content');if(!C)return;
