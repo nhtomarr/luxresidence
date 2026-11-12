@@ -418,3 +418,4 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - (12.11) Şöbə «Nizami City satış ofisi» (vəzifələr: 48 Satış direktoru → Aysel, 49 Xadimə). Yeni işçi: Sevda Abbasova (emp 93, sevda.abbasova@pilothayat.az / 123456), Xadimə, 09:00–14:00 B.e–Cümə, iş yeri Nizami City satış ofisi.
 - (12.11) Günel Hüseynli (emp 55): schedule {"7":["10:00","18:00"]} — bazar günü 10:00. Keçmiş bazar gecikmələri (11.10 – 34 dəq, 01.11 – 36 dəq) 0 edildi, qeyd əlavə olundu. workdays dəyişmədi.
 - (12.11) Gültəkin Məmmədzadə (emp 41, g.memmedzade@luxresidence.az): ofis kartı aktiv, LUX Satış ofisi, yeni vəzifə «Satış direktoru» (şöbə 16), perms + ofis. Parol dəyişdirilmədi (komendant parolu ilə girir).
+- (12.11) Damafon icazəsi ayrıldı: bio_res_ok() = office_pay_ok() or lux_has_perm('damafon') (əvvəl km_staff — komendant icazəsi olan hamı). damafon perm: Nihat, Məhəmməd Məmmədli. Gültəkin və Rəşadda artıq görünmür.
