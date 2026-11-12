@@ -424,3 +424,8 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - Panel: sakin siyahısı/jurnal sessionStorage keşindən dərhal göstərilir, fonda yenilənir; axtarış artıq hər hərfdə şəbəkəyə getmir; "Sakinlər" tabı jurnal sorğusunu atmır.
 - bio-adms: Delay cihaz roluna görə — damafon (VGU6261301547) 2 san, maaş 10 san (info.delay ilə əl ilə dəyişmək olar). Cihaz yeni Delay-i yenidən başlayanda / seçimləri təkrar alanda götürür.
 - bio_door_list: işçi adı artıq bio_users.pin → employee_id ilə tapılır (əvvəl PIN=işçi id səhv fərziyyəsi idi).
+
+## 12.11 — Səhv QR çıxışı qoruması (v145)
+- Səbuhi Pirquliyev (№59) QR-ı skan etmədən 2 dəfə çıxış qeyd olundu (statik QR linki təkrar açılıb). Hər ikisi ləğv edildi.
+- autoCheck: səhifə yenilənəndə / geri-irəli / 60 san içində eyni link — avtomatik qeyd edilmir. Erkən çıxışda xəbərdarlıq: "N dəq erkən çıxış yazılacaq".
+- Səbinə Hacıyeva (№38): lux_profiles.active=false idi → açıldı; vəzifə 41; 12.11 gəliş 08:35. Ceyhun (№62) 12.11 08:45. Səbuhi 12.11 gəliş 08:30. Köhnə dublikat kart №40 → "(köhnə kart · arxiv)".

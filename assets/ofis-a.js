@@ -670,9 +670,14 @@ function scan(kind){_scanKind=kind;geoWarm();
  }).catch(function(e){var n=(e&&e.name)||'';$('camMsg').innerHTML=(n==='NotAllowedError'||n==='SecurityError')?'<b style="color:var(--bad)">Kameraya icazə verilmədi.</b> Telefonun ayarlarında bu sayt üçün kameranı aktiv edin (iPhone: Ayarlar → Safari → Kamera → İcazə ver), sonra yenidən cəhd edin. Və ya telefonun <b>Kamera</b> tətbiqi ilə skan edin.':(n==='NotFoundError'?'Kamera tapılmadı.':'Kamera açılmadı: '+esc((e&&e.message)||n)+'. Telefonun Kamera tətbiqi ilə skan edin.');});}
 
 function autoCheck(token){history.replaceState(null,'',OFB());if(!EMP){toast('Hesabınız işçi kartına bağlanmayıb');return;}
+ /* 12.11: köhnə QR linki yenidən açılanda (səhifə yenilənməsi, geri/irəli, bərpa olunan tab) avtomatik qeyd etmə — yalnız təzə skan */
+ try{var nv=(performance.getEntriesByType('navigation')[0]||{}).type;if(nv==='reload'||nv==='back_forward'){toast('QR linki köhnədir — qeyd üçün ofisdəki QR-ı yenidən skan edin');return;}}catch(_){}
+ try{var lk='ofis_qr_'+token,lt=+localStorage.getItem(lk)||0;if(Date.now()-lt<60000){return;}localStorage.setItem(lk,Date.now());}catch(_){}
  run(sb.from('office_attendance').select('*').eq('employee_id',EMP.id).eq('day',today()).maybeSingle()).then(function(r){var kind=(!r||!r.check_in)?'in':(!r.check_out?'out':null);
   if(!kind){toast('Bu gün gəliş və çıxış artıq qeyd olunub');return;}
-  if(kind==='out'&&!confirm('Çıxışı qeyd edək?'))return;doCheck(kind,token);}).catch(err);}
+  if(kind==='out'){var we=(EMP.work_end||'18:00').slice(0,5).split(':'),nw=new Date(),left=(+we[0]*60+ +we[1])-(nw.getHours()*60+nw.getMinutes());
+   if(!confirm(left>0?'Diqqət: iş '+(EMP.work_end||'18:00').slice(0,5)+'-də bitir. İndi çıxış etsəniz '+left+' dəq erkən çıxış yazılacaq.\n\nÇıxış qeyd olunsun?':'Çıxışı qeyd edək?'))return;}
+  doCheck(kind,token);}).catch(err);}
 function doCheck(kind,token){toast('Yer yoxlanılır…');var _scanAt=new Date().toISOString();
  function send(lat,lng){sb.rpc('office_check',{p_kind:kind,p_token:token,p_lat:lat,p_lng:lng,p_at:_scanAt}).then(function(r){if(r.error)throw r.error;var msg=(r.data&&r.data.msg)||'Qeyd olundu';toast(msg);renderToday();return selfieCapture(kind).then(function(){renderToday();}).catch(function(){});}).catch(err);}
  if(_geoPos&&Date.now()-_geoAt<180000)return send(_geoPos.coords.latitude,_geoPos.coords.longitude);
