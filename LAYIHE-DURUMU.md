@@ -419,3 +419,8 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - (12.11) Günel Hüseynli (emp 55): schedule {"7":["10:00","18:00"]} — bazar günü 10:00. Keçmiş bazar gecikmələri (11.10 – 34 dəq, 01.11 – 36 dəq) 0 edildi, qeyd əlavə olundu. workdays dəyişmədi.
 - (12.11) Gültəkin Məmmədzadə (emp 41, g.memmedzade@luxresidence.az): ofis kartı aktiv, LUX Satış ofisi, yeni vəzifə «Satış direktoru» (şöbə 16), perms + ofis. Parol dəyişdirilmədi (komendant parolu ilə girir).
 - (12.11) Damafon icazəsi ayrıldı: bio_res_ok() = office_pay_ok() or lux_has_perm('damafon') (əvvəl km_staff — komendant icazəsi olan hamı). damafon perm: Nihat, Məhəmməd Məmmədli. Gültəkin və Rəşadda artıq görünmür.
+
+## 12.11 — Damafon gecikməsi (v144)
+- Panel: sakin siyahısı/jurnal sessionStorage keşindən dərhal göstərilir, fonda yenilənir; axtarış artıq hər hərfdə şəbəkəyə getmir; "Sakinlər" tabı jurnal sorğusunu atmır.
+- bio-adms: Delay cihaz roluna görə — damafon (VGU6261301547) 2 san, maaş 10 san (info.delay ilə əl ilə dəyişmək olar). Cihaz yeni Delay-i yenidən başlayanda / seçimləri təkrar alanda götürür.
+- bio_door_list: işçi adı artıq bio_users.pin → employee_id ilə tapılır (əvvəl PIN=işçi id səhv fərziyyəsi idi).
