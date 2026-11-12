@@ -1556,3 +1556,6 @@ body.lux .pushcta{background:linear-gradient(135deg,#5a2414,#ba4d2c)}
 body.lux .iosSheet.on .ios-arrow{color:#ba4d2c}
 body.lux .kbs button.on,body.lux .okinds label:has(input:checked){background:#f6e9e2;box-shadow:0 0 0 3px rgba(186,77,44,.14)}
 body.lux .tdc.an{background:linear-gradient(135deg,#9a3c20,#ba4d2c)}
+
+/* v141: LUX ortaq giriş çipi ("Ad | Çıxış") ofis tətbiqində görünməsin — mesaj sahəsinin üstünə düşürdü; çıxış profil menyusundadır */
+.lux-me{display:none!important}
