@@ -1,0 +1,73 @@
+name: iOS tətbiqi
+# Baş Ofis iPhone tətbiqi — macOS runner-də yığılır, App Store Connect açarı varsa TestFlight-a yüklənir.
+# Lazım olan secrets: APPLE_TEAM_ID, ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8 (App Store Connect API açarı, .p8 mətni)
+# Bildirişlər üçün (istəyə bağlı): GOOGLE_SERVICE_INFO_PLIST (Firebase iOS faylının mətni)
+on:
+  push:
+    paths: ['mobile/**', '.github/workflows/ios.yml']
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Asılılıqlar
+        run: npm install --no-audit --no-fund
+      - name: iOS layihəsi
+        run: npx cap add ios
+      - name: İkon və açılış ekranı
+        run: npx @capacitor/assets generate --ios --iconBackgroundColor '#0f172a' --splashBackgroundColor '#0f172a' || true
+      - name: İcazələr və ayarlar (Info.plist)
+        run: |
+          P=ios/App/App/Info.plist
+          pb(){ /usr/libexec/PlistBuddy -c "$1" $P 2>/dev/null || true; }
+          pb "Add :NSCameraUsageDescription string 'İş yerindəki QR kodu oxumaq üçün kamera lazımdır.'"
+          pb "Add :NSLocationWhenInUseUsageDescription string 'Gəliş-gedişi iş yerində qeyd etmək üçün yer məlumatı lazımdır.'"
+          pb "Add :NSLocationAlwaysAndWhenInUseUsageDescription string 'Səfər zamanı yer məlumatı yalnız iş saatlarında istifadə olunur.'"
+          pb "Add :NSMicrophoneUsageDescription string 'Səsli mesaj və zəng üçün mikrofon lazımdır.'"
+          pb "Add :NSPhotoLibraryUsageDescription string 'Profil şəkli və fayl göndərmək üçün.'"
+          pb "Add :ITSAppUsesNonExemptEncryption bool false"
+          pb "Add :UIBackgroundModes array"
+          pb "Add :UIBackgroundModes:0 string remote-notification"
+          pb "Add :UIBackgroundModes:1 string location"
+          pb "Set :CFBundleDisplayName 'Baş Ofis'"
+          V=$(node -p "require('./package.json').version")
+          pb "Set :CFBundleShortVersionString $V"
+          pb "Set :CFBundleVersion ${{ github.run_number }}"
+          plutil -lint $P
+      - name: Firebase (varsa)
+        env:
+          GSP: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
+        run: |
+          if [ -n "$GSP" ]; then echo "$GSP" > ios/App/App/GoogleService-Info.plist; echo "FCM: var"; else echo "FCM: yox — bildirişlərsiz"; fi
+      - name: Sinxronizasiya
+        run: npx cap sync ios
+      - name: App Store Connect açarı
+        env:
+          P8: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          if [ -n "$P8" ]; then mkdir -p ~/.asc; echo "$P8" > ~/.asc/key.p8; echo "SIGN=1" >> $GITHUB_ENV; else echo "Açar yoxdur — yalnız yoxlama yığımı (imzasız)"; fi
+      - name: Yoxlama yığımı (imzasız, simulyator)
+        if: env.SIGN != '1'
+        working-directory: mobile/ios/App
+        run: xcodebuild -project App.xcodeproj -scheme App -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build | tail -20
+      - name: Arxiv + TestFlight
+        if: env.SIGN == '1'
+        working-directory: mobile/ios/App
+        env:
+          TEAM: ${{ secrets.APPLE_TEAM_ID }}
+          KID: ${{ secrets.ASC_KEY_ID }}
+          ISS: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          AUTH="-allowProvisioningUpdates -authenticationKeyPath $HOME/.asc/key.p8 -authenticationKeyID $KID -authenticationKeyIssuerID $ISS"
+          xcodebuild -project App.xcodeproj -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath $RUNNER_TEMP/App.xcarchive DEVELOPMENT_TEAM=$TEAM CODE_SIGN_STYLE=Automatic PRODUCT_BUNDLE_IDENTIFIER=az.rahmangroup.basofis $AUTH archive | tail -30
+          cat > $RUNNER_TEMP/export.plist <<PL
+          <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict><key>method</key><string>app-store-connect</string><key>destination</key><string>upload</string><key>teamID</key><string>$TEAM</string><key>signingStyle</key><string>automatic</string></dict></plist>
+          PL
+          xcodebuild -exportArchive -archivePath $RUNNER_TEMP/App.xcarchive -exportOptionsPlist $RUNNER_TEMP/export.plist -exportPath $RUNNER_TEMP/out $AUTH | tail -30

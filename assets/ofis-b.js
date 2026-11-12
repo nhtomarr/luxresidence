@@ -2608,3 +2608,6 @@ function damOpen(tab){damCan().then(function(ok){if(!ok){toast('Bu bölməyə ic
 
 /* v128: ad altında rol əvəzinə işçinin vəzifəsi (məs. «Resepşn») — sahibkar/admin/dev üçün dəyişmir */
 (function(){var n=0,t=setInterval(function(){if(++n>60){clearInterval(t);return;}try{if(PREVIEW||ME.is_admin||DEV||OWNER){clearInterval(t);return;}if(!EMP||!POS||!POS.length)return;var p=posOf(EMP),b=$('meBox');if(p&&p.title&&b){var nm=b.querySelector('b');b.innerHTML='';if(nm)b.appendChild(nm);b.appendChild(document.createTextNode(p.title));}clearInterval(t);}catch(e){}},500);})();
+
+/* v142: iPhone tətbiqində (Capacitor iOS) klaviatura üstündəki ˄˅✓ panelini gizlət — Instagram kimi təmiz yazı sahəsi */
+(function(){try{var C=window.Capacitor;if(C&&C.getPlatform&&C.getPlatform()==='ios'&&C.Plugins&&C.Plugins.Keyboard){C.Plugins.Keyboard.setAccessoryBarVisible({isVisible:false}).catch(function(){});}}catch(e){}})();

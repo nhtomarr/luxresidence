@@ -28,6 +28,15 @@
         "sound",
         "alert"
       ]
+    },
+    "Keyboard": {
+      "resize": "native",
+      "resizeOnFullScreen": true
     }
+  },
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#0f172a",
+    "limitsNavigationsToAppBoundDomains": false
   }
 }
