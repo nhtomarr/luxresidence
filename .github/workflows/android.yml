@@ -19,6 +19,8 @@ jobs:
         with: { distribution: temurin, java-version: 21 }
       - name: Asılılıqlar
         run: npm install --no-audit --no-fund
+      - name: Yerli paket (ofis səhifəsi tətbiqin içinə)
+        run: node build-www.js
       - name: Android layihəsi
         run: npx cap add android
       - name: İkon və açılış ekranı

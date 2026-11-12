@@ -2611,3 +2611,20 @@ function damOpen(tab){damCan().then(function(ok){if(!ok){toast('Bu bölməyə ic
 
 /* v142: iPhone tətbiqində (Capacitor iOS) klaviatura üstündəki ˄˅✓ panelini gizlət — Instagram kimi təmiz yazı sahəsi */
 (function(){try{var C=window.Capacitor;if(C&&C.getPlatform&&C.getPlatform()==='ios'&&C.Plugins&&C.Plugins.Keyboard){C.Plugins.Keyboard.setAccessoryBarVisible({isVisible:false}).catch(function(){});}}catch(e){}})();
+
+/* ===== HİBRİD TƏTBİQ (v143) — tətbiq paketi telefonda, məlumat serverdən =====
+   1) Canlı yeniləmə: /app-bundle/latest yoxlanır, yeni versiya fonda yüklənir, tətbiq arxa plana keçəndə (və ya növbəti açılışda) tətbiq olunur.
+   2) Yerli hiss: düymələrdə yüngül titrəmə (haptik), bölmə keçidlərində animasiya. Yalnız tətbiqdə (window.OFIS_APP) işləyir. */
+(function(){if(!window.OFIS_APP)return;var C=window.Capacitor;if(!C||!C.isNativePlatform||!C.isNativePlatform())return;var P=C.Plugins||{};
+ var U=P.CapacitorUpdater,H=P.Haptics,BASE='https://ofis.pilothayat.az';
+ if(U){try{U.notifyAppReady();}catch(e){}
+  var pending=null;
+  function check(){fetch(BASE+'/app-bundle/latest',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){if(!j||!j.version||String(j.version)===String(window.OFIS_V)||pending)return;
+    return U.download({url:j.url,version:String(j.version)}).then(function(b){pending=b;});}).catch(function(){});}
+  function apply(){if(pending){var b=pending;pending=null;U.set({id:b.id}).catch(function(){});}}
+  setTimeout(check,4000);setInterval(check,30*60*1000);
+  document.addEventListener('visibilitychange',function(){if(document.hidden)apply();else check();});
+  if(P.App&&P.App.addListener)P.App.addListener('appStateChange',function(s){if(!s.isActive)apply();});}
+ if(H){document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('button,.btn,#tabs button,.qa-b,a.card');if(t){try{H.impact({style:'LIGHT'});}catch(x){}}},true);}
+ var st=document.createElement('style');st.textContent='html{-webkit-tap-highlight-color:transparent}body{overscroll-behavior-y:none}';document.head.appendChild(st);
+})();

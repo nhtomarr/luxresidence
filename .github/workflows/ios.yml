@@ -18,6 +18,8 @@ jobs:
         with: { node-version: 22 }
       - name: Asılılıqlar
         run: npm install --no-audit --no-fund
+      - name: Yerli paket (ofis səhifəsi tətbiqin içinə)
+        run: node build-www.js
       - name: iOS layihəsi
         run: npx cap add ios
       - name: İkon və açılış ekranı

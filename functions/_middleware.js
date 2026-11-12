@@ -30,6 +30,7 @@ async function officeHost(ctx, url) {
   if (p === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'Content-Type': 'text/plain' } });
   if (p === '/auth-ok') return new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } });
   if (p.startsWith('/iclock')) return ctx.next();
+  if (p.startsWith('/app-bundle')) return ctx.next(); // mobil tətbiq üçün yerli paket
   if (p === '/ofis-sw.js' || p.startsWith('/assets/ofis/') || p.startsWith('/assets/lux-auth.js') || p.startsWith('/favicon') || p === '/apple-touch-icon.png') return ctx.next();
   return Response.redirect(url.origin + '/', 302);
 }

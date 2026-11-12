@@ -3,7 +3,6 @@
   "appName": "Baş Ofis",
   "webDir": "www",
   "server": {
-    "url": "https://ofis.pilothayat.az",
     "androidScheme": "https",
     "allowNavigation": [
       "*.pilothayat.az",
@@ -32,6 +31,16 @@
     "Keyboard": {
       "resize": "native",
       "resizeOnFullScreen": true
+    },
+    "CapacitorUpdater": {
+      "autoUpdate": false,
+      "resetWhenUpdate": true,
+      "appReadyTimeout": 15000
+    },
+    "StatusBar": {
+      "overlaysWebView": false,
+      "style": "LIGHT",
+      "backgroundColor": "#081634"
     }
   },
   "ios": {

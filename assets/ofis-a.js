@@ -1530,7 +1530,7 @@ function closeModal(){var mb=$('mbox');if(mb)mb.classList.remove('wide');if(type
 $('modal').addEventListener('click',function(e){if(e.target===$('modal'))closeModal();});
 
 /* ---------- PWA ---------- */
-if('serviceWorker' in navigator){navigator.serviceWorker.register('/ofis-sw.js',{scope:'/'}).then(function(reg){
+if('serviceWorker' in navigator&&!window.OFIS_APP){navigator.serviceWorker.register('/ofis-sw.js',{scope:'/'}).then(function(reg){
   // yeni versiya gelende avtomatik yenile (kohne kes ilisib qalmasin)
   reg.addEventListener('updatefound',function(){var nw=reg.installing;if(!nw)return;nw.addEventListener('statechange',function(){if(nw.state==='activated'&&navigator.serviceWorker.controller){location.reload();}});});
   setInterval(function(){reg.update().catch(function(){});},60000);

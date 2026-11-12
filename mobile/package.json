@@ -1,6 +1,6 @@
 {
   "name": "bas-ofis-app",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
   "dependencies": {
     "@capacitor-community/background-geolocation": "^1.2.26",
@@ -10,13 +10,17 @@
     "@capacitor/ios": "^8.6.0",
     "@capacitor/keyboard": "^8.0.6",
     "@capacitor/preferences": "^8.0.1",
-    "@capacitor/push-notifications": "^8.1.3"
+    "@capacitor/push-notifications": "^8.1.3",
+    "@capgo/capacitor-updater": "^8.54.2",
+    "@capacitor/haptics": "^8.0.0",
+    "@capacitor/status-bar": "^8.0.0"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.5.2"
   },
   "scripts": {
-    "capacitor:sync:after": "node native/install.js"
+    "capacitor:sync:after": "node native/install.js",
+    "build:www": "node build-www.js"
   }
 }
