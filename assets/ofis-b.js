@@ -2525,7 +2525,10 @@ function payEnroll(id){run(sb.rpc('bio_push_user',{p_emp:id})).then(function(){P
 function payBio(id,blk){var r=blk?prompt(_pyEmp(id).full_name+' bloklansın? Barmaq izi cihazdan silinəcək, maaşı verilməyəcək. Səbəb:'):'';if(blk&&r===null)return;if(!blk&&!confirm('Blok açılsın? Barmaq izi cihaza geri yüklənəcək.'))return;
  run(sb.rpc('bio_block',{p_emp:id,p_block:!!blk,p_reason:r||null})).then(function(){toast(blk?'Bloklandı':'Blok açıldı');payDev();}).catch(err);}
 /* ---- damafon sakinləri (v129): sakin basmaları maaş jurnalına düşmür ---- */
-function payRes(quiet){var b=$('pyBody');if(!b)return;if(!quiet)b.innerHTML='<div class="muted small">Yüklənir…</div>';Promise.all([run(sb.rpc('bio_res_list')),run(sb.rpc('bio_door_list',{p_limit:DAM.tab==='log'?100:1}))]).then(function(r){var R=r[0]||[],L=r[1]||[];PAY.res=R;var q=(PAY.resQ||'').toLowerCase();
+function payRes(quiet){var b=$('pyBody');if(!b)return;var lg=DAM.tab==='log',ck='dam_'+DAM.tab,c=null;try{c=JSON.parse(sessionStorage.getItem(ck)||'null');}catch(_){}
+ if(!quiet){if(c)payResDraw(c);else b.innerHTML='<div class="muted small">Yüklənir…</div>';}
+ Promise.all([lg?Promise.resolve(PAY.res||[]):run(sb.rpc('bio_res_list')),lg?run(sb.rpc('bio_door_list',{p_limit:100})):Promise.resolve([])]).then(function(r){try{sessionStorage.setItem(ck,JSON.stringify(r));}catch(_){}payResDraw(r);}).catch(function(e){if(!c)err(e);});}
+function payResDraw(r){var b=$('pyBody');if(!b)return;PAY.resLast=r;var R=r[0]||[],L=r[1]||[];PAY.res=R;var q=(PAY.resQ||'').toLowerCase();
  var F=R.filter(function(x){return !q||(x.full_name+' '+(x.unit_label||'')+' '+(x.phone||'')+' '+(x.card||'')+' '+x.pin).toLowerCase().indexOf(q)>=0;});
  var vb={1:'barmaq',4:'brelok',15:'üz',0:'şifrə','-1':'panel'};
  var LIST='<div class="card" style="margin-bottom:12px"><p class="small" style="margin:0">Mənzili seçin → ad özü dolur → breloku <b>USB oxuducuya 1 dəfə</b> toxundurun → saxlanır və Cihaz 2-yə yazılır. Sakinlər yalnız <b>Cihaz 2</b>-yə (damafon) yazılır, maaşa heç bir aidiyyəti yoxdur.</p></div>'+
@@ -2536,8 +2539,8 @@ function payRes(quiet){var b=$('pyBody');if(!b)return;if(!quiet)b.innerHTML='<di
  var LOG='<div class="py-bar"><span class="small muted">Cihaz 2 — sakin brelokları və işçi gəliş-gedişi · hər 5 san yenilənir</span></div><div class="py-wrap"><table class="py-t"><thead><tr><th>Vaxt</th><th>Sakin</th><th>Mənzil</th><th>Üsul</th><th>Nəticə</th></tr></thead><tbody>'+
  (L.map(function(l){return '<tr><td>'+_pyT(l.at)+'</td><td>'+esc(l.name)+'</td><td>'+esc(l.unit_label||'')+'</td><td>'+(vb[l.verify]||('#'+l.verify))+'</td><td>'+(l.result==='passiv'?'<span class="py-s b">passiv sakin</span>':l.result==='tanınmır'?'<span class="py-s b">tanınmır</span>':'<span class="py-s v">'+esc(l.result||'giriş')+'</span>')+'</td></tr>';}).join('')||'<tr><td colspan="5" class="muted">Hələ giriş yoxdur</td></tr>')+'</tbody></table></div>';
  if(DAM.tab==='log'){b.innerHTML=LOG;return;}b.innerHTML=LIST;
- var qi=$('pyResQ');if(qi)qi.oninput=function(){PAY.resQ=qi.value;clearTimeout(PAY.resT);PAY.resT=setTimeout(function(){var p=qi.selectionStart;payRes();setTimeout(function(){var n=$('pyResQ');if(n){n.focus();try{n.setSelectionRange(p,p);}catch(_){}}},150);},350);};
-}).catch(err);}
+ var qi=$('pyResQ');if(qi)qi.oninput=function(){PAY.resQ=qi.value;clearTimeout(PAY.resT);PAY.resT=setTimeout(function(){var p=qi.selectionStart;payResDraw(PAY.resLast);var n=$('pyResQ');if(n){n.focus();try{n.setSelectionRange(p,p);}catch(_){}}},200);};
+}
 function payResForm(id){var x=id?(PAY.res||[]).find(function(r){return r.id===id;})||{}:{};var w=document.createElement('div');w.id='pyResDlg';w.style.cssText='position:fixed;inset:0;z-index:100001;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px';
  w.innerHTML='<div class="card" style="width:100%;max-width:460px;max-height:92vh;overflow:auto"><h3 style="margin:0 0 12px">'+(id?'Sakini düzəlt':'Yeni sakin')+'</h3>'+
  '<label class="small"><b>1. Mənzil</b> — nömrə, sahib adı və ya telefon</label><input id="rsU" autocomplete="off" value="'+esc(x.unit_label||'')+'" placeholder="məs. 11-4 və ya Kira" style="width:100%;font-size:17px"><div id="rsUL" style="margin:6px 0 10px"></div>'+
@@ -2587,7 +2590,7 @@ function payResAct(id,on){if(!on&&!confirm('Sakin söndürülsün? Cihazdan sili
 function payResDel(id){if(!confirm('Sakin tam silinsin? Cihazdan da silinəcək.'))return;run(sb.rpc('bio_res_delete',{p_id:id})).then(function(){toast('Silindi');payRes();}).catch(err);}
 /* ---- 🔑 Damafon (Cihaz 2) — maaşdan ayrı bölmə ---- */
 var DAM={tab:'res'};
-function damDoor(){var b=$('damOpenBtn');if(!b||b.disabled)return;if(!confirm('Qapı açılsın?'))return;b.disabled=true;var t0=b.textContent;b.textContent='⏳ Açılır…';
+function damDoor(){var b=$('damOpenBtn');if(!b||b.disabled)return;if(!confirm('Qapı açılsın?'))return;b.disabled=true;var t0=b.textContent;b.textContent='⏳ Cihaza göndərilir…';
  var done=function(m,ok){b.textContent=m;b.style.background=ok?'#30D158':'#FF453A';setTimeout(function(){b.disabled=false;b.textContent=t0;b.style.background='#30D158';},3000);};
  run(sb.rpc('bio_door_open',{p_sn:null})).then(function(C){var ids=(C||[]).map(function(c){return c.id;}),n=0;var iv=setInterval(function(){n++;run(sb.rpc('bio_res_cmds',{p_ids:ids})).then(function(S){S=S||[];
   if(S.some(function(c){return c.status==='ok';})){clearInterval(iv);done('✅ Qapı açıldı',true);try{navigator.vibrate&&navigator.vibrate(60);}catch(_){}if(DAM.tab==='log')payRes(1);}
