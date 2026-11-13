@@ -437,3 +437,4 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - Edge function `birbank` (x-cron-secret ilə): ?a=ping → login yoxlanışı. 13.11 test: http 200, code 0, token alındı, TEST USER / "T M M", ~7.9 san. IP məhdudiyyəti yoxdur.
 - Növbəti: "Köçürmə əməliyyatları" endpointi → gələn köçürmələrlə sakin borclarının avtomatik bağlanması.
 - 13.11: `birbank?a=accounts` (GET https://pre-my.birbank.business/b2b/accounts/portal/v1, Bearer jwttoken) işləyir — test hesabında 8 hesab (AZN/USD/EUR). Token office_secrets.birbank_tok-da 10 dəq keşlənir, 401-də təkrar login. `?a=get&p=/b2b/...` — yalnız GET, reject/sign/confirm/create bloklu.
+- 13.11: Çıxarış endpointi tapıldı (sənədsiz, yoxlamaqla): GET /b2b/accounts/portal/v1/statements?accountNumber=…&fromDate=YYYY-MM-DD&toDate=YYYY-MM-DD → {"accountStatements":[...]}. Maks aralıq 10 gün. Test mühitində bütün yoxlanan hesab/tarixlərdə siyahı boşdur — sahə formatı üçün sənəddəki cavab nümunəsi lazımdır.
