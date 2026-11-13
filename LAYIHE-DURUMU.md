@@ -429,3 +429,10 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - Səbuhi Pirquliyev (№59) QR-ı skan etmədən 2 dəfə çıxış qeyd olundu (statik QR linki təkrar açılıb). Hər ikisi ləğv edildi.
 - autoCheck: səhifə yenilənəndə / geri-irəli / 60 san içində eyni link — avtomatik qeyd edilmir. Erkən çıxışda xəbərdarlıq: "N dəq erkən çıxış yazılacaq".
 - Səbinə Hacıyeva (№38): lux_profiles.active=false idi → açıldı; vəzifə 41; 12.11 gəliş 08:35. Ceyhun (№62) 12.11 08:45. Səbuhi 12.11 gəliş 08:30. Köhnə dublikat kart №40 → "(köhnə kart · arxiv)".
+
+## 13.11 — Birbank Business API (komendant, test)
+- Birbank B2B API = şirkət hesabı API-si (çıxarış, köçürmə, kart, POS/e-ticarət çıxarışı). Sakindən kartla ödəniş (ekvayrinq) YOXDUR — bankdan ayrıca e-commerce test hesabı istənilməlidir.
+- Test login: POST https://pre-my.birbank.business/api/b2b/login {username,password} → responseData.jwttoken / jwtrefreshtoken. Real: my.birbank.business.
+- Giriş məlumatları: office_secrets.birbank (jsonb: env, base, username, password). Repoya yazılmayıb.
+- Edge function `birbank` (x-cron-secret ilə): ?a=ping → login yoxlanışı. 13.11 test: http 200, code 0, token alındı, TEST USER / "T M M", ~7.9 san. IP məhdudiyyəti yoxdur.
+- Növbəti: "Köçürmə əməliyyatları" endpointi → gələn köçürmələrlə sakin borclarının avtomatik bağlanması.
