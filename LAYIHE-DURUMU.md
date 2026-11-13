@@ -445,3 +445,8 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
   - Çıxarışda ödəyicinin adı YOXDUR (yalnız purpose) — tutuşdurma təyinatdakı koda bağlıdır.
   - Panel: Maliyyə → "🏦 Bank ödənişləri" (tanınmayanları mənzilə bağla / aid deyil). Sakin "Ödənişlər": "təyinata B3 5-2 yazın".
   - km_config.bank_info BOŞDUR — sakinlərə IBAN göstərilmir, doldurulmalıdır.
+
+## 13.11 — Məzuniyyət qalığı İR cədvəlindən (v146)
+- Cədvəl `office_leave_hr` (employee_id, year, used_text, used_days, left_days, note, as_of). RLS: işçi yalnız öz sətrini, rəhbər hamısını görür (yoxlanıb).
+- 2026 üçün 30 işçi Excel-dən yazıldı (as_of 13.11). Sistemdə olmayanlar: İsa Qaraşov, Gülfiyyə/Əfsanə/Əli Rəhmanov, İsmət Nəzərov, Qafil Nəsirov; Rəşad Rəhmanov — Excel-də boş. Rəfail Mirzəyev → aktiv kart №60 (Rəfael), Aytac Soltanlı → №36 (Soltanova).
+- Panel: "Məzuniyyət" və "Mən" — İR məlumatı varsa qalıq ondan; as_of-dan sonra sistemdə götürülən məzuniyyət avtomatik çıxılır. Rəhbər sorğu siyahısında qalıq da buna görə.

@@ -1,5 +1,5 @@
 // Baş Ofis — service worker: tətbiq qabığı keşi + telefon bildirişləri (Web Push)
-const C='ofis-v145';const V='145';const AS=['/assets/ofis-app.css?v='+V,'/assets/ofis-a.js?v='+V,'/assets/ofis-b.js?v='+V,'/bg.js'];
+const C='ofis-v146';const V='146';const AS=['/assets/ofis-app.css?v='+V,'/assets/ofis-a.js?v='+V,'/assets/ofis-b.js?v='+V,'/bg.js'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(['/ofis','/assets/ofis/icon-192.png'].concat(AS)).catch(()=>{})));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);
