@@ -438,3 +438,10 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - Növbəti: "Köçürmə əməliyyatları" endpointi → gələn köçürmələrlə sakin borclarının avtomatik bağlanması.
 - 13.11: `birbank?a=accounts` (GET https://pre-my.birbank.business/b2b/accounts/portal/v1, Bearer jwttoken) işləyir — test hesabında 8 hesab (AZN/USD/EUR). Token office_secrets.birbank_tok-da 10 dəq keşlənir, 401-də təkrar login. `?a=get&p=/b2b/...` — yalnız GET, reject/sign/confirm/create bloklu.
 - 13.11: Çıxarış endpointi tapıldı (sənədsiz, yoxlamaqla): GET /b2b/accounts/portal/v1/statements?accountNumber=…&fromDate=YYYY-MM-DD&toDate=YYYY-MM-DD → {"accountStatements":[...]}. Maks aralıq 10 gün. Test mühitində bütün yoxlanan hesab/tarixlərdə siyahı boşdur — sahə formatı üçün sənəddəki cavab nümunəsi lazımdır.
+- 13.11 TUTUŞDURMA QURULDU (LUX komendant):
+  - Cədvəl `km_bank_txns` (ref unique, status matched/unmatched/ignored, payment_id). `km_bank_match_unit(purpose)`: "B3 5-2", "Bina 3, mənzil 5-2", "LUX-<unit_id>". `km_bank_ingest` → uyğunsa km_payments (method kocurme, note "Birbank avtomatik · … · ref"). `km_bank_assign(id, unit|null)`, `km_bank_list`.
+  - Edge `birbank?a=sync&days=3`: hesabların çıxarışı (maks 10 gün), yalnız drcrInd=C və amountTag=MAIN; Telegram xülasə. Cron `km-bank-sync` hər 15 dəq (km_bank_sync_call).
+  - Test env-də hesab siyahısı avtomatik (AZN). PROD-da office_secrets.birbank.accounts mütləq LUX komendant hesabı(ları) ilə doldurulmalıdır, yoxsa sync xəta verir.
+  - Çıxarışda ödəyicinin adı YOXDUR (yalnız purpose) — tutuşdurma təyinatdakı koda bağlıdır.
+  - Panel: Maliyyə → "🏦 Bank ödənişləri" (tanınmayanları mənzilə bağla / aid deyil). Sakin "Ödənişlər": "təyinata B3 5-2 yazın".
+  - km_config.bank_info BOŞDUR — sakinlərə IBAN göstərilmir, doldurulmalıdır.
