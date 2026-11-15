@@ -84,6 +84,10 @@ button{font-family:inherit;cursor:pointer;}
 .vbar{display:none;position:fixed;left:50%;transform:translateX(-50%);top:calc(14px + env(safe-area-inset-top,0px));z-index:13;align-items:center;gap:10px;background:rgba(255,252,248,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.75);border-radius:16px;padding:7px 14px 7px 7px;box-shadow:0 14px 36px -16px rgba(74,42,24,.5);max-width:calc(100% - 16px);}
 .vbar.on{display:flex}.vbar button{border:none;background:#2a2420;color:#fff;border-radius:11px;padding:9px 13px;font-weight:600;cursor:pointer}.vt{display:flex;flex-direction:column;line-height:1.25}.vt b{font-size:14px}.vt span{font-size:12px;opacity:.65}
 body.view #side,body.view .top,body.view #hint,body.view #crumb,body.view #sunbtn{opacity:0;pointer-events:none;transition:opacity .4s}
+.mkbtn{left:470px}body.view .mkbtn,body.maket .mkbtn,body.maket #side,body.maket .top,body.maket #hint,body.maket #crumb,body.maket #sunbtn,body.maket #panel,body.maket #lbls{opacity:0;pointer-events:none;transition:opacity .4s}
+.mkbar{display:none;position:fixed;left:50%;transform:translateX(-50%);top:calc(14px + env(safe-area-inset-top,0px));z-index:13;align-items:center;gap:10px;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(0,0,0,.06);border-radius:16px;padding:7px;box-shadow:0 14px 36px -18px rgba(0,0,0,.35);max-width:calc(100% - 16px)}
+body.maket .mkbar{display:flex}.mkbar button{border:none;background:#2a2420;color:#fff;border-radius:11px;padding:9px 13px;font-weight:600;cursor:pointer;white-space:nowrap}.mkbar #mkn{background:#f0e6da;color:#241109}
+@media(max-width:760px){.mkbtn{display:flex!important;left:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));padding:9px 13px;font-size:13px}.mkbar .vt span{display:none}}
 .note{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.5;}
 body.hide .filt,body.hide .legend,body.hide .fr .dots{display:none!important;}
 .load{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:#f3e6d8;font-family:var(--serif);font-size:18px;color:var(--ink);transition:opacity .5s;}
@@ -209,6 +213,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <div class="ibar" id="ibar"><button id="iback">← Geri</button><div class="it"><b id="ititle"></b><span id="isub"></span></div><button id="irot" disabled>⟳ Döndər</button><button id="ireset">Sıfırla</button></div>
 <div class="ihint" id="ihint"></div>
 <button class="sunbtn" id="sunbtn" aria-label="Günəş və kölgə">☀️ <span>Günəş və kölgə</span></button>
+<button class="sunbtn mkbtn" id="mkbtn" aria-label="Rəqəmsal maket">🏙 <span>Rəqəmsal maket</span></button>
+<div class="mkbar" id="mkbar"><button id="mkx">← Çıx</button><div class="vt"><b>LUX Residence · rəqəmsal maket</b><span>11 bina · fırlatmaq üçün sürüşdürün, yaxınlaşdırmaq üçün çimdikləyin</span></div><button id="mkn">🌙 Gecə</button></div>
 <div class="sunbox" id="sunbox">
   <div class="sunhd"><b>☀️ Günəş və kölgə</b><div class="cmp" title="Kompas · Ş = şimal"><div class="cn" id="cmpN"><span>Ş</span><i></i></div></div><button class="sx" id="sunx" aria-label="Bağla">×</button></div>
   <div class="sdays" id="sdays"><button data-d="today" class="on">Bu gün</button><button data-d="3-20" title="21 mart">Yaz</button><button data-d="6-21" title="21 iyun">Yay</button><button data-d="9-23" title="23 sentyabr">Payız</button><button data-d="12-21" title="21 dekabr">Qış</button></div>
@@ -377,6 +383,52 @@ function placeSite(){const L=LAYOUT[CUR]||[0,0];SITE.position.set(-L[0],0,-L[1])
  for(const d of [0,15,-15,30,-30,45,-45,60,-60,80,-80,100,-100]){const a2=base+d*Math.PI/180;if(!blocked(a2)){best=a2;break;}}
  try{HOME.pos.set(Math.sin(best)*r,CY,Math.cos(best)*r);HOME.tgt.set(0,MOB?30:26,0);}catch(e){}}
 placeSite();
+/* ---------- 15.11 RƏQƏMSAL MAKET: ağ studiya, maket altlığı, yollar, yaşıllıq, meydançalar ---------- */
+const MK={on:false,grp:null,saved:null};
+function buildMaket(){if(MK.grp)return;const G=new THREE.Group();G.visible=false;SITE.add(G);MK.grp=G;
+ const X0=-132,X1=137,Z0=-168,Z1=118,CX=(X0+X1)/2,CZ=(Z0+Z1)/2,WX=X1-X0,WZ=Z1-Z0;
+ const mm=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.85},o));
+ const top=mm(0xf3f1ed),side=mm(0x2b2826,{roughness:.5}),asph=mm(0x5b5d61,{roughness:.9}),walk=mm(0xdcd5ca),lawn=mm(0x9fbf74),lawn2=mm(0x8eb066),line=mm(0xffffff),rub=mm(0xc8693f),rub2=mm(0x5f93b5),sand=mm(0xe7d3a6);
+ const bx=(w,h,d,m,x,y,z,cs=false)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.receiveShadow=true;o.castShadow=cs;G.add(o);return o;};
+ bx(WX,6,WZ,side,CX,-3.05,CZ);bx(WX-0.6,0.1,WZ-0.6,top,CX,-0.04,CZ);
+ /* yollar (perimetr + daxili küçə) */
+ const R=[[CX,Z1-12,WX-10,12,'x'],[CX,Z0+12,WX-10,12,'x'],[X0+12,CZ,12,WZ-10,'z'],[X1-12,CZ,12,WZ-10,'z'],[-20,CZ+10,9,WZ-60,'z']];
+ R.forEach(([x,z,w,d,ax])=>{bx(w,.12,d,asph,x,.06,z);
+  const L=ax==='x'?w:d;for(let t=-L/2+3;t<L/2-3;t+=7){ax==='x'?bx(3,.13,.25,line,x+t,.07,z):bx(.25,.13,3,line,x,.07,z+t);}
+  ax==='x'?(bx(w,.18,3,walk,x,.09,z-(d/2+1.5)),bx(w,.18,3,walk,x,.09,z+(d/2+1.5))):(bx(3,.18,d,walk,x-(w/2+1.5),.09,z),bx(3,.18,d,walk,x+(w/2+1.5),.09,z));});
+ /* yaşıllıq: binalardan və yollardan boş qalan xanalar */
+ const busy=(x,z,pad)=>Object.values(LAYOUT).some(V=>Math.abs(x-V[0])<(V[2]||W)/2+pad+4&&Math.abs(z-V[1])<(V[3]||D)/2+pad+3)||R.some(([rx,rz,w,d])=>Math.abs(x-rx)<w/2+5&&Math.abs(z-rz)<d/2+5);
+ const trees=[];let sd=21;const r3=()=>{sd=(sd*16807)%2147483647;return sd/2147483647;};
+ for(let x=X0+26;x<X1-24;x+=12)for(let z=Z0+26;z<Z1-24;z+=12){if(busy(x,z,3))continue;bx(12.02,.22,12.02,r3()<.5?lawn:lawn2,x,.11,z);
+  if(r3()<.55)trees.push([x+(r3()-.5)*7,z+(r3()-.5)*7,.8+r3()*.6]);if(r3()<.25)trees.push([x+(r3()-.5)*7,z+(r3()-.5)*7,.7+r3()*.5]);}
+ /* uşaq və idman meydançaları */
+ const PL=[[-60,-40],[20,-70],[-100,40]];PL.forEach(([x,z],i)=>{if(busy(x,z,-2))return;bx(16,.3,12,i===1?rub2:rub,x,.15,z);bx(5,.35,4,sand,x-4,.18,z+2);
+  const pc=new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,3,8),mm(0xffffff));[[-2,-3],[2,-3]].forEach(([a,b])=>{const c=pc.clone();c.position.set(x+a,1.5,z+b);G.add(c);});bx(4.6,.25,.25,mm(0xffd25a),x,3,z-3,true);bx(3,1.2,2,mm(0x2f6f8f),x+4,.6,z+2,true);});
+ /* ağaclar — instanced */
+ const tg=new THREE.CylinderGeometry(.18,.24,2.2,6),cg=new THREE.IcosahedronGeometry(1.6,1);const tm=new THREE.InstancedMesh(tg,mm(0x6b4f3a),trees.length),cm=new THREE.InstancedMesh(cg,mm(0x6f9a4c,{roughness:.9}),trees.length);
+ const o=new THREE.Object3D(),col=new THREE.Color();trees.forEach(([x,z,s2],i)=>{o.position.set(x,1.1*s2,z);o.scale.setScalar(s2);o.updateMatrix();tm.setMatrixAt(i,o.matrix);o.position.set(x,3.1*s2,z);o.scale.set(s2*1.1,s2,s2*1.1);o.updateMatrix();cm.setMatrixAt(i,o.matrix);cm.setColorAt(i,col.setHSL(.24+r3()*.06,.38,.36+r3()*.1));});
+ tm.castShadow=cm.castShadow=true;G.add(tm,cm);
+ /* parklanmış avtomobillər */
+ const cars=[];for(let x=X0+30;x<X1-30;x+=5.2){if(r3()<.55)cars.push([x,Z1-21.5,0]);if(r3()<.45)cars.push([x,Z0+21.5,0]);}for(let z=Z0+30;z<Z1-30;z+=5.2){if(r3()<.5)cars.push([X1-21.5,z,1]);}
+ const carG=new THREE.BoxGeometry(4.4,1.4,1.9);const carM=new THREE.InstancedMesh(carG,mm(0xffffff,{roughness:.35,metalness:.4}),cars.length);const CC=[0xf2f2f2,0x1f1f22,0x8a8f96,0xb4552f,0x2d4a6b,0xd9d4cc];
+ cars.forEach(([x,z,r],i)=>{o.position.set(x,.75,z);o.rotation.y=r?Math.PI/2:0;o.scale.setScalar(1);o.updateMatrix();carM.setMatrixAt(i,o.matrix);carM.setColorAt(i,col.setHex(CC[(r3()*CC.length)|0]));});carM.castShadow=true;G.add(carM);
+ MK.center=new THREE.Vector3(CX,0,CZ);}
+function maketOn(){if(MK.on)return;if(VIEW)exitView();if(SEL)exitFloor();buildMaket();MK.on=true;document.body.classList.add('maket');
+ MK.saved={hide:[],fogN:scene.fog.near,fogF:scene.fog.far,fogC:scene.fog.color.clone(),top:domeMat.uniforms.top.value.clone(),c:{min:controls.minDistance,max:controls.maxDistance,ar:controls.autoRotate,ars:controls.autoRotateSpeed,maxP:controls.maxPolarAngle}};
+ SITE.children.forEach(ch=>{if(ch!==MK.grp&&!Object.values(CTX).includes(ch)&&ch.visible){ch.visible=false;MK.saved.hide.push(ch);}});
+ scene.children.forEach(ch=>{if(ch.isMesh&&ch.geometry&&ch.geometry.type==='BoxGeometry'&&ch.position.length()<35&&ch.visible&&ch.position.y<1){ch.visible=false;MK.saved.hide.push(ch);}});
+ MK.sh={...sun.shadow.camera};Object.assign(sun.shadow.camera,{left:-200,right:200,top:200,bottom:-200,near:10,far:700});sun.shadow.camera.updateProjectionMatrix();
+ MK.grp.visible=true;scene.fog.near=700;scene.fog.far=2400;scene.fog.color.setHex(0xf4f3f1);domeMat.uniforms.top.value.setHex(0xe9e9ea);domeMat.uniforms.hor.value.setHex(0xf6f5f3);
+ const c=SITE.position.clone().add(MK.center);Object.assign(controls,{minDistance:60,maxDistance:620,maxPolarAngle:Math.PI*.46,autoRotate:true,autoRotateSpeed:.55});
+ flyTo(c.clone().add(new THREE.Vector3(210,175,250)),c.clone().add(new THREE.Vector3(0,10,0)),1600);}
+function maketOff(){if(!MK.on)return;MK.on=false;document.body.classList.remove('maket');MK.grp.visible=false;MK.saved.hide.forEach(h=>h.visible=true);
+ scene.fog.near=MK.saved.fogN;scene.fog.far=MK.saved.fogF;scene.fog.color.copy(MK.saved.fogC);domeMat.uniforms.top.value.copy(MK.saved.top);domeMat.uniforms.hor.value.copy(scene.fog.color);
+ Object.assign(sun.shadow.camera,{left:-60,right:60,top:70,bottom:-40,near:10,far:260});sun.shadow.camera.updateProjectionMatrix();
+ Object.assign(controls,{maxPolarAngle:MK.saved.c.maxP,autoRotate:false,autoRotateSpeed:MK.saved.c.ars});if(SUN.on&&MK.night){closeSun();}MK.night=false;$('mkn').textContent='🌙 Gecə';
+ flyTo(HOME.pos.clone(),HOME.tgt.clone(),1300,()=>{controls.minDistance=MK.saved.c.min;controls.maxDistance=MK.saved.c.max;});}
+function maketNight(){MK.night=!MK.night;$('mkn').textContent=MK.night?'☀️ Gündüz':'🌙 Gecə';
+ if(MK.night){SUN.on=true;enableShadowsMobile();const n=bakuNow();SUN.doy=doyOf(n.m,n.d);SUN.min=20*60;applySun();scene.fog.color.setHex(0x1d2230);domeMat.uniforms.hor.value.setHex(0x2a3040);domeMat.uniforms.top.value.setHex(0x0e1220);}
+ else{SUN.on=false;applySun();scene.fog.color.setHex(0xf4f3f1);domeMat.uniforms.top.value.setHex(0xe9e9ea);domeMat.uniforms.hor.value.setHex(0xf6f5f3);}}
 /* podium (2 commercial floors) */
 const podium=new THREE.Group();scene.add(podium);
 box(W+8,POD-0.4,D+6,MAT.pod,0,(POD-0.4)/2+0.3,0,podium);
@@ -452,7 +504,9 @@ function exitView(){if(!VIEW)return;const V=VIEW;VIEW=null;$('vbar').classList.r
  for(let k=F0;k<=F1;k++){floors[k].grp.visible=k<=SEL;}floors[SEL].shell.visible=false;roof.visible=false;scene.fog.near=V.fog[0];scene.fog.far=V.fog[1];camera.fov=V.fov;camera.updateProjectionMatrix();
  flyTo(V.cam,V.tgt,1300,()=>{controls.minDistance=V.c.minDistance;controls.maxDistance=V.c.maxDistance;});}
 document.getElementById('vback').addEventListener('click',exitView);
-window.__lux3d={view:n=>{const t=(floors[SEL]&&floors[SEL].tiles||[]).find(x=>String(x.userData.u.n)===String(n))||(floors[SEL].tiles||[])[0];if(t){openApt(t.userData.u);viewFrom(t.userData.u);}},exitView};
+document.getElementById('mkbtn').addEventListener('click',maketOn);document.getElementById('mkx').addEventListener('click',maketOff);document.getElementById('mkn').addEventListener('click',maketNight);
+if(new URLSearchParams(location.search).get('maket')==='1')setTimeout(maketOn,600);
+window.__lux3d={maket:()=>maketOn(),maketNight:()=>maketNight(),view:n=>{const t=(floors[SEL]&&floors[SEL].tiles||[]).find(x=>String(x.userData.u.n)===String(n))||(floors[SEL].tiles||[])[0];if(t){openApt(t.userData.u);viewFrom(t.userData.u);}},exitView};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&VIEW)exitView();});
 
 /* ---------- floor interior (sxematik) ---------- */

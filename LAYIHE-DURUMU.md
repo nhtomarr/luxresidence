@@ -475,3 +475,7 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 ## 15.11 — Dizayn layihəsi albomu (PDF, A3) — 2 otaqlı 111,64 m²
 - tools/album/build.py (reportlab, Poppins): plan108 məlumatından (3d.html ROOMS/WALLS/WINS/DEF108) 14 vərəq — üz qabığı, mündəricat, vizuallar (menzil-tur renderləri), 3D aksonometriya (three ortho render), ölçülü plan 1:60, mebel, qapılar (boşluqdan avtomatik aşkarlama + cədvəl), döşəmə + plintus hesabı, tavan, işıqlandırma + açarlar, elektrik (rozetka/TV/kondisioner), materiallar spesifikasiyası (+10%), qeydlər.
 - Giriş faylları /tmp/album-da yaradılır (plan108.json, axon.png, r_*.png) — yenidən qurmaq üçün əvvəlcə onları yarat.
+
+## 15.11 — 3D: «🏙 Rəqəmsal maket» rejimi
+- Düymə (masaüstü: Günəş düyməsinin yanında, mobil: sol aşağı) və ya ?maket=1. Ağ studiya fonu, 269×286 m maket altlığı (qara kənar), perimetr + daxili yollar (zolaq xətləri, səkilər), binalar/yollardan boş xanalarda qazon + instanced ağaclar, uşaq/idman meydançaları, parklanmış maşınlar (instanced). Avtomatik fırlanma, «🌙 Gecə» (SUN 20:00 → pəncərə işıqları).
+- Çıxanda hər şey bərpa olunur (gizlədilən SITE obyektləri, fog/dome, kamera limitləri, kölgə kamerası).
