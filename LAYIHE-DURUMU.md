@@ -479,3 +479,7 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 ## 15.11 — 3D: «🏙 Rəqəmsal maket» rejimi
 - Düymə (masaüstü: Günəş düyməsinin yanında, mobil: sol aşağı) və ya ?maket=1. Ağ studiya fonu, 269×286 m maket altlığı (qara kənar), perimetr + daxili yollar (zolaq xətləri, səkilər), binalar/yollardan boş xanalarda qazon + instanced ağaclar, uşaq/idman meydançaları, parklanmış maşınlar (instanced). Avtomatik fırlanma, «🌙 Gecə» (SUN 20:00 → pəncərə işıqları).
 - Çıxanda hər şey bərpa olunur (gizlədilən SITE obyektləri, fog/dome, kamera limitləri, kölgə kamerası).
+
+## 15.11 — Kompleks düzülüşü renderə uyğunlaşdırıldı
+- LAYOUT indi şəbəkədir (LG): x addımı 32 m, z addımı 38 m; qüllə 26×20 m (W/D dəyişdi), iri binalar 40×26 m, 20 mərtəbə. Şəbəkə: arxa sıra Bina 9/8/5/4, ön sıra Bina 7/6/3, Bina 10 (2,2), Bina 11 (3,3), Bina 1 (4,-1), Bina 2 (4.7,0.5). Nömrələr renderdən TƏXMİNİ.
+- Eyni sırada qonşu qüllələr arası 2 mərtəbəli birləşdirici podium. Maket altlığı LAYOUT-dan avtomatik ölçülür; həyətdə səki+qazon qarışığı. Maket kamerası renderin bucağına yaxın.

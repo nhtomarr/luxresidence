@@ -84,7 +84,7 @@ button{font-family:inherit;cursor:pointer;}
 .vbar{display:none;position:fixed;left:50%;transform:translateX(-50%);top:calc(14px + env(safe-area-inset-top,0px));z-index:13;align-items:center;gap:10px;background:rgba(255,252,248,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.75);border-radius:16px;padding:7px 14px 7px 7px;box-shadow:0 14px 36px -16px rgba(74,42,24,.5);max-width:calc(100% - 16px);}
 .vbar.on{display:flex}.vbar button{border:none;background:#2a2420;color:#fff;border-radius:11px;padding:9px 13px;font-weight:600;cursor:pointer}.vt{display:flex;flex-direction:column;line-height:1.25}.vt b{font-size:14px}.vt span{font-size:12px;opacity:.65}
 body.view #side,body.view .top,body.view #hint,body.view #crumb,body.view #sunbtn{opacity:0;pointer-events:none;transition:opacity .4s}
-.mkbtn{left:470px}body.view .mkbtn,body.maket .mkbtn,body.maket #side,body.maket .top,body.maket #hint,body.maket #crumb,body.maket #sunbtn,body.maket #panel,body.maket #lbls{opacity:0;pointer-events:none;transition:opacity .4s}
+.sunbtn.mkbtn{left:286px;bottom:calc(74px + env(safe-area-inset-bottom,0px))}body.view .mkbtn,body.maket .mkbtn,body.maket #side,body.maket .top,body.maket #hint,body.maket #crumb,body.maket #sunbtn,body.maket #panel,body.maket #lbls{opacity:0;pointer-events:none;transition:opacity .4s}
 .mkbar{display:none;position:fixed;left:50%;transform:translateX(-50%);top:calc(14px + env(safe-area-inset-top,0px));z-index:13;align-items:center;gap:10px;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(0,0,0,.06);border-radius:16px;padding:7px;box-shadow:0 14px 36px -18px rgba(0,0,0,.35);max-width:calc(100% - 16px)}
 body.maket .mkbar{display:flex}.mkbar button{border:none;background:#2a2420;color:#fff;border-radius:11px;padding:9px 13px;font-weight:600;cursor:pointer;white-space:nowrap}.mkbar #mkn{background:#f0e6da;color:#241109}
 @media(max-width:760px){.mkbtn{display:flex!important;left:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));padding:9px 13px;font-size:13px}.mkbar .vt span{display:none}}
@@ -233,7 +233,7 @@ import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const SUPA='https://avqchschbbltnnasabdm.supabase.co',KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2cWNoc2NoYmJsdG5uYXNhYmRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5NDA2NTAsImV4cCI6MjEwNTUxNjY1MH0.PVxxfLrj8KZH6AUaQQPx5sEqpiGEMDIFy3Mq206OMKI';
 const BINALAR=['Bina 3','Bina 4','Bina 5','Bina 6','Bina 7','Bina 8'];
-const F0=3,F1=16,W=30,D=22,FH=3.2,POD=9.2;
+const F0=3,F1=16,W=26,D=20,FH=3.2,POD=9.2;
 const MOB=matchMedia('(max-width:760px)').matches;
 let HIDE=false,HST=false;try{HIDE=localStorage.getItem('lux_hidefloors')==='1';HST=localStorage.getItem('lux_hidestatus')==='1';}catch(e){}
 const OFF=()=>HIDE||HST;
@@ -308,7 +308,7 @@ function box(w,h,d,mat,x,y,z,parent,cast=true){const m=new THREE.Mesh(new THREE.
 
 /* ground & surroundings */
 const g=new THREE.Mesh(new THREE.CircleGeometry(420,64),MAT.ground);g.rotation.x=-Math.PI/2;g.receiveShadow=true;scene.add(g);
-box(62,0.3,50,MAT.paving,0,0.15,2,scene,false);
+box(36,0.3,30,MAT.paving,0,0.15,2,scene,false);
 box(18,0.35,9,MAT.grass,-16,0.2,19,scene,false);box(18,0.35,9,MAT.grass,16,0.2,19,scene,false);
 box(8,0.36,4,MAT.water,-16,0.25,19,scene,false);
 let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
@@ -352,7 +352,11 @@ const FT={h:66,x:-70,z:300,y:-8,ry:0};
 
 /* ---------- 15.11 kompleks: 11 bina (ana səhifədəki render kimi), 1 və 2 — 20 mərtəbəli ----------
    Seçilmiş bina həmişə mərkəzdədir (interaktiv model); qalanları kontekst modelidir. SITE qrupu seçilən binaya görə sürüşdürülür. */
-const LAYOUT={'Bina 1':[30,72,44,28,20],'Bina 2':[78,24,44,28,20],'Bina 3':[-12,30],'Bina 4':[35,-12],'Bina 5':[0,-38],'Bina 6':[-44,0],'Bina 7':[-80,-30],'Bina 8':[-32,-66],'Bina 9':[-60,-98],'Bina 10':[6,-102],'Bina 11':[40,-128]};
+/* Düzülüş ana səhifədəki render (assets/img1.webp) əsasında: qüllələr şəbəkə üzrə — x addımı 40 m, z addımı 48 m;
+   öndə 2 iri (cüt seksiyalı) 20 mərtəbəli bina. Bina nömrələri renderdən təxminidir. */
+const LG={};const LAYOUT=(()=>{const G={'Bina 7':[0,0],'Bina 6':[1,0],'Bina 3':[2,0],'Bina 9':[0,1],'Bina 8':[1,1],'Bina 5':[2,1],'Bina 4':[3,1],'Bina 10':[2,2],'Bina 11':[3,3],'Bina 1':[4,-1,40,26,20],'Bina 2':[4.7,.5,40,26,20]};Object.assign(LG,G);
+ const o={};let sx=0,sz=0;Object.entries(G).forEach(([k,v])=>{o[k]=[v[0]*32,-v[1]*38].concat(v.slice(2));sx+=o[k][0];sz+=o[k][1];});
+ const n=Object.keys(o).length;Object.values(o).forEach(v=>{v[0]=Math.round(v[0]-sx/n);v[1]=Math.round(v[1]-sz/n);});return o;})();
 const SITE=new THREE.Group();
 scene.children.slice().forEach(o=>{if(o.isLight||o===dome||o===sun.target)return;if(o.isMesh&&o.geometry&&o.geometry.type==='BoxGeometry'&&o.position.length()<30)return;if(o.isGroup&&o.position.length()<35&&o.children.length&&o.children[0].geometry&&o.children[0].geometry.type==='CylinderGeometry')return;SITE.add(o);});
 scene.add(SITE);
@@ -374,10 +378,14 @@ Object.entries(LAYOUT).forEach(([nm,L])=>{const [x,z,w=W,d=D,fl=F1-F0+1]=L,big=w
  if(big){for(let i=-2;i<=2;i++)box(0.9,H,0.9,MAT.cream,i*w/4.2,POD+H/2,d/2+0.3,g);}
  const pv=box(w+14,0.25,d+12,MAT.paving,0,0.12,0,g,false);pv.receiveShadow=true;
  g.position.set(x,0,z);SITE.add(g);CTX[nm]=g;});
+/* qonşu qüllələr arasında 2 mərtəbəli birləşdirici podium (renderdəki kimi) */
+Object.entries(LG).forEach(([a,va])=>{Object.entries(LG).forEach(([b,vb])=>{if(a>=b||va.length>2||vb.length>2)return;const A=LAYOUT[a],B=LAYOUT[b];
+  if(va[1]===vb[1]&&Math.abs(va[0]-vb[0])===1){const x=(A[0]+B[0])/2,gap=Math.abs(A[0]-B[0])-W;if(gap>0)box(gap+2,POD*.75,D*.8,MAT.pod,x,POD*.375,A[1],SITE);}
+  if(va[0]===vb[0]&&Math.abs(va[1]-vb[1])===1){const z=(A[1]+B[1])/2,gap=Math.abs(A[1]-B[1])-D;if(gap>0)box(W*.6,POD*.75,gap+2,MAT.pod,A[0],POD*.375,z,SITE);}});});
 function placeSite(){const L=LAYOUT[CUR]||[0,0];SITE.position.set(-L[0],0,-L[1]);Object.entries(CTX).forEach(([n,g])=>g.visible=n!==CUR);
  /* kamera: kompleksin mərkəzindən seçilmiş binaya doğru, kənardan — başqa bina önünü kəsməsin */
  const cx=Object.values(LAYOUT).reduce((a,v)=>a+v[0],0)/11,cz=Object.values(LAYOUT).reduce((a,v)=>a+v[1],0)/11;let dx=L[0]-cx,dz=L[1]-cz;const n=Math.hypot(dx,dz);if(n<8){dx=.7;dz=.7;}else{dx/=n;dz/=n;}
- const r=MOB?150:112,CY=MOB?175:138,base=Math.atan2(dx,dz);let best=base;
+ const r=MOB?175:150,CY=MOB?195:160,base=Math.atan2(dx,dz);let best=base;
  const blocked=ang=>{const px=Math.sin(ang)*r,pz=Math.cos(ang)*r;return Object.entries(LAYOUT).some(([n,V])=>{if(n===CUR)return false;const ox=V[0]-L[0],oz=V[1]-L[1],hw=(V[2]||W)/2+4,hd=(V[3]||D)/2+4;
   for(let t=.12;t<.92;t+=.04){const x=px*(1-t),z=pz*(1-t),y=CY*(1-t)+26*t,ht=POD+(V[4]||(F1-F0+1))*FH;if(Math.abs(x-ox)<hw&&Math.abs(z-oz)<hd&&y<ht)return true;}return false;});};
  for(const d of [0,15,-15,30,-30,45,-45,60,-60,80,-80,100,-100]){const a2=base+d*Math.PI/180;if(!blocked(a2)){best=a2;break;}}
@@ -386,23 +394,24 @@ placeSite();
 /* ---------- 15.11 RƏQƏMSAL MAKET: ağ studiya, maket altlığı, yollar, yaşıllıq, meydançalar ---------- */
 const MK={on:false,grp:null,saved:null};
 function buildMaket(){if(MK.grp)return;const G=new THREE.Group();G.visible=false;SITE.add(G);MK.grp=G;
- const X0=-132,X1=137,Z0=-168,Z1=118,CX=(X0+X1)/2,CZ=(Z0+Z1)/2,WX=X1-X0,WZ=Z1-Z0;
+ const VS=Object.values(LAYOUT),X0=Math.min(...VS.map(v=>v[0]-(v[2]||W)/2))-36,X1=Math.max(...VS.map(v=>v[0]+(v[2]||W)/2))+36,Z0=Math.min(...VS.map(v=>v[1]-(v[3]||D)/2))-36,Z1=Math.max(...VS.map(v=>v[1]+(v[3]||D)/2))+36,CX=(X0+X1)/2,CZ=(Z0+Z1)/2,WX=X1-X0,WZ=Z1-Z0;
  const mm=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.85},o));
  const top=mm(0xf3f1ed),side=mm(0x2b2826,{roughness:.5}),asph=mm(0x5b5d61,{roughness:.9}),walk=mm(0xdcd5ca),lawn=mm(0x9fbf74),lawn2=mm(0x8eb066),line=mm(0xffffff),rub=mm(0xc8693f),rub2=mm(0x5f93b5),sand=mm(0xe7d3a6);
  const bx=(w,h,d,m,x,y,z,cs=false)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.receiveShadow=true;o.castShadow=cs;G.add(o);return o;};
  bx(WX,6,WZ,side,CX,-3.05,CZ);bx(WX-0.6,0.1,WZ-0.6,top,CX,-0.04,CZ);
  /* yollar (perimetr + daxili küçə) */
- const R=[[CX,Z1-12,WX-10,12,'x'],[CX,Z0+12,WX-10,12,'x'],[X0+12,CZ,12,WZ-10,'z'],[X1-12,CZ,12,WZ-10,'z'],[-20,CZ+10,9,WZ-60,'z']];
+ const R=[[CX,Z1-12,WX-10,12,'x'],[CX,Z0+12,WX-10,12,'x'],[X0+12,CZ,12,WZ-10,'z'],[X1-12,CZ,12,WZ-10,'z']];
  R.forEach(([x,z,w,d,ax])=>{bx(w,.12,d,asph,x,.06,z);
   const L=ax==='x'?w:d;for(let t=-L/2+3;t<L/2-3;t+=7){ax==='x'?bx(3,.13,.25,line,x+t,.07,z):bx(.25,.13,3,line,x,.07,z+t);}
   ax==='x'?(bx(w,.18,3,walk,x,.09,z-(d/2+1.5)),bx(w,.18,3,walk,x,.09,z+(d/2+1.5))):(bx(3,.18,d,walk,x-(w/2+1.5),.09,z),bx(3,.18,d,walk,x+(w/2+1.5),.09,z));});
  /* yaşıllıq: binalardan və yollardan boş qalan xanalar */
  const busy=(x,z,pad)=>Object.values(LAYOUT).some(V=>Math.abs(x-V[0])<(V[2]||W)/2+pad+4&&Math.abs(z-V[1])<(V[3]||D)/2+pad+3)||R.some(([rx,rz,w,d])=>Math.abs(x-rx)<w/2+5&&Math.abs(z-rz)<d/2+5);
  const trees=[];let sd=21;const r3=()=>{sd=(sd*16807)%2147483647;return sd/2147483647;};
- for(let x=X0+26;x<X1-24;x+=12)for(let z=Z0+26;z<Z1-24;z+=12){if(busy(x,z,3))continue;bx(12.02,.22,12.02,r3()<.5?lawn:lawn2,x,.11,z);
+ const pave=mm(0xd9cdbb,{roughness:.9}),inner=(x,z)=>x>X0+40&&x<X1-40&&z>Z0+40&&z<Z1-40;
+ for(let x=X0+26;x<X1-24;x+=12)for(let z=Z0+26;z<Z1-24;z+=12){if(busy(x,z,3))continue;const pv=inner(x,z)&&r3()<.45;bx(12.02,.22,12.02,pv?pave:(r3()<.5?lawn:lawn2),x,.11,z);if(pv)continue;
   if(r3()<.55)trees.push([x+(r3()-.5)*7,z+(r3()-.5)*7,.8+r3()*.6]);if(r3()<.25)trees.push([x+(r3()-.5)*7,z+(r3()-.5)*7,.7+r3()*.5]);}
  /* uşaq və idman meydançaları */
- const PL=[[-60,-40],[20,-70],[-100,40]];PL.forEach(([x,z],i)=>{if(busy(x,z,-2))return;bx(16,.3,12,i===1?rub2:rub,x,.15,z);bx(5,.35,4,sand,x-4,.18,z+2);
+ const PL=[[CX-WX*.28,CZ+WZ*.12],[CX+WX*.05,CZ-WZ*.3],[CX-WX*.3,CZ-WZ*.3],[CX+WX*.3,CZ+WZ*.05]];PL.forEach(([x,z],i)=>{if(busy(x,z,-2))return;bx(16,.3,12,i===1?rub2:rub,x,.15,z);bx(5,.35,4,sand,x-4,.18,z+2);
   const pc=new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,3,8),mm(0xffffff));[[-2,-3],[2,-3]].forEach(([a,b])=>{const c=pc.clone();c.position.set(x+a,1.5,z+b);G.add(c);});bx(4.6,.25,.25,mm(0xffd25a),x,3,z-3,true);bx(3,1.2,2,mm(0x2f6f8f),x+4,.6,z+2,true);});
  /* ağaclar — instanced */
  const tg=new THREE.CylinderGeometry(.18,.24,2.2,6),cg=new THREE.IcosahedronGeometry(1.6,1);const tm=new THREE.InstancedMesh(tg,mm(0x6b4f3a),trees.length),cm=new THREE.InstancedMesh(cg,mm(0x6f9a4c,{roughness:.9}),trees.length);
@@ -420,7 +429,7 @@ function maketOn(){if(MK.on)return;if(VIEW)exitView();if(SEL)exitFloor();buildMa
  MK.sh={...sun.shadow.camera};Object.assign(sun.shadow.camera,{left:-200,right:200,top:200,bottom:-200,near:10,far:700});sun.shadow.camera.updateProjectionMatrix();
  MK.grp.visible=true;scene.fog.near=700;scene.fog.far=2400;scene.fog.color.setHex(0xf4f3f1);domeMat.uniforms.top.value.setHex(0xe9e9ea);domeMat.uniforms.hor.value.setHex(0xf6f5f3);
  const c=SITE.position.clone().add(MK.center);Object.assign(controls,{minDistance:60,maxDistance:620,maxPolarAngle:Math.PI*.46,autoRotate:true,autoRotateSpeed:.55});
- flyTo(c.clone().add(new THREE.Vector3(210,175,250)),c.clone().add(new THREE.Vector3(0,10,0)),1600);}
+ flyTo(c.clone().add(new THREE.Vector3(150,235,255)),c.clone().add(new THREE.Vector3(0,8,0)),1600);}
 function maketOff(){if(!MK.on)return;MK.on=false;document.body.classList.remove('maket');MK.grp.visible=false;MK.saved.hide.forEach(h=>h.visible=true);
  scene.fog.near=MK.saved.fogN;scene.fog.far=MK.saved.fogF;scene.fog.color.copy(MK.saved.fogC);domeMat.uniforms.top.value.copy(MK.saved.top);domeMat.uniforms.hor.value.copy(scene.fog.color);
  Object.assign(sun.shadow.camera,{left:-60,right:60,top:70,bottom:-40,near:10,far:260});sun.shadow.camera.updateProjectionMatrix();
@@ -506,7 +515,7 @@ function exitView(){if(!VIEW)return;const V=VIEW;VIEW=null;$('vbar').classList.r
 document.getElementById('vback').addEventListener('click',exitView);
 document.getElementById('mkbtn').addEventListener('click',maketOn);document.getElementById('mkx').addEventListener('click',maketOff);document.getElementById('mkn').addEventListener('click',maketNight);
 if(new URLSearchParams(location.search).get('maket')==='1')setTimeout(maketOn,600);
-window.__lux3d={maket:()=>maketOn(),maketNight:()=>maketNight(),view:n=>{const t=(floors[SEL]&&floors[SEL].tiles||[]).find(x=>String(x.userData.u.n)===String(n))||(floors[SEL].tiles||[])[0];if(t){openApt(t.userData.u);viewFrom(t.userData.u);}},exitView};
+window.__lux3d={cam:(x,y,z)=>{anim=null;controls.autoRotate=false;const c=SITE.position.clone().add(MK.center||new THREE.Vector3());camera.position.set(c.x+x,y,c.z+z);controls.target.set(c.x,8,c.z);controls.update();},maket:()=>maketOn(),maketNight:()=>maketNight(),view:n=>{const t=(floors[SEL]&&floors[SEL].tiles||[]).find(x=>String(x.userData.u.n)===String(n))||(floors[SEL].tiles||[])[0];if(t){openApt(t.userData.u);viewFrom(t.userData.u);}},exitView};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&VIEW)exitView();});
 
 /* ---------- floor interior (sxematik) ---------- */
