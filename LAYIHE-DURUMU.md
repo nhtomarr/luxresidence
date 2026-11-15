@@ -465,3 +465,9 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - Mebel RoundedBoxGeometry ilə: buklé divan, terrakota kreslo, travertin masa, qoz TV konsolu (lamel), fikus bitkiləri, palıd yemək masası + 6 stul + 3 şüşə kürə, mərmər mətbəx, açıq kitab rəfi, döşəmə lampası, yarımşəffaf pərdələr, gizli LED.
 - «🌙 Axşam / ☀️ Gündüz» düyməsi: axşam işıqları (5 PointLight, yalnız axşam görünür — shader yükü azdır), LED, gecə panoraması.
 - Pəncərə mənzərəsi: canvas panorama (dəniz, Alov qüllələri, 3 planlı şəhər), üfüq göz səviyyəsində. window.__tour test qarmağı.
+
+## 15.11 — 3D: 11 binalı kompleks (ana səhifə renderi əsasında)
+- LAYOUT (metr, kompleks mərkəzinə görə): Bina 1 (30,72) və Bina 2 (78,24) — 44×28 m, 20 mərtəbə (öndəki iri binalar); Bina 3–11 — 30×22 m, 14 yaşayış mərtəbəsi + podium. Nömrələmə renderdən TƏXMİNİDİR — real baş plana görə LAYOUT-u düzəlt.
+- Seçilmiş bina (Bina 3–8 tabları) həmişə mərkəzdə interaktiv modeldir; qalan 10 bina kontekst (canvas fasad faktura, gecə pəncərə işığı). SITE qrupu seçilən binaya görə sürüşür (placeSite).
+- HOME kamerası hər bina üçün avtomatik: kompleks mərkəzindən çölə, digər binaların kəsmədiyi bucaq seçilir (quş baxışı, r=112, y=138).
+- Şəhər/dəniz konteksti kompleksdən kənara itələndi (bay city z 160+).

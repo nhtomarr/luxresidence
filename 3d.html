@@ -261,7 +261,7 @@ const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(38,1,0.5,2200);
 scene.fog=new THREE.Fog(0xf0dcc6,260,1300);
 const controls=new OrbitControls(camera,canvas);
-controls.enableDamping=true;controls.dampingFactor=.08;controls.minDistance=25;controls.maxDistance=MOB?260:170;controls.maxPolarAngle=Math.PI*0.49;controls.enablePan=false;
+controls.enableDamping=true;controls.dampingFactor=.08;controls.minDistance=25;controls.maxDistance=MOB?320:280;controls.maxPolarAngle=Math.PI*0.49;controls.enablePan=false;
 controls.autoRotate=true;controls.autoRotateSpeed=0.5;
 controls.addEventListener('start',()=>{controls.autoRotate=false;document.getElementById('hint').style.opacity=0;});
 
@@ -308,7 +308,7 @@ box(8,0.36,4,MAT.water,-16,0.25,19,scene,false);
 let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
 function tree(x,z,s=1){const t=new THREE.Group();const tr=new THREE.Mesh(new THREE.CylinderGeometry(.18*s,.25*s,2.2*s,6),MAT.trunk);tr.position.y=1.1*s;tr.castShadow=true;t.add(tr);
  const lm=rnd()<.5?MAT.leaf:MAT.leaf2;[[0,3,0,1.45],[.6,2.6,.3,1],[-.55,2.7,-.25,1.05],[.1,3.7,-.1,.95]].forEach(q=>{const c=new THREE.Mesh(new THREE.IcosahedronGeometry(q[3]*s,1),lm);c.position.set(q[0]*s,q[1]*s,q[2]*s);c.castShadow=true;t.add(c);});t.rotation.y=rnd()*6;t.position.set(x,0,z);scene.add(t);}
-for(let i=0;i<46;i++){const a=rnd()*Math.PI*2,r=34+rnd()*40;tree(Math.cos(a)*r,Math.sin(a)*r,.8+rnd()*.7);}
+const RING=[];for(let i=0;i<90;i++){const a=rnd()*Math.PI*2,r=150+rnd()*90;RING.push([Math.cos(a)*r,Math.sin(a)*r,.8+rnd()*.7]);}
 [[-26,20],[-6,23],[6,23],[26,20],[-28,-18],[28,-18]].forEach(p=>tree(p[0],p[1],1));
 
 
@@ -320,9 +320,9 @@ const FT={h:66,x:-70,z:300,y:-8,ry:0};
  const shore=new THREE.Mesh(new THREE.PlaneGeometry(3200,14),MAT.paving);shore.rotation.x=-Math.PI/2;shore.position.set(0,0.1,283);bay.add(shore);
  const cMats=[0xe6d6c1,0xd9c4a8,0xcdb89c,0xefe4d4,0xbfae98].map(c=>{const t=WINTEX.clone();t.repeat.set(2,3);t.needsUpdate=true;const w=M(c,{map:t}),r=M(c);return [w,w,r,r,w,w];});let sd=11;const r2=()=>{sd=(sd*16807)%2147483647;return sd/2147483647;};
  const cg=new THREE.BoxGeometry(1,1,1);
- for(let i=0;i<190;i++){const x=(r2()-.5)*520,z=70+r2()*205;if(x<-20&&x>-120&&z>215)continue;
+ for(let i=0;i<190;i++){const x=(r2()-.5)*560,z=160+r2()*115;if(x<-20&&x>-120&&z>215)continue;
   const h=5+Math.pow(r2(),2.4)*20,w=7+r2()*11,d=7+r2()*11;const m=new THREE.Mesh(cg,cMats[i%5]);m.scale.set(w,h,d);m.position.set(x,h/2,z);m.rotation.y=(r2()-.5)*.3;bay.add(m);}
- for(let i=0;i<50;i++){const x=(r2()-.5)*460,z=60+r2()*210;const t=new THREE.Mesh(new THREE.IcosahedronGeometry(2.2,0),MAT.leaf);t.position.set(x,2.6,z);bay.add(t);}
+ for(let i=0;i<50;i++){const x=(r2()-.5)*460,z=160+r2()*110;const t=new THREE.Mesh(new THREE.IcosahedronGeometry(2.2,0),MAT.leaf);t.position.set(x,2.6,z);bay.add(t);}
  /* Alov qüllələri — sxematik */
  const prof=[[0,0],[15,0],[15.6,14],[15.2,48],[13.4,90],[10.2,128],[6.2,160],[2.4,182],[0,192]].map(p=>new THREE.Vector2(p[0],p[1]));
  const glass=new THREE.MeshStandardMaterial({color:0xa9bfd0,metalness:.45,roughness:.22,emissive:0x5a3418,emissiveIntensity:.3});
@@ -344,6 +344,39 @@ const FT={h:66,x:-70,z:300,y:-8,ry:0};
   procKids.forEach(k=>bay.remove(k));bay.add(piv);},undefined,()=>{});
 }
 
+/* ---------- 15.11 kompleks: 11 bina (ana səhifədəki render kimi), 1 və 2 — 20 mərtəbəli ----------
+   Seçilmiş bina həmişə mərkəzdədir (interaktiv model); qalanları kontekst modelidir. SITE qrupu seçilən binaya görə sürüşdürülür. */
+const LAYOUT={'Bina 1':[30,72,44,28,20],'Bina 2':[78,24,44,28,20],'Bina 3':[-12,30],'Bina 4':[35,-12],'Bina 5':[0,-38],'Bina 6':[-44,0],'Bina 7':[-80,-30],'Bina 8':[-32,-66],'Bina 9':[-60,-98],'Bina 10':[6,-102],'Bina 11':[40,-128]};
+const SITE=new THREE.Group();
+scene.children.slice().forEach(o=>{if(o.isLight||o===dome||o===sun.target)return;if(o.isMesh&&o.geometry&&o.geometry.type==='BoxGeometry'&&o.position.length()<30)return;if(o.isGroup&&o.position.length()<35&&o.children.length&&o.children[0].geometry&&o.children[0].geometry.type==='CylinderGeometry')return;SITE.add(o);});
+scene.add(SITE);
+{const _sc=scene;RING.forEach(([x,z,s])=>{if(Object.values(LAYOUT).some(L=>Math.abs(x-L[0])<30&&Math.abs(z-L[1])<26))return;const t0=_sc.children.length;tree(x,z,s);const t=_sc.children[_sc.children.length-1];SITE.add(t);});}
+function facTex(w,d,fl,big){const mk=lit=>{const c=document.createElement('canvas');c.width=256;c.height=256;const x=c.getContext('2d');
+  x.fillStyle=lit?'#000':(big?'#e9dfd1':'#efe3d2');x.fillRect(0,0,256,256);
+  const bays=4;for(let i=0;i<bays;i++){const bx=i*64;if(!lit&&!big&&i%2===1){x.fillStyle='#c9693f';x.fillRect(bx+6,0,52,256);}
+   for(let r=0;r<4;r++){const y=r*64;if(lit){if(Math.random()<.55){x.fillStyle=Math.random()<.5?'#ffcf93':'#ffe2b8';x.fillRect(bx+12,y+12,40,44);}}else{const gg=x.createLinearGradient(0,y+12,0,y+56);gg.addColorStop(0,big?'#7d8a94':'#8a98a2');gg.addColorStop(1,big?'#3e4850':'#46535c');x.fillStyle=gg;x.fillRect(bx+12,y+12,40,44);x.fillStyle='rgba(240,232,220,.9)';x.fillRect(bx+31,y+12,2,44);}}}
+  if(!lit){x.fillStyle=big?'#f4ece0':'#f3e9db';for(let r=0;r<4;r++)x.fillRect(0,r*64,256,6);}
+  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=8;return t;};
+ const a=mk(false),e=mk(true);const mm=(uw)=>{const A=a.clone(),E=e.clone();A.needsUpdate=E.needsUpdate=true;A.repeat.set(uw/12,fl/4);E.repeat.set(uw/12,fl/4);
+  const m=new THREE.MeshStandardMaterial({map:A,emissiveMap:E,emissive:0xffc48a,emissiveIntensity:0,roughness:.6,metalness:.05});CTXM.push(m);return m;};
+ return [mm(d),mm(d),MAT.cream,MAT.cream,mm(w),mm(w)];}
+const CTXM=[],CTX={};
+Object.entries(LAYOUT).forEach(([nm,L])=>{const [x,z,w=W,d=D,fl=F1-F0+1]=L,big=w>W,g=new THREE.Group();
+ box(w+8,POD,d+6,MAT.pod,0,POD/2,0,g);box(w+8.6,0.5,d+6.6,MAT.cream,0,POD,0,g);
+ const H=fl*FH;const body=new THREE.Mesh(new THREE.BoxGeometry(w,H,d),facTex(w,d,fl,big));body.position.y=POD+H/2;body.castShadow=true;body.receiveShadow=true;g.add(body);
+ box(w+0.8,0.6,d+0.8,MAT.cream,0,POD+H+0.3,0,g);box(w*.35,3,d*.35,MAT.dark,w*.15,POD+H+2,0,g);
+ if(big){for(let i=-2;i<=2;i++)box(0.9,H,0.9,MAT.cream,i*w/4.2,POD+H/2,d/2+0.3,g);}
+ const pv=box(w+14,0.25,d+12,MAT.paving,0,0.12,0,g,false);pv.receiveShadow=true;
+ g.position.set(x,0,z);SITE.add(g);CTX[nm]=g;});
+function placeSite(){const L=LAYOUT[CUR]||[0,0];SITE.position.set(-L[0],0,-L[1]);Object.entries(CTX).forEach(([n,g])=>g.visible=n!==CUR);
+ /* kamera: kompleksin mərkəzindən seçilmiş binaya doğru, kənardan — başqa bina önünü kəsməsin */
+ const cx=Object.values(LAYOUT).reduce((a,v)=>a+v[0],0)/11,cz=Object.values(LAYOUT).reduce((a,v)=>a+v[1],0)/11;let dx=L[0]-cx,dz=L[1]-cz;const n=Math.hypot(dx,dz);if(n<8){dx=.7;dz=.7;}else{dx/=n;dz/=n;}
+ const r=MOB?150:112,CY=MOB?175:138,base=Math.atan2(dx,dz);let best=base;
+ const blocked=ang=>{const px=Math.sin(ang)*r,pz=Math.cos(ang)*r;return Object.entries(LAYOUT).some(([n,V])=>{if(n===CUR)return false;const ox=V[0]-L[0],oz=V[1]-L[1],hw=(V[2]||W)/2+4,hd=(V[3]||D)/2+4;
+  for(let t=.12;t<.92;t+=.04){const x=px*(1-t),z=pz*(1-t),y=CY*(1-t)+26*t,ht=POD+(V[4]||(F1-F0+1))*FH;if(Math.abs(x-ox)<hw&&Math.abs(z-oz)<hd&&y<ht)return true;}return false;});};
+ for(const d of [0,15,-15,30,-30,45,-45,60,-60,80,-80,100,-100]){const a2=base+d*Math.PI/180;if(!blocked(a2)){best=a2;break;}}
+ try{HOME.pos.set(Math.sin(best)*r,CY,Math.cos(best)*r);HOME.tgt.set(0,MOB?30:26,0);}catch(e){}}
+placeSite();
 /* podium (2 commercial floors) */
 const podium=new THREE.Group();scene.add(podium);
 box(W+8,POD-0.4,D+6,MAT.pod,0,(POD-0.4)/2+0.3,0,podium);
@@ -398,7 +431,7 @@ for(let i=0;i<7;i++)box(0.35,3.2,0.35,MAT.terra,-W/2+2+i*2.2,ry+2.1,D/2-3,roof);
 function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
 addEventListener('resize',resize);resize();
 const HOME={pos:new THREE.Vector3(MOB?58:92,MOB?74:50,MOB?178:96),tgt:new THREE.Vector3(MOB?0:-6,MOB?28:25,0)};
-camera.position.copy(HOME.pos);controls.target.copy(HOME.tgt);
+placeSite();camera.position.copy(HOME.pos);controls.target.copy(HOME.tgt);
 let anim=null;
 function flyTo(pos,tgt,ms=900,done){anim={p0:camera.position.clone(),t0:controls.target.clone(),p1:pos,t1:tgt,s:performance.now(),ms,done};}
 /* ---------- 15.11 «Eyvandan mənzərə»: seçilmiş mənzilin hündürlüyündən ətrafa baxış ---------- */
@@ -459,7 +492,7 @@ function buildTabs(){$('tabs').innerHTML=BINALAR.map(b=>'<button class="'+(b===C
 function buildList(){document.body.classList.toggle('hide',OFF());let h='';for(let f=F1;f>=F0;f--){const us=units(f),av=OFF()?0:us.filter(u=>u.st==='available').length,ok=OFF()||us.some(match);
  h+='<button class="fr'+(SEL===f?' on':'')+(ok||!us.length?'':' dim')+(av?' av':'')+'" data-f="'+f+'"><span class="num">'+f+'</span><span class="inf"><b>'+ord(f)+' mərtəbə</b><span>'+(HIDE?'Mənzillərə baxın':HST?(us.length?us.length+' mənzil':'Məlumat yoxdur'):(us.length?(av?av+' mənzil satışda':'Hamısı satılıb'):'Məlumat yoxdur'))+'</span></span><span class="dots">'+(OFF()?[]:us).map(u=>'<i style="background:'+(u.st==='available'?'var(--av)':'var(--sd)')+';opacity:'+(match(u)?1:.25)+'"></i>').join('')+'</span></button>';}
  $('fl').innerHTML=h;}
-$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;CUR=b.dataset.b;buildTabs();closePanel();if(SEL)selectFloor(SEL,true);buildList();history.replaceState(null,'','?bina='+encodeURIComponent(CUR));});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;CUR=b.dataset.b;placeSite();buildTabs();if(!SEL&&!VIEW){controls.autoRotate=false;flyTo(HOME.pos.clone(),HOME.tgt.clone(),1200);}closePanel();if(SEL)selectFloor(SEL,true);buildList();history.replaceState(null,'','?bina='+encodeURIComponent(CUR));});
 $('filt').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;FILTER=b.dataset.f;[...$('filt').children].forEach(x=>x.classList.toggle('on',x===b));buildList();if(SEL)selectFloor(SEL,true);});
 $('fl').addEventListener('click',e=>{const b=e.target.closest('.fr');if(!b)return;selectFloor(+b.dataset.f);});
 $('crumbB').addEventListener('click',()=>exitFloor());
@@ -558,7 +591,7 @@ function applySun(){
  $('sinfo').innerHTML=ds+(p.alt>0?('Günəş '+dirName(p.az).toLowerCase()+' tərəfdədir, hündürlüyü '+Math.round(p.alt)+'° · Gün çıxır '+hhmm(rs.r)+', batır '+hhmm(rs.s)):('Günəş üfüqün altındadır · Gün çıxır '+hhmm(rs.r)+', batır '+hhmm(rs.s)));
 }
 if(!scene.children.includes(sun.target))scene.add(sun.target);
-function nightGlass(){let k=0;if(SUN.on){const p=sunPos(SUN.doy,SUN.min);k=1-THREE.MathUtils.smoothstep(p.alt,-7,2);}GLASS.forEach(g=>{g.m.emissiveIntensity=g.on?k*1.25*g.r:0;});domeMat.uniforms.top.value.copy(DOME.top).lerp(DOME.nTop,k);domeMat.uniforms.hor.value.copy(scene.fog.color);}
+function nightGlass(){let k=0;if(SUN.on){const p=sunPos(SUN.doy,SUN.min);k=1-THREE.MathUtils.smoothstep(p.alt,-7,2);}GLASS.forEach(g=>{g.m.emissiveIntensity=g.on?k*1.25*g.r:0;});CTXM.forEach(m=>m.emissiveIntensity=k*1.1);domeMat.uniforms.top.value.copy(DOME.top).lerp(DOME.nTop,k);domeMat.uniforms.hor.value.copy(scene.fog.color);}
 {const _aS=applySun;applySun=function(){_aS();updSky(!SUN.play);nightGlass();};}
 function setDay(key){if(key==='today'){const n=bakuNow();SUN.doy=doyOf(n.m,n.d);}else{const [m,d]=key.split('-').map(Number);SUN.doy=doyOf(m,d);}
  [...$('sdays').children].forEach(b=>b.classList.toggle('on',b.dataset.d===key));applySun();}
