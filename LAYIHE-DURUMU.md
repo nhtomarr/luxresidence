@@ -517,3 +517,27 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - Baxışa yazılma (`luxVisit(ctx)`, `/?baxis=1&m=...`): 10 gün × 10:00–19:00, ad, telefon → lux_leads (subject «Baxış: 17.11.2026, 15:00»). Ana səhifədə, mənzil səhifəsində, köməkçidə və 3D panelində.
 - Son baxdıqlarınız (localStorage `lux_recent`, ana səhifədə, 4 kart). Mənzil səhifəsində «3D-də bax» (Bina 3–8 üçün `?area=`) və «Çap et / PDF» (A4 üfüqi çap görünüşü).
 - Qiymət, mərtəbə və satış statusu bu funksiyalarda göstərilmir (lux_showprices=0, lux_hidefloors=1, lux_hidestatus=1 ayarlarına uyğun).
+
+## 16.11 — Sayt: vizual cila + 20 yenilik (index.html, blok «LUX v2» — `<style id="lux-v2">` + skript, faylın sonunda)
+İstiqamət (unslop, cila rejimi — brend saxlanılıb): isti, memarlıq hissli, sakit-dəqiq; dünya — terrakota fasad, krem daş, axşam işığı; «anlar» — hero-dakı nömrəli render və gündüz/gecə sürgüsü; imza detalı — nömrəli bina nişanları (hero-dakı nişanlar kartlarda da).
+1. Tipoqrafiya: başlıqlar Playfair 600 (əvvəl 700), sıx aralıq; sahələr «70,37 m²» formatında (MutationObserver mətn düyünlərində nöqtəni vergülə çevirir; `azA()` kartlarda).
+2. Bölmə etiketləri: iri hərf + seyrək yazı əvəzinə adi yazı və nazik xətt.
+3. Düymələr/kartlar: vahid keçid əyrisi (`--ease`), basanda .98, fokus halqası; rəngli parıltılı kölgələr götürüldü; kart hover — haşiyə + yüngül kölgə (yuxarı sıçrama yoxdur).
+4. Emoji çıxarıldı (xəritə kateqoriyaları, forma təşəkkürü, WhatsApp ipucu, yükləmə düymələri).
+5. Bina nişanları: kartda «Bina 3, 4, 5, 6» əvəzinə nömrəli nişanlar (`locHtml`, yalnız lux_hidefloors=1 olanda); 3D-də baxıla bilən planlarda «3D» nişanı (`l3d`).
+6. Hero: «Mənzil seç» və «3D-də gəz» düymələri (masaüstü və mobil).
+7. Yeni bölmə «Kompleksi gündüz və gecə görün»: müqayisə sürgüsü (assets/3d-gunduz.webp, 3d-gece.webp — 3D modeldən çəkilib; yenidən çəkmək üçün /tmp/shots/cap3d.py məntiqi: `__lux3d.cam(150,100,170)` + `tod('night')`).
+8. Xəbərlər: fasiləsiz axan lent əvəzinə oxlu karusel (`#newsCar`); tərəfdaşlar sabit sıra.
+9. Mobil: «Seçilmiş mənzillər», «Digər mənzillər», «Son baxdıqlarınız» üfüqi sürüşən sıra.
+10. Mobil alt menyu (`#tabbar`: Ana səhifə, Planlar, 3D tur, Sevimlilər + say, Əlaqə).
+11. Oxuma irəliləyişi xətti (`#rProg`) + «Yuxarı qayıt» düyməsi (masaüstü).
+12. Səhifə keçidi (yumşaq açılma) və bölmələrin sürüşdükcə açılması (`.rv`, yalnız ekrandan aşağıdakılar; reduced-motion-da sönülü).
+13. `::selection`, `:focus-visible`, `html{overflow-x:clip}`.
+14. Plan böyüdücü (`#lxBox`): plana toxunanda tam ekran; təkər/çimdik/ikiqat kliklə yaxınlaşdırma, sürükləmə.
+15. Mobil mənzil səhifəsində yapışqan panel (`#actBar`: Zəng, WhatsApp, Baxışa yazıl) — alt menyunu əvəz edir.
+16. Planlar: sıralama (`#catSort`, `luxV2.sort`) + mobil 2 sütun.
+17. Müqayisə paneli (`#cmpBar`): seçim olanda «Müqayisədə N mənzil — Müqayisə et».
+18. `alert()` əvəzinə sakit bildiriş (`luxToast`; `window.alert` bununla əvəzlənib).
+19. Suallar: axtarış (`#faqQ`).
+20. Footer: «3D tur», «Baxışa yazıl», «Seçim köməkçisi», «Yuxarı qayıt».
+Qarmaqlar: `showView` → `luxV2.view(v,nav)`, `updCounts` → `luxV2.counts()`, `renderCat` → `luxV2.sort(list)`. 3D səhifəyə toxunulmayıb.

@@ -821,8 +821,8 @@ body.modal-open #waFab,body.modal-open #waTip{display:none}
     <button class="burger" id="burger"><span></span><span></span><span></span></button>
   </div>
 </header></div><div class="view active" id="v-ana" data-nav="ana">
-  <div class="hero-sec"><div class="hero"><div class="sky day"></div><div class="sky night"></div><div class="veil"></div><svg class="overlay" viewBox="0 0 100 100" preserveAspectRatio="none"><g class="hots"></g></svg><div class="dn-badge">Gündüz</div><div class="hcap"><div class="eyebrow" id="cHomeEye">Şəhərin yeni ritmi</div><h1 id="cHomeTitle">Sizin istədiyiniz<br>kompleks</h1></div></div></div>
-  <div class="wrap"><div class="hcap-mobile" id="hcapMobile"><div class="eyebrow">Şəhərin yeni ritmi</div><h1>Sizin istədiyiniz kompleks</h1></div><div class="stats" id="homeStats">
+  <div class="hero-sec"><div class="hero"><div class="sky day"></div><div class="sky night"></div><div class="veil"></div><svg class="overlay" viewBox="0 0 100 100" preserveAspectRatio="none"><g class="hots"></g></svg><div class="dn-badge">Gündüz</div><div class="hcap"><div class="eyebrow" id="cHomeEye">Şəhərin yeni ritmi</div><h1 id="cHomeTitle">Sizin istədiyiniz<br>kompleks</h1><div class="hero-cta"><a class="btn btn-primary" href="/planlar">Mənzil seç</a><a class="btn hero-ghost" href="/3d">3D-də gəz</a></div></div></div></div>
+  <div class="wrap"><div class="hcap-mobile" id="hcapMobile"><div class="eyebrow">Şəhərin yeni ritmi</div><h1>Sizin istədiyiniz kompleks</h1><div class="hero-cta"><a class="btn btn-primary" href="/planlar">Mənzil seç</a><a class="btn hero-ghost" href="/3d">3D-də gəz</a></div></div><div class="stats" id="homeStats">
     <div class="stat"><b>11</b><span>yaşayış binası</span></div>
     <div class="stat"><b>0%</b><span>daxili kredit</span></div>
     <div class="stat"><b>7/24</b><span>mühafizə</span></div>
@@ -832,9 +832,15 @@ body.modal-open #waFab,body.modal-open #waTip{display:none}
     <div class="sec-head"><div><div class="eyebrow-d">Xüsusi təkliflər</div><h2 class="h2">Seçilmiş mənzillər</h2></div><a class="link-btn" href="/planlar">Bütün mənzillərə baxmaq →</a></div>
     <div class="apt-grid" id="featured-cards"></div>
   </div></section>
+  <section class="sec dn-sec"><div class="wrap"><div class="dn-grid">
+    <div class="dn-copy"><div class="eyebrow-d">3D tur</div><h2 class="h2">Kompleksi gündüz və gecə görün</h2><p>Sürgünü çəkin: eyni kadr günün iki vaxtında. 3D turda binanı fırlada, mərtəbəni seçə və eyvandan mənzərəyə baxa bilərsiniz.</p>
+     <ul class="dn-list"><li>11 bina, həyət və ətraf məhəllə bir modeldə</li><li>Mərtəbə-mərtəbə mənzil planları</li><li>İlin istənilən günü üçün günəş və kölgə</li></ul>
+     <a class="btn btn-primary" href="/3d">3D turu aç</a></div>
+    <div class="dn-cmp" id="dnCmp"><img src="/assets/3d-gunduz.webp" alt="LUX Residence kompleksi gündüz, 3D model" loading="lazy" width="1600" height="900"><img class="dn-night" src="/assets/3d-gece.webp" alt="LUX Residence kompleksi gecə, 3D model" loading="lazy" width="1600" height="900"><span class="dn-tag l">Gündüz</span><span class="dn-tag r">Gecə</span><i class="dn-line"></i><i class="dn-knob"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg></i><input type="range" min="0" max="100" value="50" aria-label="Gündüz və gecə müqayisəsi" id="dnRange"></div>
+  </div></div></section>
   <section class="sec alt"><div class="wrap">
-    <div class="sec-head"><div><div class="eyebrow-d">Xəbərlər</div><h2 class="h2">Son yeniliklər</h2></div></div>
-    <div class="marquee"><div class="mq-track" id="newsMq"></div></div>
+    <div class="sec-head"><div><div class="eyebrow-d">Xəbərlər</div><h2 class="h2">Son yeniliklər</h2></div><div class="car-nav"><button type="button" id="newsPrev" aria-label="Əvvəlki xəbərlər"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button><button type="button" id="newsNext" aria-label="Növbəti xəbərlər"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button><a class="link-btn" href="/xeberler">Bütün xəbərlər</a></div></div>
+    <div class="marquee news-car" id="newsCar"><div class="mq-track" id="newsMq"></div></div>
   </div></section>
   <section class="sec" id="partnersSec" hidden><div class="wrap">
     <div class="sec-head" style="justify-content:center;text-align:center;flex-direction:column;align-items:center;"><div class="eyebrow-d">Tərəfdaşlar</div><h2 class="h2">Etibarlı brendlərlə</h2></div>
@@ -882,7 +888,7 @@ body.modal-open #waFab,body.modal-open #waTip{display:none}
   <section class="abt-hero hero-short" id="infraHero"><div class="wrap"><div class="inner"><div class="se" id="cInfraEye">İnfrastruktur</div><h1 id="cInfraTitle">Yaşamaq üçün lazım olan<br>hər şey yaxınlıqda</h1><p id="cInfraText">Məktəb, xəstəxana, metro və ticarət mərkəzləri — hamısı yürüş məsafəsində.</p></div></div></section>
   <div class="wrap"><div style="margin-top:0;"><div class="abt-stats inf-stats" id="infraStats"><div class="abt-stat"><div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="3" width="14" height="13" rx="2.5"/><path d="M5 11h14M8.5 20l-1.5 2M15.5 20l1.5 2M8.5 16h.01M15.5 16h.01"/></svg></div><div><b>5 dəq</b><span>Metro stansiyası</span></div></div><div class="abt-stat"><div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3.5 22 8l-10 4.5L2 8l10-4.5z"/><path d="M6 10.5V15c0 1.6 2.7 3 6 3s6-1.4 6-3v-4.5"/></svg></div><div><b>3 dəq</b><span>Məktəb & bağça</span></div></div><div class="abt-stat"><div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8" stroke-width="2"/></svg></div><div><b>7 dəq</b><span>Xəstəxana</span></div></div><div class="abt-stat"><div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></div><div><b>4 dəq</b><span>Ticarət mərkəzi</span></div></div></div></div>
   <section class="sec" style="padding-top:0;"><div class="feat-grid"><div class="feat"><div class="badge-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 20A7 7 0 0 1 4 13c0-6 8-10 8-10s8 4 8 10a7 7 0 0 1-7 7z"/></svg></div><h3 id="ft0t">Yaşıl sahələr</h3><p id="ft0d">Bloklar arasında geniş park zonaları və peyzaj.</p></div><div class="feat"><div class="badge-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3 id="ft1t">7/24 mühafizə</h3><p id="ft1d">Nəzarət kameraları və qapalı ərazi təhlükəsizliyi.</p></div><div class="feat"><div class="badge-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13l2-5h10l2 5M5 13h14v5H5zM7 18v2M17 18v2"/></svg></div><h3 id="ft2t">Parking</h3><p id="ft2d">Yerüstü və yeraltı avtomobil dayanacaqları.</p></div><div class="feat"><div class="badge-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="7" r="3"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7"/></svg></div><h3 id="ft3t">Uşaq meydançaları</h3><p id="ft3d">Uşaqlar üçün təhlükəsiz oyun zonaları.</p></div><div class="feat"><div class="badge-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9h18l-1.5 11H4.5zM3 9l2-5h14l2 5"/></svg></div><h3 id="ft4t">Ticarət sahələri</h3><p id="ft4d">Market, kafe və xidmət obyektləri binaların altında.</p></div><div class="feat"><div class="badge-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 10h14M8 21l2-3M16 21l-2-3"/></svg></div><h3 id="ft5t">Nəqliyyat</h3><p id="ft5d">Metro və əsas yollara birbaşa çıxış.</p></div></div></section>
-  <section class="sec" style="padding-top:0;"><div class="wrap"><div class="imap-head"><div><div class="se">Xəritə</div><h2 class="h2">Ətrafdakılar</h2></div></div><div class="imap-cats" id="imapCats"><button class="imap-cat on" data-cat="__base">📍 Kompleks</button><button class="imap-cat" data-cat="school">🎓 Məktəblər</button><button class="imap-cat" data-cat="kindergarten">🧸 Bağçalar</button><button class="imap-cat" data-cat="supermarket">🛒 Marketlər</button><button class="imap-cat" data-cat="subway">🚇 Metro</button><button class="imap-cat" data-cat="health">🏥 Səhiyyə</button><button class="imap-cat" data-cat="pharmacy">💊 Apteklər</button><button class="imap-cat" data-cat="park">🌳 Parklar</button><button class="imap-cat" data-cat="food">🍽️ Kafe/Restoran</button><button class="imap-cat" data-cat="bank">🏦 Banklar</button><button class="imap-cat" data-cat="fuel">⛽ Yanacaq</button><button class="imap-cat" data-cat="gym">🏋️ İdman</button></div><div class="imap-wrap"><div id="imapMap"></div><div id="imapLoad" class="imap-load" style="display:none">Yüklənir…</div></div><div class="imap-note" id="imapNote">Kateqoriya seçin — kompleksin ~1.5 km ətrafındakı yerlər xəritədə görünəcək.</div></div></section>
+  <section class="sec" style="padding-top:0;"><div class="wrap"><div class="imap-head"><div><div class="se">Xəritə</div><h2 class="h2">Ətrafdakılar</h2></div></div><div class="imap-cats" id="imapCats"><button class="imap-cat on" data-cat="__base">Kompleks</button><button class="imap-cat" data-cat="school">Məktəblər</button><button class="imap-cat" data-cat="kindergarten">Bağçalar</button><button class="imap-cat" data-cat="supermarket">Marketlər</button><button class="imap-cat" data-cat="subway">Metro</button><button class="imap-cat" data-cat="health">Səhiyyə</button><button class="imap-cat" data-cat="pharmacy">Apteklər</button><button class="imap-cat" data-cat="park">Parklar</button><button class="imap-cat" data-cat="food">Kafe/Restoran</button><button class="imap-cat" data-cat="bank">Banklar</button><button class="imap-cat" data-cat="fuel">Yanacaq</button><button class="imap-cat" data-cat="gym">İdman</button></div><div class="imap-wrap"><div id="imapMap"></div><div id="imapLoad" class="imap-load" style="display:none">Yüklənir…</div></div><div class="imap-note" id="imapNote">Kateqoriya seçin — kompleksin ~1.5 km ətrafındakı yerlər xəritədə görünəcək.</div></div></section>
 </div></div><div class="view" id="v-xeberler" data-nav="xeberler">
   <section class="abt-hero hero-short" id="newsHero"><div class="wrap"><div class="inner"><div class="se" id="cNewsEye">Xəbərlər</div><h1 id="cNewsTitle">Son yeniliklər</h1><p id="cNewsText">Layihə ilə bağlı ən son xəbərlər və elanlar.</p></div></div></section>
   <div class="wrap"><section class="sec"><div class="news-grid" id="newsGrid"></div></section></div>
@@ -936,7 +942,7 @@ body.modal-open #waFab,body.modal-open #waTip{display:none}
 <div class="view" id="v-sevimliler" data-nav="sevimliler"><div class="wrap" style="padding-top:calc(var(--nav-h) + 30px);">
   <h1 class="cmp-title">Sevimlilər</h1><div id="favBody2"></div>
 </div></div>
-<div class="modal-bg" id="favModal"><div class="list-modal"><button class="mclose" id="favClose">&times;</button><h2>Favorilər ♥</h2><div id="favBody"></div></div></div>
+<div class="modal-bg" id="favModal"><div class="list-modal"><button class="mclose" id="favClose">&times;</button><h2>Sevimlilər</h2><div id="favBody"></div></div></div>
 <div class="modal-bg" id="cmpPicker"><div class="list-modal" style="max-width:520px"><button class="mclose" onclick="document.getElementById('cmpPicker').classList.remove('open')">&times;</button><h2>Mənzil əlavə et</h2><div id="cmpPickBody" style="max-height:60vh;overflow:auto"></div></div></div>
 <div class="modal-bg" id="cmpModal"><div class="list-modal"><button class="mclose" id="cmpClose">&times;</button><h2>Müqayisə</h2><div id="cmpBody"></div></div></div>
 <div class="modal-bg" id="aptModal"><div class="apt-detail"><button class="mclose" id="aptClose">&times;</button>
@@ -957,7 +963,7 @@ body.modal-open #waFab,body.modal-open #waTip{display:none}
     <label>E-poçt</label><input id="cfMail" type="email" placeholder="E-poçt"><label>Telefon</label><input id="cfPhone" placeholder="+994"><label>Mövzu</label><textarea id="cfMsg" placeholder="Mövzu"></textarea>
     <button class="btn btn-primary" id="callSend" style="width:100%;margin-top:18px;">Göndər →</button>
   </div>
-  <div id="callOk">Təşəkkürlər! 🎉<br>Tezliklə sizinlə əlaqə saxlayacağıq.</div>
+  <div id="callOk">Təşəkkür edirik<br>Tezliklə sizinlə əlaqə saxlayacağıq</div>
 </div></div>
 <div class="view" id="v-secim" data-nav="secim"><div class="wrap" style="padding-top:calc(var(--nav-h) + 12px);"><div class="sec-head"><div><div class="se">İnteraktiv seçim</div><h1 class="sec-h1">Binanı və mərtəbəni seçin</h1></div><div class="sec-filt" id="secFilt"><button class="sf on" data-st="all">Hamısı</button><button class="sf" data-st="available">Satışda</button><button class="sf" data-st="sold">Satılıb</button></div></div><div class="bina-tabs" id="binaTabs"></div><a class="go3d" href="/3d" onclick="this.href='/3d?bina='+encodeURIComponent(window._curBina3d||'Bina 3')">3D-də bax <span>yeni</span></a><div class="tower-row"><div class="tower-stage" id="towerStage"><div class="tower-zoom" id="towerZoom"><img src="/assets/tower-3-8.webp" alt="Bina" id="towerImg"><svg id="towerSvg" viewBox="0 0 1000 563" preserveAspectRatio="none"></svg></div><div class="floor-tip" id="floorTip" style="display:none"></div><div class="tz-ctrl"><button onclick="tzoom(1.3)" title="Böyüt">+</button><button onclick="tzoom(0.77)" title="Kiçilt">−</button><button onclick="tzreset()" title="Sıfırla">⟲</button></div></div><div class="floor-strip" id="floorStrip" aria-label="Mərtəbələr"></div></div><div class="sec-note"><span class="sn-d">Bina üzərində gəzin — mərtəbə görünsün. <b>Klik edin</b> — mənzillər sağda açılsın.</span><span class="sn-m">Mərtəbəni binada və ya yandakı siyahıda seçin. Mənzillər aşağıda açılacaq.</span></div><div class="sec-panel" id="secPanel"><div class="sp-grab"></div><button class="sp-close" onclick="document.getElementById('secPanel').classList.remove('open')">×</button><div id="secPanelBody"></div></div></div></div>
 <div class="view" id="v-bina" data-nav="planlar"><div class="wrap">
@@ -974,11 +980,11 @@ body.modal-open #waFab,body.modal-open #waTip{display:none}
 </div></div>
 <div class="drawer" id="drawer"><button class="x" id="drawerX">&times;</button><div class="eyebrow-d">LUX RESIDENCE</div><h2 id="dName">Bina</h2><div class="dr-meta" id="dMeta"></div><div id="drawerBody"></div><a class="cta" id="drawerAll" href="/planlar" data-bina="">Bu binada bütün mənzillər →</a></div><footer><svg class="foot-mark" viewBox="0 0 120 120" fill="currentColor" aria-hidden="true"><path d="M20 16 h22 v66 h34 v22 h-56 z"/><path d="M100 104 h-22 v-66 h-34 v-22 h56 z"/></svg><div class="foot-grid">
   <div class="foot-brand"><img src="/assets/brand/logo-site-white.svg" alt="LUX RESIDENCE"><p>Şəhərin imkanlarından uzaqlaşmadan, yaşıllıqların əhatəsində rahat və huzurlu yaşam.</p></div>
-  <div class="foot-col"><h4>Səhifələr</h4><a href="/">Ana Səhifə</a><a href="/haqqimizda">Haqqımızda</a><a href="/infrastruktur">İnfrastruktur</a><a href="/xeberler">Xəbərlər</a><a href="/planlar">Planlar</a><a href="/suallar">Tez-tez verilən suallar</a><a href="/elaqe">Əlaqə</a></div>
+  <div class="foot-col"><h4>Səhifələr</h4><a href="/">Ana Səhifə</a><a href="/haqqimizda">Haqqımızda</a><a href="/infrastruktur">İnfrastruktur</a><a href="/xeberler">Xəbərlər</a><a href="/planlar">Planlar</a><a href="/3d">3D tur</a><a href="/suallar">Tez-tez verilən suallar</a><a href="/elaqe">Əlaqə</a></div>
   <div class="foot-col"><h4>Binalar</h4><a href="/bina-1">Bina 1</a><a href="/bina-3">Bina 3</a><a href="/bina-4">Bina 4</a><a href="/bina-5">Bina 5</a><a href="/bina-6">Bina 6</a><a href="/bina-10">Bina 10</a><a href="/bina-11">Bina 11</a><a href="/planlar">Bütün mənzillər</a></div>
-  <div class="foot-col"><h4>Əlaqə</h4><a href="tel:+994508090088">+994 50 809 00 88</a><a href="tel:+994507000088">+994 50 700 00 88</a><a href="mailto:luxresidence.az@gmail.com">luxresidence.az@gmail.com</a></div>
+  <div class="foot-col"><h4>Əlaqə</h4><a href="tel:+994508090088">+994 50 809 00 88</a><a href="tel:+994507000088">+994 50 700 00 88</a><a href="mailto:luxresidence.az@gmail.com">luxresidence.az@gmail.com</a><div class="foot-acts"><button type="button" onclick="luxVisit('')">Baxışa yazıl</button><button type="button" onclick="luxWizard()">Seçim köməkçisi</button></div></div>
 </div>
-<div class="foot-bottom"><span>© 2026 LUX Residence · luxresidence.az</span><div class="socials"><a id="soc-instagram" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg></a><a id="soc-facebook" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 3h-3a4 4 0 0 0-4 4v3H5v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a><a id="soc-youtube" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 8a3 3 0 0 0-2.1-2.1C19 5.4 12 5.4 12 5.4s-7 0-8.9.5A3 3 0 0 0 1 8a31 31 0 0 0 0 8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5A3 3 0 0 0 23 16a31 31 0 0 0 0-8zM10 15.5v-7l6 3.5z"/></svg></a><a id="soc-whatsapp" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20z"/></svg></a><a id="soc-telegram" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 2.6 11.7c-.9.4-.9 1.6.1 1.9l4.7 1.5 1.8 5.6c.2.7 1.1.9 1.6.3l2.6-2.6 4.8 3.5c.6.4 1.5.1 1.7-.6l3.3-15.6c.2-.9-.7-1.7-1.6-1.3z"/></svg></a><a id="soc-linkedin" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9V21h-4z"/></svg></a></div></div><div class="millinet-b" style="display:flex;justify-content:center;margin-top:14px"><!--MilliNet --> <script type="text/javascript" src="https://millinet.az/banner.js?id=776"></script></div></footer><script>
+<div class="foot-bottom"><span>© 2026 LUX Residence · luxresidence.az</span><a class="foot-top" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Yuxarı qayıt</a><div class="socials"><a id="soc-instagram" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg></a><a id="soc-facebook" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 3h-3a4 4 0 0 0-4 4v3H5v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a><a id="soc-youtube" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 8a3 3 0 0 0-2.1-2.1C19 5.4 12 5.4 12 5.4s-7 0-8.9.5A3 3 0 0 0 1 8a31 31 0 0 0 0 8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5A3 3 0 0 0 23 16a31 31 0 0 0 0-8zM10 15.5v-7l6 3.5z"/></svg></a><a id="soc-whatsapp" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20z"/></svg></a><a id="soc-telegram" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 2.6 11.7c-.9.4-.9 1.6.1 1.9l4.7 1.5 1.8 5.6c.2.7 1.1.9 1.6.3l2.6-2.6 4.8 3.5c.6.4 1.5.1 1.7-.6l3.3-15.6c.2-.9-.7-1.7-1.6-1.3z"/></svg></a><a id="soc-linkedin" href="#" target="_blank" rel="noopener" style="display:none"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9V21h-4z"/></svg></a></div></div><div class="millinet-b" style="display:flex;justify-content:center;margin-top:14px"><!--MilliNet --> <script type="text/javascript" src="https://millinet.az/banner.js?id=776"></script></div></footer><script>
 function locLines(a){var f=String(a.floor||'');if(f.indexOf(':')>=0){return f.split(/\s*·\s*/).map(function(p){var i=p.indexOf(':');return {b:'Bina '+p.slice(0,i).trim(),f:p.slice(i+1).trim()};});}return [{b:a.bina,f:f}];}
 function locTxt(a,sep){if(typeof HIDEFL!=='undefined'&&HIDEFL){if(a.bina)return String(a.bina);var seen={};return locLines(a).map(function(l){return l.b;}).filter(function(b){if(!b||seen[b])return false;seen[b]=1;return true;}).join(', ');}return locLines(a).map(function(l){return l.b+' — mərtəbə '+l.f;}).join(sep);}
 function flTxt(a,sep){var L=locLines(a);return L.length>1?L.map(function(l){return l.b+': '+l.f;}).join(sep):L[0].f;}
@@ -1026,10 +1032,14 @@ function shareApt(id){var a=APARTMENTS.find(function(x){return x.id==id;});if(!a
   +'<button id="shCopy"><i style="background:#8b7a6b">⧉</i>Linki kopyala</button></div></div>';
  sh.classList.add('open');document.getElementById('shCopy').onclick=function(){var b=this;function ok(){b.lastChild.textContent='Kopyalandı ✓';}
   if(navigator.clipboard)navigator.clipboard.writeText(url).then(ok,function(){prompt('Linki kopyalayın:',url);});else prompt('Linki kopyalayın:',url);};}
-function card(a){const[l,c]=STL[a.status];const f=FAV.has(a.id)?" on":"",cm=CMP.has(a.id)?" on":"";return `<div class="apt-card" data-id="${a.id}" style="cursor:pointer;"><div class="apt-thumb"><span class="apt-badge ${c}">${l}</span><div class="card-actions"><button class="cact${f}" data-act="fav" data-id="${a.id}">${HEART}</button><button class="cact${cm}" data-act="cmp" data-id="${a.id}">${SCALE}</button><button class="cact" data-act="share" data-id="${a.id}" title="Paylaş" aria-label="Paylaş">${SHAREI}</button></div>${a.plan?('<img class="apt-planimg" src="'+a.plan+'" alt="'+a.rooms+' otaqlı mənzil planı, '+a.area+' m²" loading="lazy">'):PLAN}</div><div class="apt-b"><div class="spec">${a.rooms} otaqlı · ${a.area} m²</div><div class="loc">${PIN}<span class="locl">${locTxt(a,'<br>')}</span></div><div class="p">${priceLabel(a)}</div><div class="abtn">Ətraflı →</div></div></div>`;}
+function azA(v){return String(v).replace('.',',');}
+function bNums(a){return String(a.bina||'').replace(/Bina/gi,'').split(/[,\s]+/).map(Number).filter(Boolean);}
+function l3d(a){var n=bNums(a).filter(function(x){return x>=3&&x<=8;})[0];return n?'/3d?bina='+encodeURIComponent('Bina '+n)+'&area='+a.area:null;}
+function locHtml(a){var ns=bNums(a);if(typeof HIDEFL!=='undefined'&&HIDEFL&&ns.length)return '<div class="loc bpins"><span>Bina</span>'+ns.map(function(n){return '<i>'+n+'</i>';}).join('')+'</div>';return '<div class="loc">'+PIN+'<span class="locl">'+locTxt(a,'<br>')+'</span></div>';}
+function card(a){const[l,c]=STL[a.status];const f=FAV.has(a.id)?" on":"",cm=CMP.has(a.id)?" on":"";return `<div class="apt-card" data-id="${a.id}" style="cursor:pointer;"><div class="apt-thumb"><span class="apt-badge ${c}">${l}</span>${l3d(a)?'<span class="c3d">3D</span>':''}<div class="card-actions"><button class="cact${f}" data-act="fav" data-id="${a.id}">${HEART}</button><button class="cact${cm}" data-act="cmp" data-id="${a.id}">${SCALE}</button><button class="cact" data-act="share" data-id="${a.id}" title="Paylaş" aria-label="Paylaş">${SHAREI}</button></div>${a.plan?('<img class="apt-planimg" src="'+a.plan+'" alt="'+a.rooms+' otaqlı mənzil planı, '+a.area+' m²" loading="lazy">'):PLAN}</div><div class="apt-b"><div class="spec">${a.rooms} otaqlı · ${azA(a.area)} m²</div>${locHtml(a)}<div class="p">${priceLabel(a)}</div><div class="abtn">Ətraflı →</div></div></div>`;}
 document.getElementById('featured-cards').innerHTML=VAPT().filter(a=>a.status==='available').slice(0,4).map(card).join('');
 const F={rooms:new Set(),min:70,max:250,status:'all',bina:null};
-function renderCat(){const list=VAPT().filter(a=>{if(F.rooms.size){const r=a.rooms>=4?4:a.rooms;if(!F.rooms.has(r))return false;}if(a.area<F.min||a.area>F.max)return false;if(F.status!=='all'&&a.status!==F.status)return false;if(F.bina&&!inB(a,F.bina))return false;return true;});document.getElementById('cat-cards').innerHTML=list.length?list.map(card).join(''):'<p style="color:var(--muted);grid-column:1/-1;">Uyğun mənzil tapılmadı.</p>';document.getElementById('catCount').textContent=list.length+' mənzil';}
+function renderCat(){const list=VAPT().filter(a=>{if(F.rooms.size){const r=a.rooms>=4?4:a.rooms;if(!F.rooms.has(r))return false;}if(a.area<F.min||a.area>F.max)return false;if(F.status!=='all'&&a.status!==F.status)return false;if(F.bina&&!inB(a,F.bina))return false;return true;});if(window.luxV2)luxV2.sort(list);document.getElementById('cat-cards').innerHTML=list.length?list.map(card).join(''):'<p style="color:var(--muted);grid-column:1/-1;">Uyğun mənzil tapılmadı.</p>';document.getElementById('catCount').textContent=list.length+' mənzil';}
 document.querySelectorAll('#fRooms button').forEach(b=>b.addEventListener('click',()=>{const r=+b.dataset.r;b.classList.toggle('on');F.rooms.has(r)?F.rooms.delete(r):F.rooms.add(r);renderCat();}));
 const amin=document.getElementById('fAreaMin'),amax=document.getElementById('fAreaMax'),albl=document.getElementById('fAreaLbl');
 function ac(){let lo=+amin.value,hi=+amax.value;if(lo>hi){[lo,hi]=[hi,lo];amin.value=lo;amax.value=hi;}F.min=lo;F.max=hi;albl.textContent=lo+'–'+hi+' m²';renderCat();}
@@ -1038,9 +1048,9 @@ document.getElementById('fStatus').addEventListener('change',e=>{F.status=e.targ
 document.getElementById('fReset').addEventListener('click',()=>{F.rooms.clear();F.min=70;F.max=250;F.status='all';F.bina=null;amin.value=70;amax.value=250;albl.textContent='70–250 m²';document.querySelectorAll('#fRooms button').forEach(b=>b.classList.remove('on'));document.getElementById('fStatus').value='all';renderCat();});
 renderCat();
 function openApt(a){const total=a.area*a.price,initial=total*0.3,monthly=(total-initial)/36;const[l,c]=STL[a.status];const bd=document.getElementById('adBadge');bd.className='apt-badge '+c;bd.textContent=l;document.getElementById('adTitle').textContent=a.rooms+' otaqlı · '+a.area+' m²';document.getElementById('adLoc').innerHTML=locTxt(a,'<br>');if(SHOWP){document.getElementById('adPrice').textContent=fmt(total)+' AZN – dan';document.getElementById('adMonthly').textContent=fmt(Math.round(monthly))+' AZN';document.getElementById('adInitial').textContent=fmt(Math.round(initial))+' AZN';}else{document.getElementById('adPrice').textContent='Qiymət — sorğu ilə';document.getElementById('adMonthly').textContent='—';document.getElementById('adInitial').textContent='—';}document.getElementById('aptModal').classList.add('open');}
-function updCounts(){var ids=new Set(APARTMENTS.map(function(a){return a.id;}));var chg=false;[...FAV].forEach(function(id){if(!ids.has(id)){FAV.delete(id);chg=true;}});[...CMP].forEach(function(id){if(!ids.has(id)){CMP.delete(id);chg=true;}});if(chg)saveFC();var f=document.getElementById('favCount'),c=document.getElementById('cmpCount');if(f){f.textContent=FAV.size;f.style.display=FAV.size?'flex':'none';}if(c){c.textContent=CMP.size;c.style.display=CMP.size?'flex':'none';}}
+function updCounts(){var ids=new Set(APARTMENTS.map(function(a){return a.id;}));var chg=false;[...FAV].forEach(function(id){if(!ids.has(id)){FAV.delete(id);chg=true;}});[...CMP].forEach(function(id){if(!ids.has(id)){CMP.delete(id);chg=true;}});if(chg)saveFC();var f=document.getElementById('favCount'),c=document.getElementById('cmpCount');if(f){f.textContent=FAV.size;f.style.display=FAV.size?'flex':'none';}if(c){c.textContent=CMP.size;c.style.display=CMP.size?'flex':'none';}if(window.luxV2)luxV2.counts();}
 function rerenderCards(){document.getElementById('featured-cards').innerHTML=VAPT().filter(a=>a.status==='available').slice(0,4).map(card).join('');renderCat();if(typeof updCounts==='function')updCounts();if(document.getElementById('favModal').classList.contains('open'))openFav();if(document.getElementById('cmpModal').classList.contains('open'))openCmp();}
-function openFav(){const list=VAPT().filter(a=>FAV.has(a.id));document.getElementById('favBody').innerHTML=list.length?('<div class="apt-grid">'+list.map(card).join('')+'</div>'):'<p style="color:var(--muted);text-align:center;padding:30px;">Hələ favorit mənzil yoxdur. Kartdakı ♥ ilə əlavə edin.</p>';document.getElementById('favModal').classList.add('open');}
+function openFav(){const list=VAPT().filter(a=>FAV.has(a.id));document.getElementById('favBody').innerHTML=list.length?('<div class="apt-grid">'+list.map(card).join('')+'</div>'):'<p style="color:var(--muted);text-align:center;padding:30px;">Hələ sevimli mənzil yoxdur. Kartdakı ürək düyməsi ilə əlavə edin.</p>';document.getElementById('favModal').classList.add('open');}
 function openCmp(){const list=VAPT().filter(a=>CMP.has(a.id));let html;if(!list.length){html='<p style="color:var(--muted);text-align:center;padding:30px;">Müqayisə üçün mənzil seçilməyib.</p>';}else{const rows=[['Otaq',a=>a.rooms+' otaqlı'],['Sahə',a=>a.area+' m²'],['Bina',a=>a.bina]].concat(HIDEFL?[]:[['Mərtəbə',a=>flTxt(a,'<br>')]]).concat([['Qiymət',a=>SHOWP?fmt(a.price)+' AZN/m²':'Sorğu ilə']]).concat(HIDEST?[]:[['Status',a=>STL[a.status][0]]]);html='<div style="overflow-x:auto;"><table class="cmp-table"><tr><th></th>'+list.map(a=>'<th>'+a.rooms+' otaqlı</th>').join('')+'</tr>'+rows.map(r=>'<tr><td class="rl">'+r[0]+'</td>'+list.map(a=>'<td>'+r[1](a)+'</td>').join('')+'</tr>').join('')+'</table></div>';}document.getElementById('cmpBody').innerHTML=html;document.getElementById('cmpModal').classList.add('open');}
 document.addEventListener('click',e=>{
   const act=e.target.closest('.cact');
@@ -1068,10 +1078,10 @@ const NEWS=(_lsNews&&_lsNews.length)?_lsNews:[
 ];
 function _nbg(img){if(!img)return '';var plan=img.indexOf('/plans/')>=0;var ext=/^https?:/.test(img)&&img.indexOf('luxresidence')<0&&img.indexOf('jsdelivr')<0;return 'background-image:url(\''+img+'\')'+(ext?',url(\'/assets/img1.webp\')':'')+';background-size:'+(plan?'contain':'cover')+';background-position:center;background-repeat:no-repeat;'+(plan?'background-color:#f5efe7;':'');}
 function newsCard(n){return `<div class="news-card" data-newsid="${n.slug||n.id}" style="cursor:pointer;"><div class="news-thumb"${n.img?` style="${_nbg(n.img)}"`:``}></div><div class="news-b"><div class="date">${n.date}</div><h3>${n.title}</h3><p>${n.excerpt}</p><span class="go">Ətraflı →</span></div></div>`;}
-function renderNews(){const mq=document.getElementById('newsMq');var _mqN=NEWS.slice(0,8);if(mq)mq.innerHTML=_mqN.map(newsCard).join('')+_mqN.map(newsCard).join('');const g=document.getElementById('newsGrid');if(g)g.innerHTML=NEWS.map(newsCard).join('');}
+function renderNews(){const mq=document.getElementById('newsMq');var _mqN=NEWS.slice(0,8);if(mq)mq.innerHTML=_mqN.map(newsCard).join('');const g=document.getElementById('newsGrid');if(g)g.innerHTML=NEWS.map(newsCard).join('');}
 renderNews();
 var _lsP=LS('lux_partners');
-function renderPartners(){var el=document.getElementById('partnersMq'),sec=document.getElementById('partnersSec');if(!el||!_lsP||!_lsP.length){if(sec)sec.hidden=true;return;}if(sec)sec.hidden=false;var one=_lsP.map(function(p){return p.logo?('<div class="pt"><img src="'+p.logo+'" alt="'+(p.name||'')+'" style="max-height:70px;max-width:130px;object-fit:contain;"></div>'):('<div class="pt">'+(p.name||'')+'</div>');}).join('');el.innerHTML=one+one;}
+function renderPartners(){var el=document.getElementById('partnersMq'),sec=document.getElementById('partnersSec');if(!el||!_lsP||!_lsP.length){if(sec)sec.hidden=true;return;}if(sec)sec.hidden=false;var one=_lsP.map(function(p){return p.logo?('<div class="pt"><img src="'+p.logo+'" alt="'+(p.name||'')+'" style="max-height:70px;max-width:130px;object-fit:contain;"></div>'):('<div class="pt">'+(p.name||'')+'</div>');}).join('');el.innerHTML=one;}
 renderPartners();
 var _ICI=['<rect x="5" y="3" width="14" height="13" rx="2.5"/><path d="M5 11h14M8.5 20l-1.5 2M15.5 20l1.5 2M8.5 16h.01M15.5 16h.01"/>','<path d="M12 3.5 22 8l-10 4.5L2 8l10-4.5z"/><path d="M6 10.5V15c0 1.6 2.7 3 6 3s6-1.4 6-3v-4.5"/>','<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8" stroke-width="2"/>','<path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>'];
 function applyContent(){var C=LS('lux_content');if(!C)return;
@@ -1096,7 +1106,7 @@ applyContent();renderAbtVideo();
 var _lf=document.getElementById('lfSend');if(_lf)_lf.addEventListener('click',function(){var n=document.getElementById('lfName').value.trim(),p=document.getElementById('lfPhone').value.trim();if(!p){alert('Telefon nömrəsini daxil edin');return;}submitLead({name:n,phone:p,email:document.getElementById('lfMail').value.trim(),subject:document.getElementById('lfSubj').value.trim()||'Əlaqə',apartment:'',message:document.getElementById('lfMsg').value.trim(),status:'yeni'});document.getElementById('lfOk').style.display='block';['lfName','lfPhone','lfMail','lfSubj','lfMsg'].forEach(function(id){document.getElementById(id).value='';});});
 var _callApt="";var LEAD_URL="https://avqchschbbltnnasabdm.supabase.co",LEAD_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2cWNoc2NoYmJsdG5uYXNhYmRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5NDA2NTAsImV4cCI6MjEwNTUxNjY1MH0.PVxxfLrj8KZH6AUaQQPx5sEqpiGEMDIFy3Mq206OMKI";
 function submitLead(o){try{var ph=String(o.phone||"").replace(/[^\d+]/g,"");if(ph&&ph.charAt(0)!=="+")ph="+994"+ph.replace(/^0/,"");if(typeof gtag==="function"&&ph.length>8)gtag("set","user_data",{phone_number:ph});luxConv("lead",{value:1.0,currency:"USD"});}catch(e){}try{fetch(LEAD_URL+"/rest/v1/lux_leads",{method:"POST",headers:{apikey:LEAD_KEY,Authorization:"Bearer "+LEAD_KEY,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify(o)}).catch(function(){});}catch(e){}}
-function fillApt(a){_callApt=a.rooms+" otaqlı · "+a.area+" m² · "+a.bina;const total=a.area*a.price,initial=total*0.3,monthly=(total-initial)/36;const[l,c]=STL[a.status];const bd=document.getElementById('dName2');bd.className='apt-badge '+c;bd.textContent=l;document.getElementById('dTitle').textContent=a.rooms+' otaqlı · '+a.area+' m²';document.getElementById('dLoc').innerHTML=locTxt(a,'<br>');if(SHOWP){document.getElementById('dPrice').textContent=fmt(total)+' AZN – dan';document.getElementById('dMonthly').textContent=fmt(Math.round(monthly))+' AZN';document.getElementById('dInitial').textContent=fmt(Math.round(initial))+' AZN';}else{document.getElementById('dPrice').textContent='Qiymət — sorğu ilə';document.getElementById('dMonthly').textContent='—';document.getElementById('dInitial').textContent='—';}var _cust=a.eksp&&a.eksp.length,ek=_cust?a.eksp.map(function(r){return [r.name,r.area];}):eksp(a),de=document.getElementById('dEksp');if(de)de.innerHTML='<h4>Eksplikasiya</h4>'+(_cust?'':'<div class="en">Otaqların təxmini sahələri (nümunə)</div>')+'<table>'+ek.map(function(r,i){return '<tr><td>'+(i+1)+'. '+r[0]+'</td><td>'+r[1]+' m²</td></tr>';}).join('')+'<tr class="tot"><td>Ümumi sahə</td><td>'+a.area+' m²</td></tr></table>'+(a.poster||a.plan_png?'<div class="ek-dls">'+(a.plan_png?'<a class="btn btn-primary ek-dl" href="'+(String(a.plan_png).charAt(0)==='/'?a.plan_png:'/'+a.plan_png)+'" download>⬇ 3D plan (PNG)</a>':'')+(a.poster?'<a class="btn ek-dl ek-dl2" href="'+(String(a.poster).charAt(0)==='/'?a.poster:'/'+a.poster)+'" download>⬇ Plan + eksplikasiya (PNG)</a>':'')+'</div>':'');var pw=document.getElementById('dPlanWrap');if(pw){if(a.plan){pw.innerHTML='<img src="'+a.plan+'" alt="Mənzil planı">';pw.style.background='#f5f0e8';}else{pw.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 10h10M13 3v18M13 14h8"/></svg><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#a9805c;margin-top:8px;">Plan sxemi</span>';}}var _iconPin='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10a8 8 0 1 0-16 0c0 6 8 10 8 10z"/><circle cx="12" cy="12" r="2.5"/></svg>';var _iconFl='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>';var _iconRoom='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>';var _iconArea='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3h18v18H3zM3 9h6V3M15 21v-6h6"/></svg>';var _binas=String(a.bina||'').replace(/Bina/gi,'').split(/[,\s]+/).filter(Boolean);var _fe=document.getElementById('dFeats');if(_fe)_fe.innerHTML='<div class="dc-feat">'+_iconPin+'<div><div class="fl">Bina</div><div class="fv">'+esc(a.bina||'—')+'</div></div></div>'+(HIDEFL?'':'<div class="dc-feat">'+_iconFl+'<div><div class="fl">Mərtəbə</div><div class="fv">'+esc((typeof flTxt==='function'?flTxt(a,", "):a.floor)||'—')+'</div></div></div>')+'<div class="dc-feat">'+_iconRoom+'<div><div class="fl">Otaq sayı</div><div class="fv">'+esc(a.rooms)+' otaqlı</div></div></div>'+'<div class="dc-feat">'+_iconArea+'<div><div class="fl">Ümumi sahə</div><div class="fv">'+esc(a.area)+' m²</div></div></div>';var _dr=document.getElementById('dRows');if(_dr)_dr.style.display=SHOWP?'':'none';var _fb=document.getElementById('dFavBtn'),_cb=document.getElementById('dCmpBtn');var _sb=document.getElementById('dShareBtn');if(_sb)_sb.onclick=function(){shareApt(a.id);};if(_fb){_fb.classList.toggle('on',FAV.has(a.id));_fb.onclick=function(){if(FAV.has(a.id))FAV.delete(a.id);else FAV.add(a.id);saveFC();_fb.classList.toggle('on',FAV.has(a.id));if(typeof updCounts==='function')updCounts();};}if(_cb){_cb.classList.toggle('on',CMP.has(a.id));_cb.onclick=function(){if(CMP.has(a.id))CMP.delete(a.id);else{if(CMP.size>=3){alert('Ən çox 3 mənzil müqayisə edilə bilər');return;}CMP.add(a.id);}saveFC();_cb.classList.toggle('on',CMP.has(a.id));if(typeof updCounts==='function')updCounts();};}var _oA=VAPT().filter(function(x){return x.id!==a.id&&!x.hidden;});_oA.sort(function(x,y){return (y.bina===a.bina?1:0)-(x.bina===a.bina?1:0);});_oA=_oA.slice(0,4);var _ao=document.getElementById('aptOther');if(_ao)_ao.innerHTML=_oA.length?('<h2 class="h2" style="margin:6px 0 20px">Digər mənzillər</h2><div class="apt-grid">'+_oA.map(card).join('')+'</div>'):'';}
+function fillApt(a){_callApt=a.rooms+" otaqlı · "+a.area+" m² · "+a.bina;const total=a.area*a.price,initial=total*0.3,monthly=(total-initial)/36;const[l,c]=STL[a.status];const bd=document.getElementById('dName2');bd.className='apt-badge '+c;bd.textContent=l;document.getElementById('dTitle').textContent=a.rooms+' otaqlı · '+a.area+' m²';document.getElementById('dLoc').innerHTML=locTxt(a,'<br>');if(SHOWP){document.getElementById('dPrice').textContent=fmt(total)+' AZN – dan';document.getElementById('dMonthly').textContent=fmt(Math.round(monthly))+' AZN';document.getElementById('dInitial').textContent=fmt(Math.round(initial))+' AZN';}else{document.getElementById('dPrice').textContent='Qiymət — sorğu ilə';document.getElementById('dMonthly').textContent='—';document.getElementById('dInitial').textContent='—';}var _cust=a.eksp&&a.eksp.length,ek=_cust?a.eksp.map(function(r){return [r.name,r.area];}):eksp(a),de=document.getElementById('dEksp');if(de)de.innerHTML='<h4>Eksplikasiya</h4>'+(_cust?'':'<div class="en">Otaqların təxmini sahələri (nümunə)</div>')+'<table>'+ek.map(function(r,i){return '<tr><td>'+(i+1)+'. '+r[0]+'</td><td>'+r[1]+' m²</td></tr>';}).join('')+'<tr class="tot"><td>Ümumi sahə</td><td>'+a.area+' m²</td></tr></table>'+(a.poster||a.plan_png?'<div class="ek-dls">'+(a.plan_png?'<a class="btn btn-primary ek-dl" href="'+(String(a.plan_png).charAt(0)==='/'?a.plan_png:'/'+a.plan_png)+'" download>3D planı yüklə (PNG)</a>':'')+(a.poster?'<a class="btn ek-dl ek-dl2" href="'+(String(a.poster).charAt(0)==='/'?a.poster:'/'+a.poster)+'" download>Plan və eksplikasiya (PNG)</a>':'')+'</div>':'');var pw=document.getElementById('dPlanWrap');if(pw){if(a.plan){pw.innerHTML='<img src="'+a.plan+'" alt="Mənzil planı">';pw.style.background='#f5f0e8';}else{pw.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 10h10M13 3v18M13 14h8"/></svg><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#a9805c;margin-top:8px;">Plan sxemi</span>';}}var _iconPin='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10a8 8 0 1 0-16 0c0 6 8 10 8 10z"/><circle cx="12" cy="12" r="2.5"/></svg>';var _iconFl='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>';var _iconRoom='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>';var _iconArea='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3h18v18H3zM3 9h6V3M15 21v-6h6"/></svg>';var _binas=String(a.bina||'').replace(/Bina/gi,'').split(/[,\s]+/).filter(Boolean);var _fe=document.getElementById('dFeats');if(_fe)_fe.innerHTML='<div class="dc-feat">'+_iconPin+'<div><div class="fl">Bina</div><div class="fv">'+esc(a.bina||'—')+'</div></div></div>'+(HIDEFL?'':'<div class="dc-feat">'+_iconFl+'<div><div class="fl">Mərtəbə</div><div class="fv">'+esc((typeof flTxt==='function'?flTxt(a,", "):a.floor)||'—')+'</div></div></div>')+'<div class="dc-feat">'+_iconRoom+'<div><div class="fl">Otaq sayı</div><div class="fv">'+esc(a.rooms)+' otaqlı</div></div></div>'+'<div class="dc-feat">'+_iconArea+'<div><div class="fl">Ümumi sahə</div><div class="fv">'+esc(a.area)+' m²</div></div></div>';var _dr=document.getElementById('dRows');if(_dr)_dr.style.display=SHOWP?'':'none';var _fb=document.getElementById('dFavBtn'),_cb=document.getElementById('dCmpBtn');var _sb=document.getElementById('dShareBtn');if(_sb)_sb.onclick=function(){shareApt(a.id);};if(_fb){_fb.classList.toggle('on',FAV.has(a.id));_fb.onclick=function(){if(FAV.has(a.id))FAV.delete(a.id);else FAV.add(a.id);saveFC();_fb.classList.toggle('on',FAV.has(a.id));if(typeof updCounts==='function')updCounts();};}if(_cb){_cb.classList.toggle('on',CMP.has(a.id));_cb.onclick=function(){if(CMP.has(a.id))CMP.delete(a.id);else{if(CMP.size>=3){alert('Ən çox 3 mənzil müqayisə edilə bilər');return;}CMP.add(a.id);}saveFC();_cb.classList.toggle('on',CMP.has(a.id));if(typeof updCounts==='function')updCounts();};}var _oA=VAPT().filter(function(x){return x.id!==a.id&&!x.hidden;});_oA.sort(function(x,y){return (y.bina===a.bina?1:0)-(x.bina===a.bina?1:0);});_oA=_oA.slice(0,4);var _ao=document.getElementById('aptOther');if(_ao)_ao.innerHTML=_oA.length?('<h2 class="h2" style="margin:6px 0 20px">Digər mənzillər</h2><div class="apt-grid">'+_oA.map(card).join('')+'</div>'):'';}
 
 var _SEO0={t:document.title,d:(document.querySelector('meta[name="description"]')||{}).content||''};
 function _meta(name,val){var m=document.querySelector('meta[name="'+name+'"]');if(!m){m=document.createElement('meta');m.setAttribute('name',name);document.head.appendChild(m);}m.setAttribute('content',val);}
@@ -1154,7 +1164,7 @@ function openCmpPicker(){
 }
 function addToCmp(id){if(CMP.size>=3){alert('Ən çox 3 mənzil');return;}CMP.add(id);saveFC();updCounts();document.getElementById('cmpPicker').classList.remove('open');renderCmp();}
 function renderFav(){var b=document.getElementById('favBody2');if(!b)return;var list=VAPT().filter(a=>FAV.has(a.id));
- b.innerHTML=list.length?('<div class="apt-grid">'+list.map(card).join('')+'</div>'):'<div class="cmp-empty"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg><p>Hələ sevimli mənzil yoxdur — kartdakı ♥ ilə əlavə edin</p></div>';}
+ b.innerHTML=list.length?('<div class="apt-grid">'+list.map(card).join('')+'</div>'):'<div class="cmp-empty"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg><p>Hələ sevimli mənzil yoxdur. Kartdakı ürək düyməsi ilə əlavə edin</p></div>';}
 
 var dcb=document.getElementById('detCallBtn');if(dcb)dcb.addEventListener('click',()=>document.getElementById('callModal').classList.add('open'));
 function ps(p){return p.map(a=>a[0]+','+a[1]).join(' ');}
@@ -1169,7 +1179,7 @@ const badges=document.querySelectorAll('.dn-badge');setInterval(()=>{const t=(pe
 const navEl=document.querySelector('.nav');function onNavScroll(){navEl.classList.toggle('scrolled',window.scrollY>28);}window.addEventListener('scroll',onNavScroll,{passive:true});onNavScroll();
 const menu=document.getElementById('menu');
 function closeAll(){['favModal','cmpModal','aptModal','callModal'].forEach(id=>{const m=document.getElementById(id);if(m)m.classList.remove('open');});drawer.classList.remove('open');menu.classList.remove('open');}
-function showView(v,nav){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id==='v-'+v));document.querySelectorAll('[data-nav]').forEach(a=>{if(a.tagName==='A')a.classList.toggle('active',a.dataset.nav===nav);});window.scrollTo(0,0);}
+function showView(v,nav){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id==='v-'+v));document.querySelectorAll('[data-nav]').forEach(a=>{if(a.tagName==='A')a.classList.toggle('active',a.dataset.nav===nav);});window.scrollTo(0,0);if(window.luxV2)luxV2.view(v,nav);}
 function _cleanPath(){var seg=location.pathname.replace(/^\/+|\/+$/g,'');return seg;}
 
 /* ===== Bina səhifələri ===== */
@@ -1287,24 +1297,24 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
  var LAT=40.3666437,LNG=49.8187887,map=null,layer=null,homeMarker=null,inited=false;
  // Overpass amenity/shop filtrləri
  var CATS={
-  school:{q:'node["amenity"="school"]',ic:'🎓',nm:'Məktəb'},
-  kindergarten:{q:'node["amenity"="kindergarten"]',ic:'🧸',nm:'Bağça'},
-  supermarket:{q:'node["shop"~"supermarket|convenience|mall|general"]',ic:'🛒',nm:'Market'},
-  subway:{q:'node["railway"="station"];node["station"="subway"];node["public_transport"="station"]',ic:'🚇',nm:'Stansiya'},
-  health:{q:'node["amenity"~"hospital|clinic|doctors"]',ic:'🏥',nm:'Səhiyyə'},
-  pharmacy:{q:'node["amenity"="pharmacy"]',ic:'💊',nm:'Aptek'},
-  park:{q:'node["leisure"="park"];way["leisure"="park"]',ic:'🌳',nm:'Park'},
-  food:{q:'node["amenity"~"restaurant|cafe|fast_food"]',ic:'🍽️',nm:'Kafe/Restoran'},
-  bank:{q:'node["amenity"~"bank|atm"]',ic:'🏦',nm:'Bank'},
-  fuel:{q:'node["amenity"="fuel"]',ic:'⛽',nm:'Yanacaq'},
-  gym:{q:'node["leisure"~"fitness_centre|sports_centre"];node["amenity"="gym"]',ic:'🏋️',nm:'İdman'}
+  school:{q:'node["amenity"="school"]',ic:'',nm:'Məktəb'},
+  kindergarten:{q:'node["amenity"="kindergarten"]',ic:'',nm:'Bağça'},
+  supermarket:{q:'node["shop"~"supermarket|convenience|mall|general"]',ic:'',nm:'Market'},
+  subway:{q:'node["railway"="station"];node["station"="subway"];node["public_transport"="station"]',ic:'',nm:'Stansiya'},
+  health:{q:'node["amenity"~"hospital|clinic|doctors"]',ic:'',nm:'Səhiyyə'},
+  pharmacy:{q:'node["amenity"="pharmacy"]',ic:'',nm:'Aptek'},
+  park:{q:'node["leisure"="park"];way["leisure"="park"]',ic:'',nm:'Park'},
+  food:{q:'node["amenity"~"restaurant|cafe|fast_food"]',ic:'',nm:'Kafe/Restoran'},
+  bank:{q:'node["amenity"~"bank|atm"]',ic:'',nm:'Bank'},
+  fuel:{q:'node["amenity"="fuel"]',ic:'',nm:'Yanacaq'},
+  gym:{q:'node["leisure"~"fitness_centre|sports_centre"];node["amenity"="gym"]',ic:'',nm:'İdman'}
  };
  var cache={};
  function ensureMap(){
   if(inited)return;var el=document.getElementById('imapMap');if(!el||!window.L)return;
   map=L.map('imapMap',{scrollWheelZoom:false}).setView([LAT,LNG],15);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
-  var homeIcon=L.divIcon({html:'<div class="imap-marker" style="background:#2f7a44">🏢</div>',className:'',iconSize:[30,30],iconAnchor:[15,15]});
+  var homeIcon=L.divIcon({html:'<div class="imap-marker imap-home">L</div>',className:'',iconSize:[30,30],iconAnchor:[15,15]});
   homeMarker=L.marker([LAT,LNG],{icon:homeIcon,zIndexOffset:1000}).addTo(map).bindPopup('<b>LUX Residence</b>');
   layer=L.layerGroup().addTo(map);
   inited=true;setTimeout(function(){map.invalidateSize();},200);
@@ -1697,8 +1707,243 @@ document.addEventListener('click',function(e){if(e.target.closest&&e.target.clos
  if(/[?&]komekci=1/.test(location.search))setTimeout(wizOpen,400);
 })();
 </script>
+<!-- ====== 16.11 LUX v2 : vizual cila + naviqasiya və mənzil funksiyaları ====== -->
+<style id="lux-v2">
+:root{--ease:cubic-bezier(.22,1,.36,1);--hair:rgba(42,29,20,.09)}
+html{overflow-x:clip}
+::selection{background:#ecd5c8;color:var(--ink)}
+:focus-visible{outline:2px solid var(--rust);outline-offset:2px}
+/* tipoqrafiya */
+.h2,.sec-h1,.page-hero h1,.fd-head h2,.cmp-title,.db-title,.lx-help h2,.hcap h1,.hcap-mobile h1,.detail-card h1,.bp-info h1,.call-form h2,.lx-wiz h2,.list-modal h2,.news-b h3,.bp-h2{font-weight:600;letter-spacing:-.012em}
+.h2{font-size:clamp(28px,3.4vw,40px);line-height:1.12}
+.hcap h1{font-size:clamp(32px,4.6vw,56px);line-height:1.04;letter-spacing:-.02em}
+.spec,.apt-b .spec{font-weight:600;font-size:19px}
+.spec,.stat b,.detail-card h1,.dc-price,.lx-res-b b,.eksp td,.fv,.cmp-title{font-variant-numeric:lining-nums tabular-nums}
+/* bölmə etiketləri: sakit, xətli */
+.eyebrow-d,.se,.abt-hero .se,.inf-hero .se,.slide-cap .se,.lx-wiz .lx-step,.lx-rank{text-transform:none;letter-spacing:.01em;font-size:13.5px;font-weight:600}
+.fgroup>label,.cc-plan span,.go3d span{text-transform:none;letter-spacing:0}
+.fgroup>label{font-size:13px;font-weight:600}
+.eyebrow-d{display:inline-flex;align-items:center;gap:10px}
+.eyebrow-d::before{content:"";width:20px;height:1px;background:currentColor;opacity:.6;flex:none}
+.eyebrow,.hero .hcap .eyebrow{text-transform:none;letter-spacing:.01em;font-size:14.5px;font-weight:500;color:#f3d9c6}
+.hcap-mobile .eyebrow{color:var(--rust);text-transform:none;letter-spacing:.01em;font-size:14px;font-weight:600}
+.dn-badge,.apt-badge,.dc-feat .fl{text-transform:none;letter-spacing:0}
+.apt-badge{font-size:12px;font-weight:600;padding:5px 10px}
+.dn-badge{font-size:12.5px}
+/* düymələr */
+.btn,.fd-go,.link-btn,.abtn,.cact,.nav-ic,.imap-cat,.fd-rooms button{transition:background-color .16s var(--ease),color .16s var(--ease),border-color .16s var(--ease),transform .16s var(--ease),box-shadow .16s var(--ease)}
+.btn{border-radius:12px}
+.btn:active,.fd-go:active,.link-btn:active{transform:scale(.98)}
+.fd-go{border-radius:12px;box-shadow:none;padding:15px 26px}
+.link-btn{border-width:1px}
+#waFab{box-shadow:0 8px 22px -8px rgba(0,0,0,.4)}
+/* kartlar */
+.apt-card{border-radius:16px;transition:border-color .18s var(--ease),box-shadow .18s var(--ease)}
+.apt-card:hover{transform:none;border-color:#dcc7b6;box-shadow:0 14px 34px -22px rgba(42,29,20,.42)}
+.apt-planimg{transition:transform .5s var(--ease)}
+.apt-card:hover .apt-planimg{transform:scale(1.03)}
+.apt-b .abtn{background:none;text-align:left;padding:12px 0 0;margin-top:12px;border-top:1px solid var(--line);border-radius:0;color:var(--rust)}
+.apt-b .abtn:hover{background:none;color:var(--rust-deep)}
+.bpins{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:8px 0 10px}
+.bpins span{margin-right:3px}
+.bpins i{font-style:normal;min-width:22px;height:22px;padding:0 5px;border-radius:11px;background:var(--rust);color:#fff;font:600 11.5px/21px var(--sans);text-align:center;border:1px solid #fff;box-shadow:0 0 0 1px rgba(186,77,44,.45);box-sizing:border-box}
+.c3d{position:absolute;left:13px;bottom:12px;z-index:2;font:600 11px var(--sans);letter-spacing:.04em;color:var(--ink);background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:6px;padding:3px 7px}
+/* hero düymələri */
+.hero-cta{display:flex;gap:10px;margin-top:20px;pointer-events:auto;flex-wrap:wrap}
+.hero-cta .btn{padding:13px 22px;font-size:15px;text-decoration:none}
+.hero-ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.hero-ghost:hover{background:rgba(255,255,255,.26)}
+.hcap-mobile .hero-ghost{background:none;color:var(--ink);border:1px solid #d9cabb;backdrop-filter:none}
+.hcap{bottom:clamp(74px,9.5vw,112px)}
+/* gündüz / gecə */
+.dn-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.85fr);gap:clamp(24px,4vw,60px);align-items:center}
+.dn-copy p{color:#5e4e44;font-size:16px;line-height:1.6;margin:14px 0 20px;max-width:38ch}
+.dn-list{list-style:none;padding:0;margin:0 0 26px;display:grid;gap:10px;font-size:15px;color:var(--ink)}
+.dn-list li{display:flex;gap:10px;align-items:baseline}
+.dn-list li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--rust);flex:none;transform:translateY(-2px)}
+.dn-copy .btn{text-decoration:none}
+.dn-cmp{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/9;background:#1b130f;user-select:none;-webkit-user-select:none;box-shadow:0 30px 60px -38px rgba(42,29,20,.55);--p:50%}
+.dn-cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.dn-cmp .dn-night{clip-path:inset(0 0 0 var(--p))}
+.dn-line{position:absolute;top:0;bottom:0;left:var(--p);width:2px;margin-left:-1px;background:#fff}
+.dn-knob{position:absolute;top:50%;left:var(--p);width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.35);color:var(--ink)}
+.dn-tag{position:absolute;top:14px;font:600 12.5px var(--sans);color:#fff;background:rgba(20,12,8,.52);border-radius:8px;padding:6px 10px}
+.dn-tag.l{left:14px}.dn-tag.r{right:14px}
+.dn-cmp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0;touch-action:pan-y}
+/* xəbər karuseli, tərəfdaşlar */
+.news-car{overflow-x:auto;scroll-snap-type:x mandatory;-webkit-mask-image:none;mask-image:none;scrollbar-width:none;margin-top:28px;scroll-behavior:smooth}
+.news-car::-webkit-scrollbar{display:none}
+.news-car .mq-track{animation:none;gap:20px}
+.news-car .news-card{scroll-snap-align:start;width:min(340px,78vw)}
+.car-nav{display:flex;align-items:center;gap:8px}
+.car-nav button{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:border-color .16s var(--ease),color .16s var(--ease)}
+.car-nav button:hover{border-color:var(--rust);color:var(--rust)}
+.car-nav svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.car-nav .link-btn{margin-left:6px}
+#partnersMq{animation:none;width:auto;flex-wrap:wrap;justify-content:center}
+.partners-box .marquee{-webkit-mask-image:none;mask-image:none}
+/* xəritə */
+.imap-marker:empty::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+.imap-home{background:#2f7a44;font:700 13px var(--serif)}
+/* planlar: sıralama */
+.cat-count{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.cat-sort{margin-left:auto;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 12px;font:500 13.5px var(--sans);color:var(--ink);cursor:pointer}
+/* suallar: axtarış */
+.faq-search{max-width:860px;margin:0 auto 14px;position:relative}
+.faq-none{max-width:860px;margin:0 auto}
+.faq-search input{width:100%;box-sizing:border-box;border:1px solid var(--line);background:#fff;border-radius:12px;padding:13px 14px 13px 44px;font:15px var(--sans);color:var(--ink);outline:none}
+.faq-search input:focus{border-color:var(--rust)}
+.faq-search svg{position:absolute;left:15px;top:50%;width:18px;height:18px;margin-top:-9px;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round}
+.faq-none{color:var(--muted);padding:6px 2px;font-size:15px}
+/* footer */
+.foot-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.foot-acts button{border:1px solid rgba(255,255,255,.22);background:none;color:#f3e7dd;border-radius:10px;padding:9px 12px;font:600 13px var(--sans);cursor:pointer;transition:border-color .16s var(--ease),background-color .16s var(--ease)}
+.foot-acts button:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.06)}
+.foot-top{color:rgba(243,231,221,.75);font-size:13px;text-decoration:none;border-bottom:1px solid rgba(243,231,221,.3)}
+/* oxuma xətti, yuxarı, bildiriş, müqayisə paneli */
+.rprog{position:fixed;left:0;top:0;height:2px;width:100%;background:var(--rust);transform-origin:0 50%;transform:scaleX(0);z-index:300;pointer-events:none}
+.totop{position:fixed;right:27px;bottom:92px;z-index:145;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(255,251,247,.96);color:var(--ink);display:grid;place-items:center;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s var(--ease)}
+.totop.on{opacity:1;pointer-events:auto}
+.totop svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.lxtoast{position:fixed;left:50%;top:88px;transform:translate(-50%,-10px);z-index:600;background:var(--espresso);color:#fff;font:500 14px var(--sans);padding:11px 16px;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .2s var(--ease),transform .2s var(--ease);max-width:calc(100% - 32px);text-align:center}
+.lxtoast.on{opacity:1;transform:translate(-50%,0)}
+.cmpbar{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);z-index:145;display:flex;align-items:center;gap:12px;background:var(--espresso);color:#fff;border-radius:14px;padding:8px 8px 8px 16px;font:500 14px var(--sans);opacity:0;pointer-events:none;transition:opacity .2s var(--ease),transform .2s var(--ease);box-shadow:0 14px 34px -14px rgba(0,0,0,.5);white-space:nowrap}
+.cmpbar.on{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+.cmpbar button{border:none;border-radius:10px;height:36px;padding:0 14px;font:600 13.5px var(--sans);cursor:pointer}
+.cmpbar .go{background:var(--rust);color:#fff}
+.cmpbar .x{background:rgba(255,255,255,.12);color:#fff;width:36px;padding:0;font-size:17px}
+/* plan böyüdücü */
+#dPlanWrap img{cursor:zoom-in}
+.lxbox{position:fixed;inset:0;z-index:700;background:rgba(20,12,8,.93);display:none;touch-action:none;overflow:hidden}
+.lxbox.on{display:block}
+.lxbox img{position:absolute;left:50%;top:50%;max-width:92vw;max-height:84vh;transform:translate(-50%,-50%) translate(var(--x,0px),var(--y,0px)) scale(var(--s,1));cursor:grab;user-select:none;-webkit-user-drag:none;background:#f5f0e8;border-radius:10px}
+.lx-ctl{position:absolute;right:16px;top:calc(16px + env(safe-area-inset-top,0px));display:flex;gap:8px;z-index:2}
+.lx-ctl button{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.lx-hint{position:absolute;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);color:rgba(255,255,255,.7);font:13px var(--sans);white-space:nowrap}
+/* səhifə keçidi və bölmələrin açılması */
+@keyframes v2in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.view.active{animation:v2in .38s var(--ease)}
+.rv{opacity:0;transform:translateY(14px);transition:opacity .55s var(--ease),transform .55s var(--ease)}
+.rv.rv-in{opacity:1;transform:none}
+/* mobil */
+.tabbar,.actbar{display:none}
+@media(max-width:900px){.dn-grid{grid-template-columns:1fr}.dn-copy{order:2}}
+@media(max-width:760px){
+ .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:140;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(255,251,247,.95);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border-top:1px solid var(--hair);padding:5px 6px calc(5px + env(safe-area-inset-bottom,0px))}
+ .tabbar a{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0 4px;font:500 10.5px var(--sans);color:var(--muted);text-decoration:none;position:relative}
+ .tabbar a.on{color:var(--rust)}
+ .tabbar svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+ .tabbar .tb-n{position:absolute;top:1px;left:calc(50% + 5px);min-width:16px;height:16px;border-radius:8px;background:var(--rust);color:#fff;font:600 10px/16px var(--sans);text-align:center;padding:0 4px;display:none;box-sizing:border-box}
+ body{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px))}
+ #waFab{bottom:calc(74px + env(safe-area-inset-bottom,0px));width:52px;height:52px}
+ #waTip{bottom:calc(134px + env(safe-area-inset-bottom,0px))}
+ body.on-apt .tabbar,body.on-apt #waFab,body.on-apt #waTip{display:none}
+ body.on-apt .actbar{position:fixed;left:0;right:0;bottom:0;z-index:140;display:grid;grid-template-columns:auto auto 1fr;gap:8px;background:rgba(255,251,247,.97);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--hair);padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px))}
+ .actbar a,.actbar button{height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:7px;font:600 14px var(--sans);text-decoration:none;border:1px solid var(--line);background:#fff;color:var(--ink);padding:0 12px;cursor:pointer;white-space:nowrap}
+ .actbar svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+ .actbar .pri{background:var(--rust);border-color:var(--rust);color:#fff}
+ .cmpbar{bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+ .totop{display:none}
+ .lxtoast{top:76px}
+ .car-nav .link-btn{display:none}
+ .hero-cta .btn{flex:1;padding:13px 12px}
+}
+@media(max-width:700px){
+ #featured-cards,#aptOther .apt-grid,#recentCards{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-left:-16px;margin-right:-16px;padding:0 16px 6px;scrollbar-width:none}
+ #featured-cards::-webkit-scrollbar,#aptOther .apt-grid::-webkit-scrollbar,#recentCards::-webkit-scrollbar{display:none}
+ #featured-cards>.apt-card,#aptOther .apt-grid>.apt-card,#recentCards>.apt-card{flex:0 0 76%;scroll-snap-align:center}
+ #cat-cards{grid-template-columns:1fr 1fr;gap:10px}
+ #cat-cards .apt-b{padding:12px}
+ #cat-cards .spec{font-size:15px;line-height:1.25}
+ #cat-cards .card-actions{top:8px;right:8px;gap:5px}
+ #cat-cards .cact{width:30px;height:30px}
+ #cat-cards .cact[data-act="share"]{display:none}
+ #cat-cards .apt-badge{font-size:10.5px;padding:3px 7px;top:8px;left:8px}
+ #cat-cards .c3d{left:8px;bottom:8px}
+ #cat-cards .bpins{font-size:12px;gap:4px;margin:6px 0 6px}
+ #cat-cards .bpins i{min-width:19px;height:19px;line-height:18px;font-size:10.5px;padding:0 4px}
+ #cat-cards .p{font-size:13px}
+ #cat-cards .abtn{font-size:13px;padding-top:9px;margin-top:9px}
+ .cat-sort{margin-left:0;flex:1}
+}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.view.active{animation:none}.apt-card:hover .apt-planimg{transform:none}html{scroll-behavior:auto}.news-car{scroll-behavior:auto}}
+@media print{.rv{opacity:1!important;transform:none!important}.tabbar,.actbar,.cmpbar,.totop,.rprog,.lxtoast{display:none!important}}
+</style>
+<div class="rprog" id="rProg"></div>
+<button class="totop" id="toTop" type="button" aria-label="Yuxarı qayıt"><svg viewBox="0 0 24 24"><path d="M12 19V6M6 11.5 12 5.5l6 6"/></svg></button>
+<div class="lxtoast" id="lxToast" role="status"></div>
+<div class="cmpbar" id="cmpBar"><span id="cmpBarT"></span><button type="button" class="go" id="cmpBarGo">Müqayisə et</button><button type="button" class="x" id="cmpBarX" aria-label="Müqayisəni təmizlə">&times;</button></div>
+<nav class="tabbar" id="tabbar" aria-label="Əsas menyu">
+ <a href="/" data-t="ana"><svg viewBox="0 0 24 24"><path d="M3.5 10.5 12 4l8.5 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-4v-6h-6v6H5A1.5 1.5 0 0 1 3.5 19z"/></svg>Ana səhifə</a>
+ <a href="/planlar" data-t="planlar"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M3.5 10h9M12.5 3.5v17M12.5 14.5h8"/></svg>Planlar</a>
+ <a href="/3d" data-t="3d"><svg viewBox="0 0 24 24"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9zM4 7.5l8 4.5 8-4.5M12 12v9"/></svg>3D tur</a>
+ <a href="/sevimliler" data-t="sevimliler"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><span class="tb-n" id="tbFav"></span>Sevimlilər</a>
+ <a href="/elaqe" data-t="elaqe"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>Əlaqə</a>
+</nav>
+<div class="actbar" id="actBar">
+ <a href="tel:+994508090088" aria-label="Zəng edin"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>Zəng</a>
+ <a href="https://wa.me/994508090088" target="_blank" rel="noopener" onclick="this.href=luxWaHref()" aria-label="WhatsApp-da yazın"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-4.2A8 8 0 1 1 8.4 19z"/></svg>WhatsApp</a>
+ <button type="button" class="pri" id="actVisit"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Baxışa yazıl</button>
+</div>
+<div class="lxbox" id="lxBox" aria-hidden="true"><div class="lx-ctl"><button type="button" id="lxOut" aria-label="Uzaqlaşdır">&minus;</button><button type="button" id="lxIn" aria-label="Yaxınlaşdır">+</button><button type="button" id="lxX" aria-label="Bağla">&times;</button></div><img id="lxImg" alt="Mənzil planı"><div class="lx-hint">Yaxınlaşdırmaq üçün çimdikləyin və ya sürüşdürün</div></div>
+<script>
+/* LUX v2 — naviqasiya, bildiriş, plan böyüdücü, sıralama, axtarış. Məzmuna toxunmur; yalnız təqdimat və rahatlıq. */
+(function(){
+ function $(i){return document.getElementById(i);}
+ var V2=window.luxV2={},CURV='ana',SORT='';
+ /* bildiriş (alert əvəzinə) */
+ function toast(t){var e=$('lxToast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on');},2800);}
+ window.luxToast=toast;window.alert=function(m){toast(String(m));};
+ /* rəqəm formatı: 111.64 m² → 111,64 m² (mətn düyünlərində; skript və üslub istisna) */
+ var NR=/(\d)\.(\d+)(\s*m²)/g;
+ function fixT(n){var p=n.parentNode;if(!p||p.nodeName==='SCRIPT'||p.nodeName==='STYLE')return;if(NR.test(n.nodeValue)){NR.lastIndex=0;n.nodeValue=n.nodeValue.replace(NR,'$1,$2$3');}NR.lastIndex=0;}
+ function fixAll(root){var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),n,l=[];while((n=w.nextNode()))l.push(n);l.forEach(fixT);}
+ try{new MutationObserver(function(ms){ms.forEach(function(m){for(var i=0;i<m.addedNodes.length;i++){var nd=m.addedNodes[i];if(nd.nodeType===3)fixT(nd);else if(nd.nodeType===1)fixAll(nd);}});}).observe(document.body,{childList:true,subtree:true});fixAll(document.body);}catch(e){}
+ /* bölmələrin açılması (yalnız ekrandan aşağıda olanlar) */
+ var io=('IntersectionObserver' in window)&&!matchMedia('(prefers-reduced-motion:reduce)').matches?new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('rv-in');io.unobserve(e.target);}});},{threshold:.05,rootMargin:'0px 0px -5% 0px'}):null;
+ function reveal(){if(!io)return;document.querySelectorAll('.view.active section.sec>.wrap').forEach(function(el){if(el.classList.contains('rv'))return;if(el.getBoundingClientRect().top>innerHeight*.92){el.classList.add('rv');io.observe(el);}});}
+ /* oxuma xətti və yuxarı düyməsi */
+ var tick=false;function prog(){var h=document.documentElement,mx=h.scrollHeight-innerHeight,p=mx>200?Math.min(1,scrollY/mx):0;$('rProg').style.transform='scaleX('+p+')';$('toTop').classList.toggle('on',scrollY>900);tick=false;}
+ addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(prog);}},{passive:true});
+ $('toTop').addEventListener('click',function(){scrollTo({top:0,behavior:'smooth'});});
+ /* görünüş və sayğac qarmaqları */
+ V2.view=function(v,nav){CURV=v;document.body.classList.toggle('on-apt',v==='apt');var t=nav||v;document.querySelectorAll('#tabbar a').forEach(function(a){a.classList.toggle('on',a.dataset.t===t);});V2.counts();setTimeout(function(){reveal();prog();},60);};
+ V2.counts=function(){var n=0,c=0;try{n=FAV.size;c=CMP.size;}catch(e){}var b=$('tbFav');b.textContent=n;b.style.display=n?'block':'none';$('cmpBar').classList.toggle('on',c>0&&CURV!=='muqayise');$('cmpBarT').textContent='Müqayisədə '+c+' mənzil';};
+ $('cmpBarGo').addEventListener('click',function(){_go('muqayise');});
+ $('cmpBarX').addEventListener('click',function(){try{CMP.clear();saveFC();rerenderCards();}catch(e){}V2.counts();});
+ $('actVisit').addEventListener('click',function(){var b=$('aptVisit');if(b)b.click();else if(window.luxVisit)luxVisit('');});
+ /* planlar: sıralama */
+ V2.sort=function(list){if(SORT==='a')list.sort(function(x,y){return x.area-y.area;});else if(SORT==='d')list.sort(function(x,y){return y.area-x.area;});else if(SORT==='r')list.sort(function(x,y){return x.rooms-y.rooms||x.area-y.area;});};
+ (function(){var cc=$('catCount');if(!cc)return;var s=document.createElement('select');s.className='cat-sort';s.id='catSort';s.setAttribute('aria-label','Sıralama');s.innerHTML='<option value="">Sıralama: standart</option><option value="a">Sahə: kiçikdən böyüyə</option><option value="d">Sahə: böyükdən kiçiyə</option><option value="r">Otaq sayına görə</option>';cc.parentNode.appendChild(s);s.addEventListener('change',function(){SORT=s.value;renderCat();});})();
+ /* suallar: axtarış */
+ (function(){var box=$('faqList');if(!box)return;var w=document.createElement('div');w.className='faq-search';w.innerHTML='<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.4-3.4"/></svg><input id="faqQ" type="search" placeholder="Sual axtar" aria-label="Suallarda axtarış">';box.parentNode.insertBefore(w,box);var none=document.createElement('p');none.className='faq-none';none.hidden=true;none.textContent='Uyğun sual tapılmadı. Satış ofisinə zəng edin: +994 50 809 00 88';box.parentNode.insertBefore(none,box.nextSibling);
+  function apply(){var q=$('faqQ').value.trim().toLocaleLowerCase('az'),n=0;box.querySelectorAll('details').forEach(function(d){var ok=!q||d.textContent.toLocaleLowerCase('az').indexOf(q)>=0;d.style.display=ok?'':'none';if(ok)n++;if(q&&ok)d.open=true;});none.hidden=!q||n>0;}
+  $('faqQ').addEventListener('input',apply);try{new MutationObserver(function(){if($('faqQ').value)apply();}).observe(box,{childList:true});}catch(e){}})();
+ /* xəbər karuseli */
+ (function(){var car=$('newsCar');if(!car)return;function go(d){car.scrollBy({left:d*Math.min(car.clientWidth*.9,720),behavior:'smooth'});}$('newsPrev').addEventListener('click',function(){go(-1);});$('newsNext').addEventListener('click',function(){go(1);});})();
+ /* gündüz / gecə sürgüsü */
+ (function(){var r=$('dnRange'),c=$('dnCmp');if(!r)return;r.addEventListener('input',function(){c.style.setProperty('--p',r.value+'%');});})();
+ /* plan böyüdücü */
+ var LB={s:1,x:0,y:0,p:{},d0:0,s0:1};
+ function lbSet(){var im=$('lxImg');if(LB.s<=1){LB.s=1;LB.x=LB.y=0;}im.style.setProperty('--s',LB.s);im.style.setProperty('--x',LB.x+'px');im.style.setProperty('--y',LB.y+'px');}
+ function lbOpen(src){$('lxImg').src=src;LB.s=1;LB.x=LB.y=0;LB.p={};lbSet();$('lxBox').classList.add('on');$('lxBox').setAttribute('aria-hidden','false');}
+ function lbClose(){$('lxBox').classList.remove('on');$('lxBox').setAttribute('aria-hidden','true');}
+ document.addEventListener('click',function(e){var im=e.target.closest&&e.target.closest('#dPlanWrap img');if(im)lbOpen(im.currentSrc||im.src);});
+ $('lxX').addEventListener('click',lbClose);$('lxIn').addEventListener('click',function(){LB.s=Math.min(5,LB.s*1.4);lbSet();});$('lxOut').addEventListener('click',function(){LB.s=Math.max(1,LB.s/1.4);lbSet();});
+ var bx=$('lxBox');
+ bx.addEventListener('click',function(e){if(e.target===bx)lbClose();});
+ bx.addEventListener('wheel',function(e){e.preventDefault();LB.s=Math.max(1,Math.min(5,LB.s*(e.deltaY<0?1.15:1/1.15)));lbSet();},{passive:false});
+ bx.addEventListener('dblclick',function(e){if(e.target.id==='lxImg'){LB.s=LB.s>1?1:2.5;lbSet();}});
+ bx.addEventListener('pointerdown',function(e){if(e.target.closest('.lx-ctl'))return;LB.p[e.pointerId]={x:e.clientX,y:e.clientY};var k=Object.keys(LB.p);if(k.length===2){var a=LB.p[k[0]],b=LB.p[k[1]];LB.d0=Math.hypot(a.x-b.x,a.y-b.y);LB.s0=LB.s;}});
+ bx.addEventListener('pointermove',function(e){var q=LB.p[e.pointerId];if(!q)return;var k=Object.keys(LB.p);if(k.length===1&&LB.s>1){LB.x+=e.clientX-q.x;LB.y+=e.clientY-q.y;}q.x=e.clientX;q.y=e.clientY;if(k.length===2&&LB.d0){var a=LB.p[k[0]],b=LB.p[k[1]];LB.s=Math.max(1,Math.min(5,LB.s0*Math.hypot(a.x-b.x,a.y-b.y)/LB.d0));}lbSet();});
+ ['pointerup','pointercancel','pointerleave'].forEach(function(ev){bx.addEventListener(ev,function(e){delete LB.p[e.pointerId];LB.d0=0;});});
+ document.addEventListener('keydown',function(e){if(e.key==='Escape')lbClose();});
+ /* ilkin vəziyyət */
+ var act=document.querySelector('.view.active');V2.view(act?act.id.slice(2):'ana',act?act.dataset.nav:'ana');
+})();
+</script>
 <a id="waFab" href="https://wa.me/994508090088" target="_blank" rel="noopener" aria-label="WhatsApp-da yazın" onclick="this.href=luxWaHref()">
  <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16.04 3C9.4 3 4 8.32 4 14.87c0 2.3.67 4.47 1.84 6.3L4 29l8.1-2.1a12.2 12.2 0 0 0 3.94.66C22.68 27.56 28 22.24 28 15.69 28 9.14 22.68 3 16.04 3zm0 22.3c-1.25 0-2.47-.23-3.6-.68l-.26-.1-4.8 1.25 1.28-4.62-.17-.27a9.9 9.9 0 0 1-1.6-5.4c0-5.43 4.5-9.85 10.1-9.85 5.56 0 9.86 4.4 9.86 9.85 0 5.45-4.43 9.82-9.8 9.82zm5.6-7.36c-.3-.15-1.8-.88-2.07-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.95 1.18-.18.2-.35.22-.65.07-.3-.15-1.28-.46-2.43-1.47-.9-.79-1.5-1.77-1.68-2.07-.18-.3-.02-.46.13-.61.14-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.57-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.05 1.02-1.05 2.47s1.08 2.87 1.23 3.07c.15.2 2.12 3.2 5.14 4.48.72.3 1.28.49 1.72.63.72.22 1.38.19 1.9.12.58-.09 1.8-.72 2.05-1.43.25-.7.25-1.3.18-1.43-.08-.12-.28-.2-.58-.34z"/></svg>
 </a>
-<div id="waTip" role="status"><button type="button" aria-label="Bağla" onclick="waTipClose()">×</button><b>Suallarınız var? 👋</b><span>WhatsApp-da yazın, tez cavab verək.</span></div>
+<div id="waTip" role="status"><button type="button" aria-label="Bağla" onclick="waTipClose()">×</button><b>Sualınız var?</b><span>WhatsApp-da yazın, tez cavab verək</span></div>
 </body></html>
