@@ -458,3 +458,10 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - Faktura: canvas ilə səki plitəsi, torpaq, ot; şəhər binalarına pəncərə faktura (dam yox); ağaclar 4 kürəli, 2 rəngli.
 - YENİ «🌅 Eyvandan mənzərə» (mənzil panelində): kamera mənzilin tərəfində ən yaxın eyvana, mərtəbə hündürlüyünə uçur; ±83° baxış, «← Geri»/Esc ilə qayıdış; dəniz/şəhər tərəfi və hündürlük yazılır. window.__lux3d.view(n) test qarmağı.
 - Yoxlama: headless Chrome ekran şəkilləri (masaüstü, mobil, gecə, eyvan görünüşü), konsol xətası yoxdur.
+
+## 15.11 — Mənzil turu fotoreal yeniləmə (menzil-tur.html)
+- Tam yenidən quruldu (idarəetmə/otaq keçidləri saxlanıb). Xarici fayl yoxdur — bütün fakturalar canvas: palıd parket (+roughness), suvaq, mikrosement vurğu divarı, mərmər, travertin, buklé, kətan, qoz, palıd, xalça, mücərrəd tablo.
+- İşıq: pəncərədən günəş (yumşaq kölgə, profillərin kölgəsi döşəmədə), RectAreaLight səma işığı, RoomEnvironment PMREM əksi. Masaüstündə GTAO + yüngül bloom (EffectComposer, OutputPass). Mobil — post-effektsiz.
+- Mebel RoundedBoxGeometry ilə: buklé divan, terrakota kreslo, travertin masa, qoz TV konsolu (lamel), fikus bitkiləri, palıd yemək masası + 6 stul + 3 şüşə kürə, mərmər mətbəx, açıq kitab rəfi, döşəmə lampası, yarımşəffaf pərdələr, gizli LED.
+- «🌙 Axşam / ☀️ Gündüz» düyməsi: axşam işıqları (5 PointLight, yalnız axşam görünür — shader yükü azdır), LED, gecə panoraması.
+- Pəncərə mənzərəsi: canvas panorama (dəniz, Alov qüllələri, 3 planlı şəhər), üfüq göz səviyyəsində. window.__tour test qarmağı.
