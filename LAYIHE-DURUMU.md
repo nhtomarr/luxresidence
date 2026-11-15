@@ -483,3 +483,8 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 ## 15.11 — Kompleks düzülüşü renderə uyğunlaşdırıldı
 - LAYOUT indi şəbəkədir (LG): x addımı 32 m, z addımı 38 m; qüllə 26×20 m (W/D dəyişdi), iri binalar 40×26 m, 20 mərtəbə. Şəbəkə: arxa sıra Bina 9/8/5/4, ön sıra Bina 7/6/3, Bina 10 (2,2), Bina 11 (3,3), Bina 1 (4,-1), Bina 2 (4.7,0.5). Nömrələr renderdən TƏXMİNİ.
 - Eyni sırada qonşu qüllələr arası 2 mərtəbəli birləşdirici podium. Maket altlığı LAYOUT-dan avtomatik ölçülür; həyətdə səki+qazon qarışığı. Maket kamerası renderin bucağına yaxın.
+
+## 15.11 — TEST budağı `rentgen`: 3D «🩻 Rentgen · kommunikasiya»
+- Preview: https://rentgen.luxresidence.pages.dev/3d?rentgen=1 (main-ə birləşdirilməyib, canlı saytda yoxdur).
+- Seçilmiş binanın fasadı gizlənir, qonşular 6% şəffaf; şəffaf döşəmə plitələri + mərtəbə konturları, lift/pilləkən nüvəsi, sxematik qalxıcılar S-1…S-4 (su + kanalizasiya, mərtəbə qolları), 2 ventilyasiya şaxtası, elektrik qalxıcısı + mərtəbə xətti, yanğınsöndürmə (sprinkler). Qatlar paneldən açılıb-bağlanır.
+- Müraciət pinləri və sayğac anomaliyası NÜMUNƏ məlumatdır (8 müraciət, S-2 boyunca 3 sızma; 3 anomal sayğac) + avtomatik nəticə kartları. Real versiya: km_requests/km_readings yalnız komendant girişi ilə (km_staff).
