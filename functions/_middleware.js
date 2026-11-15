@@ -127,7 +127,7 @@ export async function onRequest(ctx) {
           const root = await ctx.env.ASSETS.fetch(new Request(new URL('/', url).toString(), { method: 'HEAD' }));
           if (root.headers.get('etag') === et) {
             const h = new Headers(res.headers); h.set('X-Robots-Tag', 'noindex'); h.set('Cache-Control', 'no-store'); h.delete('etag');
-            return new HTMLRewriter().on('title', new Title('Səhifə tapılmadı | LUX Residence')).on('meta[name="robots"]', new Meta('noindex, follow')).transform(new Response(res.body, { status: 404, headers: h }));
+            return new HTMLRewriter().on('title', new Title('Səhifə tapılmadı | LUX Residence')).on('meta[name="robots"]', new Meta('noindex, follow')).on('link[rel="canonical"]', { element(el) { el.remove(); } }).transform(new Response(res.body, { status: 404, headers: h }));
           }
         }
       }
