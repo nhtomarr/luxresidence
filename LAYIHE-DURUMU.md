@@ -137,6 +137,7 @@
 
 ## 7. LUX SAYT / 3D
 - **3d.html**: Three.js bina (jsdelivr @0.160.0), WebGL yoxlaması (experimental-webgl fallback). Mənzil paneldə "🚶 İçində gəz" düyməsi.
+- **16.11.2026 — Mərhələ 1 (satış ofisi konfiquratoru):** 3d.html-ə Bina 3–6 üçün qalan 4 plan izləndi (105=73,42; 113=134,33; 117=150,66; 119=174,53). İndi 6 tipdən 6-sı mərtəbədə divar+mebel ilə görünür, «İçəri bax» hamısında işləyir. Otaq sahələri rəsmi olmadığı üçün yeni planlarda göstərilmir. Növbəti: fotoreal interyer (Marble), pəncərədən real dron panoraması, gün vaxtı sürüşdürmə.
 - **menzil-tur.html**: göz səviyyəsində 3D interyer gəzinti (modern mebel, PBR, WASD/joystick+toxunuş, otaq keçidləri). Three.js importmap jsdelivr.
 
 ---
