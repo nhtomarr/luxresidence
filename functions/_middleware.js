@@ -1,5 +1,6 @@
 // 1) www.luxresidence.az → luxresidence.az (301)
 // 2) Əsas SPA səhifələri üçün serverdə düzgün başlıq, təsvir və canonical (Google ilk HTML-də görsün)
+import { kv } from '../functions-lib/seo.js';
 const BASE = 'https://luxresidence.az';
 const OFFICE_PRIMARY = 'ofis.pilothayat.az';
 const OFFICE_HOSTS = new Set([OFFICE_PRIMARY]);
@@ -43,7 +44,16 @@ const PAGES = {
   '/suallar': ['Tez-tez verilən suallar — ödəniş, təhvil, parkinq | LUX Residence', 'LUX Residence haqqında ən çox verilən suallar: daxili kredit, təhvil, parkinq, təhlükəsizlik, infrastruktur və mənzilə baxış.'],
   '/elaqe': ['Əlaqə — satış ofisi, ünvan və telefon | LUX Residence', 'LUX Residence satış ofisi ilə əlaqə: +994 50 809 00 88. Ünvan: Yasamal rayonu, Elmlər Akademiyası metrosu yaxınlığı, Bakı.'],
 };
+for (const n of [1, 2, 3, 4]) PAGES[`/${n}-otaqli-menziller`] = [`${n} otaqlı mənzillər — Yasamalda yeni tikili | LUX Residence`, `LUX Residence-də ${n} otaqlı mənzil planları: sahələr, 3D görünüş və eksplikasiya. Elmlər Akademiyası metrosu yaxınlığı, 0% daxili kredit.`];
+const CRUMB = { '/planlar': 'Planlar', '/secim': 'İnteraktiv seçim', '/haqqimizda': 'Haqqımızda', '/infrastruktur': 'İnfrastruktur', '/xeberler': 'Xəbərlər', '/suallar': 'Tez-tez verilən suallar', '/elaqe': 'Əlaqə' };
 const NOINDEX = new Set(['/muqayise', '/sevimliler']);
+// SPA-nın tanıdığı yollar; qalan naməlum ünvanlar (index.html-ə düşənlər) 404 qaytarır
+const SPA_OK = /^\/(|ana|planlar|secim|haqqimizda|infrastruktur|xeberler|elaqe|suallar|muqayise|sevimliler|[1-4]-otaqli-menziller|bina-\d+)$/;
+const HREFLANG = '<link rel="alternate" hreflang="az" href="https://luxresidence.az/"><link rel="alternate" hreflang="ru" href="https://luxresidence.az/ru"><link rel="alternate" hreflang="x-default" href="https://luxresidence.az/">';
+const azn = (v) => String(v).replace('.', ',');
+const ldTag = (id, o) => `<script type="application/ld+json" id="${id}">${JSON.stringify(o).replace(/</g, '\\u003c')}</script>`;
+const crumbLd = (items) => ldTag('ldCrumb', { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items.map((it, i) => ({ '@type': 'ListItem', position: i + 1, name: it[0], item: BASE + it[1] })) });
+const escH = (x) => String(x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 class Meta { constructor(v) { this.v = v; } element(el) { el.setAttribute('content', this.v); } }
 class Href { constructor(v) { this.v = v; } element(el) { el.setAttribute('href', this.v); } }
 class Title { constructor(v) { this.v = v; } element(el) { el.setInnerContent(this.v); } }
@@ -105,7 +115,25 @@ export async function onRequest(ctx) {
   const bm = path.match(/^\/bina-(\d+)$/);
   if (bm) { const n = +bm[1]; p = [`Bina ${n} — 1–4 otaqlı mənzillər, planlar | LUX Residence`, `LUX Residence Bina ${n}: ${LEAD[n] || 'yaşayış binası'}, 3D planlar və eksplikasiya. Yasamal, Elmlər Akademiyası metrosu yaxınlığı. 0% daxili kredit.`]; }
   const ct = res.headers.get('content-type') || '';
-  if (!ct.includes('text/html') || (!p && !NOINDEX.has(path))) return res;
+  if (!ct.includes('text/html')) return res;
+  if (!p && !NOINDEX.has(path)) {
+    try {
+      // ana səhifə: dil alternativləri (AZ ↔ RU)
+      if (path === '/') return new HTMLRewriter().on('head', new Append(HREFLANG)).transform(res);
+      // naməlum ünvan SPA qabığına (index.html) düşübsə — əsl 404
+      if (res.status === 200 && ctx.request.method === 'GET' && !SPA_OK.test(path) && !/^\/(apt|xeber)\//.test(path) && !/\.[a-z0-9]{2,5}$/i.test(path)) {
+        const et = res.headers.get('etag');
+        if (et) {
+          const root = await ctx.env.ASSETS.fetch(new Request(new URL('/', url).toString(), { method: 'HEAD' }));
+          if (root.headers.get('etag') === et) {
+            const h = new Headers(res.headers); h.set('X-Robots-Tag', 'noindex'); h.set('Cache-Control', 'no-store'); h.delete('etag');
+            return new HTMLRewriter().on('title', new Title('Səhifə tapılmadı | LUX Residence')).on('meta[name="robots"]', new Meta('noindex, follow')).transform(new Response(res.body, { status: 404, headers: h }));
+          }
+        }
+      }
+    } catch (e) {}
+    return res;
+  }
   let rw = new HTMLRewriter();
   if (p) {
     const u = BASE + path;
@@ -113,6 +141,26 @@ export async function onRequest(ctx) {
       .on('meta[property="og:title"]', new Meta(p[0])).on('meta[property="og:description"]', new Meta(p[1]))
       .on('meta[name="twitter:title"]', new Meta(p[0])).on('meta[name="twitter:description"]', new Meta(p[1]))
       .on('meta[property="og:url"]', new Meta(u)).on('link[rel="canonical"]', new Href(u));
+    try {
+      const rm = path.match(/^\/([1-4])-otaqli-menziller$/);
+      // naviqasiya yolu (BreadcrumbList)
+      const cr = [['Ana səhifə', '/']];
+      if (bm) cr.push(['Planlar', '/planlar'], [`Bina ${+bm[1]}`, path]);
+      else if (rm) cr.push(['Planlar', '/planlar'], [`${rm[1]} otaqlı mənzillər`, path]);
+      else if (CRUMB[path]) cr.push([CRUMB[path], path]);
+      let extra = cr.length > 1 ? crumbLd(cr) : '';
+      // planlar və otaq tipi səhifələri: mənzil siyahısı (ItemList) + JS-siz oxunan linklər
+      if (path === '/planlar' || rm) {
+        const list = await kv('lux_apartments');
+        const apts = (Array.isArray(list) ? list : []).filter((a) => a && !a.hidden && a.id != null && (!rm || (Number(a.rooms) >= 4 ? 4 : Number(a.rooms)) === +rm[1]));
+        if (apts.length) {
+          const nm = (a) => `${a.rooms} otaqlı mənzil, ${azn(a.area)} m²`;
+          extra += ldTag('ldList', { '@context': 'https://schema.org', '@type': 'ItemList', name: p[0], numberOfItems: apts.length, itemListElement: apts.map((a, i) => ({ '@type': 'ListItem', position: i + 1, name: nm(a), url: `${BASE}/apt/${a.id}` })) });
+          rw = rw.on('body', new Append(`<noscript><ul>${apts.map((a) => `<li><a href="/apt/${escH(a.id)}">${escH(nm(a))} — ${escH(a.bina || 'LUX Residence')}</a></li>`).join('')}</ul></noscript>`));
+        }
+      }
+      if (extra) rw = rw.on('head', new Append(extra));
+    } catch (e) {}
     if (path === '/suallar') {
       try {
         const f = await (await ctx.env.ASSETS.fetch(new URL('/assets/faq.json', ctx.request.url))).json();

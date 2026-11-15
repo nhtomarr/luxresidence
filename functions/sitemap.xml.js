@@ -13,8 +13,10 @@ export async function onRequest() {
   } catch (e) {}
   const u = [];
   const add = (p, pr, cf, lm = today) => u.push(`  <url><loc>${esc(BASE + p)}</loc><lastmod>${lm}</lastmod><changefreq>${cf}</changefreq><priority>${pr}</priority></url>`);
-  add('/', '1.0', 'weekly'); add('/planlar', '0.9', 'daily'); add('/secim', '0.8', 'weekly'); add('/3d', '0.7', 'weekly');
+  add('/', '1.0', 'weekly'); add('/ru', '0.6', 'monthly'); add('/planlar', '0.9', 'daily'); add('/secim', '0.8', 'weekly'); add('/3d', '0.7', 'weekly');
   add('/haqqimizda', '0.7', 'monthly'); add('/infrastruktur', '0.7', 'monthly'); add('/xeberler', '0.8', 'weekly'); add('/elaqe', '0.6', 'monthly'); add('/suallar', '0.6', 'monthly');
+  // otaq sayına görə səhifələr (yalnız həmin tipdə plan varsa)
+  [1, 2, 3, 4].forEach((n) => { if (apts.some((a) => a && !a.hidden && (Number(a.rooms) >= 4 ? 4 : Number(a.rooms)) === n)) add(`/${n}-otaqli-menziller`, '0.8', 'weekly'); });
   const bset = new Set(); apts.filter((a) => a && !a.hidden).forEach((a) => String(a.bina || '').replace(/Bina/gi, '').split(/[^0-9]+/).filter(Boolean).forEach((k) => bset.add(+k)));
   [...bset].sort((a, b) => a - b).forEach((k) => add(`/bina-${k}`, '0.8', 'weekly'));
   apts.filter((a) => a && !a.hidden && a.id != null).forEach((a) => add(`/apt/${a.id}`, '0.7', 'weekly'));

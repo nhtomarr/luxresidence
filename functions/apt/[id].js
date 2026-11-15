@@ -1,4 +1,4 @@
-import { kv, abs, page, exists, BASE } from '../../functions-lib/seo.js';
+import { kv, abs, page, exists, azn, BASE } from '../../functions-lib/seo.js';
 export async function onRequest(ctx) {
   try {
     const id = String(ctx.params.id || '');
@@ -9,17 +9,19 @@ export async function onRequest(ctx) {
     if (!a && MOVED[id]) return Response.redirect(`${BASE}/apt/${MOVED[id]}`, 301);
     if (!a) { const r = await ctx.env.ASSETS.fetch(new URL('/', ctx.request.url)); return new Response(r.body, { status: 404, headers: r.headers }); }
     const bina = a.bina || 'LUX Residence';
-    const title = `${a.rooms} otaqlı mənzil, ${a.area} m² — ${bina} | LUX Residence`;
-    const desc = `${bina}: ${a.rooms} otaqlı, ${a.area} m² sahəli yeni tikili mənzil. Yasamal, Elmlər Akademiyası metrosu yaxınlığı. Qiymət sorğu ilə.`;
+    const title = `${a.rooms} otaqlı mənzil, ${azn(a.area)} m² — ${bina} | LUX Residence`;
+    const desc = `${bina}: ${a.rooms} otaqlı, ${azn(a.area)} m² sahəli yeni tikili mənzil. Yasamal, Elmlər Akademiyası metrosu yaxınlığı. Qiymət sorğu ilə.`;
     const og = `/assets/og/apt-${id}.jpg`;
     const hasOg = await exists(ctx, og);
     const image = hasOg ? BASE + og : BASE + '/assets/og-cover.jpg';
     const url = `${BASE}/apt/${id}`;
-    const ld = { '@context': 'https://schema.org', '@type': 'Apartment', name: `${a.rooms} otaqlı mənzil, ${a.area} m²`, description: desc, url,
+    const ld = { '@context': 'https://schema.org', '@type': 'Apartment', name: `${a.rooms} otaqlı mənzil, ${azn(a.area)} m²`, description: desc, url,
       numberOfRooms: Number(a.rooms) || undefined, floorSize: { '@type': 'QuantitativeValue', value: Number(a.area) || undefined, unitCode: 'MTK' },
       image: [image, abs(a.plan_png || a.plan)].filter(Boolean),
       containedInPlace: { '@type': 'ApartmentComplex', name: 'LUX Residence', '@id': BASE + '/#complex' },
       address: { '@type': 'PostalAddress', addressLocality: 'Bakı', addressRegion: 'Yasamal rayonu', addressCountry: 'AZ' } };
-    return page(ctx, { title, desc, url, image, ld, ldId: 'ldApt' });
+    const rn = Number(a.rooms) >= 4 ? 4 : Number(a.rooms) || 1;
+    const crumbs = [['Ana səhifə', '/'], ['Planlar', '/planlar'], [`${rn} otaqlı mənzillər`, `/${rn}-otaqli-menziller`], [`${a.rooms} otaqlı · ${azn(a.area)} m²`, `/apt/${id}`]];
+    return page(ctx, { title, desc, url, image, ld, ldId: 'ldApt', crumbs });
   } catch (e) { return ctx.env.ASSETS.fetch(new URL('/', ctx.request.url)); }
 }

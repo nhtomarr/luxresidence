@@ -6,6 +6,9 @@ export async function kv(key) {
   const r = await fetch(`${SUPA}/rest/v1/lux_kv?select=value&key=eq.${key}`, { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }, cf: { cacheTtl: 120 } });
   if (!r.ok) return null; const j = await r.json(); return j && j[0] ? j[0].value : null;
 }
+export const azn = (v) => String(v).replace('.', ',');
+// naviqasiya yolu: [[ad, yol], ...] → BreadcrumbList (sayt skripti eyni id ilə yeniləyir)
+export const crumbLd = (items) => `<script type="application/ld+json" id="ldCrumb">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items.map((it, i) => ({ '@type': 'ListItem', position: i + 1, name: it[0], item: BASE + it[1] })) }).replace(/</g, '\\u003c')}</script>`;
 export const abs = (p) => !p ? null : /^https?:/.test(p) ? p : BASE + (String(p).charAt(0) === '/' ? p : '/' + p);
 const attr = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 class Meta { constructor(v) { this.v = v; } element(el) { el.setAttribute('content', this.v); } }
@@ -27,7 +30,7 @@ export async function page(ctx, seo) {
     .on('meta[property="og:image:alt"]', new Meta(seo.title))
     .on('meta[property="og:type"]', new Meta(seo.type || 'website'))
     .on('link[rel="canonical"]', new Href(seo.url))
-    .on('head', new Append(`<script type="application/ld+json" id="${seo.ldId}">${JSON.stringify(seo.ld).replace(/</g, '\\u003c')}</script>` ))
+    .on('head', new Append(`<script type="application/ld+json" id="${seo.ldId}">${JSON.stringify(seo.ld).replace(/</g, '\\u003c')}</script>` + (seo.crumbs ? crumbLd(seo.crumbs) : '')))
     .on('body', new Append(`<noscript><h1>${attr(seo.title)}</h1><p>${attr(seo.desc)}</p></noscript>`));
   const out = r.transform(res);
   const h = new Headers(out.headers); h.set('Cache-Control', 'public, max-age=300');
