@@ -488,3 +488,11 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - Preview: https://rentgen.luxresidence.pages.dev/3d?rentgen=1 (main-ə birləşdirilməyib, canlı saytda yoxdur).
 - Seçilmiş binanın fasadı gizlənir, qonşular 6% şəffaf; şəffaf döşəmə plitələri + mərtəbə konturları, lift/pilləkən nüvəsi, sxematik qalxıcılar S-1…S-4 (su + kanalizasiya, mərtəbə qolları), 2 ventilyasiya şaxtası, elektrik qalxıcısı + mərtəbə xətti, yanğınsöndürmə (sprinkler). Qatlar paneldən açılıb-bağlanır.
 - Müraciət pinləri və sayğac anomaliyası NÜMUNƏ məlumatdır (8 müraciət, S-2 boyunca 3 sızma; 3 anomal sayğac) + avtomatik nəticə kartları. Real versiya: km_requests/km_readings yalnız komendant girişi ilə (km_staff).
+
+## 16.11 — Sakin tətbiqi `/sakin` (sakin.html + sakin.webmanifest)
+- Ayrıca mobil tətbiq (PWA, ana ekrana əlavə, avtomatik açıq/tünd tema). Giriş: telefon (+994) + parol → `<son 9 rəqəm>@sakin.luxresidence.az` (komendantın yaratdığı hesab formatı); email də qəbul olunur. `?p=0501234567` nömrəni əvvəlcədən doldurur. Sessiya yadda qalır.
+- Bölmələr (alt menyu): Evim (balans, aylıq haqq, sürətli düymələr, gözləyən bağlama bannerı, açıq müraciətlər, son elan) · Ödəniş (bank rekvizitləri km_config.bank_info, təyinat kodu «B3 5-2» kopyala, hesab çıxarışı; kartla onlayn — «qoşulma mərhələsində») · Xidmətlər (müraciət + şəkil WebP-yə kiçildilir, qonaq QR + WhatsApp, rezervasiya, sayğac, bağlamalar, təcili zəng) · İcma (elan, səsvermə, sənədlər) · Profil (mənzillər, push bildiriş office_push_subs ua='sakin', parol dəyiş, quraşdırma, çıxış).
+- Məlumat mövcud km_* cədvəllərindən, RLS ilə (yeni cədvəl yoxdur). Bir neçə mənzili olan sakində mənzil seçimi.
+- Komendant → Ayarlar → «Sakin tətbiqi»: statistika, «Hesabları yarat və kartları çap et» (yasayir/icare, demo deyil, telefonu olan, hesabı olmayan mənzillər; lux-admin create, 6 rəqəmli parol, km_residents sahib/kiraye), A4-də 4 xoş gəldin kartı (QR → /sakin?p=, telefon, parol). Parollar saxlanmır — yalnız çapda. «Lift posteri (QR) çap et» A4.
+- Test: demo.sakin@luxresidence.az / LuxDemo2026 (Bina 9, 14-2, demo).
+- Qalan: km_config.bank_info və phone boşdur; kartla onlayn ödəniş (bank e-commerce) gözlənilir; RU/EN dilləri hələ yoxdur.

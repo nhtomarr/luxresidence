@@ -1,0 +1,14 @@
+{
+ "name": "LUX Residence — Sakin",
+ "short_name": "LUX Sakin",
+ "start_url": "/sakin",
+ "scope": "/sakin",
+ "display": "standalone",
+ "background_color": "#f6f1eb",
+ "theme_color": "#f6f1eb",
+ "lang": "az",
+ "icons": [
+  {"src": "/favicon-192.png","sizes": "192x192","type": "image/png"},
+  {"src": "/favicon-512.png","sizes": "512x512","type": "image/png"}
+ ]
+}
