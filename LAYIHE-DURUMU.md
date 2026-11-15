@@ -450,3 +450,11 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - Cədvəl `office_leave_hr` (employee_id, year, used_text, used_days, left_days, note, as_of). RLS: işçi yalnız öz sətrini, rəhbər hamısını görür (yoxlanıb).
 - 2026 üçün 30 işçi Excel-dən yazıldı (as_of 13.11). Sistemdə olmayanlar: İsa Qaraşov, Gülfiyyə/Əfsanə/Əli Rəhmanov, İsmət Nəzərov, Qafil Nəsirov; Rəşad Rəhmanov — Excel-də boş. Rəfail Mirzəyev → aktiv kart №60 (Rəfael), Aytac Soltanlı → №36 (Soltanova).
 - Panel: "Məzuniyyət" və "Mən" — İR məlumatı varsa qalıq ondan; as_of-dan sonra sistemdə götürülən məzuniyyət avtomatik çıxılır. Rəhbər sorğu siyahısında qalıq da buna görə.
+
+## 15.11 — 3D səhifə realizm yeniləməsi (3d.html)
+- Fon: brend tonlarında qradiyent səma (gecə tündləşir). Şüşə + podium + eyvan şüşəsi Sky shader-dən PMREM əksi alır (yalnız bu materiallar; ümumi işıq dəyişmədi). updSky() günəşlə sinxron, 700 ms-dən bir.
+- Fasad: hər mərtəbəyə şüşə profilləri (şaquli + üfüqi), z tərəflərində eyvan plitələri, şüşə məhəccər və qapaq (mergeGeometries, mərtəbəyə 4 mesh).
+- Gecə: hər mərtəbənin şüşəsi ayrıca material — 72% mərtəbədə isti işıq, gün batandan sonra yanır (nightGlass).
+- Faktura: canvas ilə səki plitəsi, torpaq, ot; şəhər binalarına pəncərə faktura (dam yox); ağaclar 4 kürəli, 2 rəngli.
+- YENİ «🌅 Eyvandan mənzərə» (mənzil panelində): kamera mənzilin tərəfində ən yaxın eyvana, mərtəbə hündürlüyünə uçur; ±83° baxış, «← Geri»/Esc ilə qayıdış; dəniz/şəhər tərəfi və hündürlük yazılır. window.__lux3d.view(n) test qarmağı.
+- Yoxlama: headless Chrome ekran şəkilləri (masaüstü, mobil, gecə, eyvan görünüşü), konsol xətası yoxdur.
