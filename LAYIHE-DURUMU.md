@@ -471,3 +471,7 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - Seçilmiş bina (Bina 3–8 tabları) həmişə mərkəzdə interaktiv modeldir; qalan 10 bina kontekst (canvas fasad faktura, gecə pəncərə işığı). SITE qrupu seçilən binaya görə sürüşür (placeSite).
 - HOME kamerası hər bina üçün avtomatik: kompleks mərkəzindən çölə, digər binaların kəsmədiyi bucaq seçilir (quş baxışı, r=112, y=138).
 - Şəhər/dəniz konteksti kompleksdən kənara itələndi (bay city z 160+).
+
+## 15.11 — Dizayn layihəsi albomu (PDF, A3) — 2 otaqlı 111,64 m²
+- tools/album/build.py (reportlab, Poppins): plan108 məlumatından (3d.html ROOMS/WALLS/WINS/DEF108) 14 vərəq — üz qabığı, mündəricat, vizuallar (menzil-tur renderləri), 3D aksonometriya (three ortho render), ölçülü plan 1:60, mebel, qapılar (boşluqdan avtomatik aşkarlama + cədvəl), döşəmə + plintus hesabı, tavan, işıqlandırma + açarlar, elektrik (rozetka/TV/kondisioner), materiallar spesifikasiyası (+10%), qeydlər.
+- Giriş faylları /tmp/album-da yaradılır (plan108.json, axon.png, r_*.png) — yenidən qurmaq üçün əvvəlcə onları yarat.
