@@ -497,3 +497,23 @@ Bayraqlara hörmət: 3D-də kran yalnız showStatus=true olanda. Kök (site.html
 - Komendant → Ayarlar → «Sakin tətbiqi»: statistika, «Hesabları yarat və kartları çap et» (yasayir/icare, demo deyil, telefonu olan, hesabı olmayan mənzillər; lux-admin create, 6 rəqəmli parol, km_residents sahib/kiraye), A4-də 4 xoş gəldin kartı (QR → /sakin?p=, telefon, parol). Parollar saxlanmır — yalnız çapda. «Lift posteri (QR) çap et» A4.
 - Test: demo.sakin@luxresidence.az / LuxDemo2026 (Bina 9, 14-2, demo).
 - Qalan: km_config.bank_info və phone boşdur; kartla onlayn ödəniş (bank e-commerce) gözlənilir; RU/EN dilləri hələ yoxdur.
+
+## 16.11 — 3D: canlı və real kompleks (3d.html) + saytda alıcı funksiyaları (index.html)
+**3D — reallıq**
+- Kontekst qüllələri artıq yastı faktura deyil: `floorGeo(w,d,big)` hər mərtəbənin həndəsəsini (plitə, pilyastr, panel, şüşə profili, eyvan, məhəccər) bir dəfə qurur, hər qüllədə InstancedMesh ilə təkrarlanır; `staticGeo` — podium və dam (parapet, pavilyon). Əsas (seçilmiş) bina da eyni `floorGeo`-dan istifadə edir (köhnə `facade()`/`DET` silindi). Gecə pəncərələri: `litTex` (hər pəncərə ayrıca yanır, əsas binada arabir dəyişir).
+- Çəkiliş çağırışları 1637 → ~410 (masaüstü), mobil ~340. Kölgə: 4096 xəritə, ±250 m (`SHB`).
+- Səma: düzgün sRGB qradiyent + duman zolağı (`hz`), qürubda isti ton (`DUSK`), buludlar, ulduzlar, ay, günəş diski (`SKYG`).
+**3D — canlılıq** (`LAND`, `NEIGH`, `LIFE`, `lifeTick`)
+- LAND (həmişə görünür, əvvəl yalnız maketdə idi): perimetr yolları, səkilər, qazon xanaları, ağaclar (küləkdə yellənir), meydançalar, parklanmış maşınlar, küçə/həyət lampaları, fəvvarə. Maket rejimi indi yalnız altlıq əlavə edir.
+- NEIGH: ətraf məhəllə (bloklar, binalar, küçələr), keçən maşınlar. LIFE: perimetrdə maşınlar (gecə fənərlər), səkilərdə və binaların ətrafında piyadalar, meydançada uşaqlar, quş dəstəsi. Dəniz — hərəkətli dalğa. Gecə: lampa işığı və yerdə işıq ləkələri, Alov qüllələri.
+**3D — yeni funksiyalar**
+- Alt panel (`#dock`): Günəş və kölgə · Maket · Gündüz/Qürub/Gecə (`setTOD`, rəvan keçid) · Tur (`startTour`, 7 kadr, başlıqlarla; `?tur=1`, sonsuz: `?tur=loop` — satış ofisi ekranı üçün) · Şəkil (`snap`, su nişanı ilə JPG).
+- Qülləyə və ya üstündəki etiketə kliklə bina dəyişir (`goTower`, `buildTL/updTL`); status gizli deyilsə etiketdə «N mənzil satışda». Otaq sayına görə filtr (`RF`, `#rfilt`).
+- Dərin link: `?bina=Bina 4&f=10&u=2` (mərtəbə + mənzil açılır), `?area=111.64` (həmin sahəli ilk mənzil). URL seçimlə birlikdə yenilənir; paneldə «Paylaş» və «Baxışa yazıl».
+- Test qarmaqları: `__lux3d.tod('dusk'|'night'|'day')`, `.tour()`, `.tourAt(i)`, `.info()`, `.night(min)`, `.cam(x,y,z)`.
+- QEYD: paralel sessiya eyni fayla interyer planları (PLANS 105/113/117/119) əlavə edir — push-dan əvvəl həmişə `git pull --rebase`. `rentgen` test budağı köhnə 3d.html üzərindədir, birləşdirmək üçün yenidən köçürülməlidir.
+**Sayt (index.html, blok «LUX+» — faylın sonunda, `<style id="lux-plus">` + skript)**
+- Seçim köməkçisi (`luxWizard()`, `/?komekci=1`): 3 sual (neçə nəfər, nə vacibdir, hansı bina) → 3 ən uyğun plan, səbəbi ilə; «Plana bax», «3D-də bax», məsləhət üçün ad+telefon (lux_leads, subject «Seçim köməkçisi», mesajda cavablar və tövsiyə olunan planlar).
+- Baxışa yazılma (`luxVisit(ctx)`, `/?baxis=1&m=...`): 10 gün × 10:00–19:00, ad, telefon → lux_leads (subject «Baxış: 17.11.2026, 15:00»). Ana səhifədə, mənzil səhifəsində, köməkçidə və 3D panelində.
+- Son baxdıqlarınız (localStorage `lux_recent`, ana səhifədə, 4 kart). Mənzil səhifəsində «3D-də bax» (Bina 3–8 üçün `?area=`) və «Çap et / PDF» (A4 üfüqi çap görünüşü).
+- Qiymət, mərtəbə və satış statusu bu funksiyalarda göstərilmir (lux_showprices=0, lux_hidefloors=1, lux_hidestatus=1 ayarlarına uyğun).
