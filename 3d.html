@@ -84,7 +84,13 @@ button{font-family:inherit;cursor:pointer;}
 .vbar{display:none;position:fixed;left:50%;transform:translateX(-50%);top:calc(14px + env(safe-area-inset-top,0px));z-index:13;align-items:center;gap:10px;background:rgba(255,252,248,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.75);border-radius:16px;padding:7px 14px 7px 7px;box-shadow:0 14px 36px -16px rgba(74,42,24,.5);max-width:calc(100% - 16px);}
 .vbar.on{display:flex}.vbar button{border:none;background:#2a2420;color:#fff;border-radius:11px;padding:9px 13px;font-weight:600;cursor:pointer}.vt{display:flex;flex-direction:column;line-height:1.25}.vt b{font-size:14px}.vt span{font-size:12px;opacity:.65}
 body.view #side,body.view .top,body.view #hint,body.view #crumb,body.view #sunbtn{opacity:0;pointer-events:none;transition:opacity .4s}
-.sunbtn.mkbtn{left:286px;bottom:calc(74px + env(safe-area-inset-bottom,0px))}body.view .mkbtn,body.maket .mkbtn,body.maket #side,body.maket .top,body.maket #hint,body.maket #crumb,body.maket #sunbtn,body.maket #panel,body.maket #lbls{opacity:0;pointer-events:none;transition:opacity .4s}
+.sunbtn.mkbtn{left:286px;bottom:calc(74px + env(safe-area-inset-bottom,0px))}.sunbtn.xrbtn{left:286px;bottom:calc(128px + env(safe-area-inset-bottom,0px))}
+body.xray #side,body.xray #hint,body.xray #crumb,body.xray .sunbtn,body.xray #panel,body.xray #lbls{opacity:0;pointer-events:none;transition:opacity .4s}
+.xrp{display:none;position:fixed;right:16px;top:76px;z-index:14;width:300px;max-height:calc(100% - 100px);overflow:auto;background:rgba(255,252,248,.95);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.8);border-radius:18px;padding:14px;box-shadow:0 18px 40px -20px rgba(74,42,24,.55);font-size:13px;color:#241109}
+body.xray .xrp{display:block}.xrh{display:flex;justify-content:space-between;align-items:center}.xrh b{font-family:var(--serif,Georgia);font-size:18px}.xrh button{border:none;background:#2a2420;color:#fff;border-radius:10px;padding:7px 11px;font-weight:600;cursor:pointer}.xrs{opacity:.6;font-size:12px;margin:4px 0 10px}
+.xrt{display:flex;align-items:center;gap:9px;padding:7px 4px;border-radius:9px;cursor:pointer;user-select:none}.xrt:hover{background:#f3ebe1}.xrt i{width:14px;height:14px;border-radius:4px;flex:none}.xrt.off{opacity:.38}.xrt span{flex:1}.xrt em{font-style:normal;font-size:11.5px;opacity:.55}
+.xri{margin-top:10px}.xri div{background:#fbf1e9;border-left:3px solid #b4552f;border-radius:8px;padding:8px 10px;margin-top:7px;line-height:1.4}.xrn{font-size:11px;opacity:.55;margin-top:10px;line-height:1.4}
+@media(max-width:760px){.xrp{left:8px;right:8px;width:auto;top:auto;bottom:8px;max-height:46%}.sunbtn.xrbtn{display:flex!important;left:12px;bottom:calc(128px + env(safe-area-inset-bottom,0px));padding:9px 13px;font-size:13px}}body.view .mkbtn,body.maket .mkbtn,body.maket #side,body.maket .top,body.maket #hint,body.maket #crumb,body.maket #sunbtn,body.maket #panel,body.maket #lbls{opacity:0;pointer-events:none;transition:opacity .4s}
 .mkbar{display:none;position:fixed;left:50%;transform:translateX(-50%);top:calc(14px + env(safe-area-inset-top,0px));z-index:13;align-items:center;gap:10px;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(0,0,0,.06);border-radius:16px;padding:7px;box-shadow:0 14px 36px -18px rgba(0,0,0,.35);max-width:calc(100% - 16px)}
 body.maket .mkbar{display:flex}.mkbar button{border:none;background:#2a2420;color:#fff;border-radius:11px;padding:9px 13px;font-weight:600;cursor:pointer;white-space:nowrap}.mkbar #mkn{background:#f0e6da;color:#241109}
 @media(max-width:760px){.mkbtn{display:flex!important;left:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));padding:9px 13px;font-size:13px}.mkbar .vt span{display:none}}
@@ -213,6 +219,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <div class="ibar" id="ibar"><button id="iback">← Geri</button><div class="it"><b id="ititle"></b><span id="isub"></span></div><button id="irot" disabled>⟳ Döndər</button><button id="ireset">Sıfırla</button></div>
 <div class="ihint" id="ihint"></div>
 <button class="sunbtn" id="sunbtn" aria-label="Günəş və kölgə">☀️ <span>Günəş və kölgə</span></button>
+<button class="sunbtn xrbtn" id="xrbtn" aria-label="Rentgen">🩻 <span>Rentgen · kommunikasiya</span></button>
+<div class="xrp" id="xrp"><div class="xrh"><b>Rentgen</b><button id="xrx">← Çıx</button></div><div class="xrs">Binanın daxili: nüvə, qalxıcılar və komendant məlumatı</div><div id="xrl"></div><div class="xri" id="xri"></div><div class="xrn">Qalxıcılar sxematikdir — sanitar qovşaqların yerləşməsinə görə. Müraciət və sayğac nöqtələri <b>nümunə məlumatdır</b> (test).</div></div>
 <button class="sunbtn mkbtn" id="mkbtn" aria-label="Rəqəmsal maket">🏙 <span>Rəqəmsal maket</span></button>
 <div class="mkbar" id="mkbar"><button id="mkx">← Çıx</button><div class="vt"><b>LUX Residence · rəqəmsal maket</b><span>11 bina · fırlatmaq üçün sürüşdürün, yaxınlaşdırmaq üçün çimdikləyin</span></div><button id="mkn">🌙 Gecə</button></div>
 <div class="sunbox" id="sunbox">
@@ -515,7 +523,44 @@ function exitView(){if(!VIEW)return;const V=VIEW;VIEW=null;$('vbar').classList.r
 document.getElementById('vback').addEventListener('click',exitView);
 document.getElementById('mkbtn').addEventListener('click',maketOn);document.getElementById('mkx').addEventListener('click',maketOff);document.getElementById('mkn').addEventListener('click',maketNight);
 if(new URLSearchParams(location.search).get('maket')==='1')setTimeout(maketOn,600);
-window.__lux3d={cam:(x,y,z)=>{anim=null;controls.autoRotate=false;const c=SITE.position.clone().add(MK.center||new THREE.Vector3());camera.position.set(c.x+x,y,c.z+z);controls.target.set(c.x,8,c.z);controls.update();},maket:()=>maketOn(),maketNight:()=>maketNight(),view:n=>{const t=(floors[SEL]&&floors[SEL].tiles||[]).find(x=>String(x.userData.u.n)===String(n))||(floors[SEL].tiles||[])[0];if(t){openApt(t.userData.u);viewFrom(t.userData.u);}},exitView};
+/* ---------- 15.11 RENTGEN: binanın daxili — nüvə, qalxıcılar, müraciət və sayğac qatları (TEST) ---------- */
+const XR={on:false,g:null,layers:{},saved:null};
+const XRL=[['su','Su qalxıcıları','#2f7dd1'],['kan','Kanalizasiya','#8a5a3c'],['vent','Ventilyasiya şaxtaları','#3fae5a'],['el','Elektrik qalxıcısı','#f2b632'],['yan','Yanğınsöndürmə','#d63a3a'],['req','Sakin müraciətləri','#b4552f'],['met','Sayğac anomaliyası','#7a3fd1']];
+function xrBuild(){if(XR.g)return;const G=new THREE.Group();G.visible=false;scene.add(G);XR.g=G;XRL.forEach(l=>{const g=new THREE.Group();G.add(g);XR.layers[l[0]]=g;});
+ const top=POD+(F1-F0+1)*FH,ghost=new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:.13,depthWrite:false,roughness:.6}),edge=new THREE.LineBasicMaterial({color:0x8a7f75,transparent:true,opacity:.45});
+ for(let f=F0;f<=F1;f++){const y0=floors[f].y0;const sl=new THREE.Mesh(new THREE.BoxGeometry(W,.16,D),ghost);sl.position.set(0,y0+.08,0);G.add(sl);
+  const e=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(W,FH,D)),edge);e.position.set(0,y0+FH/2,0);G.add(e);}
+ const core=new THREE.Mesh(new THREE.BoxGeometry(6,top-POD,3.4),new THREE.MeshStandardMaterial({color:0x9a9086,transparent:true,opacity:.55,depthWrite:false}));core.position.set(0,(top+POD)/2,0);G.add(core);
+ const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.4,metalness:.1,emissive:c,emissiveIntensity:.25});
+ const H=top-POD+1,ym=(top+POD)/2;
+ const vert=(lay,x,z,r,c,box)=>{const m=new THREE.Mesh(box?new THREE.BoxGeometry(r,H,r):new THREE.CylinderGeometry(r,r,H,12),mat(c));m.position.set(x,ym,z);XR.layers[lay].add(m);return m;};
+ /* sanitar qovşaqlar nüvəyə yaxın, hər sırada 2 cüt qalxıcı (S-1…S-4) */
+ XR.ris=[];[[-5.6,-1],[5.6,-1],[-5.6,1],[5.6,1]].forEach(([x,sd],i)=>{const z=sd*3.6;vert('su',x,z,.13,0x2f7dd1);vert('kan',x+.55,z,.2,0x8a5a3c);XR.ris.push({id:'S-'+(i+1),x,z});
+  for(let f=F0;f<=F1;f++){const y=floors[f].y0+.45;[[x+(x<0?-2.6:2.6),sd*6.2],[x,sd*6.4]].forEach(([tx,tz])=>{const pts=[new THREE.Vector3(x,y,z),new THREE.Vector3(tx,y,z),new THREE.Vector3(tx,y,tz)];const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:0x2f7dd1,transparent:true,opacity:.55}));XR.layers.su.add(l);});}});
+ [[-3.6,2.3],[3.6,-2.3]].forEach(([x,z])=>vert('vent',x,z,.7,0x3fae5a,true));
+ vert('el',3.3,1.1,.32,0xf2b632,true);vert('yan',-3.3,-1.1,.15,0xd63a3a);
+ for(let f=F0;f<=F1;f++){const y=floors[f].y0+2.9;const m=new THREE.Mesh(new THREE.SphereGeometry(.16,10,8),mat(0xd63a3a));m.position.set(-3.3,y,-1.1);XR.layers.yan.add(m);
+  const pl=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(3.3,floors[f].y0+1.2,1.1),new THREE.Vector3(3.3,floors[f].y0+1.2,4.5),new THREE.Vector3(-8,floors[f].y0+1.2,4.5)]),new THREE.LineBasicMaterial({color:0xf2b632,transparent:true,opacity:.6}));XR.layers.el.add(pl);}
+ /* NÜMUNƏ məlumat: müraciətlər və sayğac anomaliyaları (real panel məlumatı deyil) */
+ const APT=[[-8.6,-6.4],[0,-6.6],[8.6,-6.4],[-8.6,6.4],[0,6.6],[8.6,6.4]];let sd=33;const rr=()=>{sd=(sd*16807)%2147483647;return sd/2147483647;};
+ const reqs=[[8,2,'sızma'],[9,2,'sızma'],[10,2,'sızma'],[5,4,'elektrik'],[12,0,'qapı/kilid'],[14,3,'sızma'],[6,5,'elektrik'],[11,1,'havalandırma']];
+ const RC={'sızma':0x2f7dd1,'elektrik':0xf2b632,'qapı/kilid':0x8a7f75,'havalandırma':0x3fae5a};
+ reqs.forEach(([f,a,t])=>{const [x,z]=APT[a];const y=floors[f].y0+1.6;const pin=new THREE.Group();const b=new THREE.Mesh(new THREE.SphereGeometry(.55,16,12),new THREE.MeshStandardMaterial({color:0xb4552f,emissive:0xb4552f,emissiveIntensity:.5}));b.position.y=1.2;pin.add(b);
+  const ring=new THREE.Mesh(new THREE.SphereGeometry(.28,12,10),new THREE.MeshBasicMaterial({color:RC[t]}));ring.position.y=1.2;ring.scale.setScalar(1.25);ring.position.z=.42*Math.sign(z);pin.add(ring);
+  const st=new THREE.Mesh(new THREE.CylinderGeometry(.04,.04,1.2,6),new THREE.MeshBasicMaterial({color:0xb4552f}));st.position.y=.6;pin.add(st);pin.position.set(x,y-1.2,z+Math.sign(z)*1.4);XR.layers.req.add(pin);});
+ const hot=new Set(['7-1','9-2','13-5']);for(let f=F0;f<=F1;f++)APT.forEach(([x,z],a)=>{const k=f+'-'+a,h=hot.has(k);if(!h&&rr()<.55)return;const m=new THREE.Mesh(new THREE.BoxGeometry(5.6,.12,3.4),new THREE.MeshStandardMaterial({color:h?0x7a3fd1:0x6fbf73,transparent:true,opacity:h?.85:.35,emissive:h?0x7a3fd1:0,emissiveIntensity:h?.5:0,depthWrite:false}));m.position.set(x,floors[f].y0+.3,z*.82);XR.layers.met.add(m);});
+ XR.info=['<b>S-2 qalxıcısı:</b> 8, 9 və 10-cu mərtəbələrdə ardıcıl 3 «sızma» müraciəti. Ehtimal: qalxıcıda sızma — mənzillərə yox, qalxıcıya baxılsın.','<b>Sayğac:</b> 3 mənzildə su istehlakı mərtəbə ortalamasından 2× çoxdur (7, 9, 13-cü mərtəbə) — gizli sızma və ya sayğac nasazlığı.','<b>Elektrik:</b> 5 və 6-cı mərtəbədə 2 müraciət — mərtəbə şitlərini yoxlayın.'];}
+function xrRender(){$('xrl').innerHTML=XRL.map(l=>'<div class="xrt'+(XR.layers[l[0]].visible?'':' off')+'" data-k="'+l[0]+'"><i style="background:'+l[2]+'"></i><span>'+l[1]+'</span><em>'+(l[0]==='req'?'8':l[0]==='met'?'3 ⚠':'')+'</em></div>').join('');$('xri').innerHTML=XR.info.map(t=>'<div>'+t+'</div>').join('');}
+function xrOn(){if(XR.on)return;if(MK&&MK.on)maketOff();if(VIEW)exitView();if(SEL)exitFloor();xrBuild();XR.on=true;document.body.classList.add('xray');
+ XR.saved={shell:[],roof:roof.visible,pod:podium.visible,ctx:[]};for(let f=F0;f<=F1;f++){XR.saved.shell.push(floors[f].shell.visible);floors[f].shell.visible=false;}roof.visible=false;
+ Object.values(CTX).forEach(g=>{XR.saved.ctx.push(g.visible);g.traverse(o=>{if(o.isMesh&&o.material&&!o.userData.xrm){o.userData.xrm=o.material;o.material=Array.isArray(o.material)?o.material.map(m=>{const c=m.clone();c.transparent=true;c.opacity=.06;c.depthWrite=false;return c;}):(()=>{const c=o.material.clone();c.transparent=true;c.opacity=.06;c.depthWrite=false;return c;})();}});});
+ XR.g.visible=true;xrRender();controls.autoRotate=true;controls.autoRotateSpeed=.4;flyTo(new THREE.Vector3(58,50,74),new THREE.Vector3(0,(POD+(F1-F0+1)*FH)/2+3,0),1500);}
+function xrOff(){if(!XR.on)return;XR.on=false;document.body.classList.remove('xray');XR.g.visible=false;for(let f=F0;f<=F1;f++)floors[f].shell.visible=XR.saved.shell[f-F0];roof.visible=XR.saved.roof;
+ Object.values(CTX).forEach(g=>g.traverse(o=>{if(o.isMesh&&o.userData.xrm){o.material=o.userData.xrm;delete o.userData.xrm;}}));controls.autoRotate=false;flyTo(HOME.pos.clone(),HOME.tgt.clone(),1300);}
+document.getElementById('xrbtn').addEventListener('click',xrOn);document.getElementById('xrx').addEventListener('click',xrOff);
+document.getElementById('xrl').addEventListener('click',e=>{const t=e.target.closest('.xrt');if(!t)return;const g=XR.layers[t.dataset.k];g.visible=!g.visible;xrRender();});
+if(new URLSearchParams(location.search).get('rentgen')==='1')setTimeout(xrOn,700);
+window.__lux3d={xray:()=>xrOn(),cam:(x,y,z)=>{anim=null;controls.autoRotate=false;const c=SITE.position.clone().add(MK.center||new THREE.Vector3());camera.position.set(c.x+x,y,c.z+z);controls.target.set(c.x,8,c.z);controls.update();},maket:()=>maketOn(),maketNight:()=>maketNight(),view:n=>{const t=(floors[SEL]&&floors[SEL].tiles||[]).find(x=>String(x.userData.u.n)===String(n))||(floors[SEL].tiles||[])[0];if(t){openApt(t.userData.u);viewFrom(t.userData.u);}},exitView};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&VIEW)exitView();});
 
 /* ---------- floor interior (sxematik) ---------- */
