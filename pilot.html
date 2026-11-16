@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pilot Həyat — yaşayış komplekslərinin tikintisi və idarə olunması</title>
+<meta name="description" content="Pilot Həyat Bakıda yaşayış kompleksləri tikir və onları idarə edir: LUX Residence, Nizami City, komendant xidməti və sakinlər üçün onlayn xidmətlər.">
+<link rel="canonical" href="https://pilothayat.az/">
+<meta property="og:title" content="Pilot Həyat">
+<meta property="og:description" content="Yaşayış komplekslərinin tikintisi və idarə olunması — LUX Residence, Nizami City, komendant xidməti.">
+<meta property="og:url" content="https://pilothayat.az/">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/pilot-mark.svg" type="image/svg+xml">
+<!-- Pilot Həyat — bir səhifəlik şirkət saytı (pilothayat.az). Rekvizitlər aşağıdakı CO obyektindən doldurulur; boş sahə göstərilmir. -->
+<style>
+:root{--bg:#f6f4ef;--bg2:#fffdf9;--ink:#1b1a16;--mut:#6b675e;--line:rgba(27,26,22,.09);--acc:#2f5d50;--acc-ink:#fff;--r:16px;
+ --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif;--ease:cubic-bezier(.22,1,.36,1)}
+@media(prefers-color-scheme:dark){:root{--bg:#14130f;--bg2:#1c1b16;--ink:#efece4;--mut:#a39e92;--line:rgba(255,255,255,.09);--acc:#7fb5a3;--acc-ink:#0f1a16}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.w{max-width:1120px;margin:0 auto;padding:0 24px}
+header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 86%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:24px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:17px;text-decoration:none;letter-spacing:-.01em}
+.logo svg{width:28px;height:28px}
+nav{display:flex;gap:22px;margin-left:auto;font-size:14.5px}
+nav a{text-decoration:none;color:var(--mut);transition:color .15s var(--ease)}
+nav a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;font:600 15px var(--sans);text-decoration:none;border:1px solid var(--line);background:var(--bg2);color:var(--ink);transition:background-color .15s var(--ease),border-color .15s var(--ease),transform .1s var(--ease)}
+.btn:active{transform:scale(.98)}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.btn:hover{border-color:color-mix(in srgb,var(--ink) 22%,transparent)}
+.hd .btn{height:38px;padding:0 14px;font-size:14px}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:6px}
+/* hero */
+.hero{padding:96px 0 72px;display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(36px,5vw,58px);line-height:1.05;letter-spacing:-.025em;font-weight:600;margin:0 0 20px}
+.hero p{font-size:18px;color:var(--mut);max-width:520px;margin:0 0 30px}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+/* imza: yaşayış bloklarının sxemi — tikinti və idarə bir xəttdə */
+.plan{background:var(--bg2);border:1px solid var(--line);border-radius:24px;padding:28px;aspect-ratio:1/1;display:grid;place-items:center}
+.plan svg{width:100%;height:100%}
+.plan .b{fill:none;stroke:var(--ink);stroke-width:1.4;opacity:.55}
+.plan .f{fill:var(--acc);opacity:.14}
+.plan .r{fill:none;stroke:var(--acc);stroke-width:2;stroke-linecap:round;stroke-dasharray:4 7}
+.plan text{font:600 11px var(--sans);fill:var(--mut)}
+/* bölmələr */
+section{padding:72px 0;border-top:1px solid var(--line)}
+.sh{display:grid;grid-template-columns:280px 1fr;gap:48px}
+.sh h2{font-size:28px;line-height:1.15;letter-spacing:-.015em;font-weight:600;margin:0}
+.sh .lead{color:var(--mut);margin:10px 0 0;font-size:15px}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;gap:8px}
+.card h3{margin:0;font-size:19px;font-weight:600;letter-spacing:-.01em}
+.card p{margin:0;color:var(--mut);font-size:15px}
+.card .meta{font-size:13.5px;color:var(--mut);margin-top:auto;padding-top:12px}
+.card a.more{margin-top:8px;font-weight:600;font-size:14.5px;color:var(--acc);text-decoration:none}
+.list{display:grid;gap:0;border-top:1px solid var(--line)}
+.li{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:18px 0;border-bottom:1px solid var(--line)}
+.li svg{width:20px;height:20px;stroke:var(--acc);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-top:3px}
+.li b{display:block;font-weight:600}
+.li span{color:var(--mut);font-size:15px}
+.cta{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap}
+dl{display:grid;grid-template-columns:200px 1fr;gap:12px 24px;margin:0}
+dt{color:var(--mut);font-size:14.5px}dd{margin:0;font-weight:500;font-variant-numeric:tabular-nums}
+details{border-bottom:1px solid var(--line);padding:16px 0}
+details:first-of-type{border-top:1px solid var(--line)}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--mut);font-weight:400;font-size:20px;line-height:1}
+details[open] summary::after{content:"–"}
+details p,details li{color:var(--mut);font-size:15px}
+details ul{padding-left:20px;margin:8px 0 0}
+footer{border-top:1px solid var(--line);padding:28px 0 40px;font-size:13.5px;color:var(--mut)}
+.ft{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+@media(max-width:860px){
+ nav{display:none}
+ .hero{grid-template-columns:1fr;padding:56px 0 48px;gap:36px}
+ .plan{aspect-ratio:4/3;padding:18px}
+ .sh{grid-template-columns:1fr;gap:24px}
+ .cards{grid-template-columns:1fr}
+ dl{grid-template-columns:1fr;gap:2px 0}dd{margin-bottom:12px}
+ section{padding:56px 0}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><div class="w hd">
+ <a class="logo" href="#" aria-label="Pilot Həyat"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="8" fill="var(--acc)"/><path d="M9 20V8h6a4 4 0 0 1 0 8H9" fill="none" stroke="var(--acc-ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Pilot Həyat</a>
+ <nav><a href="#layiheler">Layihələr</a><a href="#komendant">Komendant xidməti</a><a href="#odenis">Ödəniş qaydaları</a><a href="#elaqe">Əlaqə</a></nav>
+ <a class="btn" href="https://komendant.pilothayat.az/">Komendant sistemi</a>
+</div></header>
+
+<main>
+<div class="w hero">
+ <div>
+  <h1>Yaşayış kompleksləri tikirik və onları idarə edirik</h1>
+  <p>Pilot Həyat Bakıda LUX Residence və Nizami City layihələrini həyata keçirir. Təhvil verilən binalarda komendant xidməti göstəririk: təmizlik, təhlükəsizlik, texniki xidmət və sakinlərlə iş.</p>
+  <div class="acts"><a class="btn pri" href="#layiheler">Layihələr</a><a class="btn" href="#komendant">Sakinlər üçün</a></div>
+ </div>
+ <div class="plan" aria-hidden="true">
+  <svg viewBox="0 0 320 320">
+   <rect class="f" x="40" y="44" width="92" height="64" rx="6"/><rect class="b" x="40" y="44" width="92" height="64" rx="6"/>
+   <rect class="b" x="152" y="44" width="128" height="64" rx="6"/>
+   <rect class="f" x="40" y="128" width="64" height="148" rx="6"/><rect class="b" x="40" y="128" width="64" height="148" rx="6"/>
+   <rect class="b" x="124" y="128" width="72" height="72" rx="36"/>
+   <rect class="b" x="216" y="128" width="64" height="148" rx="6"/>
+   <rect class="b" x="124" y="220" width="72" height="56" rx="6"/>
+   <path class="r" d="M20 118 H300 M114 22 V298 M206 22 V298"/>
+   <text x="44" y="38">Tikinti</text><text x="220" y="296">İdarəetmə</text>
+  </svg>
+ </div>
+</div>
+
+<section id="layiheler"><div class="w sh">
+ <div><h2>Layihələr</h2><p class="lead">Satışda olan və tikintisi davam edən yaşayış kompleksləri</p></div>
+ <div class="cards">
+  <article class="card"><h3>LUX Residence</h3><p>Yasamal rayonunda, Elmlər Akademiyası metrosunun yaxınlığında 11 binalı yaşayış kompleksi. Qapalı həyət, yeraltı parkinq, 7/24 mühafizə.</p><div class="meta">Ə.Ələkbərov, M.Müşfiq, S.Dağlı və İ.Qutqaşınlı küçələrinin kəsişməsi, Bakı</div><a class="more" href="https://luxresidence.az/">luxresidence.az →</a></article>
+  <article class="card"><h3>Nizami City</h3><p>Bakının mərkəzində qapalı həyətli yaşayış kompleksi. Hazır binalarda və tikintisi davam edən binalarda mənzillər.</p><div class="meta">Nizami rayonu, Bakı</div><a class="more" href="https://nizami-city.az/">nizami-city.az →</a></article>
+ </div>
+</div></section>
+
+<section id="komendant"><div class="w sh">
+ <div><h2>Komendant xidməti</h2><p class="lead">Təhvil verilmiş binalarda sakinlər üçün gündəlik xidmət</p></div>
+ <div>
+  <div class="list">
+   <div class="li"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><div><b>Binanın saxlanılması</b><span>Ümumi sahələrin təmizliyi, lift və mühəndis sistemlərinə texniki xidmət, həyətin abadlığı.</span></div></div>
+   <div class="li"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/></svg><div><b>Təhlükəsizlik və giriş</b><span>Mühafizə, kartla və barmaq izi ilə giriş, damafon.</span></div></div>
+   <div class="li"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18M7 15h4"/></svg><div><b>Aylıq xidmət haqqı</b><span>Hər mənzil üçün aylıq hesab, ödəniş tarixçəsi və qəbzlər sakinin şəxsi kabinetində.</span></div></div>
+   <div class="li"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/></svg><div><b>Müraciətlər</b><span>Nasazlıq və digər müraciətlər tətbiqdən göndərilir, icra vəziyyəti izlənilir.</span></div></div>
+  </div>
+  <div class="cta"><a class="btn pri" href="https://luxresidence.az/sakin">Sakin kabineti</a><a class="btn" href="https://komendant.pilothayat.az/">Komendant sistemi (əməkdaşlar)</a></div>
+ </div>
+</div></section>
+
+<section id="odenis"><div class="w sh">
+ <div><h2>Ödəniş qaydaları</h2><p class="lead">Xidmət haqlarının onlayn ödənilməsi</p></div>
+ <div>
+  <details open><summary>Nəyə görə ödəniş edilir</summary><p>Sakin kabinetində mənzilə yazılmış aylıq komendant xidməti haqqı və əlavə xidmətlər (məsələn, kart və ya brelok bərpası) ödənilir. Məbləğ ödənişdən əvvəl Azərbaycan manatı ilə göstərilir.</p></details>
+  <details><summary>Necə ödənilir</summary><ul><li>Sakin kabinetinə telefon nömrəsi və parolla daxil olun.</li><li>Ödənilməmiş hesabı seçin və «Kartla ödə» düyməsinə toxunun.</li><li>Kart məlumatları bankın təhlükəsiz ödəniş səhifəsində daxil edilir; Pilot Həyat kart məlumatlarını görmür və saxlamır.</li><li>Uğurlu ödənişdən sonra hesab bağlanır və elektron qəbz kabinetdə görünür.</li></ul></details>
+  <details><summary>Ləğv və qaytarma</summary><p>Səhv və ya təkrar ödəniş olduqda komendantlığa müraciət edin. Müraciət yoxlandıqdan sonra məbləğ 10 iş günü ərzində ödənişin edildiyi karta qaytarılır və ya sakinin növbəti hesablarına aid edilir. Artıq göstərilmiş xidmət üçün ödəniş qaytarılmır.</p></details>
+  <details><summary>Məxfilik</summary><p>Sakinin adı, telefon nömrəsi və mənzil məlumatları yalnız xidmət göstərmək və hesablaşma aparmaq üçün istifadə olunur və üçüncü şəxslərə verilmir, qanunla nəzərdə tutulan hallar istisna olmaqla.</p></details>
+ </div>
+</div></section>
+
+<section id="elaqe"><div class="w sh">
+ <div><h2>Əlaqə və rekvizitlər</h2></div>
+ <dl id="co"></dl>
+</div></section>
+</main>
+
+<footer><div class="w ft"><span>© <span id="yr"></span> Pilot Həyat</span><span>Odeo Agency tərəfindən</span></div></footer>
+<script>
+// Rekvizitlər — boş sahələr göstərilmir. Hüquqi məlumatlar Nihat təsdiqlədikdən sonra doldurulur.
+var CO=[['Şirkət','Pilot Həyat'],['Hüquqi adı',''],['VÖEN',''],['Hüquqi ünvan',''],['Telefon',''],['E-poçt',''],['Satış ofisi (LUX Residence)','+994 50 809 00 88']];
+document.getElementById('co').innerHTML=CO.filter(function(r){return r[1];}).map(function(r){var v=r[1];if(/^\+?\d[\d\s]+$/.test(v))v='<a href="tel:'+v.replace(/\s/g,'')+'">'+v+'</a>';else if(v.indexOf('@')>0)v='<a href="mailto:'+v+'">'+v+'</a>';return '<dt>'+r[0]+'</dt><dd>'+v+'</dd>';}).join('');
+document.getElementById('yr').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>

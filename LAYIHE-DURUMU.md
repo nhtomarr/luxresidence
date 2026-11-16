@@ -569,3 +569,8 @@ Düzəliş: `bio_template(..., p_sn)` damafonda işçi fərziyyəsi yoxdur; `bio
 
 ## 16.11 — Nizami paneli: sorğular LUX kimi
 nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ, mənzil/vaxt, mesaj), hər kartda «✓ Cavablandı» / «Yeni et», WhatsApp, Kopyala, status seçimi, Sil; yuxarıda «Yeniləri kopyala», «Bu günküləri kopyala», seçilənləri kopyala / cavablandı. Status «contacted» indi «Cavablandı» adlanır. Yeniləmə `.select()` ilə yoxlanır — RLS yazmasa «icazə yoxdur» deyir.
+
+## 16.11 — pilothayat.az şirkət saytı + komendant.pilothayat.az
+- `pilot.html` — Pilot Həyat bir səhifəlik saytı (layihələr, komendant xidməti, ödəniş/qaytarma/məxfilik qaydaları, rekvizitlər). Rekvizitlər skriptdəki `CO` massivindən; boş sahə göstərilmir — hüquqi ad, VÖEN, hüquqi ünvan, telefon, e-poçt Nihatdan gözlənilir. Məqsəd: Kapital Bank e-commerce yoxlamasında domen boş/hostinq səhifəsi göstərməsin.
+- Middleware: `pilotHost` (pilothayat.az → /pilot; www → 301), `komendantHost` (komendant.pilothayat.az → /komendant, /sakin; noindex).
+- Domenlər Cloudflare Pages layihəsinə custom domain kimi Nihat tərəfindən əlavə olunmalıdır (sys_config.cf_token yalnız analitika icazəlidir). pilothayat.az zonası Cloudflare-dədir (zone e1044558592a6598f05f5eacd706d31b); kök hələ hostinq.az-a baxır.

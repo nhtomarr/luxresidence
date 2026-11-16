@@ -18,6 +18,27 @@ async function techizatHost(ctx, url) {
   if (p.startsWith('/assets/km/')) return ctx.next();
   return Response.redirect(url.origin + '/', 302);
 }
+// ---- Pilot Həyat şirkət saytı (pilothayat.az) ----
+const PILOT_HOSTS = new Set(['pilothayat.az', 'www.pilothayat.az']);
+async function pilotHost(ctx, url) {
+  if (url.hostname === 'www.pilothayat.az') return Response.redirect('https://pilothayat.az' + url.pathname + url.search, 301);
+  const p = url.pathname;
+  if (p === '/' || p === '/index.html') return ctx.env.ASSETS.fetch(new Request(new URL('/pilot', url).toString(), ctx.request));
+  if (p === '/pilot-mark.svg' || p === '/favicon.ico') return ctx.env.ASSETS.fetch(new Request(new URL('/pilot-mark.svg', url).toString(), ctx.request));
+  if (p === '/robots.txt') return new Response('User-agent: *\nAllow: /\nSitemap: https://pilothayat.az/sitemap.xml\n', { headers: { 'Content-Type': 'text/plain' } });
+  if (p === '/sitemap.xml') return new Response('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://pilothayat.az/</loc></url></urlset>', { headers: { 'Content-Type': 'application/xml' } });
+  return Response.redirect('https://pilothayat.az/', 302);
+}
+// ---- Komendant sistemi ayrıca domendə (komendant.pilothayat.az) ----
+async function komendantHost(ctx, url) {
+  const p = url.pathname;
+  const noindex = (r) => { const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); };
+  if (p === '/' || p === '/index.html' || p === '/komendant' || p === '/komendant.html') return noindex(await ctx.env.ASSETS.fetch(new Request(new URL('/komendant' + url.search, url).toString(), ctx.request)));
+  if (p === '/sakin' || p === '/sakin.html') return noindex(await ctx.env.ASSETS.fetch(new Request(new URL('/sakin' + url.search, url).toString(), ctx.request)));
+  if (p === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'Content-Type': 'text/plain' } });
+  if (p.startsWith('/assets/') || /^\/(komendant|sakin)\.webmanifest$/.test(p) || /^\/(favicon|apple-touch-icon)/.test(p) || p === '/bg.js') return ctx.next();
+  return Response.redirect(url.origin + '/', 302);
+}
 async function officeHost(ctx, url) {
   const p = url.pathname;
   const noindex = (r) => { const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); };
@@ -102,6 +123,8 @@ export async function onRequest(ctx) {
   if (OFFICE_HOSTS.has(url.hostname)) return officeHost(ctx, url);
   // ---- Təchizat paneli ayrıca domendə (techizat.pilothayat.az) ----
   if (url.hostname === 'techizat.pilothayat.az') return techizatHost(ctx, url);
+  if (PILOT_HOSTS.has(url.hostname)) return pilotHost(ctx, url);
+  if (url.hostname === 'komendant.pilothayat.az') return komendantHost(ctx, url);
   // ---- Nizami City daxili sistemləri (nizamicity.az) ----
   if (NC_HOSTS.has(url.hostname)) return nizamiHost(ctx, url);
   if (url.pathname === '/nc/admin' || url.pathname === '/nc/admin.html') { const r = await ctx.env.ASSETS.fetch(new Request(new URL('/nc/sayt', url).toString(), ctx.request)); const h = new Headers(r.headers); h.set('X-Robots-Tag', 'noindex, nofollow'); return new Response(r.body, { status: r.status, headers: h }); }
