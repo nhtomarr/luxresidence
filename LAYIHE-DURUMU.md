@@ -566,3 +566,6 @@ Mənbə nüsxələri iş vaxtı /tmp/psite: `v4.css`, `v4.js`, `v4.body.html`, `
 ## 16.11 — Barmaq cihazı: sakin PIN-i işçi ilə qarışırdı (düzəldildi)
 Komendant Cihaz 2-də (damafon, VGU6261301547) sakinləri birbaşa cihazda yaradırdı; cihaz ardıcıl PIN verir (39–59). `bio_template` naməlum PIN-i «PIN = işçi id» sayırdı → PIN 54 (ELNUR BEY, 4/14/4) Mirzə Süleymanlıya (işçi 54) bağlandı, sınaq basışları Mirzənin 13.11 çıxışı (14:17) oldu, izi maaş cihazına Mirzə kimi getdi.
 Düzəliş: `bio_template(..., p_sn)` damafonda işçi fərziyyəsi yoxdur; `bio_dev_user_save` damafonda naməlum istifadəçini sakin edir; bio-adms v5 p_sn ötürür. 18 sakin qeydə alındı, qapı jurnalı «giriş» oldu. Mirzənin 13.11 çıxışı 18:03 (Nihatın təsdiqi). Maaş cihazına `DATA DELETE USERINFO PIN=54` növbədədir (cihaz 14.11-dən bəri oflayn — qoşulanda icra olunacaq).
+
+## 16.11 — Nizami paneli: sorğular LUX kimi
+nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ, mənzil/vaxt, mesaj), hər kartda «✓ Cavablandı» / «Yeni et», WhatsApp, Kopyala, status seçimi, Sil; yuxarıda «Yeniləri kopyala», «Bu günküləri kopyala», seçilənləri kopyala / cavablandı. Status «contacted» indi «Cavablandı» adlanır. Yeniləmə `.select()` ilə yoxlanır — RLS yazmasa «icazə yoxdur» deyir.
