@@ -574,3 +574,8 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - `pilot.html` — Pilot Həyat bir səhifəlik saytı (layihələr, komendant xidməti, ödəniş/qaytarma/məxfilik qaydaları, rekvizitlər). Rekvizitlər skriptdəki `CO` massivindən; boş sahə göstərilmir — hüquqi ad, VÖEN, hüquqi ünvan, telefon, e-poçt Nihatdan gözlənilir. Məqsəd: Kapital Bank e-commerce yoxlamasında domen boş/hostinq səhifəsi göstərməsin.
 - Middleware: `pilotHost` (pilothayat.az → /pilot; www → 301), `komendantHost` (komendant.pilothayat.az → /komendant, /sakin; noindex).
 - (16.11) Custom domains əlavə edildi (Cloudflare panel, daxili brauzer): pilothayat.az (köhnə A @ 136.243.3.33 hostinq → CNAME luxresidence.pages.dev), www.pilothayat.az (→ 301 kökə), komendant.pilothayat.az. Poçt toxunulmadı: MX → _dc-mx.8ac57fea2b84.pilothayat.az (136.243.3.33), SPF ip4 ilə. Hamısı 200 qaytarır.
+
+## 16.11 (axşam) — Kinematik giriş + dron intro + yanıb-sönmə düzəlişi
+- Hero kənardan-kənara (16:9, pinlər yerində qalsın deyə nisbət saxlanılıb), naviqasiyanın altından başlayır; `html.is-home/.hero-top` başlıqda (head skripti) təyin olunur. Sürüşdükcə `--hp` ilə yaxınlaşma. «Mənzilinizi tapın» `.hfind-strip` — şəklin altında.
+- Dron intro (`html.intro`, sessiyada bir dəfə, sessionStorage.lux_intro): buludlar (`.hero::after`, dCloud) + şəkil perspektivdən enir (dDrop 3.2s); başlıq/pinlər sonra çıxır. reduced-motion-da yoxdur.
+- Yanıb-sönmə səbəbi: v2–v4 və gecə üslubları body-nin sonundadır → ilk boyamada köhnə görünüş. Düzəliş: head-də `lx-boot` (DOMContentLoaded-dək body opacity 0, 3 san ehtiyat). İlk ziyarətdə (localStorage boş) `lx-wait` — məlumat sinxronu bitənə və ya reload-a qədər gizli (4 san ehtiyat).
