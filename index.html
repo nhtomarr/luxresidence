@@ -38,7 +38,8 @@ function luxConv(kind,extra){try{var L=window.LUX_ADS,lab=L[kind];if(!lab||typeo
 /* telefon və WhatsApp klikləri */
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href^="tel:"],a[href*="wa.me/"],a[href*="api.whatsapp.com"]');if(a)luxConv('call',{value:1.0,currency:'USD'});},true);
 </script>
-<link rel="preload" as="image" href="/assets/img1.webp" fetchpriority="high">
+<link rel="preload" as="image" href="/assets/img1.webp" fetchpriority="high" media="(max-width:999px)">
+<link rel="preload" as="image" href="/assets/img1-hd.webp" fetchpriority="high" media="(min-width:1000px)">
 <script src="/assets/buildings.js?v=1790338061"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -46,6 +47,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 *{box-sizing:border-box;}
 :root{--rust:#ba4d2c;--rust-deep:#9a3c20;--ink:#2a1d14;--muted:#8b7a6b;--line:#eadfd3;--bg:#f7f2ec;--card:#fff;--espresso:#251712;--gold:#c98a4e;
 --serif:'Playfair Display',Georgia,serif;--sans:-apple-system,'Inter',system-ui,'Segoe UI',sans-serif;--nav-h:78px;--day:url("/assets/img1.webp");--night:url("/assets/img2.webp");}
+@media (min-width:1000px),(min-width:600px) and (min-resolution:2dppx){:root{--day:url("/assets/img1-hd.webp");--night:url("/assets/img2-hd.webp")}}
 html{scroll-behavior:smooth;}
 body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 a{color:inherit;text-decoration:none;} img{max-width:100%;display:block;}

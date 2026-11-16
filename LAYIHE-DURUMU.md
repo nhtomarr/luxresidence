@@ -579,3 +579,8 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Hero kənardan-kənara (16:9, pinlər yerində qalsın deyə nisbət saxlanılıb), naviqasiyanın altından başlayır; `html.is-home/.hero-top` başlıqda (head skripti) təyin olunur. Sürüşdükcə `--hp` ilə yaxınlaşma. «Mənzilinizi tapın» `.hfind-strip` — şəklin altında.
 - Dron intro (`html.intro`, sessiyada bir dəfə, sessionStorage.lux_intro): buludlar (`.hero::after`, dCloud) + şəkil perspektivdən enir (dDrop 3.2s); başlıq/pinlər sonra çıxır. reduced-motion-da yoxdur.
 - Yanıb-sönmə səbəbi: v2–v4 və gecə üslubları body-nin sonundadır → ilk boyamada köhnə görünüş. Düzəliş: head-də `lx-boot` (DOMContentLoaded-dək body opacity 0, 3 san ehtiyat). İlk ziyarətdə (localStorage boş) `lx-wait` — məlumat sinxronu bitənə və ya reload-a qədər gizli (4 san ehtiyat).
+
+## 16.11.2026 — Hero şəkillərinin keyfiyyəti
+- img1/img2 (1600×900) Real-ESRGAN x4plus ilə (CPU) böyüdüldü, 25% Lanczos qarışığı + yüngül unsharp, 2560×1440 WebP: assets/img1-hd.webp (~580 KB), img2-hd.webp (~550 KB).
+- ≥1000px və ya retina planşetdə --day/--night HD fayllara keçir; telefonda köhnə 1600 versiya qalır (sürət). Preload media ilə ayrıldı.
+- Ən yaxşı nəticə üçün orijinal render (4K) faylları lazımdır — istənilib.
