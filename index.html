@@ -2603,6 +2603,36 @@ html:not(.intro-done) #v-ana .hero .dn-badge{animation:hFade .8s ease 1.6s both}
  #v-ana .stats{max-width:none;margin-top:14px}
 }
 @media(prefers-reduced-motion:reduce){html #v-ana .hero *,html #v-ana .hcap-mobile>*,html #v-ana .stats,html #v-ana .hfind{animation:none!important}html #v-ana .hero .sky.night{animation:daynight 16s ease-in-out infinite!important}}
+/* ===== Kinematik giriş (16.11 axşam): şəkil kənardan-kənara, naviqasiyanın altından başlayır, üstündə yalnız başlıq ===== */
+@media(min-width:641px){
+ body.is-home #v-ana .hero-sec{padding:0;margin-top:calc(-1 * var(--nwh,78px))}
+ body.is-home #v-ana .hero{max-width:none;border-radius:0;box-shadow:none;aspect-ratio:16/9}
+ #v-ana .hero .sky,#v-ana .hero .overlay{transform:translate3d(0,calc(var(--hp,0) * 7%),0) scale(calc(1 + var(--hp,0) * .06));transform-origin:50% 60%;will-change:transform}
+ #v-ana .hero .veil{background:linear-gradient(180deg,rgba(16,8,3,.42) 0%,rgba(16,8,3,0) 22%),linear-gradient(90deg,rgba(16,8,3,.62) 0%,rgba(16,8,3,.18) 42%,rgba(16,8,3,0) 64%),linear-gradient(0deg,rgba(16,8,3,.5),rgba(16,8,3,0) 34%);opacity:calc(1 + var(--hp,0) * .6)}
+ #v-ana .hero .hcap{opacity:calc(1 - var(--hp,0) * 1.8);transform:translate3d(0,calc(var(--hp,0) * -60px),0)}
+ #v-ana .hero .bmark,#v-ana .hero .dn-badge{opacity:calc(1 - var(--hp,0) * 2.4)}
+ body.is-home #v-ana .hero .hcap{max-width:min(900px,62vw)}
+ body.is-home #v-ana .hero .hcap h1{font-size:clamp(40px,5.2vw,80px);line-height:1.02}
+ /* naviqasiya şəklin üstündə: şəffaf, ağ yazı */
+ body.is-home.hero-top .nav{background:rgba(16,8,3,.16);border-color:rgba(255,255,255,.2);box-shadow:none}
+ body.is-home.hero-top .nav .logo img{filter:brightness(0) invert(1)}
+ body.is-home.hero-top .nav a,body.is-home.hero-top .nav .nav-ic,body.is-home.hero-top .nav .nav-phone-pill,body.is-home.hero-top .nav button{color:#fff}
+ body.is-home.hero-top .nav .nav-ic,body.is-home.hero-top .nav .nav-phone-pill{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22)}
+ body.is-home.hero-top .burger span{background:#fff}
+ /* «Mənzilinizi tapın» şəklin altında ayrıca sətir */
+ .hfind-strip{max-width:1180px;margin:22px auto 0;padding:0 clamp(16px,3vw,28px)}
+ .hfind-strip .hfind{position:static;width:auto;display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.3fr) auto;align-items:center;gap:24px;padding:20px 22px;background:var(--g2);-webkit-backdrop-filter:var(--gblur);backdrop-filter:var(--gblur);border-color:var(--gb);box-shadow:var(--gsh);animation:none!important}
+ .hfind-strip .hfind h2{font-size:22px}.hfind-strip .hfind p{margin:0;color:var(--muted)}
+ .hfind-strip .hf-l{display:none}.hfind-strip .hf-rooms{margin:0}
+ .hfind-strip .hf-act{display:flex;flex-direction:column;gap:8px;min-width:190px}
+ .hfind-strip .hf-links{margin:0;justify-content:center;gap:16px}
+ #v-ana .stats{margin-top:20px}
+}
+@media(min-width:641px) and (max-width:1000px){.hfind-strip .hfind{grid-template-columns:1fr;gap:14px}}
+@media(prefers-reduced-motion:reduce){#v-ana .hero .sky,#v-ana .hero .overlay,#v-ana .hero .hcap{transform:none!important}}
+html[data-theme="dark"] .hfind-strip .hfind p{color:#b9a798}
+@media(min-width:901px){body.is-home.hero-top .menu>:not(.submenu),body.is-home.hero-top .menu>*>:not(.submenu){color:#fff}}
+@media(max-width:900px){body.is-home.hero-top .menu a,body.is-home.hero-top .menu button{color:var(--ink)}}
 </style>
 <div class="modal-bg" id="qrModal"><div class="lux-qr" role="dialog" aria-modal="true" aria-label="QR kod"><button class="mclose" id="qrClose" aria-label="Bağla">&times;</button><h2>QR kod</h2><p id="qrT">Telefonun kamerası ilə skan edin</p><div class="qr-box" id="qrBox"></div><button type="button" class="btn lx-ghost" id="qrCopy">Linki kopyala</button></div></div>
 <div class="apt-bar" id="aptBar"><img id="abImg" alt=""><div><b id="abT"></b><span id="abS"></span></div><button type="button" class="btn lx-ghost" id="abVisit">Baxışa yazıl</button><button type="button" class="btn btn-primary" id="abCall">Mənə zəng edin</button></div>
@@ -2774,7 +2804,7 @@ html:not(.intro-done) #v-ana .hero .dn-badge{animation:hFade .8s ease 1.6s both}
   NEAR=(arr||[]).slice().sort(function(a,b){return a.d-b.d;}).slice(0,8);el.innerHTML='';NEAR.forEach(function(x,i){var b=document.createElement('button');b.type='button';b.dataset.i=i;b.appendChild(document.createTextNode(x.n));var s=document.createElement('span');s.textContent=x.s+' · piyada '+Math.max(1,Math.round(x.d/80))+' dəq';b.appendChild(s);el.appendChild(b);});};
 
  /* ---- görünüş və kataloq qarmaqları ---- */
- function onView(v){CUR=v;$('aptBar').classList.remove('on');if(v==='apt')decoApt();else if(v==='xeber')newsPN();else if(v==='xeberler')newsTools();else if(v==='sevimliler'){favNotes();acts4(v);}else if(v==='muqayise')acts4(v);else if(v==='planlar'){if(readX())renderCat();else syncX();}}
+ function onView(v){CUR=v;if(V4.hero)V4.hero(v);$('aptBar').classList.remove('on');if(v==='apt')decoApt();else if(v==='xeber')newsPN();else if(v==='xeberler')newsTools();else if(v==='sevimliler'){favNotes();acts4(v);}else if(v==='muqayise')acts4(v);else if(v==='planlar'){if(readX())renderCat();else syncX();}}
  (function(){var v3=window.luxV3;if(!v3)return;var vv=v3.view;v3.view=function(v,nav){vv(v,nav);try{onView(v);}catch(e){}};var cc=v3.cat;v3.cat=function(list){cc(list);try{onCat();}catch(e){}};})();
  try{onView(CUR);if(CUR!=='planlar')readX();renderCat();}catch(e){}
 
@@ -2790,6 +2820,18 @@ html:not(.intro-done) #v-ana .hero .dn-badge{animation:hFade .8s ease 1.6s both}
    QA('.hf-go').forEach(function(a){a.textContent=SEL.size?n+' mənzili göstər':'Planlara bax';a.setAttribute('href',!SEL.size?'/planlar':ks.length===1?'/'+ks[0]+'-otaqli-menziller':'/planlar?otaq='+ks.join(','));});}
   document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.hf-rooms button');if(b&&!b.disabled){var k=+b.dataset.r;if(SEL.has(k))SEL.delete(k);else SEL.add(k);upd();}if(e.target.closest&&e.target.closest('.hf-vis')&&window.luxVisit)luxVisit('');});
   setTimeout(function(){document.documentElement.classList.add('intro-done');},3200);})();
+
+ /* ---- kinematik giriş: şəkil naviqasiyanın altından, sürüşdükcə yavaş yaxınlaşma ---- */
+ (function(){var hero=Q('#v-ana .hero'),sec=Q('#v-ana .hero-sec'),nw=Q('.nav-wrap'),f=Q('.hero .hfind'),b=document.body;if(!hero||!sec)return;
+  if(f){var st=document.createElement('div');st.className='hfind-strip';sec.parentNode.insertBefore(st,sec.nextSibling);
+   var a=document.createElement('div');a.className='hf-act';var go=Q('.hf-go',f),ln=Q('.hf-links',f);if(go)a.appendChild(go);if(ln)a.appendChild(ln);
+   var head=document.createElement('div');['h2','p'].forEach(function(t){var e=Q(':scope>'+t,f);if(e)head.appendChild(e);});
+   f.insertBefore(head,f.firstChild);f.appendChild(a);st.appendChild(f);}
+  function nwh(){if(nw)document.documentElement.style.setProperty('--nwh',nw.offsetHeight+'px');}
+  var tk=false;function upd(){tk=false;var h=hero.offsetHeight||1,y=scrollY,p=b.classList.contains('is-home')?Math.max(0,Math.min(1,y/h)):0;hero.style.setProperty('--hp',p.toFixed(3));b.classList.toggle('hero-top',b.classList.contains('is-home')&&y<h-90);}
+  addEventListener('scroll',function(){if(!tk){tk=true;requestAnimationFrame(upd);}},{passive:true});addEventListener('resize',function(){nwh();upd();});
+  V4.hero=function(v){b.classList.toggle('is-home',v==='ana');nwh();upd();};
+  V4.hero(CUR);})();
 })();
 </script><!--/v4-->
 <!--dark--><style id="lux-dark">
@@ -3266,6 +3308,14 @@ html[data-theme="dark"] .hf-links button{color:var(--rust)}
 html[data-theme="dark"][data-theme="dark"] .hfind{border-color:rgba(255,255,255,0.02)}
 html[data-theme="dark"][data-theme="dark"] .hf-rooms button{background:rgba(32,25,21,0.06);border-color:rgba(255,255,255,0.024)}
 html[data-theme="dark"][data-theme="dark"] .hf-rooms button.on{background:#ba4d2c;border-color:var(--rust)}
+@media(min-width:641px){html[data-theme="dark"] body.is-home.hero-top .nav{border-color:rgba(255,255,255,0.04)}
+html[data-theme="dark"] body.is-home.hero-top .nav .nav-ic,
+html[data-theme="dark"] body.is-home.hero-top .nav .nav-phone-pill{background:rgba(32,25,21,0.12);border-color:rgba(255,255,255,0.044)}
+html[data-theme="dark"] body.is-home.hero-top .burger span{background:#201915}
+html[data-theme="dark"] .hfind-strip .hfind{background:var(--g2);border-color:var(--gb)}
+html[data-theme="dark"] .hfind-strip .hfind p{color:var(--muted)}}
+@media(max-width:900px){html[data-theme="dark"] body.is-home.hero-top .menu a,
+html[data-theme="dark"] body.is-home.hero-top .menu button{color:var(--ink)}}
 /* şüşə komponentlər: dəyişənlərdən oxusun (avtomatik çevrilmiş köhnə dəyərlərin üstündən) */
 html[data-theme="dark"] .nav{background:var(--g1);border-color:var(--gb)}
 html[data-theme="dark"] .nav.scrolled{background:var(--g2);border-color:var(--gb)}
