@@ -1,0 +1,5 @@
+-- 16.11: damafon cihazında birbaşa yaradılan sakinlər işçi ID-si ilə qarışırdı (PIN 54 = Mirzə Süleymanlı).
+-- Canlıya apply_migration ilə tətbiq olunub (bio_damafon_pin_fix_20261116): bio_template(p_pin,p_key,p_cmd,p_sn) — damafonda
+-- naməlum PIN işçiyə bağlanmır; bio_dev_user_save — damafonda naməlum istifadəçi avtomatik bio_residents-ə yazılır
+-- (adın əvvəlindəki 4'14'4 / 3-12-2 → unit_label 4/14/4); 39–59 PIN-li sakinlər qeydə alındı; Elnur bəyin (4/14/4) izi
+-- Mirzənin qeydindən ayrıldı, maaş cihazına DELETE USERINFO PIN=54 göndərildi; Mirzə 13.11 çıxışı 18:03 (Nihatın təsdiqi).

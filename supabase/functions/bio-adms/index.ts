@@ -1,6 +1,8 @@
-// ZKTeco ADMS (Push / iClock) qəbuledicisi — maaş verilişi üçün barmaq izi terminalı.
+// ZKTeco ADMS (Push / iClock) qəbuledicisi — maaş (Cihaz 1) və damafon + davamiyyət (Cihaz 2).
 // Cihaz → https://ofis.pilothayat.az/iclock/* → (Pages proxy) → bu funksiya.
 // Təhlükəsizlik: cihaz SN-i Baş Ofisdə təsdiqlənməlidir (bio_devices.allowed) və təsdiqlənən IP-dən gəlməlidir (lock_ip).
+// 12.11: sorğu intervalı cihaz roluna görə — damafon 2 san (qapı tez açılsın), maaş 10 san (lazımsız sorğu olmasın).
+// 16.11: bio_template-ə cihaz SN-i ötürülür — damafon cihazında naməlum PIN artıq işçiyə bağlanmır (sakin kimi yazılır).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
@@ -16,7 +18,6 @@ Deno.serve(async (req) => {
   const body = req.method === 'POST' ? await req.text() : '';
   try {
     if (!sn) return txt('OK');
-    // cihazı qeydə al / yenilə
     const { data: dev } = await db.from('bio_devices').select('*').eq('sn', sn).maybeSingle();
     const info = url.searchParams.get('INFO');
     const upd: Record<string, unknown> = { sn, last_seen: new Date().toISOString() };
@@ -26,18 +27,17 @@ Deno.serve(async (req) => {
     await db.from('bio_devices').upsert(upd);
     const allowed = !!dev?.allowed && (!dev?.info?.lock_ip || dev.info.lock_ip === ip);
 
-    // 1) ilk əlaqə: ayarlar
     if ((path === '/iclock/cdata' || path === '/iclock/push') && req.method === 'GET') {
-      return txt([`GET OPTION FROM: ${sn}`, 'ATTLOGStamp=None', 'OPERLOGStamp=9999', 'ATTPHOTOStamp=None', 'ErrorDelay=30', 'Delay=5',
+      const delay = dev?.info?.delay ? +dev.info.delay : (dev?.info?.role === 'damafon' ? 2 : 10);
+      return txt([`GET OPTION FROM: ${sn}`, 'ATTLOGStamp=None', 'OPERLOGStamp=9999', 'ATTPHOTOStamp=None', 'ErrorDelay=30', 'Delay=' + delay,
         'TransTimes=00:00;14:05', 'TransInterval=1', 'TransFlag=TransData AttLog\tOpLog\tEnrollUser\tChgUser\tEnrollFP\tChgFP\tFACE\tUserPic',
         'TimeZone=4', 'Realtime=1', 'Encrypt=None', 'ServerVer=2.4.1', 'PushProtVer=2.4.1'].join('\n') + '\n');
     }
     if (path === '/iclock/registry') return txt('RegistryCode=' + sn.slice(-8));
     if (path === '/iclock/ping') return txt('OK');
 
-    // 2) məlumat göndərir
-    if (path === '/iclock/cdata' && req.method === 'POST') {
-      const table = (url.searchParams.get('table') || '').toUpperCase();
+    if ((path === '/iclock/cdata' || path === '/iclock/querydata') && req.method === 'POST') {
+      const table = (url.searchParams.get('table') || url.searchParams.get('tablename') || '').toUpperCase();
       const lines = body.split(/\r?\n/).filter((l) => l.trim());
       if (!allowed) return txt('OK: ' + lines.length);
       let n = 0;
@@ -49,7 +49,11 @@ Deno.serve(async (req) => {
         }
         return txt('OK: ' + n);
       }
-      // OPERLOG / BIODATA / FINGERTMP — şablonların ehtiyat nüsxəsi
+      const tpl = async (pin: string, key: string, cmd: string) => {
+        await db.rpc('bio_template', { p_pin: pin, p_key: key, p_cmd: cmd, p_sn: sn });
+        // işçinin barmaq izi digər cihaza da (maaş ↔ davamiyyət); sakin izi göndərilmir
+        await db.rpc('bio_template_fwd', { p_sn: sn, p_pin: pin, p_cmd: cmd });
+      };
       for (const l0 of lines) {
         let l = l0.trim(), kind = table;
         const sp = l.indexOf(' ');
@@ -57,17 +61,18 @@ Deno.serve(async (req) => {
         const o = kv(l);
         const pin = o.PIN || o.Pin || o.pin;
         if (kind === 'FP' || kind === 'FINGERTMP') {
-          await db.rpc('bio_template', { p_pin: pin, p_key: 'fp' + (o.FID ?? '0'), p_cmd: 'DATA UPDATE FINGERTMP ' + l }); n++;
+          await tpl(pin, 'fp' + (o.FID ?? '0'), 'DATA UPDATE FINGERTMP ' + l); n++;
         } else if (kind === 'BIODATA') {
-          await db.rpc('bio_template', { p_pin: pin, p_key: 'bio' + (o.Type ?? '') + '-' + (o.No ?? '') + '-' + (o.Index ?? ''), p_cmd: 'DATA UPDATE BIODATA ' + l }); n++;
+          await tpl(pin, 'bio' + (o.Type ?? '') + '-' + (o.No ?? '') + '-' + (o.Index ?? ''), 'DATA UPDATE BIODATA ' + l); n++;
         } else if (kind === 'FACE') {
-          await db.rpc('bio_template', { p_pin: pin, p_key: 'face' + (o.FID ?? '0'), p_cmd: 'DATA UPDATE FACE ' + l }); n++;
+          await tpl(pin, 'face' + (o.FID ?? '0'), 'DATA UPDATE FACE ' + l); n++;
+        } else if ((kind === 'USER' || kind === 'USERINFO') && pin) {
+          await db.rpc('bio_dev_user_save', { p_sn: sn, p_pin: pin, p_name: o.Name ?? null, p_card: o.Card ?? o.CardNo ?? '', p_pri: o.Pri ?? null, p_raw: l }); n++;
         } else n++;
       }
       return txt('OK: ' + n);
     }
 
-    // 3) əmr soruşur
     if (path === '/iclock/getrequest') {
       if (!allowed) return txt('OK');
       const { data: cmds } = await db.from('bio_cmds').select('id,cmd').eq('sn', sn).eq('status', 'new').order('id').limit(20);
@@ -76,7 +81,6 @@ Deno.serve(async (req) => {
       return txt(cmds.map((c) => `C:${c.id}:${c.cmd}`).join('\n') + '\n');
     }
 
-    // 4) əmrin nəticəsi
     if (path === '/iclock/devicecmd') {
       for (const l of body.split(/\r?\n/).filter((x) => x.trim())) {
         const p = new URLSearchParams(l.replace(/\t/g, '&'));
