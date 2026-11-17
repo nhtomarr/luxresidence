@@ -2880,7 +2880,7 @@ html.vrev #v-ana .hero .dn-badge{animation:vRevO .6s ease 1.4s both}
   function nwh(){if(nw)document.documentElement.style.setProperty('--nwh',nw.offsetHeight+'px');}
   /* giriş şəklinin ekrana oturması (window.LUX_HERO): pos — artıq hissənin neçə faizi yuxarıdan kəsilir (0 = yuxarı tam qalır, 0.5 = mərkəz, 1 = aşağı tam qalır);
      fit — 1: şəkil ekran hündürlüyünə kəsilir, 0: tam 16:9 qalır (aşağısı sürüşdürməklə görünür); nav — 1: şəkil menyunun altından başlayır, 0: menyudan aşağıda */
-  var HCFG=window.LUX_HERO=Object.assign({pos:0,fit:1,nav:1},window.LUX_HERO||{});
+  var HCFG=window.LUX_HERO=Object.assign({pos:0,fit:0,nav:1},window.LUX_HERO||{});  /* 17.11: Nihatın seçimi — şəkil kəsilmir (fit=0) */
   function hApply(){var va=Q('#v-ana');if(!va)return;va.style.setProperty('--hpos',HCFG.pos);va.style.setProperty('--hfit',HCFG.fit?1:0);va.style.setProperty('--hnavpx',HCFG.nav?'0px':'var(--nwh,78px)');va.style.setProperty('--hmt',HCFG.nav?'calc(-1 * var(--nwh,78px))':'0px');}
   hApply();window._luxHero={cfg:HCFG,apply:function(){hApply();upd();}};
   var tk=false;function upd(){tk=false;var h=hero.offsetHeight||1,y=scrollY,p=H.classList.contains('is-home')?Math.max(0,Math.min(1,y/h)):0;hero.style.setProperty('--hp',p.toFixed(3));H.classList.toggle('hero-top',!!HCFG.nav&&H.classList.contains('is-home')&&y<h-90);}
@@ -2893,7 +2893,7 @@ html.vrev #v-ana .hero .dn-badge{animation:vRevO .6s ease 1.4s both}
   var ICFG=window.LUX_INTRO=Object.assign({x:0,y:0,s:1,a:0,b:0,f:.35,d:0,r:1},window.LUX_INTRO||{});
   function iApply(v){v.style.transform='translate('+ICFG.x+'%,'+ICFG.y+'%) scale('+ICFG.s+')';v.style.transitionDuration=ICFG.f+'s';try{v.playbackRate=ICFG.r||1;}catch(e){}}
   function iMake(){var v=document.createElement('video');v.className='hvid';v.muted=true;v.defaultMuted=true;v.playsInline=true;v.setAttribute('playsinline','');v.setAttribute('muted','');v.preload='auto';v.setAttribute('aria-hidden','true');
-    v.src='/assets/intro/'+(innerWidth<760?'day-v3-m':'day-v3')+'.mp4';  /* fayl dəyişəndə adı da dəyiş — brauzer videonu 4 saat keşdə saxlayır */
+    v.src='/assets/intro/'+(innerWidth<760?'day-v4-m':'day-v4')+'.mp4';  /* fayl dəyişəndə adı da dəyiş — brauzer videonu 4 saat keşdə saxlayır */
     iApply(v);hero.appendChild(v);return v;}
   /* video bitəndə (kamera tam dayanıb): video əriyir, sonra menyu/yazı/nöqtələr yumşaq açılır (vrev). Hərəkət zamanı heç nə açılmır — video ilişməsin */
   function iOut(v,keep){H.classList.add('vout');setTimeout(function(){H.classList.add('vrev');window._introDone&&window._introDone();H.classList.remove('intro','vintro','vplay');

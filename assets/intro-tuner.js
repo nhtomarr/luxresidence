@@ -2,7 +2,7 @@
    Nihat burada girişi gözlə düzəldir, "Kodu kopyala" ilə ayarı göndərir; kod index.html-də window.LUX_INTRO / window.LUX_HERO kimi canlıya verilir. */
 (function(){
   var I=window._luxIntro,HH=window._luxHero,H=document.documentElement;if(!I||!HH)return;
-  var C=I.cfg,G=HH.cfg,KEY='lux_tuner_v1',marks=[];
+  var C=I.cfg,G=HH.cfg,KEY='lux_tuner_v2',marks=[];
   try{var sv=JSON.parse(localStorage.getItem(KEY)||'null');if(sv){Object.assign(C,sv.c||{});Object.assign(G,sv.g||{});marks=sv.m||[];}}catch(e){}
   try{sessionStorage.setItem('lux_intro','1');}catch(e){}
   H.classList.remove('intro');window._introDone&&window._introDone();HH.apply();
@@ -47,7 +47,7 @@
   document.body.appendChild(p);
   var T=p.querySelector('#itnT'),To=p.querySelector('#itnTo'),ui=0;
   function fmt(n){return (Math.round(n*1000)/1000).toString();}
-  function code(){return 'LUX1 pos='+fmt(G.pos)+' fit='+(G.fit?1:0)+' nav='+(G.nav?1:0)+' | x='+fmt(C.x)+' y='+fmt(C.y)+' s='+fmt(C.s)+' a='+fmt(C.a)+' b='+fmt(C.b)+' r='+fmt(C.r)+' f='+fmt(C.f)+' d='+fmt(C.d)+' | m='+(marks.join(',')||'-')+' | '+innerWidth+'x'+innerHeight;}
+  function code(){return 'LUX1 pos='+fmt(G.pos)+' fit='+(G.fit?1:0)+' nav='+(G.nav?1:0)+' | x='+fmt(C.x)+' y='+fmt(C.y)+' s='+fmt(C.s)+' a='+fmt(C.a)+' b='+fmt(C.b)+' r='+fmt(C.r)+' f='+fmt(C.f)+' d='+fmt(C.d)+' | m='+(marks.join(',')||'-')+' | '+innerWidth+'x'+innerHeight+' | '+((v.currentSrc||'').split('/').pop()||'?');}
   function save(){try{localStorage.setItem(KEY,JSON.stringify({c:C,g:G,m:marks}));}catch(e){}}
   function vis(){v.style.mixBlendMode=mode==='d'?'difference':'';v.style.opacity=mode==='o'?'0':mode==='h'?'.5':'1';}
   function sync(){p.querySelectorAll('input[data-k]').forEach(function(i){var o=i.dataset.o==='c'?C:G,k=i.dataset.k;i.value=o[k];var out=p.querySelector('output[data-v="'+i.dataset.o+k+'"]');out.textContent=fmt(+o[k])+out.dataset.u;});
@@ -73,7 +73,7 @@
     else if(a==='b'||a==='f'){still();try{v.currentTime=Math.max(0,Math.min(v.duration||6,v.currentTime+(a==='f'?1:-1)/24));}catch(_){}}
     else if(a==='mark'){var t=+v.currentTime.toFixed(2);if(marks.indexOf(t)<0)marks.push(t);marks.sort(function(x,y){return x-y;});sync();}
     else if(a==='copy'){var ta=p.querySelector('#itnC');ta.select();var ok=false;try{ok=document.execCommand('copy');}catch(_){}if(navigator.clipboard)navigator.clipboard.writeText(ta.value).catch(function(){});b.textContent='Kopyalandı';setTimeout(function(){b.textContent='Kodu kopyala';},1600);}
-    else if(a==='reset'){Object.assign(C,{x:0,y:0,s:1,a:0,b:0,f:.35,d:0,r:1});Object.assign(G,{pos:0,fit:1,nav:1});marks=[];mode='n';ui=0;still();sync();}
+    else if(a==='reset'){Object.assign(C,{x:0,y:0,s:1,a:0,b:0,f:.35,d:0,r:1});Object.assign(G,{pos:0,fit:0,nav:1});marks=[];mode='n';ui=0;still();sync();}
     else if(a==='min'){p.classList.toggle('min');b.textContent=p.classList.contains('min')?'Aç':'Yığ';}
     else if(a==='exit'){location.href='/';}});
   /* paneli başlığından tutub sürüşdürmək */
