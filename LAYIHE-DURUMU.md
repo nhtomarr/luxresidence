@@ -584,3 +584,6 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - img1/img2 (1600×900) Real-ESRGAN x4plus ilə (CPU) böyüdüldü, 25% Lanczos qarışığı + yüngül unsharp, 2560×1440 WebP: assets/img1-hd.webp (~580 KB), img2-hd.webp (~550 KB).
 - ≥1000px və ya retina planşetdə --day/--night HD fayllara keçir; telefonda köhnə 1600 versiya qalır (sürət). Preload media ilə ayrıldı.
 - Ən yaxşı nəticə üçün orijinal render (4K) faylları lazımdır — istənilib.
+
+## 17.11.2026 — Mirzənin ad günü bildirişi
+- Elan id=11 (Rəhbərlik adından), audience = Baş Ofisin aktiv işçiləri (location_id null), Mirzə (id 54) xaric — 22 nəfər; hər birinə _office_push2 push (tag bday-mirze, link ?ann=11).
