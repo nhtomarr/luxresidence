@@ -2656,21 +2656,23 @@ html.intro.hero-top .nav{animation:hFade .8s ease 2.2s backwards}
 @media(prefers-reduced-motion:reduce){html.intro #v-ana .hero::after{display:none}}
 
 /* video giriş (gündüz): buludlardan real dron enişi. html.vintro olanda köhnə CSS bulud/eniş animasiyası söndürülür */
-#v-ana .hero .hvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;pointer-events:none;background:#e8ecef;opacity:1;transition:opacity .45s ease}
+#v-ana .hero .hvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;pointer-events:none;background:#e8ecef;opacity:1;transition:opacity .35s ease}
 html.vout #v-ana .hero .hvid{opacity:0}
 html.vintro #v-ana .hero::after{display:none}
 html.vintro #v-ana .hero .sky.day,html.vintro #v-ana .hero .overlay,html.vintro #v-ana .hero .sky.night{animation:none!important}
-html.vintro:not(.vplay) #v-ana .hcap>*,html.vintro:not(.vplay) #v-ana .hcap-mobile>*,html.vintro:not(.vplay) #v-ana .hero .bmark .bmark-dot,html.vintro:not(.vplay) #v-ana .hero .dn-badge,html.vintro:not(.vplay) #v-ana .hero .veil{animation:none!important;opacity:0}
-html.vintro.vplay #v-ana .hero .veil{animation-delay:4.2s!important;animation-fill-mode:both}
-html.vintro.vplay #v-ana .hcap>*,html.vintro.vplay #v-ana .hcap-mobile>*{animation-delay:4.7s!important}
-html.vintro.vplay #v-ana .hcap>:nth-child(2),html.vintro.vplay #v-ana .hcap-mobile>:nth-child(2){animation-delay:4.85s!important}
-html.vintro.vplay #v-ana .hcap>:nth-child(3),html.vintro.vplay #v-ana .hcap-mobile>:nth-child(3){animation-delay:5s!important}
-html.vintro.vplay #v-ana .hero .bmark .bmark-dot{animation-delay:calc(5.7s + var(--i,0) * 70ms)!important}
-html.vintro.vplay #v-ana .hero .dn-badge{animation-delay:6.2s!important}
-html.vintro #v-ana .hcap,html.vintro #v-ana .hcap-mobile,html.vintro #v-ana .hero .veil{z-index:4}
-html.vintro.hero-top .nav{animation:hFade .8s ease 4.4s backwards}
-html.vintro #v-ana .hcap-mobile{opacity:0;transition:opacity .7s ease}
-html.vintro.vtxt #v-ana .hcap-mobile{opacity:1}
+/* video oynayarkən menyu, tündləşmə, yazı və nöqtələr gizlidir (hərəkət zamanı heç nə açılmır) */
+html.vintro #v-ana .hcap>*,html.vintro #v-ana .hcap-mobile,html.vintro #v-ana .hero .bmark .bmark-dot,html.vintro #v-ana .hero .dn-badge,html.vintro #v-ana .hero .veil,html.vintro.hero-top .nav{animation:none!important;opacity:0!important}
+/* video bitdi: hər şey yumşaq açılır */
+@keyframes vRev{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes vRevO{from{opacity:0}to{opacity:1}}
+html.vrev #v-ana .hero .veil{animation:vRevO .9s ease both}
+html.vrev.hero-top .nav{animation:vRevO .7s ease .15s both}
+html.vrev #v-ana .hcap>*{animation:vRev .7s cubic-bezier(.22,1,.36,1) .25s both}
+html.vrev #v-ana .hcap>:nth-child(2){animation-delay:.37s}
+html.vrev #v-ana .hcap>:nth-child(3){animation-delay:.5s}
+html.vrev #v-ana .hcap-mobile{animation:vRev .7s cubic-bezier(.22,1,.36,1) .2s both}
+html.vrev #v-ana .hero .bmark .bmark-dot{animation:vRevO .5s ease both;animation-delay:calc(.9s + var(--i,0) * 60ms)}
+html.vrev #v-ana .hero .dn-badge{animation:vRevO .6s ease 1.4s both}
 /* Geniş, amma alçaq ekranlarda (iMac, ultrawide) 16:9 hero ekrandan hündür olur və başlıq aşağıda kəsilirdi:
    bölmə ekran hündürlüyünə qədər kəsilir, şəkil (və nöqtələr, video) mərkəzdən oturur, başlıq görünən hissənin altına qalxır */
 @media(min-width:901px){
@@ -2884,10 +2886,13 @@ html.vintro.vtxt #v-ana .hcap-mobile{opacity:1}
     if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;var c=navigator.connection||{};if(c.saveData||/2g/.test(c.effectiveType||''))return;
     var v=document.createElement('video');v.className='hvid';v.muted=true;v.defaultMuted=true;v.playsInline=true;v.setAttribute('playsinline','');v.setAttribute('muted','');v.preload='auto';v.setAttribute('aria-hidden','true');
     v.src='/assets/intro/'+(innerWidth<760?'day-v2-m':'day-v2')+'.mp4';  /* fayl dəyişəndə adı da dəyiş — brauzer videonu 4 saat keşdə saxlayır */H.classList.add('vintro');hero.appendChild(v);
-    var gone=false,started=false;function out(){if(gone)return;gone=true;H.classList.add('vout');setTimeout(function(){window._introDone&&window._introDone();H.classList.remove('intro','vintro','vplay','vout','vtxt');if(v.parentNode)v.parentNode.removeChild(v);},700);}
+    var gone=false,started=false;
+    /* video bitəndə (kamera tam dayanıb): video çıxarılır, sonra menyu/yazı/nöqtələr yumşaq açılır (vrev). Hərəkət zamanı heç nə açılmır — video ilişməsin */
+    function out(){if(gone)return;gone=true;H.classList.add('vout','vrev');window._introDone&&window._introDone();H.classList.remove('intro','vintro','vplay');
+      setTimeout(function(){if(v.parentNode)v.parentNode.removeChild(v);H.classList.remove('vout');},500);setTimeout(function(){H.classList.remove('vrev');},2600);}
     function fail(){if(started||gone)return;gone=true;H.classList.remove('vintro');if(v.parentNode)v.parentNode.removeChild(v);setTimeout(function(){window._introDone&&window._introDone();},3200);}
     v.addEventListener('playing',function(){if(started)return;started=true;H.classList.add('vplay');});
-    v.addEventListener('timeupdate',function(){if(v.currentTime>=4.2)H.classList.add('vtxt');if(v.duration&&v.currentTime>=v.duration-0.25)out();});v.addEventListener('ended',out);v.addEventListener('error',fail);
+    v.addEventListener('timeupdate',function(){if(v.duration&&v.currentTime>=v.duration-0.12)out();});v.addEventListener('ended',out);v.addEventListener('error',fail);
     var pr=v.play();if(pr&&pr.catch)pr.catch(fail);setTimeout(fail,3000);setTimeout(out,10000);}catch(e){}})();
   V4.hero(CUR);})();
 })();
