@@ -874,6 +874,57 @@ html[data-theme=dark] .cmap-p{background:#fff}
 html[data-theme=dark] .tcard .tpl{background:radial-gradient(circle at 50% 45%,#f4f5f0,#dfe3d6 85%)}
 .tcard .tpl{overflow:hidden}
 .tcard .tpl img{position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px);object-fit:contain}
+
+/* ===== Ana səhifə: tam ekran kinematik giriş (17.11.2026) =====
+   Video (uzaqdan darvazaya) tam ekran oynayır, menyu və yaşıl təklif kartı şüşə kimi üstündə durur; video bitəndə kart tam açılır. */
+body{overflow-x:clip}
+.hero.cine{display:block;position:relative;padding:0;margin:calc(-1 * var(--hdh,84px)) calc(50% - 50vw) 18px;width:100vw;height:100svh;min-height:560px;max-height:1240px;overflow:hidden;background:#1e241a;
+  --cx:max(var(--m),calc((100vw - var(--max)) / 2 + var(--m)))}
+.hero.cine .slides{position:absolute;inset:0;border-radius:0;min-height:0;box-shadow:none;background:#1e241a}
+.hero.cine .slide:after{inset:0;height:auto;background:linear-gradient(to bottom,rgba(20,24,16,.42),rgba(20,24,16,0) 24%,rgba(20,24,16,0) 50%,rgba(20,24,16,.66))}
+.hero.cine .slide img,.hero.cine .nci-v{object-position:53% 50%}
+.hero.cine .nci-v{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;background:#1e241a;transition:opacity .4s ease;pointer-events:none}
+.hero.cine .hero-t{top:auto;right:auto;left:var(--cx);bottom:clamp(96px,13vh,140px);max-width:min(600px,50vw);z-index:4;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.hero.cine .hero-t .h1{color:#fff}
+.hero.cine .hero-t .lead{color:rgba(255,255,255,.88)}
+.hero.cine .hero-dots{left:var(--cx);bottom:36px;z-index:4;background:rgba(255,255,255,.18);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:opacity .7s ease}
+.hero.cine .hero-dots button{background:rgba(255,255,255,.55)}
+.hero.cine .hero-dots button.on{background:rgba(255,255,255,.4)}
+.hero.cine .hero-dots button.on:after{background:#fff}
+.hero.cine .hero-nav{right:auto;left:calc(var(--cx) + 128px);bottom:28px;z-index:4;transition:opacity .7s ease}
+.hero.cine .hero-nav button{background:rgba(255,255,255,.18);color:#fff;box-shadow:none;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+/* yaşıl kart: şüşə */
+.hero.cine .offer{position:absolute;z-index:5;right:var(--cx);bottom:clamp(28px,6vh,64px);width:min(372px,calc(100vw - 2 * var(--m)));gap:12px;
+  background:rgba(54,66,37,.56);-webkit-backdrop-filter:blur(22px) saturate(150%);backdrop-filter:blur(22px) saturate(150%);border:1px solid rgba(255,255,255,.2);box-shadow:0 26px 60px -30px rgba(0,0,0,.65)}
+.hero.cine .offer .big{transition:font-size .7s cubic-bezier(.2,.7,.2,1)}
+.hero.cine .offer h2{transition:font-size .7s cubic-bezier(.2,.7,.2,1)}
+.hero.cine .offer p{max-height:220px;overflow:hidden;transition:max-height .8s cubic-bezier(.2,.7,.2,1),opacity .5s ease .25s}
+.hero.cine .offer .btn{max-height:60px;margin-top:6px;overflow:hidden;transition:max-height .8s cubic-bezier(.2,.7,.2,1),opacity .5s ease .35s,min-height .8s,margin .8s}
+.hero.cine .offer .mk{transition:opacity .6s ease}
+/* video oynayarkən: kart yığılı, başlıq və slayd düymələri gizli; menyu görünür */
+html.nci .hero.cine .offer{gap:4px}
+html.nci .hero.cine .offer .big{font-size:44px}
+html.nci .hero.cine .offer h2{font-size:22px}
+html.nci .hero.cine .offer p,html.nci .hero.cine .offer .btn{max-height:0;min-height:0;margin:0;opacity:0;pointer-events:none;transition-delay:0s}
+html.nci .hero.cine .offer .mk{opacity:0}
+html.nci .hero.cine .hero-t{opacity:0;transform:translateY(14px)}
+html.nci .hero.cine .hero-dots,html.nci .hero.cine .hero-nav{opacity:0;pointer-events:none}
+.nci-skip{position:absolute;z-index:6;left:var(--cx);bottom:36px;min-height:40px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(20,24,16,.34);color:#fff;font:500 14px/1 inherit;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);cursor:pointer}
+/* menyu şəklin üstündə: yuxarıda olanda şüşə */
+html.nc-cine .hd-in{background:rgba(255,255,255,.74);-webkit-backdrop-filter:blur(20px) saturate(160%);backdrop-filter:blur(20px) saturate(160%)}
+html[data-theme=dark].nc-cine .hd-in{background:rgba(27,31,22,.62)}
+@media(max-width:900px){
+  .hero.cine{min-height:520px;max-height:none;margin-bottom:14px}
+  .hero.cine .hero-t{left:var(--m);right:var(--m);bottom:auto;top:calc(var(--hdh,84px) + 14px);max-width:none}
+  .hero.cine .hero-dots{left:var(--m);bottom:auto;top:calc(var(--hdh,84px) + 132px)}
+  .hero.cine .hero-nav{display:none}
+  .hero.cine .offer{left:var(--m);right:var(--m);width:auto;bottom:calc(86px + env(safe-area-inset-bottom,0px));padding:20px}
+  .hero.cine .offer .big{font-size:52px}
+  .nci-skip{left:auto;right:var(--m);bottom:auto;top:calc(var(--hdh,84px) + 14px)}
+}
+@media(min-width:701px) and (max-width:900px){.hero.cine .offer{left:auto;width:360px;bottom:28px}}
+@media(prefers-reduced-motion:reduce){.hero.cine .offer *,.hero.cine .hero-t{transition:none!important}}
+html.nci .hero.cine .hero-t,html.nci .hero.cine .hero-dots,html.nci .hero.cine .hero-nav{transition:none}
 </style>
 </head>
 <body>
@@ -892,7 +943,7 @@ html[data-theme=dark] .tcard .tpl{background:radial-gradient(circle at 50% 45%,#
 <button class="fcall" type="button" data-callback aria-label="Zəng sifarişi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span>Zəng sifarişi</span></button>
 <nav class="mbar" aria-label="Sürətli əlaqə"><a href="tel:*0788"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>Zəng</a><a href="https://wa.me/994509700088" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/></svg>WhatsApp</a><a href="#secilmis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-9-9a4.5 4.5 0 0 1 9-2 4.5 4.5 0 0 1 9 2c-2 4.6-9 9-9 9z"/></svg>Seçilmiş</a><button type="button" data-callback class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v10H8l-4 4z"/></svg>Sorğu</button></nav>
 <footer class="ft" id="ft"></footer>
-<script>window.IMG={"front": "/assets/nc/site/front-2560.webp", "aerial_c": "/assets/nc/site/aerial_c-2560.webp", "corner": "/assets/nc/site/corner-2560.webp", "entrance": "/assets/nc/site/entrance-2560.webp", "tower_r": "/assets/nc/site/tower_r-2560.webp", "street": "/assets/nc/site/street-2560.webp", "tower_l": "/assets/nc/site/tower_l-2560.webp", "aerial": "/assets/nc/site/aerial-2400.webp", "logo": "/assets/nc/site/mark-cream.png"};</script>
+<script>window.IMG={"gate": "/assets/nc/site/gate-2560.webp", "front": "/assets/nc/site/front-2560.webp", "aerial_c": "/assets/nc/site/aerial_c-2560.webp", "corner": "/assets/nc/site/corner-2560.webp", "entrance": "/assets/nc/site/entrance-2560.webp", "tower_r": "/assets/nc/site/tower_r-2560.webp", "street": "/assets/nc/site/street-2560.webp", "tower_l": "/assets/nc/site/tower_l-2560.webp", "aerial": "/assets/nc/site/aerial-2400.webp", "logo": "/assets/nc/site/mark-cream.png"};</script>
 <script>// Nizami City — 3D kompleks modeli (three r128). Sayt və render skripti ortaq istifadə edir.
 // Koordinatlar: x şərq, z cənub; 1 vahid ≈ 0.5 m. Baş plan sxematikdir.
 window.NC_BLD = [
@@ -1581,10 +1632,10 @@ function share(id) {
 }
 
 /* blokları */
-const SLIDES = [['front', 'Nizami City', 'Yasamalda, Nizami metrosunun yanında qapalı həyətli yaşayış kompleksi'], ['aerial_c', 'Qapalı həyətlər', 'Binaların öz qapalı həyətləri: avtomobilsiz, uşaq meydançası və istirahət zonası ilə'], SHOW_ST ? ['corner', 'Hazır və tikilən binalar', 'A, B, C binaları təhvil verilib, E, F, G binaları tikilir'] : ['corner', '9 bina, qapalı həyət', 'Yeraltı parkinq, kommersiya qalereyası və qapalı həyətlər']];
+const SLIDES = [['gate', 'Nizami City', 'Yasamalda, Nizami metrosunun yanında qapalı həyətli yaşayış kompleksi'], ['aerial_c', 'Qapalı həyətlər', 'Binaların öz qapalı həyətləri: avtomobilsiz, uşaq meydançası və istirahət zonası ilə'], SHOW_ST ? ['corner', 'Hazır və tikilən binalar', 'A, B, C binaları təhvil verilib, E, F, G binaları tikilir'] : ['corner', '9 bina, qapalı həyət', 'Yeraltı parkinq, kommersiya qalereyası və qapalı həyətlər']];
 function heroBlock() {
   const t = TERMS[0];
-  return `<section class="wrap"><div class="hero"><div class="slides" id="sl">${SLIDES.map(([k, h, s], i) => `<div class="slide${i ? '' : ' on'}">${pic(k, h, { eager: !i, sizes: '(max-width:900px) 100vw, 66vw' })}</div>`).join('')}
+  return `<section class="wrap"><div class="hero cine"><div class="slides" id="sl">${SLIDES.map(([k, h, s], i) => `<div class="slide${i ? '' : ' on'}">${pic(k, h, { eager: !i, sizes: '100vw' })}</div>`).join('')}
       <div class="hero-t"><h1 class="h1" id="slH">${SLIDES[0][1]}</h1><p class="lead" id="slS">${SLIDES[0][2]}</p></div>
       <div class="hero-dots" id="slD">${SLIDES.map((_, i) => `<button type="button" aria-label="Şəkil ${i + 1}" class="${i ? '' : 'on'}"></button>`).join('')}</div>
       <div class="hero-nav"><button type="button" aria-label="Əvvəlki" data-d="-1">${I.al}</button><button type="button" aria-label="Növbəti" data-d="1">${I.ar}</button></div></div>
@@ -1594,7 +1645,7 @@ function heroBlock() {
 function bindHero(root) {
   const sl = $('#sl', root); if (!sl) return; let i = 0, tm;
   const go = n => { i = (n + SLIDES.length) % SLIDES.length; $$('.slide', sl).forEach((s, k) => s.classList.toggle('on', k === i)); $$('#slD button', sl).forEach((s, k) => s.classList.toggle('on', k === i)); $('#slH', sl).textContent = SLIDES[i][1]; $('#slS', sl).textContent = SLIDES[i][2]; };
-  const auto = () => { clearInterval(tm); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) tm = setInterval(() => { if (!document.body.contains(sl)) return clearInterval(tm); go(i + 1); }, 6000); };
+  const auto = () => { clearInterval(tm); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) tm = setInterval(() => { if (!document.body.contains(sl)) return clearInterval(tm); if (window.__nci || Date.now() < (window.__nciT || 0)) return; go(i + 1); }, 6000); };
   $$('#slD button', sl).forEach((b, k) => b.onclick = () => { go(k); auto(); });
   $$('.hero-nav button', sl).forEach(b => b.onclick = () => { go(i + +b.dataset.d); auto(); });
   auto();
@@ -1672,7 +1723,7 @@ pages.home = () => ({
   <section class="sec wrap">${locBlock()}</section>
   ${newsBlock() ? `<section class="sec wrap">${newsBlock()}</section>` : ''}
   <section class="sec wrap">${faqBlock(5)}</section>`,
-  mount(r) { bindHero(r); heroFx(r); bindFind(r); bindMaqHome(r); bindBuildings(r); bindRail(r); bindPlan(r); bindLead(r); bindLb(r); }
+  mount(r) { bindHero(r); heroFx(r); heroIntro(r); bindFind(r); bindMaqHome(r); bindBuildings(r); bindRail(r); bindPlan(r); bindLead(r); bindLb(r); }
 });
 pages.binalar = () => ({
   title: 'Binalar — Nizami City', html: `${pHead('Binalar', SHOW_ST ? 'A, B və C binaları təhvil verilib. E, F və G binaları tikilir' + (SHOW_DEL ? ', təhvil ' + esc(CO.delivery) : '') + '.' : '9 bina, qapalı həyət. Binanı seçin — mərtəbələr və mənzillər açılacaq.', `<div class="stats"><div class="stat"><b>${BLD.length}</b><span>bina</span></div>${SHOW_STOCK ? `<div class="stat"><b>${free.filter(u => u.st === 'free').length}</b><span>satışda</span></div>` : ''}<div class="stat"><b>9</b><span>mərtəbə</span></div></div>`)}
@@ -2174,6 +2225,7 @@ function beforeRender() { killMaq(); killCity(); const p = $('#uiP'); if (p) p.r
 function afterRender(k, main) {
   fixLinks(document); pageIn(main); reveal(main); fillQR(main); bindLocTabs(main); bindCity(main); onScroll();
   document.body.classList.toggle('pg-bro', k === 'brosur');
+  if (!$('.hero.cine', main)) heroIntro(main);   // başqa səhifədə kinematik giriş sinifləri silinir
 }
 // başlıq və altlıq əlavələri
 (() => { const fc = $('.fcall'); if (fc) { fc.removeAttribute('data-callback'); fc.dataset.hub = ''; fc.setAttribute('aria-label', 'Satış ofisi ilə əlaqə'); fc.innerHTML = I.chat + '<span>Sual verin</span>'; }
@@ -2364,6 +2416,37 @@ pages.menzil = id => { const u = uById(id); return u ? pages.tip(typeOf(u).key) 
 // köhnə #ünvan → yeni yol
 (() => { const h = location.hash.slice(1); if (isRoute(h)) history.replaceState(null, '', toPath(h)); })();
 render();
+
+
+/* ===== Ana səhifə: tam ekran kinematik giriş (17.11.2026) =====
+   Video faylı dəyişəndə adını da dəyiş (brauzer 4 saat keşdə saxlayır). Mənbə və emal: LAYIHE-DURUMU.md, "Nizami City: giriş videosu". */
+addEventListener('scroll', () => window._nciTop && window._nciTop(), { passive: true });
+addEventListener('resize', () => window._nciTop && window._nciTop());
+function heroIntro(root) {
+  const NCI_V = ['/assets/nc/intro/gate-v1.mp4', '/assets/nc/intro/gate-v1-m.mp4'];   // ilk render bu fayl oxunmadan əvvəl çağırılır — sabit funksiyanın içində olmalıdır
+  const H = document.documentElement, hd = $('#hd'), hero = $('.hero.cine', root);
+  if (!hero) { window._nciTop = null; H.classList.remove('nc-cine', 'nci'); window.__nci = 0; return; }
+  window._nciTop = () => { if (!document.body.contains(hero)) { H.classList.remove('nc-cine'); return; } H.style.setProperty('--hdh', hd.offsetHeight + 'px'); H.classList.toggle('nc-cine', scrollY < hero.offsetHeight - 90); };
+  window._nciTop();
+  let seen = false; try { seen = sessionStorage.getItem('nc_intro') === '1'; } catch (e) {}
+  const c = navigator.connection || {};
+  if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches || c.saveData || /2g/.test(c.effectiveType || '')) return;
+  try { sessionStorage.setItem('nc_intro', '1'); } catch (e) {}
+  const sl = $('#sl', hero), v = document.createElement('video');
+  v.className = 'nci-v'; v.muted = true; v.defaultMuted = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('muted', ''); v.preload = 'auto'; v.setAttribute('aria-hidden', 'true');
+  v.src = NCI_V[innerWidth < 760 ? 1 : 0];
+  const skip = document.createElement('button'); skip.type = 'button'; skip.className = 'nci-skip'; skip.textContent = 'Keç';
+  let done = false, started = false;
+  const fin = () => { if (done) return; done = true; window.__nci = 0; window.__nciT = Date.now() + 5000; H.classList.remove('nci'); v.style.opacity = '0'; skip.remove(); setTimeout(() => v.remove(), 450); };
+  const fail = () => { if (!started) fin(); };
+  skip.onclick = fin;
+  v.addEventListener('playing', () => { started = true; });
+  v.addEventListener('timeupdate', () => { if (v.duration && v.currentTime >= v.duration - 0.12) { v.pause(); fin(); } });
+  v.addEventListener('ended', fin); v.addEventListener('error', fail);
+  H.classList.add('nci'); window.__nci = 1; sl.appendChild(v); hero.appendChild(skip);
+  const p = v.play(); if (p && p.catch) p.catch(fail);
+  setTimeout(fail, 3500); setTimeout(fin, 12000);
+}
 
 };</script>
 <script>/* Nizami City sayt — canlı məlumat yükləyicisi + paneldən idarə (lux_kv nc_site / nc_blog / nc_cfg, rpc nc_public_units) */

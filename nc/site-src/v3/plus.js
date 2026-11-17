@@ -337,6 +337,7 @@ function beforeRender() { killMaq(); killCity(); const p = $('#uiP'); if (p) p.r
 function afterRender(k, main) {
   fixLinks(document); pageIn(main); reveal(main); fillQR(main); bindLocTabs(main); bindCity(main); onScroll();
   document.body.classList.toggle('pg-bro', k === 'brosur');
+  if (!$('.hero.cine', main)) heroIntro(main);   // başqa səhifədə kinematik giriş sinifləri silinir
 }
 // başlıq və altlıq əlavələri
 (() => { const fc = $('.fcall'); if (fc) { fc.removeAttribute('data-callback'); fc.dataset.hub = ''; fc.setAttribute('aria-label', 'Satış ofisi ilə əlaqə'); fc.innerHTML = I.chat + '<span>Sual verin</span>'; }

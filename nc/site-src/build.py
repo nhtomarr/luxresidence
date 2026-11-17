@@ -2,15 +2,15 @@
 # Şəkillər: /assets/nc/site/*.webp (fayl kimi, keşlənir). Şriftlər: /assets/nc/fonts (NC Display = Imbue, NC Text = Albert Sans).
 import json, pathlib, re, subprocess
 S = pathlib.Path(__file__).parent; V = S/'v3'; R = S.parent.parent
-img = {k: f'/assets/nc/site/{k}-2560.webp' for k in ['front', 'aerial_c', 'corner', 'entrance', 'tower_r', 'street', 'tower_l']}
+img = {k: f'/assets/nc/site/{k}-2560.webp' for k in ['gate', 'front', 'aerial_c', 'corner', 'entrance', 'tower_r', 'street', 'tower_l']}
 img['aerial'] = '/assets/nc/site/aerial-2400.webp'
 img['logo'] = '/assets/nc/site/mark-cream.png'
 for k in img: assert (R/img[k].lstrip('/')).exists(), img[k]
 ANON = re.search(r"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_.-]+", (R/'assets/lux-auth.js').read_text()).group(0)
 t = (V/'index.tpl.html').read_text()
-for k, v in {'%FONTS%': (R/'assets/nc/fonts/fonts.css').read_text(), '%CSS%': (V/'app.css').read_text() + '\n' + (V/'plus.css').read_text(), '%IMG%': 'window.IMG=' + json.dumps(img) + ';',
+for k, v in {'%FONTS%': (R/'assets/nc/fonts/fonts.css').read_text(), '%CSS%': (V/'app.css').read_text() + '\n' + (V/'plus.css').read_text() + '\n' + (V/'intro.css').read_text(), '%IMG%': 'window.IMG=' + json.dumps(img) + ';',
              '%MODEL%': (S/'model.js').read_text().split('window.buildNizami')[0] + 'window.ncSunPos' + (S/'model.js').read_text().split('window.ncSunPos')[1], '%MAQ%': (V/'maq.js').read_text() + '\n' + (S/'plans.js').read_text(),
-             '%DATA%': (S/'data.js').read_text(), '%APP%': (V/'app.js').read_text() + '\n' + (V/'plus.js').read_text(), '%RUNTIME%': (S/'runtime.js').read_text().replace('%ANON%', ANON)}.items():
+             '%DATA%': (S/'data.js').read_text(), '%APP%': (V/'app.js').read_text() + '\n' + (V/'plus.js').read_text() + '\n' + (V/'intro.js').read_text(), '%RUNTIME%': (S/'runtime.js').read_text().replace('%ANON%', ANON)}.items():
     assert k in t, k; t = t.replace(k, v)
 import os; out = S.parent/os.environ.get('NC_OUT','site.html'); out.write_text(t); print(out, round(len(t)/1024), 'KB')
 # panel üçün ilkin (defolt) məzmun

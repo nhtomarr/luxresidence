@@ -1,0 +1,50 @@
+/* ===== Ana səhifə: tam ekran kinematik giriş (17.11.2026) =====
+   Video (uzaqdan darvazaya) tam ekran oynayır, menyu və yaşıl təklif kartı şüşə kimi üstündə durur; video bitəndə kart tam açılır. */
+body{overflow-x:clip}
+.hero.cine{display:block;position:relative;padding:0;margin:calc(-1 * var(--hdh,84px)) calc(50% - 50vw) 18px;width:100vw;height:100svh;min-height:560px;max-height:1240px;overflow:hidden;background:#1e241a;
+  --cx:max(var(--m),calc((100vw - var(--max)) / 2 + var(--m)))}
+.hero.cine .slides{position:absolute;inset:0;border-radius:0;min-height:0;box-shadow:none;background:#1e241a}
+.hero.cine .slide:after{inset:0;height:auto;background:linear-gradient(to bottom,rgba(20,24,16,.42),rgba(20,24,16,0) 24%,rgba(20,24,16,0) 50%,rgba(20,24,16,.66))}
+.hero.cine .slide img,.hero.cine .nci-v{object-position:53% 50%}
+.hero.cine .nci-v{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;background:#1e241a;transition:opacity .4s ease;pointer-events:none}
+.hero.cine .hero-t{top:auto;right:auto;left:var(--cx);bottom:clamp(96px,13vh,140px);max-width:min(600px,50vw);z-index:4;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.hero.cine .hero-t .h1{color:#fff}
+.hero.cine .hero-t .lead{color:rgba(255,255,255,.88)}
+.hero.cine .hero-dots{left:var(--cx);bottom:36px;z-index:4;background:rgba(255,255,255,.18);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:opacity .7s ease}
+.hero.cine .hero-dots button{background:rgba(255,255,255,.55)}
+.hero.cine .hero-dots button.on{background:rgba(255,255,255,.4)}
+.hero.cine .hero-dots button.on:after{background:#fff}
+.hero.cine .hero-nav{right:auto;left:calc(var(--cx) + 128px);bottom:28px;z-index:4;transition:opacity .7s ease}
+.hero.cine .hero-nav button{background:rgba(255,255,255,.18);color:#fff;box-shadow:none;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+/* yaşıl kart: şüşə */
+.hero.cine .offer{position:absolute;z-index:5;right:var(--cx);bottom:clamp(28px,6vh,64px);width:min(372px,calc(100vw - 2 * var(--m)));gap:12px;
+  background:rgba(54,66,37,.56);-webkit-backdrop-filter:blur(22px) saturate(150%);backdrop-filter:blur(22px) saturate(150%);border:1px solid rgba(255,255,255,.2);box-shadow:0 26px 60px -30px rgba(0,0,0,.65)}
+.hero.cine .offer .big{transition:font-size .7s cubic-bezier(.2,.7,.2,1)}
+.hero.cine .offer h2{transition:font-size .7s cubic-bezier(.2,.7,.2,1)}
+.hero.cine .offer p{max-height:220px;overflow:hidden;transition:max-height .8s cubic-bezier(.2,.7,.2,1),opacity .5s ease .25s}
+.hero.cine .offer .btn{max-height:60px;margin-top:6px;overflow:hidden;transition:max-height .8s cubic-bezier(.2,.7,.2,1),opacity .5s ease .35s,min-height .8s,margin .8s}
+.hero.cine .offer .mk{transition:opacity .6s ease}
+/* video oynayarkən: kart yığılı, başlıq və slayd düymələri gizli; menyu görünür */
+html.nci .hero.cine .offer{gap:4px}
+html.nci .hero.cine .offer .big{font-size:44px}
+html.nci .hero.cine .offer h2{font-size:22px}
+html.nci .hero.cine .offer p,html.nci .hero.cine .offer .btn{max-height:0;min-height:0;margin:0;opacity:0;pointer-events:none;transition-delay:0s}
+html.nci .hero.cine .offer .mk{opacity:0}
+html.nci .hero.cine .hero-t{opacity:0;transform:translateY(14px)}
+html.nci .hero.cine .hero-dots,html.nci .hero.cine .hero-nav{opacity:0;pointer-events:none}
+.nci-skip{position:absolute;z-index:6;left:var(--cx);bottom:36px;min-height:40px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(20,24,16,.34);color:#fff;font:500 14px/1 inherit;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);cursor:pointer}
+/* menyu şəklin üstündə: yuxarıda olanda şüşə */
+html.nc-cine .hd-in{background:rgba(255,255,255,.74);-webkit-backdrop-filter:blur(20px) saturate(160%);backdrop-filter:blur(20px) saturate(160%)}
+html[data-theme=dark].nc-cine .hd-in{background:rgba(27,31,22,.62)}
+@media(max-width:900px){
+  .hero.cine{min-height:520px;max-height:none;margin-bottom:14px}
+  .hero.cine .hero-t{left:var(--m);right:var(--m);bottom:auto;top:calc(var(--hdh,84px) + 14px);max-width:none}
+  .hero.cine .hero-dots{left:var(--m);bottom:auto;top:calc(var(--hdh,84px) + 132px)}
+  .hero.cine .hero-nav{display:none}
+  .hero.cine .offer{left:var(--m);right:var(--m);width:auto;bottom:calc(86px + env(safe-area-inset-bottom,0px));padding:20px}
+  .hero.cine .offer .big{font-size:52px}
+  .nci-skip{left:auto;right:var(--m);bottom:auto;top:calc(var(--hdh,84px) + 14px)}
+}
+@media(min-width:701px) and (max-width:900px){.hero.cine .offer{left:auto;width:360px;bottom:28px}}
+@media(prefers-reduced-motion:reduce){.hero.cine .offer *,.hero.cine .hero-t{transition:none!important}}
+html.nci .hero.cine .hero-t,html.nci .hero.cine .hero-dots,html.nci .hero.cine .hero-nav{transition:none}

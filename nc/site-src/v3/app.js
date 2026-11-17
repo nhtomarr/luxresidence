@@ -239,10 +239,10 @@ function share(id) {
 }
 
 /* blokları */
-const SLIDES = [['front', 'Nizami City', 'Yasamalda, Nizami metrosunun yanında qapalı həyətli yaşayış kompleksi'], ['aerial_c', 'Qapalı həyətlər', 'Binaların öz qapalı həyətləri: avtomobilsiz, uşaq meydançası və istirahət zonası ilə'], SHOW_ST ? ['corner', 'Hazır və tikilən binalar', 'A, B, C binaları təhvil verilib, E, F, G binaları tikilir'] : ['corner', '9 bina, qapalı həyət', 'Yeraltı parkinq, kommersiya qalereyası və qapalı həyətlər']];
+const SLIDES = [['gate', 'Nizami City', 'Yasamalda, Nizami metrosunun yanında qapalı həyətli yaşayış kompleksi'], ['aerial_c', 'Qapalı həyətlər', 'Binaların öz qapalı həyətləri: avtomobilsiz, uşaq meydançası və istirahət zonası ilə'], SHOW_ST ? ['corner', 'Hazır və tikilən binalar', 'A, B, C binaları təhvil verilib, E, F, G binaları tikilir'] : ['corner', '9 bina, qapalı həyət', 'Yeraltı parkinq, kommersiya qalereyası və qapalı həyətlər']];
 function heroBlock() {
   const t = TERMS[0];
-  return `<section class="wrap"><div class="hero"><div class="slides" id="sl">${SLIDES.map(([k, h, s], i) => `<div class="slide${i ? '' : ' on'}">${pic(k, h, { eager: !i, sizes: '(max-width:900px) 100vw, 66vw' })}</div>`).join('')}
+  return `<section class="wrap"><div class="hero cine"><div class="slides" id="sl">${SLIDES.map(([k, h, s], i) => `<div class="slide${i ? '' : ' on'}">${pic(k, h, { eager: !i, sizes: '100vw' })}</div>`).join('')}
       <div class="hero-t"><h1 class="h1" id="slH">${SLIDES[0][1]}</h1><p class="lead" id="slS">${SLIDES[0][2]}</p></div>
       <div class="hero-dots" id="slD">${SLIDES.map((_, i) => `<button type="button" aria-label="Şəkil ${i + 1}" class="${i ? '' : 'on'}"></button>`).join('')}</div>
       <div class="hero-nav"><button type="button" aria-label="Əvvəlki" data-d="-1">${I.al}</button><button type="button" aria-label="Növbəti" data-d="1">${I.ar}</button></div></div>
@@ -252,7 +252,7 @@ function heroBlock() {
 function bindHero(root) {
   const sl = $('#sl', root); if (!sl) return; let i = 0, tm;
   const go = n => { i = (n + SLIDES.length) % SLIDES.length; $$('.slide', sl).forEach((s, k) => s.classList.toggle('on', k === i)); $$('#slD button', sl).forEach((s, k) => s.classList.toggle('on', k === i)); $('#slH', sl).textContent = SLIDES[i][1]; $('#slS', sl).textContent = SLIDES[i][2]; };
-  const auto = () => { clearInterval(tm); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) tm = setInterval(() => { if (!document.body.contains(sl)) return clearInterval(tm); go(i + 1); }, 6000); };
+  const auto = () => { clearInterval(tm); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) tm = setInterval(() => { if (!document.body.contains(sl)) return clearInterval(tm); if (window.__nci || Date.now() < (window.__nciT || 0)) return; go(i + 1); }, 6000); };
   $$('#slD button', sl).forEach((b, k) => b.onclick = () => { go(k); auto(); });
   $$('.hero-nav button', sl).forEach(b => b.onclick = () => { go(i + +b.dataset.d); auto(); });
   auto();
@@ -330,7 +330,7 @@ pages.home = () => ({
   <section class="sec wrap">${locBlock()}</section>
   ${newsBlock() ? `<section class="sec wrap">${newsBlock()}</section>` : ''}
   <section class="sec wrap">${faqBlock(5)}</section>`,
-  mount(r) { bindHero(r); heroFx(r); bindFind(r); bindMaqHome(r); bindBuildings(r); bindRail(r); bindPlan(r); bindLead(r); bindLb(r); }
+  mount(r) { bindHero(r); heroFx(r); heroIntro(r); bindFind(r); bindMaqHome(r); bindBuildings(r); bindRail(r); bindPlan(r); bindLead(r); bindLb(r); }
 });
 pages.binalar = () => ({
   title: 'Binalar — Nizami City', html: `${pHead('Binalar', SHOW_ST ? 'A, B və C binaları təhvil verilib. E, F və G binaları tikilir' + (SHOW_DEL ? ', təhvil ' + esc(CO.delivery) : '') + '.' : '9 bina, qapalı həyət. Binanı seçin — mərtəbələr və mənzillər açılacaq.', `<div class="stats"><div class="stat"><b>${BLD.length}</b><span>bina</span></div>${SHOW_STOCK ? `<div class="stat"><b>${free.filter(u => u.st === 'free').length}</b><span>satışda</span></div>` : ''}<div class="stat"><b>9</b><span>mərtəbə</span></div></div>`)}
