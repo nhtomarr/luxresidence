@@ -25,18 +25,13 @@ body{overflow-x:clip}
 .hero.cine .hero-nav button{width:40px;height:40px;background:rgba(255,255,255,.14);color:#fff;box-shadow:none;border:1px solid rgba(255,255,255,.16)}
 .hero.cine .hero-nav button:hover{background:rgba(255,255,255,.24)}
 .hero.cine .offer{position:absolute;z-index:5;right:var(--cx);bottom:var(--cb);width:372px;padding:28px;gap:12px;background:rgba(54,66,37,.58)}
-.hero.cine .offer .big{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:#fff;animation:none;font-size:72px;transition:font-size .7s cubic-bezier(.2,.7,.2,1)}
-.hero.cine .offer h2{font-size:30px;transition:font-size .7s cubic-bezier(.2,.7,.2,1)}
-.hero.cine .offer p{max-height:220px;overflow:hidden;transition:max-height .8s cubic-bezier(.2,.7,.2,1),opacity .5s ease .25s}
-.hero.cine .offer .btn{max-height:60px;margin-top:8px;overflow:hidden;transition:max-height .8s cubic-bezier(.2,.7,.2,1),opacity .5s ease .35s,min-height .8s,margin .8s}
-.hero.cine .offer .mk{animation:none;transition:opacity .6s ease}
-/* video oynayarkən: təklif kartı yığılı, başlıq kartı gizli; menyu görünür */
-html.nci .hero.cine .offer{gap:4px}
-html.nci .hero.cine .offer .big{font-size:44px}
-html.nci .hero.cine .offer h2{font-size:22px}
-html.nci .hero.cine .offer p,html.nci .hero.cine .offer .btn{max-height:0;min-height:0;margin:0;opacity:0;pointer-events:none;transition-delay:0s}
-html.nci .hero.cine .offer .mk{opacity:0}
-html.nci .hero.cine .hero-t{opacity:0;transform:translateY(14px);pointer-events:none;transition:none}
+.hero.cine .offer .big{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:#fff;animation:none;font-size:72px}
+.hero.cine .offer h2{font-size:30px}
+.hero.cine .offer .btn{margin-top:8px}
+.hero.cine .offer .mk{animation:none}
+.hero.cine .offer{transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+/* video oynayarkən kart yoxdur (yalnız menyu); bitəndə iki kart eyni anda, eyni hərəkətlə gəlir */
+html.nci .hero.cine .hero-t,html.nci .hero.cine .offer{opacity:0;transform:translateY(14px);pointer-events:none;transition:none}
 .nci-skip{position:absolute;z-index:6;left:var(--cx);bottom:var(--cb);min-height:40px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(20,24,16,.34);color:#fff;font:500 14px/1 inherit;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);cursor:pointer}
 /* menyu şəklin üstündə: yuxarıda olanda şüşə */
 html.nc-cine .hd-in{background:rgba(255,255,255,.74);-webkit-backdrop-filter:blur(20px) saturate(160%);backdrop-filter:blur(20px) saturate(160%)}
@@ -54,4 +49,4 @@ html[data-theme=dark].nc-cine .hd-in{background:rgba(27,31,22,.62)}
   .nci-skip{left:auto;right:var(--m);bottom:auto;top:calc(var(--hdh,84px) + 12px)}
 }
 @media(min-width:701px) and (max-width:900px){.hero.cine{--cb:28px}.hero.cine .offer{left:auto;width:360px}.hero.cine .hero-t{right:auto;width:min(440px,calc(100vw - 2 * var(--m)))}}
-@media(prefers-reduced-motion:reduce){.hero.cine .offer *,.hero.cine .hero-t{transition:none!important}}
+@media(prefers-reduced-motion:reduce){.hero.cine .offer,.hero.cine .hero-t{transition:none!important}}
