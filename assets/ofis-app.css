@@ -1622,3 +1622,8 @@ body.lux .tdc.an{background:linear-gradient(135deg,#9a3c20,#ba4d2c)}
 .ann-more{display:block;font-size:14px!important}
 .card.ann h3{overflow-wrap:anywhere}
 @media (max-width:700px){#monthTbl td,#monthTbl th{white-space:nowrap}#monthTbl td:first-child{white-space:normal;min-width:120px}}
+/* Sahibkar ekranı: grid uşağı cədvələ görə genişlənib səhifəni yana daşırmasın */
+.odash>*{min-width:0}
+.otbl{max-width:100%}
+.oside>*{min-width:0;max-width:100%;overflow-x:auto}
+.oside{min-width:0}

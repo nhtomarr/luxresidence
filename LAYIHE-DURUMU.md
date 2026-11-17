@@ -597,3 +597,5 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - **Kiçik telefon (≤400px):** Nəzarət plitələri, Bu gün statistika sətri kiçildi; tək qalan plitə tam en; `.linkbtn`/`+ Status` toxunma hündürlüyü 32px.
 - **Test mühiti:** /tmp/ofh (saxta Supabase klienti + real bazadan yalnız-oxuma fiksturlar, Playwright; 320/360/390/1280, işçi və rəhbər rolu). Müvəqqəti `_fx_run`/`_fx_tok` bazadan silindi.
 - Yoxlanmayıb: real iPhone-da toxunma jestləri (hekayə vərəqi emulyasiyada yoxlanıb), Təqvim/Sənədlər/Tapşırıqlar boş məlumatla baxılıb.
+- v149: Sahibkar ekranında səhifə yana daşırdı (telefonda ekranın 60%-i qədər kiçilirdi) — `.odash`/`.oside` grid uşaqlarına min-width:0, cədvəllər kartın içində sürüşür.
+- Gözləyir: VMM düzəlişlər paketi (20–22 okt, /mnt/user-data/uploads/…VMM-duzelisler…zip → /tmp/vmmzip) — A qrupu (alt menyu linzası, aşağı çəkib yeniləmə, sağa-sola keçid, sabit başlıq, işçi sətri toxunulan, aylıq hesabat önizləməsi) Baş Ofisə hələ köçürülməyib.
