@@ -2433,8 +2433,13 @@ function heroIntro(root) {
   const NCI_V = ['/assets/nc/intro/gate-v1.mp4', '/assets/nc/intro/gate-v1-m.mp4'];   // ilk render bu fayl oxunmadan əvvəl çağırılır — sabit funksiyanın içində olmalıdır
   const H = document.documentElement, hd = $('#hd'), hero = $('.hero.cine', root);
   if (!hero) { window._nciTop = null; H.classList.remove('nc-cine', 'nci'); window.__nci = 0; return; }
-  window._nciTop = () => { if (!document.body.contains(hero)) { H.classList.remove('nc-cine'); return; } H.style.setProperty('--hdh', hd.offsetHeight + 'px'); H.classList.toggle('nc-cine', scrollY < hero.offsetHeight - 90); };
+  let _h = parseFloat(getComputedStyle(hero).marginTop) * -1 || hd.offsetHeight;
+  window._nciTop = () => { if (!document.body.contains(hero)) { H.classList.remove('nc-cine'); return; } let off = 0; for (let e = hero; e; e = e.offsetParent) off += e.offsetTop; if (Math.abs(off) > .5) { _h = Math.max(0, _h + off); H.style.setProperty('--hdh', _h + 'px'); } H.classList.toggle('nc-cine', scrollY < hero.offsetHeight - 90); };
+  // şəkil səhifənin lap yuxarısından başlamalıdır: menyunun hündürlüyünü təxmin etmirik, qalan boşluğu ölçüb bağlayırıq (şrift/menyu gec yüklənəndə də)
   window._nciTop();
+  [60, 300, 1000, 2500].forEach(t => setTimeout(() => window._nciTop && window._nciTop(), t));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => window._nciTop && window._nciTop());
+  if (window.ResizeObserver && !window._nciRO) { window._nciRO = new ResizeObserver(() => window._nciTop && window._nciTop()); window._nciRO.observe(hd); window._nciRO.observe(document.body); }
   let seen = false; try { seen = sessionStorage.getItem('nc_intro') === '1'; } catch (e) {}
   const c = navigator.connection || {};
   if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches || c.saveData || /2g/.test(c.effectiveType || '')) return;
