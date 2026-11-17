@@ -2656,7 +2656,7 @@ html.intro.hero-top .nav{animation:hFade .8s ease 2.2s backwards}
 @media(prefers-reduced-motion:reduce){html.intro #v-ana .hero::after{display:none}}
 
 /* video giriş (gündüz): buludlardan real dron enişi. html.vintro olanda köhnə CSS bulud/eniş animasiyası söndürülür */
-#v-ana .hero .hvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;pointer-events:none;background:#e8ecef;opacity:1;transition:opacity .35s ease}
+#v-ana .hero .hvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;pointer-events:none;background:#e8ecef;opacity:1;transition:opacity .35s ease;transform-origin:50% 50%}
 html.vout #v-ana .hero .hvid{opacity:0}
 html.vintro #v-ana .hero::after{display:none}
 html.vintro #v-ana .hero .sky.day,html.vintro #v-ana .hero .overlay,html.vintro #v-ana .hero .sky.night{animation:none!important}
@@ -2676,11 +2676,12 @@ html.vrev #v-ana .hero .dn-badge{animation:vRevO .6s ease 1.4s both}
 /* Geniş, amma alçaq ekranlarda (iMac, ultrawide) 16:9 hero ekrandan hündür olur və başlıq aşağıda kəsilirdi:
    bölmə ekran hündürlüyünə qədər kəsilir, şəkil (və nöqtələr, video) mərkəzdən oturur, başlıq görünən hissənin altına qalxır */
 @media(min-width:901px){
- html.is-home #v-ana{--hx:max(0px,calc(56.25vw - 100svh + 56px))}
- html.is-home #v-ana .hero-sec{height:calc(56.25vw - var(--hx));overflow:hidden}
- html.is-home #v-ana .hero{top:calc(var(--hx) / -2)}
- html.is-home #v-ana .hero .hcap{bottom:calc(clamp(96px,10vw,150px) + var(--hx) / 2)}
- html.is-home #v-ana .hero .dn-badge{margin-top:calc(var(--hx) / 2)}
+ html.is-home #v-ana{--hx:calc(max(0px,56.25vw - 100svh + 56px + var(--hnavpx,0px)) * var(--hfit,1))}
+ html.is-home #v-ana .hero-sec{height:calc(56.25vw - var(--hx));overflow:hidden;margin-top:var(--hmt,calc(-1 * var(--nwh,78px)))}
+ html.is-home #v-ana .hero{top:calc(var(--hx) * var(--hpos,0) * -1)}
+ html.is-home #v-ana .hero .hcap{bottom:calc(clamp(96px,10vw,150px) + var(--hx) * (1 - var(--hpos,0)))}
+ html.is-home #v-ana .hero .dn-badge{margin-top:calc(var(--hx) * var(--hpos,0))}
+}
 }
 </style>
 <div class="modal-bg" id="qrModal"><div class="lux-qr" role="dialog" aria-modal="true" aria-label="QR kod"><button class="mclose" id="qrClose" aria-label="Bağla">&times;</button><h2>QR kod</h2><p id="qrT">Telefonun kamerası ilə skan edin</p><div class="qr-box" id="qrBox"></div><button type="button" class="btn lx-ghost" id="qrCopy">Linki kopyala</button></div></div>
@@ -2877,23 +2878,38 @@ html.vrev #v-ana .hero .dn-badge{animation:vRevO .6s ease 1.4s both}
    var head=document.createElement('div');['h2','p'].forEach(function(t){var e=Q(':scope>'+t,f);if(e)head.appendChild(e);});
    f.insertBefore(head,f.firstChild);f.appendChild(a);st.appendChild(f);}
   function nwh(){if(nw)document.documentElement.style.setProperty('--nwh',nw.offsetHeight+'px');}
-  var tk=false;function upd(){tk=false;var h=hero.offsetHeight||1,y=scrollY,p=H.classList.contains('is-home')?Math.max(0,Math.min(1,y/h)):0;hero.style.setProperty('--hp',p.toFixed(3));H.classList.toggle('hero-top',H.classList.contains('is-home')&&y<h-90);}
+  /* giriş şəklinin ekrana oturması (window.LUX_HERO): pos — artıq hissənin neçə faizi yuxarıdan kəsilir (0 = yuxarı tam qalır, 0.5 = mərkəz, 1 = aşağı tam qalır);
+     fit — 1: şəkil ekran hündürlüyünə kəsilir, 0: tam 16:9 qalır (aşağısı sürüşdürməklə görünür); nav — 1: şəkil menyunun altından başlayır, 0: menyudan aşağıda */
+  var HCFG=window.LUX_HERO=Object.assign({pos:0,fit:1,nav:1},window.LUX_HERO||{});
+  function hApply(){var va=Q('#v-ana');if(!va)return;va.style.setProperty('--hpos',HCFG.pos);va.style.setProperty('--hfit',HCFG.fit?1:0);va.style.setProperty('--hnavpx',HCFG.nav?'0px':'var(--nwh,78px)');va.style.setProperty('--hmt',HCFG.nav?'calc(-1 * var(--nwh,78px))':'0px');}
+  hApply();window._luxHero={cfg:HCFG,apply:function(){hApply();upd();}};
+  var tk=false;function upd(){tk=false;var h=hero.offsetHeight||1,y=scrollY,p=H.classList.contains('is-home')?Math.max(0,Math.min(1,y/h)):0;hero.style.setProperty('--hp',p.toFixed(3));H.classList.toggle('hero-top',!!HCFG.nav&&H.classList.contains('is-home')&&y<h-90);}
   addEventListener('scroll',function(){if(!tk){tk=true;requestAnimationFrame(upd);}},{passive:true});addEventListener('resize',function(){nwh();upd();});
   V4.hero=function(v){H.classList.toggle('is-home',v==='ana');nwh();upd();};
   if(H.classList.contains('intro'))setTimeout(function(){try{sessionStorage.setItem('lux_intro','1');}catch(e){}},2600);
-  /* video giriş: buludların içindən real dron enişi (gündüz). Zəif şəbəkədə, qənaət rejimində və ya video başlamasa köhnə CSS girişi qalır */
-  (function(){try{if(!H.classList.contains('intro')||!H.classList.contains('is-home')&&CUR!=='ana')return;if(H.getAttribute('data-theme')==='dark')return;
+  /* video giriş: buludların içindən real dron enişi (gündüz). Zəif şəbəkədə, qənaət rejimində və ya video başlamasa köhnə CSS girişi qalır.
+     Ayarlar window.LUX_INTRO-dadır (x,y: sürüşmə %; s: böyütmə; a: başdan kəsmə san; b: sondan kəsmə san; f: əriyiş san; d: yazıların gecikməsi san; r: sürət).
+     Vizual ayar aləti: /?ayar=giris (assets/intro-tuner.js) */
+  var ICFG=window.LUX_INTRO=Object.assign({x:0,y:0,s:1,a:0,b:0,f:.35,d:0,r:1},window.LUX_INTRO||{});
+  function iApply(v){v.style.transform='translate('+ICFG.x+'%,'+ICFG.y+'%) scale('+ICFG.s+')';v.style.transitionDuration=ICFG.f+'s';try{v.playbackRate=ICFG.r||1;}catch(e){}}
+  function iMake(){var v=document.createElement('video');v.className='hvid';v.muted=true;v.defaultMuted=true;v.playsInline=true;v.setAttribute('playsinline','');v.setAttribute('muted','');v.preload='auto';v.setAttribute('aria-hidden','true');
+    v.src='/assets/intro/'+(innerWidth<760?'day-v2-m':'day-v2')+'.mp4';  /* fayl dəyişəndə adı da dəyiş — brauzer videonu 4 saat keşdə saxlayır */
+    iApply(v);hero.appendChild(v);return v;}
+  /* video bitəndə (kamera tam dayanıb): video əriyir, sonra menyu/yazı/nöqtələr yumşaq açılır (vrev). Hərəkət zamanı heç nə açılmır — video ilişməsin */
+  function iOut(v,keep){H.classList.add('vout');setTimeout(function(){H.classList.add('vrev');window._introDone&&window._introDone();H.classList.remove('intro','vintro','vplay');
+      setTimeout(function(){H.classList.remove('vrev');},2600);},Math.max(0,ICFG.d)*1000);
+    setTimeout(function(){if(!keep&&v.parentNode)v.parentNode.removeChild(v);if(!keep)H.classList.remove('vout');},Math.max(500,ICFG.f*1000+150));}
+  window._luxIntro={cfg:ICFG,make:iMake,apply:iApply,out:iOut,hero:hero};
+  (function(){try{if(/[?&]ayar=giris/.test(location.search)){var sc=document.createElement('script');sc.src='/assets/intro-tuner.js?v='+Date.now();document.body.appendChild(sc);return;}
+    if(!H.classList.contains('intro')||!H.classList.contains('is-home')&&CUR!=='ana')return;if(H.getAttribute('data-theme')==='dark')return;
     if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;var c=navigator.connection||{};if(c.saveData||/2g/.test(c.effectiveType||''))return;
-    var v=document.createElement('video');v.className='hvid';v.muted=true;v.defaultMuted=true;v.playsInline=true;v.setAttribute('playsinline','');v.setAttribute('muted','');v.preload='auto';v.setAttribute('aria-hidden','true');
-    v.src='/assets/intro/'+(innerWidth<760?'day-v2-m':'day-v2')+'.mp4';  /* fayl dəyişəndə adı da dəyiş — brauzer videonu 4 saat keşdə saxlayır */H.classList.add('vintro');hero.appendChild(v);
-    var gone=false,started=false;
-    /* video bitəndə (kamera tam dayanıb): video çıxarılır, sonra menyu/yazı/nöqtələr yumşaq açılır (vrev). Hərəkət zamanı heç nə açılmır — video ilişməsin */
-    function out(){if(gone)return;gone=true;H.classList.add('vout','vrev');window._introDone&&window._introDone();H.classList.remove('intro','vintro','vplay');
-      setTimeout(function(){if(v.parentNode)v.parentNode.removeChild(v);H.classList.remove('vout');},500);setTimeout(function(){H.classList.remove('vrev');},2600);}
+    H.classList.add('vintro');var v=iMake();var gone=false,started=false;
+    function out(){if(gone)return;gone=true;iOut(v,false);}
     function fail(){if(started||gone)return;gone=true;H.classList.remove('vintro');if(v.parentNode)v.parentNode.removeChild(v);setTimeout(function(){window._introDone&&window._introDone();},3200);}
-    v.addEventListener('playing',function(){if(started)return;started=true;H.classList.add('vplay');});
-    v.addEventListener('timeupdate',function(){if(v.duration&&v.currentTime>=v.duration-0.12)out();});v.addEventListener('ended',out);v.addEventListener('error',fail);
-    var pr=v.play();if(pr&&pr.catch)pr.catch(fail);setTimeout(fail,3000);setTimeout(out,10000);}catch(e){}})();
+    v.addEventListener('loadedmetadata',function(){if(ICFG.a>0)try{v.currentTime=ICFG.a;}catch(e){}});
+    v.addEventListener('playing',function(){if(started)return;started=true;H.classList.add('vplay');iApply(v);});
+    v.addEventListener('timeupdate',function(){if(v.duration&&v.currentTime>=v.duration-ICFG.b-0.12){try{v.pause();}catch(e){}out();}});v.addEventListener('ended',out);v.addEventListener('error',fail);
+    var pr=v.play();if(pr&&pr.catch)pr.catch(fail);setTimeout(fail,3000);setTimeout(out,12000);}catch(e){}})();
   V4.hero(CUR);})();
 })();
 </script><!--/v4-->
