@@ -598,4 +598,11 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - **Test mühiti:** /tmp/ofh (saxta Supabase klienti + real bazadan yalnız-oxuma fiksturlar, Playwright; 320/360/390/1280, işçi və rəhbər rolu). Müvəqqəti `_fx_run`/`_fx_tok` bazadan silindi.
 - Yoxlanmayıb: real iPhone-da toxunma jestləri (hekayə vərəqi emulyasiyada yoxlanıb), Təqvim/Sənədlər/Tapşırıqlar boş məlumatla baxılıb.
 - v149: Sahibkar ekranında səhifə yana daşırdı (telefonda ekranın 60%-i qədər kiçilirdi) — `.odash`/`.oside` grid uşaqlarına min-width:0, cədvəllər kartın içində sürüşür.
-- Gözləyir: VMM düzəlişlər paketi (20–22 okt, /mnt/user-data/uploads/…VMM-duzelisler…zip → /tmp/vmmzip) — A qrupu (alt menyu linzası, aşağı çəkib yeniləmə, sağa-sola keçid, sabit başlıq, işçi sətri toxunulan, aylıq hesabat önizləməsi) Baş Ofisə hələ köçürülməyib.
+
+## 17.11.2026 — Baş Ofis v150: VMM mobil UX paketi köçürüldü (hamıya)
+- Yeni fayl `assets/ofis-ux.js` (VMM `vmm-ux.js`-dən; ofis.html və SW keş siyahısına əlavə edilib): alt menyu aşağı sürüşəndə kiçilir (`body.dk-mini`), toxunanda/sürüşdürəndə şüşə linza (`#dock.lq-on`), aşağı çəkib yeniləmə (`#ptr` → `loadAll()`), bölmələr arası sağa-sola keçid (sıra alt menyudakı kimi), aylıq hesabat tətbiq daxilində önizləmə + PDF (`ofisReport`, html2canvas + jsPDF cdnjs-dən).
+- ofis-b.js: `dkPill` faizlə yerləşir; Çat↔Lent öz jesti söndürüldü (ümumi keçidlə toqquşmasın, çat otağında kənardan geri qalır); profil menyusunda «Şifrəmi dəyiş».
+- ofis-a.js: İşçilər cədvəlində bütün sətir toxunulandır; `monthReport` seçilmiş ayı götürür, `ofisReport` yoxdursa köhnə çapa qayıdır.
+- CSS `ofis-app.css` sonunda «Mobil UX» bloku. Linzadakı rəngli (göy qurşağı) haşiyə unslop qaydasına görə KÖÇÜRÜLMƏDİ, neytral şüşədir.
+- KÖÇÜRÜLMƏDİ: sabit başlıq (Baş Ofisdə mobil başlıq şəffafdır və məzmunla sürüşür — dizayn fərqi), «yalnız HR» rolu, VMM rəngləri/Cloudflare hissəsi.
+- Yoxlama: emulyasiyada (390px) keçid, kiçilmə, yeniləmə, menyu üzərində sürüşdürmə, hesabat önizləməsi işləyir. Real iPhone-da yoxlanmayıb; PDF yükləmə düyməsi sınaqdan keçirilməyib.

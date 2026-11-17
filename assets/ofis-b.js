@@ -257,7 +257,7 @@ function dkBuild(){var d=$('dock');if(!d){d=document.createElement('nav');d.id='
  d.innerHTML='<span class="dkpill"></span>'+items.map(function(t){return '<button class="dk'+(t.v===cur?' on':'')+'" data-v="'+t.v+'" onclick="dkGo(\''+t.v+'\')">'+dkIcon(t.v)+'<span>'+esc(t.l)+'</span>'+(t.n?'<b class="dkb">'+esc(t.n)+'</b>':'')+'</button>';}).join('')
   +'<button class="dk'+(inMore?' on':'')+'" data-v="__more" onclick="dkMore()">'+dkIcon('more')+'<span>Daha</span>'+(moreN?'<b class="dkb">•</b>':'')+'</button>';
  dkPill();}
-function dkPill(){var d=$('dock');if(!d)return;var on=d.querySelector('.dk.on'),p=d.querySelector('.dkpill');if(!p)return;if(!on){p.style.width='0';return;}p.style.left=on.offsetLeft+'px';p.style.width=on.offsetWidth+'px';}
+function dkPill(){var d=$('dock');if(!d)return;var on=d.querySelector('.dk.on'),p=d.querySelector('.dkpill');if(!p)return;if(!on){p.style.width='0';return;}var ks=[].slice.call(d.querySelectorAll('.dk')),i=ks.indexOf(on),n=ks.length,pd=parseFloat(getComputedStyle(d).paddingLeft)||0;p.style.left='calc('+pd+'px + (100% - '+(2*pd)+'px) * '+i+' / '+n+')';p.style.width='calc((100% - '+(2*pd)+'px) / '+n+')';}
 function dkGo(v){try{navigator.vibrate&&navigator.vibrate(8);}catch(e){}if(typeof CHATother!=='undefined'&&CHATother&&v==='chat'){chatBack();return;}show(v);}
 function dkMore(){var tabs=dkTabs(),prim=dkPrimary(tabs);
  modal('<div class="mhead"><h3>Bölmələr</h3><button class="x" onclick="closeModal()">×</button></div><div class="dkgrid">'+tabs.filter(function(t){return prim.indexOf(t.v)<0;}).map(function(t){return '<button class="'+(t.on?'on':'')+'" onclick="closeModal();dkGo(\''+t.v+'\')">'+dkIcon(t.v)+'<span>'+esc(t.l)+'</span></button>';}).join('')+'</div>');}
@@ -267,7 +267,7 @@ function meSheet(){var mb=$('meBox'),n=(mb.querySelector('b')||{}).textContent||
  modal('<div class="mesheet"><div class="av">'+esc($('meAva').textContent)+'</div><b>'+esc(n)+'</b><span>'+esc(role)+'</span></div><div class="melist">'
   +(has('me')?'<button onclick="closeModal();show(\'me\')">Profilim<span>›</span></button>':'')
   +(has('oprofil')?'<button onclick="closeModal();show(\'oprofil\')">Profilim<span>›</span></button>':'')
-  +'<button onclick="closeModal();statusPick&&statusPick()">Status<span>›</span></button>'
+  +'<button onclick="closeModal();setTimeout(function(){modal(\'<div class=mhead><h3>Şifrəmi dəyiş</h3><button class=x onclick=closeModal()>×</button></div>\'+pwCard());},50)">Şifrəmi dəyiş<span>›</span></button>'+'<button onclick="closeModal();statusPick&&statusPick()">Status<span>›</span></button>'
   +(inst&&inst.style.display!=='none'?'<button onclick="closeModal();$(\'instBtn\').click()">Tətbiqi quraşdır<span>›</span></button>':'')
   +'<button class="red" onclick="closeModal();$(\'outBtn\').click()">Çıxış</button></div>');}
 function glassInit(){meAvaInit();var mbx=$('meBox');if(mbx&&window.MutationObserver)new MutationObserver(meAvaUpd).observe(mbx,{childList:true,subtree:true});if(!$('ambient')){var a=document.createElement('div');a.id='ambient';document.body.insertBefore(a,document.body.firstChild);}
@@ -1391,7 +1391,7 @@ var _voicePlay10=voicePlay;voicePlay=function(id,url){_voicePlay10(id,url);if(_v
 /* ---- Instagram jesti: Çat ↔ Lent sürüşdürmə, çat otağında kənardan geri ---- */
 (function(){var S=null;
  var busy=function(){return document.body.classList.contains('incall')||$('modal').classList.contains('on')||document.querySelector('.pg.on,#igSV,#mvw,#igReel,#stEd,#s4wr,#s4quiz,#igCtx,.s3over')||(typeof CHAT_SEL!=='undefined'&&CHAT_SEL);};
- var ctx=function(){var c=$('v-chat'),f=$('v-feed');if(c&&c.classList.contains('on'))return CHATother?'room':'list';if(f&&f.classList.contains('on'))return 'feed';return null;};
+ var ctx=function(){var c=$('v-chat'),f=$('v-feed');if(c&&c.classList.contains('on')&&CHATother)return 'room';return null;};
  var hscroll='.socar,.igstories,.soseg,.sugl,.s3hl,.pfbd,.fpfl,.sochips,.igvc,video,input,textarea,.igboards,.s4opts,.sorpick';
  document.addEventListener('touchstart',function(e){S=null;if(e.touches.length>1||busy())return;var k=ctx();if(!k)return;var t=e.touches[0];
   if(k==='room'){if(t.clientX>28)return;}else if(e.target.closest(hscroll))return;

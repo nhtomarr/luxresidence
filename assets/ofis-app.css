@@ -1627,3 +1627,31 @@ body.lux .tdc.an{background:linear-gradient(135deg,#9a3c20,#ba4d2c)}
 .otbl{max-width:100%}
 .oside>*{min-width:0;max-width:100%;overflow-x:auto}
 .oside{min-width:0}
+
+/* ===== Mobil UX (VMM Ofisdən köçürülüb, 17.11.2026): kiçilən alt menyu, şüşə linza, aşağı çəkib yeniləmə, sağa-sola keçid ===== */
+body{overscroll-behavior-y:contain}
+#ptr{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 10px);transform:translate(-50%,0);z-index:55;color:#6b7280;opacity:0;pointer-events:none;transition:opacity .2s;width:26px;height:26px}
+#ptr.spin svg{animation:ptrspin .8s steps(8) infinite}
+@keyframes ptrspin{to{transform:rotate(360deg)}}
+.view.sw-l{animation:swl .28s cubic-bezier(.2,.8,.2,1)}
+.view.sw-r{animation:swr .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes swl{from{transform:translateX(28px);opacity:.4}to{transform:none;opacity:1}}
+@keyframes swr{from{transform:translateX(-28px);opacity:.4}to{transform:none;opacity:1}}
+#empTbl tr[onclick]:active td{background:rgba(0,0,0,.04)}
+@media(max-width:759px){
+ #dock{overflow:visible;border-radius:999px;transition:left .38s cubic-bezier(.2,.9,.25,1.05),right .38s cubic-bezier(.2,.9,.25,1.05),height .38s cubic-bezier(.2,.9,.25,1.05),transform .35s cubic-bezier(.28,1.4,.42,1),opacity .25s}
+ #dock .dk{border-radius:999px}
+ #dock .dk svg,#dock .dk span{transition:width .3s,height .3s,opacity .18s,max-height .3s,transform .25s cubic-bezier(.3,1.4,.45,1)}
+ #dock .dk span{max-height:14px;line-height:14px;overflow:hidden}
+ body.dk-mini #dock{left:17%;right:17%;height:50px}
+ body.dk-mini #dock .dk span{opacity:0;max-height:0}
+ body.dk-mini #dock .dk svg{width:22px;height:22px}
+ body.dk-mini #dock .dkb{top:0}
+ #dock.lq-on{transform:scale(1.025)}
+ body.igfull #dock,body.incall #dock,body:has(#igSelBar) #dock{transform:translateY(140%)}
+ /* göstərici: sakitdə yastı, hərəkətdə böyüyən neytral şüşə linza (rəngli haşiyə yoxdur) */
+ #dock .dkpill{top:5px;bottom:5px;border-radius:999px;background:transparent;box-shadow:none;overflow:visible;z-index:2;pointer-events:none;transition:left .24s cubic-bezier(.25,1.12,.4,1),width .24s cubic-bezier(.25,1.12,.4,1)}
+ #dock .dkpill::before{content:"";position:absolute;inset:0;border-radius:inherit;background:rgba(15,23,42,.07);box-shadow:inset 0 0 0 .5px rgba(0,0,0,.04);transition:transform .26s cubic-bezier(.3,1.45,.45,1),background .2s,box-shadow .2s}
+ #dock.lq-on .dkpill::before{transform:scale(1.28,1.42);background:rgba(255,255,255,.22);backdrop-filter:saturate(170%) brightness(1.04);-webkit-backdrop-filter:saturate(170%) brightness(1.04);box-shadow:inset 0 0 0 .6px rgba(255,255,255,.9),inset 0 1px 2px rgba(255,255,255,.9),0 10px 26px -8px rgba(16,24,40,.38)}
+ #dock.lq-on .dk svg,#dock.lq-on .dk span{transition:width .3s,height .3s,opacity .18s,max-height .3s}
+}
