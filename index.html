@@ -2893,7 +2893,7 @@ html.vrev #v-ana .hero .dn-badge{animation:vRevO .6s ease 1.4s both}
   var ICFG=window.LUX_INTRO=Object.assign({x:0,y:0,s:1,a:0,b:0,f:.35,d:0,r:1},window.LUX_INTRO||{});
   function iApply(v){v.style.transform='translate('+ICFG.x+'%,'+ICFG.y+'%) scale('+ICFG.s+')';v.style.transitionDuration=ICFG.f+'s';try{v.playbackRate=ICFG.r||1;}catch(e){}}
   function iMake(){var v=document.createElement('video');v.className='hvid';v.muted=true;v.defaultMuted=true;v.playsInline=true;v.setAttribute('playsinline','');v.setAttribute('muted','');v.preload='auto';v.setAttribute('aria-hidden','true');
-    v.src='/assets/intro/'+(innerWidth<760?'day-v2-m':'day-v2')+'.mp4';  /* fayl dəyişəndə adı da dəyiş — brauzer videonu 4 saat keşdə saxlayır */
+    v.src='/assets/intro/'+(innerWidth<760?'day-v3-m':'day-v3')+'.mp4';  /* fayl dəyişəndə adı da dəyiş — brauzer videonu 4 saat keşdə saxlayır */
     iApply(v);hero.appendChild(v);return v;}
   /* video bitəndə (kamera tam dayanıb): video əriyir, sonra menyu/yazı/nöqtələr yumşaq açılır (vrev). Hərəkət zamanı heç nə açılmır — video ilişməsin */
   function iOut(v,keep){H.classList.add('vout');setTimeout(function(){H.classList.add('vrev');window._introDone&&window._introDone();H.classList.remove('intro','vintro','vplay');
