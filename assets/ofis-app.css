@@ -1559,3 +1559,16 @@ body.lux .tdc.an{background:linear-gradient(135deg,#9a3c20,#ba4d2c)}
 
 /* v141: LUX ortaq giriş çipi ("Ad | Çıxış") ofis tətbiqində görünməsin — mesaj sahəsinin üstünə düşürdü; çıxış profil menyusundadır */
 .lux-me{display:none!important}
+
+/* Bu gün: ad günü kartı (unikal prefiks tbd- — sosial .bdc ilə toqquşmasın) */
+.tbd{display:flex;align-items:center;gap:12px;cursor:pointer;background:#fffaf0;border:1px solid #f3e2bd;flex-wrap:wrap}
+.tbd>:first-child{flex:none}
+.tbd-t{flex:1 1 140px;min-width:0;text-align:left}
+.tbd-t b{display:block;font-size:15px;font-weight:600;line-height:1.3;overflow-wrap:anywhere}
+.tbd-t span{display:block;font-size:13px;line-height:1.4;color:#8a5a12;margin-top:2px}
+.tbd-b{flex:none;height:36px;padding:0 16px;border:0;border-radius:10px;background:#b45309;color:#fff;font:600 14px/1 inherit;cursor:pointer}
+.tbd-b:active{transform:scale(.97)}
+.tbd-ok{flex:none;font-style:normal;font-size:13px;font-weight:600;color:#15803d;white-space:nowrap}
+.tbd-go{flex:none;font-style:normal;font-size:22px;color:#8a5a12}
+.tbd-me{background:#fdf0c8;border-color:#eccb7a}
+@media (max-width:360px){.tbd-b{flex:1 1 100%}}
