@@ -606,3 +606,10 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - CSS `ofis-app.css` sonunda «Mobil UX» bloku. Linzadakı rəngli (göy qurşağı) haşiyə unslop qaydasına görə KÖÇÜRÜLMƏDİ, neytral şüşədir.
 - KÖÇÜRÜLMƏDİ: sabit başlıq (Baş Ofisdə mobil başlıq şəffafdır və məzmunla sürüşür — dizayn fərqi), «yalnız HR» rolu, VMM rəngləri/Cloudflare hissəsi.
 - Yoxlama: emulyasiyada (390px) keçid, kiçilmə, yeniləmə, menyu üzərində sürüşdürmə, hesabat önizləməsi işləyir. Real iPhone-da yoxlanmayıb; PDF yükləmə düyməsi sınaqdan keçirilməyib.
+
+## 17.11.2026 — Sayt: video giriş (buludlardan dron enişi, gündüz)
+- Higgsfield (Nihatın hesabı, Plus plan; bağlayıcı yalnız oxuyur — generasiya Claude tətbiqinin daxili brauzerində higgsfield.ai üzərindən edilir, hər generasiyadan əvvəl kredit təsdiqi alınır). Seedance 2.0, 5 san, 16:9, 1080p, səssiz, 60 kredit. Mənbə: assets/intro/day.jpg (1920×1080, CORS açıq — _headers).
+- Üsul: video TƏRSİNƏ çəkilir (render → kamera qalxır → bulud), sonra ffmpeg `reverse` ilə çevrilir: eniş dəqiq bizim kadrda bitir. Xam fayl: /tmp/intro/day_raw.mp4.
+- Fayllar: assets/intro/day.mp4 (1600×900, ~1,7 MB), day-m.mp4 (960×540, ~0,75 MB, <760px).
+- Kod (v4.js/v4.css, /tmp/psite, build4.py): `html.vintro` → `.hvid` video hero-nun üstündə oynayır, `vplay` (başladı), `vtxt` (3,4 san — mobil kart görünür), `vout` (son 0,9 san əriyir), sonra `intro`+`vintro` silinir və `intro-done`. Yalnız açıq (gündüz) temada, sessiyada bir dəfə; reduced-motion / saveData / 2g / video 3 san-də başlamasa köhnə CSS girişi qalır.
+- Gecə versiyası hələ yoxdur (assets/intro/night.jpg hazırdır): tünd temada köhnə CSS girişi işləyir.

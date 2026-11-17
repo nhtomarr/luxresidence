@@ -2654,6 +2654,23 @@ html.intro #v-ana .hcap>:nth-child(3),html.intro #v-ana .hcap-mobile>:nth-child(
 html.intro #v-ana .hero .dn-badge{animation-delay:3.2s!important}
 html.intro.hero-top .nav{animation:hFade .8s ease 2.2s backwards}
 @media(prefers-reduced-motion:reduce){html.intro #v-ana .hero::after{display:none}}
+
+/* video giriş (gündüz): buludlardan real dron enişi. html.vintro olanda köhnə CSS bulud/eniş animasiyası söndürülür */
+#v-ana .hero .hvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;pointer-events:none;background:#e8ecef;opacity:1;transition:opacity 1.1s ease}
+html.vout #v-ana .hero .hvid{opacity:0}
+html.vintro #v-ana .hero::after{display:none}
+html.vintro #v-ana .hero .sky.day,html.vintro #v-ana .hero .overlay,html.vintro #v-ana .hero .sky.night{animation:none!important}
+html.vintro:not(.vplay) #v-ana .hcap>*,html.vintro:not(.vplay) #v-ana .hcap-mobile>*,html.vintro:not(.vplay) #v-ana .hero .bmark .bmark-dot,html.vintro:not(.vplay) #v-ana .hero .dn-badge,html.vintro:not(.vplay) #v-ana .hero .veil{animation:none!important;opacity:0}
+html.vintro.vplay #v-ana .hero .veil{animation-delay:3.2s!important;animation-fill-mode:both}
+html.vintro.vplay #v-ana .hcap>*,html.vintro.vplay #v-ana .hcap-mobile>*{animation-delay:3.7s!important}
+html.vintro.vplay #v-ana .hcap>:nth-child(2),html.vintro.vplay #v-ana .hcap-mobile>:nth-child(2){animation-delay:3.85s!important}
+html.vintro.vplay #v-ana .hcap>:nth-child(3),html.vintro.vplay #v-ana .hcap-mobile>:nth-child(3){animation-delay:4s!important}
+html.vintro.vplay #v-ana .hero .bmark .bmark-dot{animation-delay:calc(4.6s + var(--i,0) * 70ms)!important}
+html.vintro.vplay #v-ana .hero .dn-badge{animation-delay:5s!important}
+html.vintro #v-ana .hcap,html.vintro #v-ana .hcap-mobile,html.vintro #v-ana .hero .veil{z-index:4}
+html.vintro.hero-top .nav{animation:hFade .8s ease 3.4s backwards}
+html.vintro #v-ana .hcap-mobile{opacity:0;transition:opacity .7s ease}
+html.vintro.vtxt #v-ana .hcap-mobile{opacity:1}
 </style>
 <div class="modal-bg" id="qrModal"><div class="lux-qr" role="dialog" aria-modal="true" aria-label="QR kod"><button class="mclose" id="qrClose" aria-label="Bağla">&times;</button><h2>QR kod</h2><p id="qrT">Telefonun kamerası ilə skan edin</p><div class="qr-box" id="qrBox"></div><button type="button" class="btn lx-ghost" id="qrCopy">Linki kopyala</button></div></div>
 <div class="apt-bar" id="aptBar"><img id="abImg" alt=""><div><b id="abT"></b><span id="abS"></span></div><button type="button" class="btn lx-ghost" id="abVisit">Baxışa yazıl</button><button type="button" class="btn btn-primary" id="abCall">Mənə zəng edin</button></div>
@@ -2840,7 +2857,7 @@ html.intro.hero-top .nav{animation:hFade .8s ease 2.2s backwards}
    QA('.hf-rooms button').forEach(function(b){b.classList.toggle('on',SEL.has(+b.dataset.r));});
    QA('.hf-go').forEach(function(a){a.textContent=SEL.size?n+' mənzili göstər':'Planlara bax';a.setAttribute('href',!SEL.size?'/planlar':ks.length===1?'/'+ks[0]+'-otaqli-menziller':'/planlar?otaq='+ks.join(','));});}
   document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.hf-rooms button');if(b&&!b.disabled){var k=+b.dataset.r;if(SEL.has(k))SEL.delete(k);else SEL.add(k);upd();}if(e.target.closest&&e.target.closest('.hf-vis')&&window.luxVisit)luxVisit('');});
-  setTimeout(function(){document.documentElement.classList.add('intro-done');},3200);})();
+  window._introDone=function(){document.documentElement.classList.add('intro-done');};setTimeout(function(){if(!document.documentElement.classList.contains('vintro'))window._introDone();},3200);})();
 
  /* ---- kinematik giriş: şəkil naviqasiyanın altından, sürüşdükcə yavaş yaxınlaşma ---- */
  (function(){var hero=Q('#v-ana .hero'),sec=Q('#v-ana .hero-sec'),nw=Q('.nav-wrap'),f=Q('.hero .hfind'),b=document.body,H=document.documentElement;if(!hero||!sec)return;
@@ -2853,6 +2870,16 @@ html.intro.hero-top .nav{animation:hFade .8s ease 2.2s backwards}
   addEventListener('scroll',function(){if(!tk){tk=true;requestAnimationFrame(upd);}},{passive:true});addEventListener('resize',function(){nwh();upd();});
   V4.hero=function(v){H.classList.toggle('is-home',v==='ana');nwh();upd();};
   if(H.classList.contains('intro'))setTimeout(function(){try{sessionStorage.setItem('lux_intro','1');}catch(e){}},2600);
+  /* video giriş: buludların içindən real dron enişi (gündüz). Zəif şəbəkədə, qənaət rejimində və ya video başlamasa köhnə CSS girişi qalır */
+  (function(){try{if(!H.classList.contains('intro')||!H.classList.contains('is-home')&&CUR!=='ana')return;if(H.getAttribute('data-theme')==='dark')return;
+    if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;var c=navigator.connection||{};if(c.saveData||/2g/.test(c.effectiveType||''))return;
+    var v=document.createElement('video');v.className='hvid';v.muted=true;v.defaultMuted=true;v.playsInline=true;v.setAttribute('playsinline','');v.setAttribute('muted','');v.preload='auto';v.setAttribute('aria-hidden','true');
+    v.src='/assets/intro/'+(innerWidth<760?'day-m':'day')+'.mp4';H.classList.add('vintro');hero.appendChild(v);
+    var gone=false,started=false;function out(){if(gone)return;gone=true;H.classList.add('vout');setTimeout(function(){window._introDone&&window._introDone();H.classList.remove('intro','vintro','vplay','vout','vtxt');if(v.parentNode)v.parentNode.removeChild(v);},1600);}
+    function fail(){if(started||gone)return;gone=true;H.classList.remove('vintro');if(v.parentNode)v.parentNode.removeChild(v);setTimeout(function(){window._introDone&&window._introDone();},3200);}
+    v.addEventListener('playing',function(){if(started)return;started=true;H.classList.add('vplay');});
+    v.addEventListener('timeupdate',function(){if(v.currentTime>=3.4)H.classList.add('vtxt');if(v.duration&&v.currentTime>=v.duration-0.9)out();});v.addEventListener('ended',out);v.addEventListener('error',fail);
+    var pr=v.play();if(pr&&pr.catch)pr.catch(fail);setTimeout(fail,3000);setTimeout(out,9000);}catch(e){}})();
   V4.hero(CUR);})();
 })();
 </script><!--/v4-->
