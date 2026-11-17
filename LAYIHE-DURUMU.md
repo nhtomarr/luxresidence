@@ -642,3 +642,10 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 ## 17.11.2026 — Baş Ofis v151: Davamiyyət cədvəlində vəzifə
 - «Davamiyyət» (gün cədvəli, `renderDay`) sətirlərində adın yanında mötərizədə vəzifə: `posOf(e).title`, sinif `.dt-pos` (solğun, qalın deyil). Vəzifəsi təyin olunmayan işçilərdə (72-dən 29-u, əsasən LUX Tikinti) mötərizə göstərilmir.
 - Test (harness, 1440 və 390): 43 sətirdə vəzifə görünür, daşma yoxdur.
+
+## 17.11.2026 — Baş Ofis v152: ana səhifədən sürətli icazə sorğusu
+- Ana səhifədə giriş/çıxış kartının içində (`#tPerm`, `qpHome`) «İcazə al» düyməsi. Modal (`qpOpen/qpDraw/qpSend`): Tez çıxıram / Gec gəlirəm / Arada çıxıram / İş tapşırığı: ofisə sonra gəlirəm; 15 dəq–3 saat; Bu gün / Sabah; səbəb məcburidir.
+- Sxem dəyişməyib: `office_leaves`-ə `type='icaze'`, `hours=dəq/60`, növ və müddət `reason`-un əvvəlində yazılır; status pending → mövcud «Sorğular → gözləyənlər» növbəsinə düşür, `notify('leave_new')` gedir. Eyni günə ikinci gözləyən sorğu bloklanır.
+- Təsdiq: Baş Ofisdə ayrıca «HR» rolu yoxdur — təsdiqi `ofis_admin` icazəsi olan 3 nəfər verir (RLS: `office_is_mgr()`). Yalnız HR-ə bağlamaq Nihatın qərarını gözləyir.
+- `lvRange` saatlıq icazəni dəqiqə ilə göstərir (`qpDur`). Davamiyyət cədvəlində təsdiqlənmiş saatlıq icazəsi olan və gəlmiş işçidə «icazəli · müddət» nişanı.
+- AÇIQ: təsdiqlənmiş icazə gecikmə/tez çıxma dəqiqələrini (late_min/early_min) avtomatik silmir — tabeldə «X dəq gec» yanında «icazəli» görünür. Gecikmənin sayılmaması HR/davamiyyət qaydasıdır, Nihatın sözü ilə ediləcək.

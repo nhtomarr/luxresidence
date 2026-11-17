@@ -1658,3 +1658,13 @@ body{overscroll-behavior-y:contain}
 
 /* v151: Davamiyyət cədvəlində adın yanında vəzifə */
 .dt-pos{color:var(--mut,#6b7280);font-weight:400;font-size:.92em;white-space:normal}
+
+/* v152: ana səhifədə sürətli icazə */
+.qp-bar{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.18)}
+.qp-st{min-width:0;font-size:14px;color:rgba(255,255,255,.8);line-height:1.35;overflow-wrap:anywhere}
+.qp-st b{color:#fff;font-weight:600}
+.qp-st .pill{margin-left:4px;background:rgba(255,255,255,.2);color:#fff}
+.qp-bar .btn{flex:none}
+.qp-seg{display:flex;flex-wrap:wrap;gap:8px}
+.qp-seg button{min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:14px;cursor:pointer}
+.qp-seg button.on{background:var(--acc);border-color:var(--acc);color:#fff}
