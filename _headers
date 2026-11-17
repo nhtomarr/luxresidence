@@ -94,3 +94,6 @@
   X-Robots-Tag: noindex, nofollow
 /tikinti
   X-Robots-Tag: noindex, nofollow
+
+/assets/intro/*
+  Access-Control-Allow-Origin: *
