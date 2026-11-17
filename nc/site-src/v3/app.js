@@ -243,10 +243,10 @@ const SLIDES = [['gate', 'Nizami City', 'Yasamalda, Nizami metrosunun yanında q
 function heroBlock() {
   const t = TERMS[0];
   return `<section class="wrap"><div class="hero cine"><div class="slides" id="sl">${SLIDES.map(([k, h, s], i) => `<div class="slide${i ? '' : ' on'}">${pic(k, h, { eager: !i, sizes: '100vw' })}</div>`).join('')}
-      <div class="hero-t"><h1 class="h1" id="slH">${SLIDES[0][1]}</h1><p class="lead" id="slS">${SLIDES[0][2]}</p></div>
-      <div class="hero-dots" id="slD">${SLIDES.map((_, i) => `<button type="button" aria-label="Şəkil ${i + 1}" class="${i ? '' : 'on'}"></button>`).join('')}</div>
-      <div class="hero-nav"><button type="button" aria-label="Əvvəlki" data-d="-1">${I.al}</button><button type="button" aria-label="Növbəti" data-d="1">${I.ar}</button></div></div>
-    <div class="offer"><img class="mk" src="/assets/nc/site/mark-cream.png" alt=""><span>Daxili kredit</span><div class="big">${t ? t.m + ' ay' : '0%'}</div><h2>faizsiz ödəniş</h2><p>Mənzili hissə-hissə alın: ilkin ödənişdən sonra qalan məbləği ${t ? t.m + ' ay ərzində faizsiz' : 'hissə-hissə'} ödəyin${TERMS.length > 1 ? ', ' + TERMS.slice(1).map(x => x.m).join(' və ') + ' aylıq variantlar da var' : ''}.</p><a class="btn" href="#elaqe" data-kind="price">${HP ? 'Qiyməti öyrən' : 'Hesabla'} ${I.ar}</a></div></div>
+      <div class="hero-t"><h1 class="h1" id="slH">${SLIDES[0][1]}</h1><p class="lead" id="slS">${SLIDES[0][2]}</p>
+        <div class="hero-c"><div class="hero-dots" id="slD">${SLIDES.map((_, i) => `<button type="button" aria-label="Şəkil ${i + 1}" class="${i ? '' : 'on'}"></button>`).join('')}</div>
+        <div class="hero-nav"><button type="button" aria-label="Əvvəlki" data-d="-1">${I.al}</button><button type="button" aria-label="Növbəti" data-d="1">${I.ar}</button></div></div></div></div>
+    <div class="offer"><img class="mk" src="/assets/nc/site/mark-cream.png" alt=""><span>Daxili kredit</span><div class="big">${t ? t.m + ' ay' : '0%'}</div><h2>faizsiz ödəniş</h2><p>Mənzili hissə-hissə alın: ilkin ödənişdən sonra qalan məbləği ${t ? t.m + ' ay ərzində faizsiz' : 'hissə-hissə'} ödəyin${TERMS.length > 1 ? ', ' + TERMS.slice(1).map(x => x.m).join(', ').replace(/, (\d+)$/, ' və $1') + ' aylıq variantlar da var' : ''}.</p><a class="btn" href="#elaqe" data-kind="price">${HP ? 'Qiyməti öyrən' : 'Hesabla'} ${I.ar}</a></div></div>
     ${findBlock()}</section>`;
 }
 function bindHero(root) {
