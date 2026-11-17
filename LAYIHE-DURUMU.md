@@ -587,3 +587,13 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 
 ## 17.11.2026 — Mirzənin ad günü bildirişi
 - Elan id=11 (Rəhbərlik adından), audience = Baş Ofisin aktiv işçiləri (location_id null), Mirzə (id 54) xaric — 22 nəfər; hər birinə _office_push2 push (tag bday-mirze, link ?ann=11).
+
+## 17.11.2026 — Baş Ofis v147–v148: responsivlik və məntiq auditi
+- **Ad günü kartı** (Bu gün): `.bdc` sinfi sosial ad günü şəbəkəsi ilə toqquşurdu (mətn 52px dairəyə sıxılırdı). Yeni unikal siniflər `tbd-*`; dar ekranda düymə alta düşür.
+- **Sinif toqquşmaları:** `.go` (ox) → `arr-go` (şifrə kartında göy zolaq görünürdü); Lentdə təşəkkür postu `.kud` flex-i təsadüfən alırdı → `.igpost.ig2.kud` üçün ayrıca grid.
+- **Məntiq:** `notYet(e,d)` — iş saatı başlamayan işçi Panel/Nəzarət/Davamiyyət/Sahibkar ekranında "gəlməyib" sayılmır ("gözlənilir"); Komandada `teamSt(e)` → "Hələ başlamayıb" / "İstirahət günü". `chatAgo` vahidləri: dəq/saat/gün/həftə (əvvəl d/s/g/h — "5h" həftə demək idi). `ini()` mötərizəni baş hərf saymır.
+- **Hekayə:** "Baxanlar" vərəqi açıq ikən arxadakı hekayəni çəkmək vərəqi aşağı salıb bağlayır (`svSheetGest`, capture-faza), hekayə yerində qalır. Önə çıxanlarda da.
+- **Cədvəllər (≤700px):** Sorğular siyahısı sətir kartlarına keçdi (`lvl-*`); qalan cədvəllər yana sürüşür (min-width), pill-lər qırılmır. Elanlarda uzun mətn 8 sətirdən sonra "Davamını oxu".
+- **Kiçik telefon (≤400px):** Nəzarət plitələri, Bu gün statistika sətri kiçildi; tək qalan plitə tam en; `.linkbtn`/`+ Status` toxunma hündürlüyü 32px.
+- **Test mühiti:** /tmp/ofh (saxta Supabase klienti + real bazadan yalnız-oxuma fiksturlar, Playwright; 320/360/390/1280, işçi və rəhbər rolu). Müvəqqəti `_fx_run`/`_fx_tok` bazadan silindi.
+- Yoxlanmayıb: real iPhone-da toxunma jestləri (hekayə vərəqi emulyasiyada yoxlanıb), Təqvim/Sənədlər/Tapşırıqlar boş məlumatla baxılıb.
