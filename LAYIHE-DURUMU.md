@@ -638,3 +638,7 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - `.offer .big` parıltılı qradiyent mətn giriş ekranında söndürüldü (düz ağ). Mətn: «12, 18 və 24 aylıq».
 - Düzəliş (17.11, 15:30): Nihatın iMac-ində şəklin üstündə ~14 px açıq zolaq qalırdı (məndə təkrarlanmadı; `--hdh` menyunun ölçülən hündürlüyünə bağlı idi). İndi `heroIntro` şəklin səhifədəki yerini (offsetTop zənciri, animasiyadan asılı deyil) ölçüb qalan boşluğu özü bağlayır; şrift yüklənəndə, menyu/səhifə ölçüsü dəyişəndə (ResizeObserver) və 60 ms–2,5 s arası təkrar yoxlayır. Test: 2576, 1440, 820, 390 — üst boşluq 0.
 - Düzəliş (17.11, 15:35): Nihatın istəyi ilə video vaxtı yaşıl kart artıq yığılı görünmür — video oynayarkən yalnız menyu və «Keç» var; bitəndə başlıq kartı və kredit kartı eyni anda, eyni hərəkətlə (0,7 s) gəlir.
+
+## 17.11.2026 — Baş Ofis v151: Davamiyyət cədvəlində vəzifə
+- «Davamiyyət» (gün cədvəli, `renderDay`) sətirlərində adın yanında mötərizədə vəzifə: `posOf(e).title`, sinif `.dt-pos` (solğun, qalın deyil). Vəzifəsi təyin olunmayan işçilərdə (72-dən 29-u, əsasən LUX Tikinti) mötərizə göstərilmir.
+- Test (harness, 1440 və 390): 43 sətirdə vəzifə görünür, daşma yoxdur.
