@@ -2671,6 +2671,15 @@ html.vintro #v-ana .hcap,html.vintro #v-ana .hcap-mobile,html.vintro #v-ana .her
 html.vintro.hero-top .nav{animation:hFade .8s ease 4.4s backwards}
 html.vintro #v-ana .hcap-mobile{opacity:0;transition:opacity .7s ease}
 html.vintro.vtxt #v-ana .hcap-mobile{opacity:1}
+/* Geniş, amma alçaq ekranlarda (iMac, ultrawide) 16:9 hero ekrandan hündür olur və başlıq aşağıda kəsilirdi:
+   bölmə ekran hündürlüyünə qədər kəsilir, şəkil (və nöqtələr, video) mərkəzdən oturur, başlıq görünən hissənin altına qalxır */
+@media(min-width:901px){
+ html.is-home #v-ana{--hx:max(0px,calc(56.25vw - 100svh + 56px))}
+ html.is-home #v-ana .hero-sec{height:calc(56.25vw - var(--hx));overflow:hidden}
+ html.is-home #v-ana .hero{top:calc(var(--hx) / -2)}
+ html.is-home #v-ana .hero .hcap{bottom:calc(clamp(96px,10vw,150px) + var(--hx) / 2)}
+ html.is-home #v-ana .hero .dn-badge{margin-top:calc(var(--hx) / 2)}
+}
 </style>
 <div class="modal-bg" id="qrModal"><div class="lux-qr" role="dialog" aria-modal="true" aria-label="QR kod"><button class="mclose" id="qrClose" aria-label="Bağla">&times;</button><h2>QR kod</h2><p id="qrT">Telefonun kamerası ilə skan edin</p><div class="qr-box" id="qrBox"></div><button type="button" class="btn lx-ghost" id="qrCopy">Linki kopyala</button></div></div>
 <div class="apt-bar" id="aptBar"><img id="abImg" alt=""><div><b id="abT"></b><span id="abS"></span></div><button type="button" class="btn lx-ghost" id="abVisit">Baxışa yazıl</button><button type="button" class="btn btn-primary" id="abCall">Mənə zəng edin</button></div>
