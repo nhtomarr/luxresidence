@@ -2656,19 +2656,19 @@ html.intro.hero-top .nav{animation:hFade .8s ease 2.2s backwards}
 @media(prefers-reduced-motion:reduce){html.intro #v-ana .hero::after{display:none}}
 
 /* video giriş (gündüz): buludlardan real dron enişi. html.vintro olanda köhnə CSS bulud/eniş animasiyası söndürülür */
-#v-ana .hero .hvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;pointer-events:none;background:#e8ecef;opacity:1;transition:opacity 1.1s ease}
+#v-ana .hero .hvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;pointer-events:none;background:#e8ecef;opacity:1;transition:opacity .45s ease}
 html.vout #v-ana .hero .hvid{opacity:0}
 html.vintro #v-ana .hero::after{display:none}
 html.vintro #v-ana .hero .sky.day,html.vintro #v-ana .hero .overlay,html.vintro #v-ana .hero .sky.night{animation:none!important}
 html.vintro:not(.vplay) #v-ana .hcap>*,html.vintro:not(.vplay) #v-ana .hcap-mobile>*,html.vintro:not(.vplay) #v-ana .hero .bmark .bmark-dot,html.vintro:not(.vplay) #v-ana .hero .dn-badge,html.vintro:not(.vplay) #v-ana .hero .veil{animation:none!important;opacity:0}
-html.vintro.vplay #v-ana .hero .veil{animation-delay:3.2s!important;animation-fill-mode:both}
-html.vintro.vplay #v-ana .hcap>*,html.vintro.vplay #v-ana .hcap-mobile>*{animation-delay:3.7s!important}
-html.vintro.vplay #v-ana .hcap>:nth-child(2),html.vintro.vplay #v-ana .hcap-mobile>:nth-child(2){animation-delay:3.85s!important}
-html.vintro.vplay #v-ana .hcap>:nth-child(3),html.vintro.vplay #v-ana .hcap-mobile>:nth-child(3){animation-delay:4s!important}
-html.vintro.vplay #v-ana .hero .bmark .bmark-dot{animation-delay:calc(4.6s + var(--i,0) * 70ms)!important}
-html.vintro.vplay #v-ana .hero .dn-badge{animation-delay:5s!important}
+html.vintro.vplay #v-ana .hero .veil{animation-delay:4.2s!important;animation-fill-mode:both}
+html.vintro.vplay #v-ana .hcap>*,html.vintro.vplay #v-ana .hcap-mobile>*{animation-delay:4.7s!important}
+html.vintro.vplay #v-ana .hcap>:nth-child(2),html.vintro.vplay #v-ana .hcap-mobile>:nth-child(2){animation-delay:4.85s!important}
+html.vintro.vplay #v-ana .hcap>:nth-child(3),html.vintro.vplay #v-ana .hcap-mobile>:nth-child(3){animation-delay:5s!important}
+html.vintro.vplay #v-ana .hero .bmark .bmark-dot{animation-delay:calc(5.7s + var(--i,0) * 70ms)!important}
+html.vintro.vplay #v-ana .hero .dn-badge{animation-delay:6.2s!important}
 html.vintro #v-ana .hcap,html.vintro #v-ana .hcap-mobile,html.vintro #v-ana .hero .veil{z-index:4}
-html.vintro.hero-top .nav{animation:hFade .8s ease 3.4s backwards}
+html.vintro.hero-top .nav{animation:hFade .8s ease 4.4s backwards}
 html.vintro #v-ana .hcap-mobile{opacity:0;transition:opacity .7s ease}
 html.vintro.vtxt #v-ana .hcap-mobile{opacity:1}
 </style>
@@ -2875,11 +2875,11 @@ html.vintro.vtxt #v-ana .hcap-mobile{opacity:1}
     if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;var c=navigator.connection||{};if(c.saveData||/2g/.test(c.effectiveType||''))return;
     var v=document.createElement('video');v.className='hvid';v.muted=true;v.defaultMuted=true;v.playsInline=true;v.setAttribute('playsinline','');v.setAttribute('muted','');v.preload='auto';v.setAttribute('aria-hidden','true');
     v.src='/assets/intro/'+(innerWidth<760?'day-m':'day')+'.mp4';H.classList.add('vintro');hero.appendChild(v);
-    var gone=false,started=false;function out(){if(gone)return;gone=true;H.classList.add('vout');setTimeout(function(){window._introDone&&window._introDone();H.classList.remove('intro','vintro','vplay','vout','vtxt');if(v.parentNode)v.parentNode.removeChild(v);},1600);}
+    var gone=false,started=false;function out(){if(gone)return;gone=true;H.classList.add('vout');setTimeout(function(){window._introDone&&window._introDone();H.classList.remove('intro','vintro','vplay','vout','vtxt');if(v.parentNode)v.parentNode.removeChild(v);},700);}
     function fail(){if(started||gone)return;gone=true;H.classList.remove('vintro');if(v.parentNode)v.parentNode.removeChild(v);setTimeout(function(){window._introDone&&window._introDone();},3200);}
     v.addEventListener('playing',function(){if(started)return;started=true;H.classList.add('vplay');});
-    v.addEventListener('timeupdate',function(){if(v.currentTime>=3.4)H.classList.add('vtxt');if(v.duration&&v.currentTime>=v.duration-0.9)out();});v.addEventListener('ended',out);v.addEventListener('error',fail);
-    var pr=v.play();if(pr&&pr.catch)pr.catch(fail);setTimeout(fail,3000);setTimeout(out,9000);}catch(e){}})();
+    v.addEventListener('timeupdate',function(){if(v.currentTime>=4.2)H.classList.add('vtxt');if(v.duration&&v.currentTime>=v.duration-0.25)out();});v.addEventListener('ended',out);v.addEventListener('error',fail);
+    var pr=v.play();if(pr&&pr.catch)pr.catch(fail);setTimeout(fail,3000);setTimeout(out,10000);}catch(e){}})();
   V4.hero(CUR);})();
 })();
 </script><!--/v4-->
