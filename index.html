@@ -2874,7 +2874,7 @@ html.vintro.vtxt #v-ana .hcap-mobile{opacity:1}
   (function(){try{if(!H.classList.contains('intro')||!H.classList.contains('is-home')&&CUR!=='ana')return;if(H.getAttribute('data-theme')==='dark')return;
     if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;var c=navigator.connection||{};if(c.saveData||/2g/.test(c.effectiveType||''))return;
     var v=document.createElement('video');v.className='hvid';v.muted=true;v.defaultMuted=true;v.playsInline=true;v.setAttribute('playsinline','');v.setAttribute('muted','');v.preload='auto';v.setAttribute('aria-hidden','true');
-    v.src='/assets/intro/'+(innerWidth<760?'day-m':'day')+'.mp4';H.classList.add('vintro');hero.appendChild(v);
+    v.src='/assets/intro/'+(innerWidth<760?'day-v2-m':'day-v2')+'.mp4';  /* fayl dəyişəndə adı da dəyiş — brauzer videonu 4 saat keşdə saxlayır */H.classList.add('vintro');hero.appendChild(v);
     var gone=false,started=false;function out(){if(gone)return;gone=true;H.classList.add('vout');setTimeout(function(){window._introDone&&window._introDone();H.classList.remove('intro','vintro','vplay','vout','vtxt');if(v.parentNode)v.parentNode.removeChild(v);},700);}
     function fail(){if(started||gone)return;gone=true;H.classList.remove('vintro');if(v.parentNode)v.parentNode.removeChild(v);setTimeout(function(){window._introDone&&window._introDone();},3200);}
     v.addEventListener('playing',function(){if(started)return;started=true;H.classList.add('vplay');});
