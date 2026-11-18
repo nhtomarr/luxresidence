@@ -53,3 +53,12 @@ window.ncPlan = function (area, b) {
   const tol = g === 'BFG' ? 0.4501 : 0.3001; let best = null, d = tol;
   Object.keys(P).forEach(k => { if (!ok(P[k])) return; const x = Math.abs(+k - a); if (x <= d) { d = x; best = P[k]; } }); return best;
 };
+
+// Təmirli mənzillərin real şəkilləri (plan sahəsi üzrə). Şəkillər: /assets/nc/temir/<sahə>/<n>.webp (tam) və <n>-s.webp (kiçik).
+// 18.11.2026: A2-7-1 (87,95 m²) — 9 şəkil.
+window.NC_REPAIR = { '87.95': ['Zal və mətbəx', 'Zal', 'Yataq otağı', 'Yataq otağı', 'Holl', 'Dəhliz', 'Sanitar qovşaq', 'Qarderob', 'Köməkçi otaq'] };
+window.ncRepair = function (plan) {
+  if (!plan) return null; var k = (+plan.a).toFixed(2), L = window.NC_REPAIR[k]; if (!L) return null;
+  var d = '/assets/nc/temir/' + k.replace('.', '_') + '/';
+  return L.map(function (t, i) { return { src: d + (i + 1) + '.webp', th: d + (i + 1) + '-s.webp', alt: 'Təmirli mənzil: ' + t }; });
+};

@@ -165,8 +165,21 @@ function planCard(u) {
   return `<div class="plan pl-card"><div class="sh" style="margin-bottom:14px;align-items:center"><div><h3 class="h3">Mənzil planı</h3><span class="mu" style="font-size:14px">${p.rooms.length} bölmə · plan ${f2(p.a)} m²</span></div><a class="lk" href="${p.img}" download="Nizami-City-plan-${fm2(p.a)}m2.png">${I.doc} PNG yüklə</a></div>
     <div class="plx"><figure class="plx-im" data-lb="pl"><img src="${p.img}" alt="Mənzil planı, ${fm2(p.a)} m²" loading="lazy" decoding="async"></figure>
     <ol class="expl">${p.rooms.map(([n, m], i) => `<li><i>${i + 1}</i><span>${esc(n)}</span><em></em><b>${f2(m)} m²</b></li>`).join('')}<li class="tot"><span>${dif ? 'Plan üzrə sahə' : 'Ümumi sahə'}</span><em></em><b>${f2(p.a)} m²</b></li>${dif ? `<li class="tot2"><span>Sənəd üzrə sahə</span><em></em><b>${f2(u.a)} m²</b></li>` : ''}</ol></div>
-    <p class="mu" style="margin:12px 0 0;font-size:13.5px">Plandakı rəqəmlər eksplikasiyadakı nömrələrə uyğundur. Mebel düzülüşü təqdimat xarakterlidir.</p></div>`;
+    <p class="mu" style="margin:12px 0 0;font-size:13.5px">Plandakı rəqəmlər eksplikasiyadakı nömrələrə uyğundur. Mebel düzülüşü təqdimat xarakterlidir.</p></div>${repBlock(p)}`;
 }
+/* təmirli mənzilin real şəkilləri (plan üzrə) */
+function repBlock(p) {
+  const L = window.ncRepair(p); if (!L) return '';
+  return `<div class="plan rp-card" id="temir"><div class="sh" style="margin-bottom:14px;align-items:center"><div><h3 class="h3">Təmirli mənzil</h3><span class="mu" style="font-size:14px">Bu planın təmirli variantından ${L.length} real şəkil</span></div></div><div class="rp-g" data-lb="rp">${L.map(x => `<figure><img src="${x.th}" data-full="${x.src}" alt="${esc(x.alt)}" loading="lazy" decoding="async"></figure>`).join('')}</div></div>`;
+}
+function openRep(k) {
+  const L = window.ncRepair(window.NC_PLANS[k]); if (!L) return; let i = 0;
+  const m = modal(`<div class="lbx"><img id="lbI" alt=""><div class="lbx-n"><button class="icb" type="button" data-d="-1" aria-label="Əvvəlki">${I.al}</button><span id="lbC" class="mu"></span><button class="icb" type="button" data-d="1" aria-label="Növbəti">${I.ar}</button></div></div>`, 'wide');
+  const show = () => { $('#lbI', m).src = L[i].src; $('#lbI', m).alt = L[i].alt; $('#lbC', m).textContent = (i + 1) + ' / ' + L.length + ' · ' + L[i].alt; };
+  $$('[data-d]', m).forEach(b => b.onclick = () => { i = (i + +b.dataset.d + L.length) % L.length; show(); });
+  m.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { i = (i + 1) % L.length; show(); } if (e.key === 'ArrowLeft') { i = (i - 1 + L.length) % L.length; show(); } }); m.tabIndex = -1; m.focus(); show();
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-rep]'); if (b) { e.preventDefault(); e.stopPropagation(); openRep(b.dataset.rep); } }, true);
 
 /* ===== 8: kinematik hero ===== */
 function heroFx(r) {
@@ -487,7 +500,7 @@ function tCard(t, blds) {
   if (!t.plan) return '';
   const r = t.rep, bl = blds || t.blds;
   return `<article class="ucard tcard"><a class="ulnk" href="#plan-${t.key}" aria-label="${esc(tTitle(t))}"></a>
-    <div class="tpl">${t.plan ? `<img src="${t.plan.img}" alt="${esc(roomsT(t.r))} mənzil planı, ${fm2(t.a)} m²" loading="lazy" decoding="async">` : `${PLSVG}<span>Plan satış ofisində</span>`}</div>
+    <div class="tpl">${t.plan ? `<img src="${t.plan.img}" alt="${esc(roomsT(t.r))} mənzil planı, ${fm2(t.a)} m²" loading="lazy" decoding="async">` : `${PLSVG}<span>Plan satış ofisində</span>`}${window.ncRepair(t.plan) ? `<button type="button" class="rp-b" data-rep="${(+t.plan.a).toFixed(2)}" aria-label="Təmirli mənzilin şəkillərinə bax">${I.cam || ''}<span>Təmirlisi var · ${window.ncRepair(t.plan).length} şəkil</span></button>` : ''}</div>
     <div class="uact"><button type="button" class="ub ${isFav(r.id) ? 'on' : ''}" data-fav="${r.id}" aria-label="Seçilmişlərə əlavə et" title="Seçilmişlər">${I.heart}</button><button type="button" class="ub ${isCmp(r.id) ? 'on' : ''}" data-cmp="${r.id}" aria-label="Müqayisəyə əlavə et" title="Müqayisə">${I.cmp}</button></div>
     <div class="tb"><b class="ts">${tTitle(t)}</b><span class="tl">${I.pin}${bList(bl)}</span>
     ${SHOW_STOCK ? `<span class="mu" style="font-size:13.5px">${t.nFree} mənzil satışda</span>` : ''}

@@ -165,7 +165,7 @@ function bindLb(root) {
   $$('[data-lb] img', root).forEach(im => { im.style.cursor = 'zoom-in'; im.onclick = () => {
     const g = im.closest('[data-lb]').dataset.lb, L = $$(`[data-lb="${g}"] img`, root); let i = L.indexOf(im);
     const m = modal(`<div class="lbx"><img id="lbI" alt=""><div class="lbx-n"><button class="icb" type="button" data-d="-1" aria-label="Əvvəlki">${I.al}</button><span id="lbC" class="mu"></span><button class="icb" type="button" data-d="1" aria-label="Növbəti">${I.ar}</button></div></div>`, 'wide');
-    const show = () => { const s = L[i]; $('#lbI', m).src = (s.currentSrc || s.src).replace('-1280.webp', s.src.includes('aerial') ? '-2400.webp' : '-2560.webp'); $('#lbI', m).alt = s.alt; $('#lbC', m).textContent = (i + 1) + ' / ' + L.length + (s.alt ? ' · ' + s.alt : ''); };
+    const show = () => { const s = L[i]; $('#lbI', m).src = s.dataset.full || (s.currentSrc || s.src).replace('-1280.webp', s.src.includes('aerial') ? '-2400.webp' : '-2560.webp'); $('#lbI', m).alt = s.alt; $('#lbC', m).textContent = (i + 1) + ' / ' + L.length + (s.alt ? ' · ' + s.alt : ''); };
     $$('[data-d]', m).forEach(b => b.onclick = () => { i = (i + +b.dataset.d + L.length) % L.length; show(); });
     m.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { i = (i + 1) % L.length; show(); } if (e.key === 'ArrowLeft') { i = (i - 1 + L.length) % L.length; show(); } }); m.tabIndex = -1; m.focus(); show(); }; });
 }

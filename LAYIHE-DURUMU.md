@@ -650,3 +650,9 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - `lvRange` saatlıq icazəni dəqiqə ilə göstərir (`qpDur`). Davamiyyət cədvəlində təsdiqlənmiş saatlıq icazəsi olan və gəlmiş işçidə «icazəli · müddət» nişanı.
 - AÇIQ: təsdiqlənmiş icazə gecikmə/tez çıxma dəqiqələrini (late_min/early_min) avtomatik silmir — tabeldə «X dəq gec» yanında «icazəli» görünür. Gecikmənin sayılmaması HR/davamiyyət qaydasıdır, Nihatın sözü ilə ediləcək.
 - Düzəliş (18.11.2026, rəhbərlikdən WhatsApp ilə gələn mətn): giriş ekranında başlığın altı «Yasamal r-nu, Nizami m/st-nın yanında qapalı həyətli yaşayış kompleksi»; kredit kartının mətni «12, 18 və 24 ayadək daxili kredit şərtlərindən yararlanın.» (əvvəlki «Mənzili hissə-hissə alın…» cümləsi çıxdı). «Layihə haqqında» və «Ödəniş» bölmələrindəki mətnlərə toxunulmayıb.
+
+### Nizami City: təmirli mənzilin real şəkilləri plan kartında (18.11.2026)
+- A2-7-1 (87,95 m², 2 otaqlı, A/E planı) üçün 9 real təmir şəkli: `assets/nc/temir/87_95/1..9.webp` (960×1280) + `N-s.webp` (kiçik). Cəmi ~680 KB.
+- `plans.js`: `window.NC_REPAIR` (açar = plan sahəsi, dəyər = şəkil başlıqları sırası) və `ncRepair(plan)`. Yeni mənzil əlavə etmək: şəkilləri `assets/nc/temir/<sahə_alt-xətlə>/` qovluğuna qoy, NC_REPAIR-ə sətir əlavə et.
+- `plus.js`: tip kartında (`tCard`) plan şəklinin üstündə «Təmirlisi var · 9 şəkil» düyməsi (`data-rep`) — basanda səhifədən çıxmadan şəkil baxışı açılır (`openRep`); plan/mənzil səhifəsində plan kartının altında «Təmirli mənzil» qalereyası (`repBlock`, `data-lb="rp"`, mövcud lightbox; `data-full` dəstəyi `bindLb`-ə əlavə olundu).
+- Otaq adları şəkillərə görə mənim təxminimdir (Zal və mətbəx, Zal, Yataq otağı ×2, Holl, Dəhliz, Sanitar qovşaq, Qarderob, Köməkçi otaq).
