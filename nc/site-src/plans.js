@@ -59,7 +59,9 @@ window.ncPlan = function (area, b) {
 // 18.11.2026: A2-6-5 (154 m² → plan 154,76) — 15 şəkil.
 // 18.11.2026: A2-6-6 (82 m² → plan 81,91) — 13 şəkil.
 // 18.11.2026: B-4-2 (163 m² → plan 163,21) — 18 şəkil.
-window.NC_REPAIR = { '163.21': ['Zal', 'Zal', 'Mətbəx', 'Mətbəx', 'Holl', 'Holl', 'Holl', 'Holl', 'Yataq otağı', 'Yataq otağı', 'Yataq otağı', 'Yataq otağı', 'Sanitar qovşaq', 'Sanitar qovşaq', 'Qarderob', 'Camaşırxana', 'Eyvan', 'Eyvan'],
+// 18.11.2026: C1-9-4 (80,73 m²) — 8 şəkil.
+window.NC_REPAIR = { '80.73': ['Zal və mətbəx', 'Zal və mətbəx', 'Yataq otağı', 'Yataq otağı', 'Holl', 'Holl', 'Sanitar qovşaq', 'Qarderob'],
+  '163.21': ['Zal', 'Zal', 'Mətbəx', 'Mətbəx', 'Holl', 'Holl', 'Holl', 'Holl', 'Yataq otağı', 'Yataq otağı', 'Yataq otağı', 'Yataq otağı', 'Sanitar qovşaq', 'Sanitar qovşaq', 'Qarderob', 'Camaşırxana', 'Eyvan', 'Eyvan'],
   '81.91': ['Zal', 'Zal', 'Zal', 'Mətbəx', 'Yataq otağı', 'Yataq otağı', 'Holl', 'Holl', 'Holl', 'Holl', 'Sanitar qovşaq', 'Sanitar qovşaq', 'Camaşırxana'],
   '154.76': ['Zal və mətbəx', 'Zal', 'Holl', 'Holl', 'Dəhliz', 'Yataq otağı', 'Yataq otağı', 'Yataq otağı', 'Yataq otağı', 'Yataq otağı', 'Dəhliz', 'Sanitar qovşaq', 'Qarderob', 'Camaşırxana', 'Camaşırxana'],
   '87.95': ['Zal və mətbəx', 'Zal', 'Yataq otağı', 'Yataq otağı', 'Holl', 'Dəhliz', 'Sanitar qovşaq', 'Qarderob', 'Köməkçi otaq'] };

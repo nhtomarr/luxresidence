@@ -658,3 +658,4 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Otaq adları şəkillərə görə mənim təxminimdir (Zal və mətbəx, Zal, Yataq otağı ×2, Holl, Dəhliz, Sanitar qovşaq, Qarderob, Köməkçi otaq).
 - (18.11, davamı) Daha iki təmirli mənzil əlavə olundu: A2-6-5 (154,53 m² → plan 154,76; 15 şəkil, `assets/nc/temir/154_76/`) və A2-6-6 (82 m² → plan 81,91; 13 şəkil, `assets/nc/temir/81_91/`). İndi 3 planda «Təmirlisi var» nişanı var: 81,91 · 87,95 · 154,76. 154 m² kartı «Mənzillər»də «Daha çox göstər»dən sonra görünür. Otaq adları yenə şəkilə görə təxmindir.
 - (18.11, davamı) B-4-2 (162,91 m² → plan 163,21; 18 şəkil, `assets/nc/temir/163_21/`) əlavə olundu. İndi 4 planda «Təmirlisi var» nişanı var: 81,91 · 87,95 · 154,76 · 163,21.
+- (18.11, davamı) C1-9-4 (80,73 m², C/G planı; 8 şəkil, `assets/nc/temir/80_73/`) əlavə olundu. İndi 5 planda «Təmirlisi var» nişanı var: 80,73 · 81,91 · 87,95 · 154,76 · 163,21.
