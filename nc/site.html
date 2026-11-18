@@ -1261,7 +1261,11 @@ window.ncPlan = function (area, b) {
 
 // Təmirli mənzillərin real şəkilləri (plan sahəsi üzrə). Şəkillər: /assets/nc/temir/<sahə>/<n>.webp (tam) və <n>-s.webp (kiçik).
 // 18.11.2026: A2-7-1 (87,95 m²) — 9 şəkil.
-window.NC_REPAIR = { '87.95': ['Zal və mətbəx', 'Zal', 'Yataq otağı', 'Yataq otağı', 'Holl', 'Dəhliz', 'Sanitar qovşaq', 'Qarderob', 'Köməkçi otaq'] };
+// 18.11.2026: A2-6-5 (154 m² → plan 154,76) — 15 şəkil.
+// 18.11.2026: A2-6-6 (82 m² → plan 81,91) — 13 şəkil.
+window.NC_REPAIR = { '81.91': ['Zal', 'Zal', 'Zal', 'Mətbəx', 'Yataq otağı', 'Yataq otağı', 'Holl', 'Holl', 'Holl', 'Holl', 'Sanitar qovşaq', 'Sanitar qovşaq', 'Camaşırxana'],
+  '154.76': ['Zal və mətbəx', 'Zal', 'Holl', 'Holl', 'Dəhliz', 'Yataq otağı', 'Yataq otağı', 'Yataq otağı', 'Yataq otağı', 'Yataq otağı', 'Dəhliz', 'Sanitar qovşaq', 'Qarderob', 'Camaşırxana', 'Camaşırxana'],
+  '87.95': ['Zal və mətbəx', 'Zal', 'Yataq otağı', 'Yataq otağı', 'Holl', 'Dəhliz', 'Sanitar qovşaq', 'Qarderob', 'Köməkçi otaq'] };
 window.ncRepair = function (plan) {
   if (!plan) return null; var k = (+plan.a).toFixed(2), L = window.NC_REPAIR[k]; if (!L) return null;
   var d = '/assets/nc/temir/' + k.replace('.', '_') + '/';
