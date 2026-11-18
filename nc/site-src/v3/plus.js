@@ -541,3 +541,26 @@ pages.menzil = id => { const u = uById(id); return u ? pages.tip(typeOf(u).key) 
 // köhnə #ünvan → yeni yol
 (() => { const h = location.hash.slice(1); if (isRoute(h)) history.replaceState(null, '', toPath(h)); })();
 render();
+
+/* ===== ana səhifə: təmirli mənzillər (real şəkillər, hərəkətli kartlar) ===== */
+function repTypes() { return Object.values(TYPES).filter(t => t.plan && window.ncRepair(t.plan)).sort((a, b) => a.a - b.a); }
+function repHome() {
+  const L = repTypes(); if (!L.length) return '';
+  const tot = L.reduce((n, t) => n + window.ncRepair(t.plan).length, 0);
+  const card = (t, dup) => { const P = window.ncRepair(t.plan); return `<a class="rh-c" href="#menziller?rp=1"${dup ? ' aria-hidden="true" tabindex="-1"' : ''} data-n="${P.length}" data-d="${P[0].th.replace(/1-s\.webp$/, '')}"><img class="rh-a" src="${P[0].th}" alt="${dup ? '' : esc(tTitle(t)) + ', təmirli mənzil'}" loading="lazy" decoding="async"><img class="rh-b" alt="" aria-hidden="true"><span class="rh-t"><b>${tTitle(t)}</b><span>${bList(t.blds)} · ${P.length} şəkil</span></span></a>`; };
+  return `<section class="sec rh" id="temirli"><div class="wrap"><div class="sh"><div><h2 class="h2">Təmirli mənzillər</h2><p class="mu" style="margin:6px 0 0">${L.length} planın təmirli variantı, ${tot} real şəkil</p></div><a class="btn tn" href="#menziller?rp=1">Təmirlilərə bax ${I.ar}</a></div></div>
+    <div class="rh-v"><div class="rh-r">${L.map(t => card(t)).join('')}${[1, 2, 3].map(() => L.map(t => card(t, 1)).join('')).join('')}</div></div></section>`;
+}
+function bindRepHome(r) {
+  const sec = $('.rh', r); if (!sec) return; const C = $$('.rh-c', sec); let on = false, k = 0;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { sec.classList.add('rh-still'); return; }
+  if ('IntersectionObserver' in window) new IntersectionObserver(e => { on = e[0].isIntersecting; sec.classList.toggle('rh-run', on); }, { rootMargin: '80px' }).observe(sec); else { on = true; sec.classList.add('rh-run'); }
+  // hər 1,6 saniyədə növbəti kartın şəkli dəyişir (hamısı birdən yox)
+  const iv = setInterval(() => {
+    if (!document.contains(sec)) return clearInterval(iv); if (!on || sec.matches(':hover')) return;
+    const m = C.length / 4, j = k % m, G = [0, 1, 2, 3].map(q => C[j + q * m]), c = G[0]; k++;
+    const n = +c.dataset.n, i = ((+c.dataset.i || 0) + 1) % n, src = c.dataset.d + (i + 1) + '-s.webp', im = new Image();
+    im.onload = () => G.forEach(x => { if (!x) return; x.dataset.i = i; const a = $('.rh-a', x), b = $('.rh-b', x), top = x.classList.contains('sw') ? a : b; top.src = src; x.classList.toggle('sw'); });
+    im.src = src;
+  }, 1600);
+}

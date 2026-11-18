@@ -660,3 +660,8 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - (18.11, davamı) B-4-2 (162,91 m² → plan 163,21; 18 şəkil, `assets/nc/temir/163_21/`) əlavə olundu. İndi 4 planda «Təmirlisi var» nişanı var: 81,91 · 87,95 · 154,76 · 163,21.
 - (18.11, davamı) C1-9-4 (80,73 m², C/G planı; 8 şəkil, `assets/nc/temir/80_73/`) əlavə olundu. İndi 5 planda «Təmirlisi var» nişanı var: 80,73 · 81,91 · 87,95 · 154,76 · 163,21.
 - (18.11, davamı) C2-5-2 (119,97 m²): 13 şəkil `assets/nc/temir/119_97/`-də hazırdır və NC_REPAIR-də '119.97' açarı ilə yazılıb, AMMA bu sahənin planı yoxdur (C binasında ~120 m²-lik mənzillər — C2-5-2, C2-6-2, C1-8-5, C2-8-2, C2-9-5 — plansızdır, planı olmayan tip saytda göstərilmir). Plan şəkli gələndə NC_PLANS-a '119.97' əlavə etmək kifayətdir.
+
+### Nizami City: ana səhifədə «Təmirli mənzillər» lenti + filtr (18.11.2026)
+- Ana səhifə (`pages.home`), «Binalar»dan sonra: `repHome()` / `bindRepHome()` (plus.js). Təmirli şəkli olan hər plan üçün bir kart (indi 5 plan, 63 şəkil); lent fasiləsiz sola axır (CSS `rhmv`, 46 s, 4 nüsxə — geniş ekranda boşluq qalmır), hər 1,6 s-də növbəti kartın şəkli yumşaq dəyişir. Kursor üstünə gələndə dayanır; bölmə ekranda deyilsə işləmir; `prefers-reduced-motion`-da hərəkətsiz, əl ilə sürüşdürülən sıra.
+- Karta və «Təmirlilərə bax» düyməsinə basanda `#menziller?rp=1` açılır: yeni filtr `F.rp` («Real şəkillər: Hamısı / Təmirlisi var»), `filtered()`-də `ncRepair(ncPlan(...))` şərti, URL-də `rp=1`. Belə gələndə səhifə nəticələrə sürüşür.
+- Yeni təmirli plan əlavə olunanda (NC_REPAIR) lent və filtr avtomatik yenilənir.

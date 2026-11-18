@@ -322,6 +322,7 @@ pages.home = () => ({
   ${numBlock()}
   ${maqSection()}
   <section class="sec wrap">${buildingsBlock()}</section>
+  ${repHome()}
   ${SHOW_STOCK ? `<section class="sec wrap">${offersBlock()}</section>` : ''}
   ${seenBlock()}
   <section class="sec wrap">${promoBlock()}</section>
@@ -330,7 +331,7 @@ pages.home = () => ({
   <section class="sec wrap">${locBlock()}</section>
   ${newsBlock() ? `<section class="sec wrap">${newsBlock()}</section>` : ''}
   <section class="sec wrap">${faqBlock(5)}</section>`,
-  mount(r) { bindHero(r); heroFx(r); heroIntro(r); bindFind(r); bindMaqHome(r); bindBuildings(r); bindRail(r); bindPlan(r); bindLead(r); bindLb(r); }
+  mount(r) { bindHero(r); heroFx(r); heroIntro(r); bindFind(r); bindMaqHome(r); bindBuildings(r); bindRail(r); bindPlan(r); bindLead(r); bindLb(r); bindRepHome(r); }
 });
 pages.binalar = () => ({
   title: 'Binalar — Nizami City', html: `${pHead('Binalar', SHOW_ST ? 'A, B və C binaları təhvil verilib. E, F və G binaları tikilir' + (SHOW_DEL ? ', təhvil ' + esc(CO.delivery) : '') + '.' : '9 bina, qapalı həyət. Binanı seçin — mərtəbələr və mənzillər açılacaq.', `<div class="stats"><div class="stat"><b>${BLD.length}</b><span>bina</span></div>${SHOW_STOCK ? `<div class="stat"><b>${free.filter(u => u.st === 'free').length}</b><span>satışda</span></div>` : ''}<div class="stat"><b>9</b><span>mərtəbə</span></div></div>`)}
@@ -363,15 +364,15 @@ pages.bina = id => {
   };
 };
 /* 13: filtrlər linkdə saxlanır, sahə və vəziyyət filtrləri */
-const F = {}; const resetF = () => Object.assign(F, { r: 0, b: '', ph: 'all', c: '', a0: 0, a1: 0, sort: HP ? 'aa' : 'pa', n: 24 }); resetF();
+const F = {}; const resetF = () => Object.assign(F, { r: 0, b: '', ph: 'all', c: '', rp: 0, a0: 0, a1: 0, sort: HP ? 'aa' : 'pa', n: 24 }); resetF();
 const AREAS = [['', 'İstənilən'], ['0-70', '70 m²-dək'], ['70-100', '70–100 m²'], ['100-130', '100–130 m²'], ['130-170', '130–170 m²'], ['170-999', '170 m²-dən çox']];
 function filtered() {
-  const L = free.filter(u => (!F.r || (F.r === 4 ? u.r >= 4 : u.r === F.r)) && (!F.b || u.b === F.b) && (F.ph === 'all' || u.bst === F.ph) && (!F.c || condOf(u) === F.c) && (!F.a0 || u.a >= F.a0) && (!F.a1 || u.a <= F.a1));
+  const L = free.filter(u => (!F.r || (F.r === 4 ? u.r >= 4 : u.r === F.r)) && (!F.b || u.b === F.b) && (F.ph === 'all' || u.bst === F.ph) && (!F.c || condOf(u) === F.c) && (!F.rp || !!window.ncRepair(window.ncPlan(u.a, u.b))) && (!F.a0 || u.a >= F.a0) && (!F.a1 || u.a <= F.a1));
   const s = { pa: (a, b) => a.price - b.price, pd: (a, b) => b.price - a.price, aa: (a, b) => a.a - b.a, ad: (a, b) => b.a - a.a, fd: (a, b) => b.f - a.f }[F.sort]; return L.sort(s);
 }
-function fQuery() { const q = {}; if (F.r) q.r = F.r; if (F.b) q.b = F.b; if (F.ph !== 'all') q.ph = F.ph; if (F.c) q.c = F.c; if (F.a0) q.a0 = F.a0; if (F.a1) q.a1 = F.a1; return new URLSearchParams(q).toString(); }
-function fFromQuery(qs) { if (!qs) return; const q = new URLSearchParams(qs); resetF(); F.r = +q.get('r') || 0; F.b = q.get('b') || ''; F.ph = q.get('ph') || 'all'; F.c = q.get('c') || ''; F.a0 = +q.get('a0') || 0; F.a1 = +q.get('a1') || 0; }
-function critText() { const t = []; if (F.r) t.push(F.r === 4 ? '4+ otaq' : F.r + ' otaq'); if (F.b) t.push('Bina ' + F.b); if (F.ph !== 'all') t.push(F.ph === 'ok' ? 'hazır bina' : 'tikilən bina'); if (F.c) t.push(F.c); if (F.a0 || F.a1) t.push((F.a0 || 0) + '–' + (F.a1 && F.a1 < 999 ? F.a1 : '…') + ' m²'); return t.join(', '); }
+function fQuery() { const q = {}; if (F.r) q.r = F.r; if (F.b) q.b = F.b; if (F.ph !== 'all') q.ph = F.ph; if (F.c) q.c = F.c; if (F.rp) q.rp = 1; if (F.a0) q.a0 = F.a0; if (F.a1) q.a1 = F.a1; return new URLSearchParams(q).toString(); }
+function fFromQuery(qs) { if (!qs) return; const q = new URLSearchParams(qs); resetF(); F.r = +q.get('r') || 0; F.b = q.get('b') || ''; F.ph = q.get('ph') || 'all'; F.c = q.get('c') || ''; F.rp = q.get('rp') ? 1 : 0; F.a0 = +q.get('a0') || 0; F.a1 = +q.get('a1') || 0; }
+function critText() { const t = []; if (F.r) t.push(F.r === 4 ? '4+ otaq' : F.r + ' otaq'); if (F.b) t.push('Bina ' + F.b); if (F.ph !== 'all') t.push(F.ph === 'ok' ? 'hazır bina' : 'tikilən bina'); if (F.c) t.push(F.c); if (F.rp) t.push('təmirli şəkilləri olan'); if (F.a0 || F.a1) t.push((F.a0 || 0) + '–' + (F.a1 && F.a1 < 999 ? F.a1 : '…') + ' m²'); return t.join(', '); }
 pages.menziller = qs => { fFromQuery(qs); return {
   title: 'Mənzillər — Nizami City', html: `${pHead('Mənzillər', 'Satışda olan bütün mənzillər — satış bazası ilə eyni vaxtda yenilənir.', `<button class="btn tn" type="button" data-quiz>${I.wand} Seçməkdə kömək et</button>`)}
   <section class="wrap"><div class="fbar">
@@ -380,6 +381,7 @@ pages.menziller = qs => { fFromQuery(qs); return {
     <div class="fld"><label for="fB">Bina</label><select class="sel" id="fB"><option value="">Bütün binalar</option>${BLD.map(b => `<option value="${b.id}">Bina ${b.id}</option>`).join('')}</select></div>
     <div class="fld"><label for="fA">Sahə</label><select class="sel" id="fA">${AREAS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('')}</select></div>
     <div class="fld"><label for="fC">Vəziyyət</label><select class="sel" id="fC"><option value="">Hamısı</option><option>Təmirli</option><option>White Box</option><option>Təmirsiz</option></select></div>
+    <div class="fld"><span>Real şəkillər</span><div class="seg" data-k="rp"><button type="button" data-v="0">Hamısı</button><button type="button" data-v="1">Təmirlisi var</button></div></div>
     <div class="fld"><label for="fS">Sıralama</label><select class="sel" id="fS">${HP ? '' : '<option value="pa">Qiymət: ucuzdan</option><option value="pd">Qiymət: bahadan</option>'}<option value="aa">Sahə: kiçikdən</option><option value="ad">Sahə: böyükdən</option></select></div></div>
     <div class="cnt"><div><b class="num" id="fN"></b> <span class="mu">mənzil planı tapıldı</span></div><div style="display:flex;gap:14px;flex-wrap:wrap"><button class="lk" type="button" data-share-f>${I.share} Axtarışı paylaş</button><button class="lk" type="button" id="fAl">${I.bell} Yeni mənzil çıxanda xəbər ver</button><button class="lk" type="button" id="fR">Filtrləri sıfırla</button></div></div>
     <div class="ugrid" id="fG"></div><div class="more"><button class="btn tn" type="button" id="fM">Daha çox göstər</button></div></section>
@@ -389,7 +391,9 @@ pages.menziller = qs => { fFromQuery(qs); return {
     const sync = () => { $$('.seg[data-k]', r).forEach(s => $$('button', s).forEach(b => b.classList.toggle('on', String(F[s.dataset.k]) === b.dataset.v))); $('#fB', r).value = F.b; $('#fS', r).value = F.sort; $('#fC', r).value = F.c; const av = F.a0 || F.a1 ? (F.a0 || 0) + '-' + (F.a1 || 999) : ''; $('#fA', r).value = AREAS.some(a => a[0] === av) ? av : ''; const q = fQuery(); history.replaceState(null, '', toPath('menziller' + (q ? '?' + q : ''))); };
     const draw = () => { const U = filtered(), L = uniqT(U), cmpS = { pa: (a, b) => a.pmin - b.pmin, pd: (a, b) => b.pmin - a.pmin, aa: (a, b) => a.r - b.r || a.a - b.a, ad: (a, b) => b.a - a.a }[F.sort] || ((a, b) => a.a - b.a); L.sort((a, b) => (!!b.plan - !!a.plan) || cmpS(a, b)); $('#fN', r).textContent = L.length; $('#fG', r).innerHTML = L.slice(0, F.n).map(x => tCard(x, F.b ? x.blds.filter(b => b === F.b) : null)).join('') || `<div class="empty" style="grid-column:1/-1"><p style="margin:0 0 14px">Bu filtrlərlə satışda mənzil yoxdur.</p><button class="btn" type="button" data-alert="${esc(critText())}">${I.bell} Uyğun mənzil çıxanda xəbər ver</button></div>`; $('#fM', r).style.display = L.length > F.n ? '' : 'none'; };
     const ch = () => { F.n = 24; sync(); draw(); };
-    $$('.seg[data-k]', r).forEach(s => s.onclick = e => { const b = e.target.closest('button'); if (!b) return; F[s.dataset.k] = s.dataset.k === 'r' ? +b.dataset.v : b.dataset.v; ch(); });
+    // «Təmirli mənzillər» bölməsindən gələndə nəticələr dərhal görünsün (telefonda filtr paneli uzundur)
+    if (qs && F.rp) setTimeout(() => { const c = $('.cnt', r); if (c && document.contains(c)) scrollTo({ top: c.getBoundingClientRect().top + scrollY - (($('#hd') || {}).offsetHeight || 80) - 12, behavior: 'auto' }); }, 160);
+    $$('.seg[data-k]', r).forEach(s => s.onclick = e => { const b = e.target.closest('button'); if (!b) return; F[s.dataset.k] = s.dataset.k === 'r' || s.dataset.k === 'rp' ? +b.dataset.v : b.dataset.v; ch(); });
     $('#fB', r).onchange = e => { F.b = e.target.value; ch(); }; $('#fS', r).onchange = e => { F.sort = e.target.value; sync(); draw(); }; $('#fC', r).onchange = e => { F.c = e.target.value; ch(); };
     $('#fA', r).onchange = e => { const [a, b] = (e.target.value || '0-0').split('-').map(Number); F.a0 = a; F.a1 = b; ch(); };
     $('#fR', r).onclick = () => { resetF(); ch(); }; $('#fM', r).onclick = () => { F.n += 24; draw(); };
