@@ -665,3 +665,7 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Ana səhifə (`pages.home`), «Binalar»dan sonra: `repHome()` / `bindRepHome()` (plus.js). Təmirli şəkli olan hər plan üçün bir kart (indi 5 plan, 63 şəkil); lent fasiləsiz sola axır (CSS `rhmv`, 46 s, 4 nüsxə — geniş ekranda boşluq qalmır), hər 1,6 s-də növbəti kartın şəkli yumşaq dəyişir. Kursor üstünə gələndə dayanır; bölmə ekranda deyilsə işləmir; `prefers-reduced-motion`-da hərəkətsiz, əl ilə sürüşdürülən sıra.
 - Karta və «Təmirlilərə bax» düyməsinə basanda `#menziller?rp=1` açılır: yeni filtr `F.rp` («Real şəkillər: Hamısı / Təmirlisi var»), `filtered()`-də `ncRepair(ncPlan(...))` şərti, URL-də `rp=1`. Belə gələndə səhifə nəticələrə sürüşür.
 - Yeni təmirli plan əlavə olunanda (NC_REPAIR) lent və filtr avtomatik yenilənir.
+
+### Nizami City ana səhifə: 3 dizayn istiqaməti (18.11.2026, seçim gözləyir)
+- Kətan: https://claude.ai/artifact/9zbqPBeGXNUqgUB7B4HRro — A «Jurnal» (açıq krem fon, Imbue serif başlıqlar, iri foto mozaikası), B «Alət» (ağ fon, axtarış paneli və plan kartları öndə), C «Kino» (tünd zeytun fon, 5 nömrəli səhnə, nəhəng yazı). Hamısı brend rəngləri və real məzmunla (rəqəmlər saytdan; uydurma yoxdur).
+- Nihat seçəndən sonra seçilən istiqamət `nc/site-src/v3`-də qurulacaq. Hələ canlıda heç nə dəyişməyib.
