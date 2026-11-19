@@ -377,8 +377,12 @@ const RING=[];for(let i=0;i<90;i++){const a=rnd()*Math.PI*2,r=150+rnd()*90;RING.
 
 
 const FT={h:66,x:-70,z:300,y:-8,ry:0};
-/* dəniz, şəhər və Alov qüllələri (kompleksin arxa tərəfində, render istiqamətində) */
-{const bay=new THREE.Group();const f=new THREE.Vector3(-0.65,0,-0.76).normalize();bay.rotation.y=Math.atan2(f.x,f.z);scene.add(bay);
+/* 19.11.2026: dəniz/Alov qüllələri istiqaməti satış ofisinin mərtəbə cədvəlinə görə düzəldilib.
+   Mərtəbədə 1-2-3 (−z fasadı) qərbə, 4-5-6 (+z fasadı) şərqə baxır; −x ucu cənub, +x ucu şimaldır.
+   Alov qüllələri (real azimut ≈141,6°, cənub-şərq) 6-cı mənzilin küncü tərəfdədir: (−x, +z). Əvvəl (−0.65, −0.76) idi — 90° səhv. */
+const BAY_F=new THREE.Vector3(-0.76,0,0.65).normalize();
+/* dəniz, şəhər və Alov qüllələri (BAY_F istiqamətində) */
+{const bay=new THREE.Group();const f=BAY_F.clone();bay.rotation.y=Math.atan2(f.x,f.z);scene.add(bay);
  const seaMat=new THREE.MeshStandardMaterial({color:0x4f8fa6,roughness:.18,metalness:.35});SEA=seaMat;
  const sea=new THREE.Mesh(new THREE.PlaneGeometry(3200,1800),seaMat);sea.rotation.x=-Math.PI/2;sea.position.set(0,0.12,290+900);sea.receiveShadow=false;bay.add(sea);
  const shore=new THREE.Mesh(new THREE.PlaneGeometry(3200,14),MAT.paving);shore.rotation.x=-Math.PI/2;shore.position.set(0,0.1,283);bay.add(shore);
@@ -537,11 +541,11 @@ const BALX=(()=>{const n=Math.round(W/3),bw=W/n,o=[];for(let i=0;i<n;i+=3)o.push
 /* ---------- 15.11 «Eyvandan mənzərə»: seçilmiş mənzilin hündürlüyündən ətrafa baxış ---------- */
 let VIEW=null;
 function viewFrom(u){if(VIEW||!SEL)return;const t=(floors[SEL].tiles||[]).find(x=>x.userData.u===u);if(!t)return;
- const side=(t.userData.face&&t.userData.face[0].z)||-1,y=floors[SEL].y0+1.62,bx=BALX.reduce((a,b)=>Math.abs(b-t.position.x)<Math.abs(a-t.position.x)?b:a),pos=new THREE.Vector3(bx,y,side*(D/2+0.55)),tgt=pos.clone().add(new THREE.Vector3(0,-0.06,side*0.7));
+ const side=(t.userData.face&&t.userData.face[0].z)||-1,y=floors[SEL].y0+1.62,bx=BALX.reduce((a,b)=>Math.abs(b-t.position.x)<Math.abs(a-t.position.x)?b:a),pos=new THREE.Vector3(bx,y,side*(D/2+0.55)),tgt=pos.clone().add(new THREE.Vector3(side*BAY_F.z>0?BAY_F.x*0.55:0,-0.06,side*0.7)); /* dəniz tərəfində baxış əvvəlcədən Alov qüllələrinə doğru çevrilir */
  VIEW={cam:camera.position.clone(),tgt:controls.target.clone(),c:['minDistance','maxDistance','minPolarAngle','maxPolarAngle','minAzimuthAngle','maxAzimuthAngle','rotateSpeed','enableZoom'].reduce((o,k)=>(o[k]=controls[k],o),{}),fog:[scene.fog.near,scene.fog.far],fov:camera.fov,side};
  closePanel(true);lblBox.style.display='none';document.body.classList.add('view');for(let k=F0;k<=F1;k++){floors[k].grp.visible=true;}floors[SEL].shell.visible=true;roof.visible=true;controls.autoRotate=false;
  controls.minDistance=0.2;controls.maxDistance=4000;controls.enableZoom=false;
- $('vtitle').textContent='Mənzil № '+u.n+' · '+ord(SEL)+' mərtəbə';$('vsub').textContent='Yerdən ~'+Math.round(y-0.1)+' m · '+(side<0?'dəniz və Alov qüllələri tərəfi':'şəhər tərəfi')+' · ətrafa baxmaq üçün sürüşdürün';$('vbar').classList.add('on');
+ $('vtitle').textContent='Mənzil № '+u.n+' · '+ord(SEL)+' mərtəbə';$('vsub').textContent='Yerdən ~'+Math.round(y-0.1)+' m · '+(side*BAY_F.z>0?'dəniz və Alov qüllələri tərəfi':'şəhər tərəfi')+' · ətrafa baxmaq üçün sürüşdürün';$('vbar').classList.add('on');
  const f0=scene.fog.near,f1=scene.fog.far,fv=camera.fov,t0=performance.now();
  (function fz(){const k=Math.min(1,(performance.now()-t0)/1600);scene.fog.near=f0+(520-f0)*k;scene.fog.far=f1+(2600-f1)*k;camera.fov=fv+(58-fv)*k;camera.updateProjectionMatrix();if(k<1&&VIEW)requestAnimationFrame(fz);})();
  flyTo(pos,tgt,1700,()=>{if(!VIEW)return;const nrm=a=>Math.atan2(Math.sin(a),Math.cos(a)),base=Math.atan2(0,-side);
@@ -554,7 +558,7 @@ function exitView(){if(!VIEW)return;const V=VIEW;VIEW=null;$('vbar').classList.r
 document.getElementById('vback').addEventListener('click',exitView);
 document.getElementById('mkbtn').addEventListener('click',maketOn);document.getElementById('mkx').addEventListener('click',maketOff);document.getElementById('mkn').addEventListener('click',maketNight);
 if(new URLSearchParams(location.search).get('maket')==='1')setTimeout(maketOn,600);
-window.__lux3d={info:()=>({calls:renderer.info.render.calls,tris:renderer.info.render.triangles}),tod:m=>setTOD(m),tour:()=>startTour(),tourAt:i=>{startTour();anim=null;TOUR.i=i;const st=TOUR.steps[i];camera.position.copy(st.p);controls.target.copy(st.t);if(st.cap){$('tcT').textContent=st.cap[0];$('tcS').textContent=st.cap[1];}TOUR.i=99;},night:(m)=>{SUN.on=true;const n=bakuNow();SUN.doy=doyOf(n.m,n.d);SUN.min=m||1290;applySun();},cam:(x,y,z)=>{anim=null;controls.autoRotate=false;const c=SITE.position.clone().add(MK.center||new THREE.Vector3());camera.position.set(c.x+x,y,c.z+z);controls.target.set(c.x,8,c.z);controls.update();},maket:()=>maketOn(),maketNight:()=>maketNight(),view:n=>{const t=(floors[SEL]&&floors[SEL].tiles||[]).find(x=>String(x.userData.u.n)===String(n))||(floors[SEL].tiles||[])[0];if(t){openApt(t.userData.u);viewFrom(t.userData.u);}},exitView};
+window.__lux3d={dirs:f=>{selectFloor(f,true);return (floors[f].tiles||[]).map(t=>[t.userData.u.n,t.userData.u.area,t.userData.face.map(v=>dirName(worldToBearing(v))).join('+')]);},view:n=>{const t=(floors[SEL].tiles||[]).find(x=>String(x.userData.u.n)===String(n));if(t)viewFrom(t.userData.u);},bina:b=>switchBina(b),info:()=>({calls:renderer.info.render.calls,tris:renderer.info.render.triangles}),tod:m=>setTOD(m),tour:()=>startTour(),tourAt:i=>{startTour();anim=null;TOUR.i=i;const st=TOUR.steps[i];camera.position.copy(st.p);controls.target.copy(st.t);if(st.cap){$('tcT').textContent=st.cap[0];$('tcS').textContent=st.cap[1];}TOUR.i=99;},night:(m)=>{SUN.on=true;const n=bakuNow();SUN.doy=doyOf(n.m,n.d);SUN.min=m||1290;applySun();},cam:(x,y,z)=>{anim=null;controls.autoRotate=false;const c=SITE.position.clone().add(MK.center||new THREE.Vector3());camera.position.set(c.x+x,y,c.z+z);controls.target.set(c.x,8,c.z);controls.update();},maket:()=>maketOn(),maketNight:()=>maketNight(),view:n=>{const t=(floors[SEL]&&floors[SEL].tiles||[]).find(x=>String(x.userData.u.n)===String(n))||(floors[SEL].tiles||[])[0];if(t){openApt(t.userData.u);viewFrom(t.userData.u);}},exitView};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&VIEW)exitView();});
 
 /* ---------- floor interior (sxematik) ---------- */
@@ -565,7 +569,7 @@ function buildInner(f){
  box(W-0.3,0.12,D-0.3,MAT.slab,0,y+0.06,0,inner,false);
  box(W+0.3,1.0,0.25,MAT.cream,0,y+0.5,D/2,inner);box(W+0.3,1.0,0.25,MAT.cream,0,y+0.5,-D/2,inner);box(0.25,1.0,D,MAT.cream,W/2,y+0.5,0,inner);box(0.25,1.0,D,MAT.cream,-W/2,y+0.5,0,inner);
  box(7,2.6,3.6,MAT.core,0,y+1.3,0,inner);
- /* №1 dəniz və Alov qüllələri tərəfdə (-z, -x küncü); nömrələr mərtəbə ətrafında ardıcıl: dəniz tərəfi soldan sağa 1,2,3, arxa tərəf sağdan sola 4,5,6 */
+ /* Nömrələr mərtəbə ətrafında ardıcıl: −z fasadı (qərb) 1,2,3; +z fasadı (şərq, dəniz tərəfi) 4,5,6 — №6 Alov qüllələrinə ən yaxın küncdədir (−x, +z). */
  const us=units(f),n=us.length,south=us.slice(0,Math.ceil(n/2)),north=us.slice(Math.ceil(n/2)).reverse();
  const tiles=[];
  [[north,1],[south,-1]].forEach(([row,side])=>{
@@ -579,7 +583,7 @@ function buildInner(f){
   box(0.18,1.0,dz,MAT.wall,W/2-0.3,y+0.55,zc,inner);
   box(W-0.6,1.0,0.18,MAT.wall,0,y+0.55,z0,inner);
  });
- F.dirP=new THREE.Vector3(-4,y+1.2,-D/2-5);F.tiles=tiles;return tiles;
+ F.dirP=new THREE.Vector3(-W/4,y+1.2,Math.sign(BAY_F.z)*(D/2+5));F.tiles=tiles;return tiles;
 }
 
 /* ---------- labels ---------- */
@@ -649,7 +653,7 @@ canvas.addEventListener('pointerup',e=>{if(INT.on||!down)return;const moved=Math
 /* ---------- günəş və kölgə (Bakı, real günəş mövqeyi) ---------- */
 /* Kompleks: 40.36664, 49.81879. Şimal istiqaməti Alov qüllələrinə görə kalibrlənib (kompleksdən azimut ≈141.6°). */
 const LAT=40.36664,LON=49.81879,TZ=4,RAD=Math.PI/180;
-const PHI_N=(()=>{const f=new THREE.Vector3(-0.65,0,-0.76).normalize(),th=Math.atan2(f.x,f.z),x=-70,z=300;
+const PHI_N=(()=>{const f=BAY_F.clone(),th=Math.atan2(f.x,f.z),x=-70,z=300;
  const wx=x*Math.cos(th)+z*Math.sin(th),wz=-x*Math.sin(th)+z*Math.cos(th);return Math.atan2(wx,wz)+141.6*RAD;})();
 function bearingToWorld(b){const p=PHI_N-b*RAD;return new THREE.Vector3(Math.sin(p),0,Math.cos(p));}
 function worldToBearing(v){let b=(PHI_N-Math.atan2(v.x,v.z))/RAD;return ((b%360)+360)%360;}
@@ -916,7 +920,7 @@ const lampPools=(()=>{const cg=new THREE.CircleGeometry(9,20);cg.rotateX(-Math.P
 
 /* ---------- ətraf məhəllə ---------- */
 const NEIGH={g:new THREE.Group(),cars:[]};SITE.add(NEIGH.g);
-{const {X0,X1,Z0,Z1,CX,CZ,WX,WZ}=LAND.b,S=48,RG=450,f=new THREE.Vector3(-0.65,0,-0.76).normalize(),G=NEIGH.g;let sd=91;const r4=()=>{sd=(sd*16807)%2147483647;return sd/2147483647;};
+{const {X0,X1,Z0,Z1,CX,CZ,WX,WZ}=LAND.b,S=48,RG=450,f=BAY_F.clone(),G=NEIGH.g;let sd=91;const r4=()=>{sd=(sd*16807)%2147483647;return sd/2147483647;};
  const mm=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.9},o)),o3=new THREE.Object3D(),col=new THREE.Color();
  /* kompleksin ətrafında enli asfalt zolağı */
  {const a=mm(0x5e6065),fr=60;[[CX,Z0-fr/2,WX+fr*2,fr],[CX,Z1+fr/2,WX+fr*2,fr],[X0-fr/2,CZ,fr,WZ],[X1+fr/2,CZ,fr,WZ]].forEach(([x,z,w,d])=>{const p=new THREE.Mesh(new THREE.PlaneGeometry(w,d),a);p.rotation.x=-Math.PI/2;p.position.set(x,.03,z);p.receiveShadow=true;G.add(p);});}

@@ -669,3 +669,13 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 ### Nizami City ana səhifə: 3 dizayn istiqaməti (18.11.2026, seçim gözləyir)
 - Kətan: https://claude.ai/artifact/9zbqPBeGXNUqgUB7B4HRro — A «Jurnal» (açıq krem fon, Imbue serif başlıqlar, iri foto mozaikası), B «Alət» (ağ fon, axtarış paneli və plan kartları öndə), C «Kino» (tünd zeytun fon, 5 nömrəli səhnə, nəhəng yazı). Hamısı brend rəngləri və real məzmunla (rəqəmlər saytdan; uydurma yoxdur).
 - Nihat seçəndən sonra seçilən istiqamət `nc/site-src/v3`-də qurulacaq. Hələ canlıda heç nə dəyişməyib.
+
+## 19.11.2026 — 3D (3d.html): mənzillərin dünya tərəfləri satış ofisinin cədvəlinə uyğunlaşdırıldı
+- Mənbə: Nihatın göndərdiyi əlyazma cədvəl (16-cı mərtəbə): №1 111,64 cənub-qərb · №2 70,37 qərb · №3 134,33 şimal-qərb · №4 73,42 şimal-şərq · №5 150,66 şimal-şərq · №6 174,53 cənub-şərq.
+- Səbəb: 3D «№1 dəniz və Alov qüllələri tərəfdədir» fərziyyəsi ilə qurulmuşdu — hər mənzil 90° səhv idi. Əslində dənizə baxan fasad 4-5-6-dır, №6 Alov qüllələrinə ən yaxın küncdədir.
+- Düzəliş: yeni tək sabit `BAY_F=(-0.76,0,0.65)` (əvvəl 3 yerdə təkrarlanan `(-0.65,0,-0.76)`): dəniz/şəhər/Alov qüllələri qrupu (`bay`), kompas (`PHI_N`) və qonşu məhəllələr (`NEIGH`) ondan asılıdır. Nəticə: −z fasadı (1,2,3) = qərb, +z (4,5,6) = şərq, −x ucu = cənub, +x ucu = şimal; Alov qüllələri 141,6° (cənub-şərq). Binanın həndəsəsi və mənzil nömrələmə dəyişməyib.
+- Ardınca: «Dəniz · Alov qüllələri tərəfi» nişanı 4-5-6 tərəfə keçdi; «Eyvandan mənzərə»də dəniz tərəfi `side*BAY_F.z>0` ilə təyin olunur və baxış əvvəlcədən qüllələrə doğru çevrilir; tur «Mənzərə» addımı avtomatik uyğunlaşır; günəş/kölgə və mənzil panelindəki «Pəncərələr … tərəfə baxır» yeni kompasla hesablanır.
+- Yoxlama (headless, Bina 3, 16-cı və 10-cu mərtəbə): 1 Qərb+Cənub, 2 Qərb, 3 Qərb+Şimal, 4 Şərq+Şimal, 5 Şərq, 6 Şərq+Cənub — cədvəllə eyni (yalnız №5 cədvəldə «şm-şq», 3D-də sırf şərq). Konsol xətası yoxdur.
+- Ana səhifənin gündüz/gecə müqayisə şəkilləri (`assets/3d-gunduz.webp`, `3d-gece.webp`) yeni səhnədən yenidən çəkildi: `__lux3d.cam(175,100,-150)`.
+- Yeni test qarmaqları: `__lux3d.dirs(mərtəbə)` (hər mənzilin tərəfi), `.view(n)` (eyvan baxışı), `.bina('Bina 4')`.
+- QEYD: bütün binalar eyni oriyentasiya ilə modellənib; cədvəl bir bina üçündür. Başqa binalar fərqli dönübsə, bina üzrə ayrıca fırlanma lazım olacaq (hələ yoxdur).
