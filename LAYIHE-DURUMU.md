@@ -679,3 +679,9 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Ana səhifənin gündüz/gecə müqayisə şəkilləri (`assets/3d-gunduz.webp`, `3d-gece.webp`) yeni səhnədən yenidən çəkildi: `__lux3d.cam(175,100,-150)`.
 - Yeni test qarmaqları: `__lux3d.dirs(mərtəbə)` (hər mənzilin tərəfi), `.view(n)` (eyvan baxışı), `.bina('Bina 4')`.
 - QEYD: bütün binalar eyni oriyentasiya ilə modellənib; cədvəl bir bina üçündür. Başqa binalar fərqli dönübsə, bina üzrə ayrıca fırlanma lazım olacaq (hələ yoxdur).
+
+## 19.11.2026 — Baş Ofis: «Nizami City komendant ofisi» iş yeri və 5 işçi
+- office_locations 5 «Nizami City komendant ofisi» (koordinat müvəqqəti satış ofisi ilə eyni, radius 100000 — real nöqtə verilməlidir; QR ayrıdır). Şöbə «Nizami City komendant ofisi» + vəzifələr: Komendant, Menecer, Dalandar, Xadimə (2).
+- Yenidən aktiv edildi (hesab bloku açıldı, parol 123456-ya qaytarıldı): Niyaz Qasımov (emp 48, Komendant, 09:00–18:00), Xəyalə Yusubova (emp 49, Menecer, 08:00–17:00).
+- Yeni: Şölə Nuriyeva (emp 94, Xadimə), Mirzə İsmayılov (emp 95, Dalandar), Sənubər Əliyeva (emp 96, Xadimə) — 08:00–17:00, ad.soyad@pilothayat.az / 123456, perms ofis.
+- Hamısı B.e–Cümə; yeni üçünün hire_date = 19.11.2026 (real işə qəbul tarixi verilsə dəyişdirilməlidir). Şənbə qrafiki soruşulmalıdır.
