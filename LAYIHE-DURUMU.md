@@ -685,3 +685,9 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Yenidən aktiv edildi (hesab bloku açıldı, parol 123456-ya qaytarıldı): Niyaz Qasımov (emp 48, Komendant, 09:00–18:00), Xəyalə Yusubova (emp 49, Menecer, 08:00–17:00).
 - Yeni: Şölə Nuriyeva (emp 94, Xadimə), Mirzə İsmayılov (emp 95, Dalandar), Sənubər Əliyeva (emp 96, Xadimə) — 08:00–17:00, ad.soyad@pilothayat.az / 123456, perms ofis.
 - Hamısı B.e–Cümə; yeni üçünün hire_date = 19.11.2026 (real işə qəbul tarixi verilsə dəyişdirilməlidir). Şənbə qrafiki soruşulmalıdır.
+
+## 19.11.2026 — Qapı cihazı başqa iş yerinin işçisinə çıxış yazırdı (düzəldildi)
+- Hal: Aysel Teymurzadə (emp 42, Nizami satış ofisi) axşam QR ilə çıxış vura bilmədi — «Çıxış artıq qeyd olunub». Səbəb: LUX Tikinti qapı cihazında (VGU6261301547) PIN 42 altında yazılmış barmaq izi gün ərzində basılıb (10:44, 15:30, 16:02) və `_bio_att` bunu onun çıxışı kimi yazıb. Barmaq onun deyil — çox güman cihazda başqa işçi (ola bilsin Aysel Əliyeva, emp 52 — bio_users-də öz qeydi yoxdur) səhvən bu adla qeydə alınıb.
+- Düzəliş: `_bio_att` — işçinin location_id-si cihazın iş yerindən fərqlidirsə (və extra_sites-də yoxdursa) davamiyyətə toxunmur, qapı jurnalına «başqa iş yeri · davamiyyət yazılmadı» düşür. Baş Ofis işçiləri (location_id null) üçün davranış dəyişməyib.
+- office_attendance id 1073: səhv çıxış (16:02) silindi, qeyd yazıldı; işçi QR ilə özü çıxış vurur.
+- Qalan: cihazda PIN 42 barmağının kimə aid olduğu yerində yoxlanıb düz işçiyə bağlanmalıdır.
