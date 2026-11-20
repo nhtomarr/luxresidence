@@ -697,3 +697,9 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Yeni bloklar (plus.js sonu): `bldTiles()` (Bina A…G düymələri → süzülmüş planlar), `plansHome()` (hər otaq sayından 1 plan, təmirlisi olan öndə, 4 kart; telefonda üfüqi sürüşmə), `payHome()` (TERMS-dən ödəniş cədvəli + «Qiyməti öyrənin»). Ana səhifədən çıxarıldı: bina foto kartları, «satışda olan mənzillər» lenti, promo bloku. Qalır: təmirli lent, maket, rəqəmlər, baş plan, kompleksdə həyat, məkan, bloq, suallar.
 - Stil: intro.css sonu (`.hero.cine.hb`, `.hf-*`, `.hb-*`). Həmçinin `.sec.wrap` yan boşluğu düzəldildi (`.sec` qısa yazılışı `.wrap`-ın yan boşluğunu sıfırlayırdı — telefonda bütün bölmələr kənara yapışırdı).
 - Test: /tmp/shots/hb.py (1440, 390, 820, 1366×640) — xəta yoxdur, forma və bina düymələri düz süzür.
+
+## 21.11.2026 — Nizami saytının açıq kodunda LUX izi silindi (kənar «texniki müqayisə» PDF-i)
+- Kənar təhlil (2 səhifəlik PDF) hər iki saytın eyni Supabase layihəsindən istifadə etdiyini göstərdi; Nizami mənbəyində `lux_kv` cədvəl adı görünürdü — «Nizami saytında LUX heç yerdə görünməsin» qaydasına zidd idi.
+- Düzəliş: `public.nc_kv` görünüşü (security_invoker, yalnız `nc_%` açarlar; anon yalnız açıq açarları görür: nc_site, nc_blog, nc_cfg). `nc/site-src/runtime.js` indi `/rest/v1/nc_kv` oxuyur; şərhlərdən «LUX» silindi. `nc/site.html`-də «lux» sözü: 0.
+- Qalan iz: Supabase layihə ünvanı (avqchschbbltnnasabdm) və anon açar hər iki saytda eynidir — tam ayırmaq üçün Nizamiyə ayrıca Supabase layihəsi və ya öz domenində proksi (api.nizami-city.az) lazımdır. Qərar gözləyir.
+- Təhlükəsizlik yoxlandı: lux_kv, lux_leads, nc_leads — RLS açıq; anonim istifadəçi yalnız müraciət göndərə bilir, oxuya/dəyişə/silə bilmir.

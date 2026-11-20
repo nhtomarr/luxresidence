@@ -854,7 +854,7 @@ html[data-theme=dark] .cmap-p{background:#fff}
 @media(min-width:901px){.cmap-m.maplibregl-map{position:absolute!important}}
 .cmap-z{overflow:hidden}.cmap-z .cmap-b:hover{transform:none;background:#f2f4f8}
 
-/* mənzil tipi kartları (LUX məntiqi) */
+/* mənzil tipi kartları */
 .tcard{padding:0;overflow:hidden;gap:0}
 .tcard .tpl{aspect-ratio:4/3;background:radial-gradient(circle at 50% 45%,#fbfbf8,#eef0e7 85%);display:grid;place-items:center;padding:16px;position:relative}
 .tcard .tpl img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 12px 14px rgba(30,36,26,.16));transition:transform .5s}
@@ -2628,13 +2628,13 @@ function heroIntro(root) {
 }
 
 };</script>
-<script>/* Nizami City sayt — canlı məlumat yükləyicisi + paneldən idarə (lux_kv nc_site / nc_blog / nc_cfg, rpc nc_public_units) */
+<script>/* Nizami City sayt — canlı məlumat yükləyicisi + paneldən idarə (nc_kv: nc_site / nc_blog / nc_cfg, rpc nc_public_units) */
 (function () {
   var U = 'https://avqchschbbltnnasabdm.supabase.co', K = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2cWNoc2NoYmJsdG5uYXNhYmRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5NDA2NTAsImV4cCI6MjEwNTUxNjY1MH0.PVxxfLrj8KZH6AUaQQPx5sEqpiGEMDIFy3Mq206OMKI';
   var H = { apikey: K, Authorization: 'Bearer ' + K, 'Content-Type': 'application/json' };
   var EDIT = /[?&]edit=1/.test(location.search); window.NC_EDIT = EDIT;
   function tmo(p, ms) { return Promise.race([p, new Promise(function (r) { setTimeout(function () { r(null); }, ms); })]); }
-  var kv = fetch(U + '/rest/v1/lux_kv?select=key,value&key=in.(nc_site,nc_blog,nc_cfg)', { headers: H }).then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
+  var kv = fetch(U + '/rest/v1/nc_kv?select=key,value&key=in.(nc_site,nc_blog,nc_cfg)', { headers: H }).then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
   var un = fetch(U + '/rest/v1/rpc/nc_public_units', { method: 'POST', headers: H, body: '{}' }).then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
 
   // sorğu → nc_leads

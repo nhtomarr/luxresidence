@@ -1,10 +1,10 @@
-/* Nizami City sayt — canlı məlumat yükləyicisi + paneldən idarə (lux_kv nc_site / nc_blog / nc_cfg, rpc nc_public_units) */
+/* Nizami City sayt — canlı məlumat yükləyicisi + paneldən idarə (nc_kv: nc_site / nc_blog / nc_cfg, rpc nc_public_units) */
 (function () {
   var U = 'https://avqchschbbltnnasabdm.supabase.co', K = '%ANON%';
   var H = { apikey: K, Authorization: 'Bearer ' + K, 'Content-Type': 'application/json' };
   var EDIT = /[?&]edit=1/.test(location.search); window.NC_EDIT = EDIT;
   function tmo(p, ms) { return Promise.race([p, new Promise(function (r) { setTimeout(function () { r(null); }, ms); })]); }
-  var kv = fetch(U + '/rest/v1/lux_kv?select=key,value&key=in.(nc_site,nc_blog,nc_cfg)', { headers: H }).then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
+  var kv = fetch(U + '/rest/v1/nc_kv?select=key,value&key=in.(nc_site,nc_blog,nc_cfg)', { headers: H }).then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
   var un = fetch(U + '/rest/v1/rpc/nc_public_units', { method: 'POST', headers: H, body: '{}' }).then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
 
   // sorğu → nc_leads
