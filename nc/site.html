@@ -958,6 +958,63 @@ html[data-theme=dark].nc-cine .hd-in{background:rgba(27,31,22,.62)}
 }
 @media(min-width:701px) and (max-width:900px){.hero.cine{--cb:28px}.hero.cine .offer{left:auto;width:360px}.hero.cine .hero-t{right:auto;width:min(440px,calc(100vw - 2 * var(--m)))}}
 @media(prefers-reduced-motion:reduce){.hero.cine .offer,.hero.cine .hero-t{transition:none!important}}
+
+/* ===== 20.11.2026 — «Alət» istiqaməti: video üstündə axtarış kartı ===== */
+.hero.cine.hb{min-height:680px}
+.hero.cine.hb .hero-f,.hero.cine.hb .offer{border-radius:var(--r);border:1px solid rgba(255,255,255,.2);-webkit-backdrop-filter:blur(22px) saturate(150%);backdrop-filter:blur(22px) saturate(150%);box-shadow:0 26px 60px -30px rgba(0,0,0,.65)}
+.hero.cine.hb .hero-f{position:absolute;z-index:4;left:var(--cx);bottom:var(--cb);width:min(560px,calc(100vw - 2 * var(--cx) - 372px - 24px));box-sizing:border-box;padding:28px;display:flex;flex-direction:column;gap:18px;background:rgba(24,29,19,.58);color:#fff;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.hero.cine.hb .hero-f .h1{color:#fff;font-size:clamp(30px,2.9vw,42px);line-height:1.08;margin:0}
+.hero.cine.hb .hero-f .fld>span,.hero.cine.hb .hero-f .fld>label{color:#e3e7d8;font-size:15px}
+.hero.cine.hb .hero-f .seg{display:flex;gap:8px;background:none;padding:0;flex-wrap:wrap}
+.hero.cine.hb .hero-f .seg button{min-height:48px;min-width:60px;padding:0 18px;border-radius:10px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.1);color:#fff;font-weight:500;box-shadow:none}
+.hero.cine.hb .hero-f .seg button:hover{background:rgba(255,255,255,.2)}
+.hero.cine.hb .hero-f .seg button.on{background:#fff;border-color:#fff;color:#1e241a}
+.hf-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hero.cine.hb .hero-f .sel{width:100%;min-height:48px;border-radius:10px;border:1px solid rgba(255,255,255,.22);background-color:#fff;color:#1e241a}
+.hf-ck{display:flex;align-items:center;gap:10px;font-size:16px;cursor:pointer;min-height:28px}
+.hf-ck input{width:20px;height:20px;accent-color:#fff;margin:0;flex:none}
+.hero.cine.hb .hf-go{width:100%;min-height:56px;justify-content:center;border-radius:12px;background:#fff;color:var(--olive);font-size:18px;font-weight:600}
+.hero.cine.hb .hf-go:hover{background:var(--cream,#f3ecdc)}
+.hf-q{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:0;border:0;background:none;color:#e3e7d8;font:500 15px/1 inherit;cursor:pointer;text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(255,255,255,.35)}
+.hf-q:hover{color:#fff}
+.hf-q svg{width:16px;height:16px}
+.hero.cine.hb .hero-f :focus-visible{outline:2px solid #fff;outline-offset:2px}
+html.nci .hero.cine.hb .hero-f{opacity:0;transform:translateY(14px);pointer-events:none;transition:none}
+@media(max-height:760px) and (min-width:901px){.hero.cine.hb .hero-f{padding:22px;gap:14px}.hero.cine.hb .hero-f .h1{font-size:30px}.hero.cine.hb{--cb:40px;min-height:620px}}
+@media(max-width:900px){
+  .hero.cine.hb{height:auto;min-height:0;max-height:none;overflow:visible;background:none;display:flex;flex-direction:column;gap:12px;padding-bottom:4px}
+  .hero.cine.hb .slides{position:relative;inset:auto;height:min(64svh,600px);min-height:380px;overflow:hidden}
+  .hero.cine.hb .hero-f,.hero.cine.hb .offer{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;margin:0 var(--m);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+  .hero.cine.hb .hero-f{margin-top:-96px;padding:20px;gap:16px;background:#1e241a;border-color:rgba(255,255,255,.14)}
+  .hero.cine.hb .hero-f .h1{font-size:28px}
+  .hero.cine.hb .offer{background:var(--olive);padding:20px}
+  html.nci .hero.cine.hb .hero-f,html.nci .hero.cine.hb .offer{opacity:1;transform:none;pointer-events:auto}
+  .hero.cine.hb .hero-f .seg button{flex:1 0 auto;min-width:44px;padding:0 12px}
+  .nci-skip{top:calc(var(--hdh,84px) + 12px);bottom:auto}
+}
+@media(max-width:420px){.hf-2{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.hero.cine.hb .hero-f{transition:none!important}}
+/* bina düymələri, plan kartları, ödəniş */
+.hb-b{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.hb-b a{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:72px;padding:0 20px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:600;font-size:20px;transition:background .2s,color .2s,border-color .2s}
+.hb-b a:hover{background:var(--olive);border-color:var(--olive);color:#fff}
+.hb-b a svg{width:18px;height:18px;flex:none}
+.hb-p{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media(max-width:1100px){.hb-p{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.hb-p{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0 calc(-1 * var(--m));padding:0 var(--m) 8px;scrollbar-width:none}.hb-p::-webkit-scrollbar{display:none}.hb-p>*{flex:0 0 82%;scroll-snap-align:center}.hb-b{grid-template-columns:repeat(2,1fr)}.hb-b a{min-height:60px;font-size:18px;padding:0 16px}}
+.hb-pay{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:clamp(20px,3.4vw,48px);align-items:start}
+.hb-t{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--card)}
+.hb-t>div{display:grid;grid-template-columns:160px 160px 1fr;align-items:center;gap:8px;padding:20px 24px;border-top:1px solid var(--line)}
+.hb-t>div:first-child{border-top:0}
+.hb-t b{font-size:22px;font-weight:600}
+.hb-t span{font-weight:500}
+.hb-t em{font-style:normal;color:var(--ink2)}
+.hb-q{padding:clamp(22px,2.6vw,32px);border-radius:16px;background:var(--soft);display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.hb-q p{margin:0;color:var(--ink2)}
+@media(max-width:900px){.hb-pay{grid-template-columns:1fr}}
+@media(max-width:620px){.hb-t>div{grid-template-columns:1fr 1fr;padding:16px 18px}.hb-t em{grid-column:1/-1;font-size:15px}.hb-t b{font-size:20px}}
+/* bölmələrin yan boşluğu: .sec qısa yazılışı .wrap-ın yan boşluğunu sıfırlayırdı (telefonda məzmun kənara yapışırdı) */
+.sec.wrap{padding-left:var(--m);padding-right:var(--m)}
 </style>
 </head>
 <body>
@@ -1687,16 +1744,20 @@ function share(id) {
 /* blokları */
 const SLIDES = [['gate', 'Nizami City', 'Yasamal r-nu, Nizami m/st-nın yanında qapalı həyətli yaşayış kompleksi'], ['aerial_c', 'Qapalı həyətlər', 'Binaların öz qapalı həyətləri: avtomobilsiz, uşaq meydançası və istirahət zonası ilə'], SHOW_ST ? ['corner', 'Hazır və tikilən binalar', 'A, B, C binaları təhvil verilib, E, F, G binaları tikilir'] : ['corner', '9 bina, qapalı həyət', 'Yeraltı parkinq, kommersiya qalereyası və qapalı həyətlər']];
 function heroBlock() {
-  const t = TERMS[0];
-  return `<section class="wrap"><div class="hero cine"><div class="slides" id="sl">${SLIDES.map(([k, h, s], i) => `<div class="slide${i ? '' : ' on'}">${pic(k, h, { eager: !i, sizes: '100vw' })}</div>`).join('')}
-      <div class="hero-t"><h1 class="h1" id="slH">${SLIDES[0][1]}</h1><p class="lead" id="slS">${SLIDES[0][2]}</p>
-        <div class="hero-c"><div class="hero-dots" id="slD">${SLIDES.map((_, i) => `<button type="button" aria-label="Şəkil ${i + 1}" class="${i ? '' : 'on'}"></button>`).join('')}</div>
-        <div class="hero-nav"><button type="button" aria-label="Əvvəlki" data-d="-1">${I.al}</button><button type="button" aria-label="Növbəti" data-d="1">${I.ar}</button></div></div></div></div>
-    <div class="offer"><img class="mk" src="/assets/nc/site/mark-cream.png" alt=""><span>Daxili kredit</span><div class="big">${t ? t.m + ' ay' : '0%'}</div><h2>faizsiz ödəniş</h2><p>${TERMS.length > 1 ? TERMS.slice(1).map(x => x.m).join(', ').replace(/, (\d+)$/, ' və $1') + ' ayadək daxili kredit şərtlərindən yararlanın.' : 'Daxili kredit şərtlərindən yararlanın.'}</p><a class="btn" href="#elaqe" data-kind="price">${HP ? 'Qiyməti öyrən' : 'Hesabla'} ${I.ar}</a></div></div>
-    ${findBlock()}</section>`;
+  const t = TERMS[0], bs = BLD.map(b => b.id);
+  /* 20.11.2026 — «Alət» istiqaməti: video üstündə mənzil axtarışı kartı (solda) + kredit kartı (sağda) */
+  return `<section class="wrap"><div class="hero cine hb"><div class="slides" id="sl"><div class="slide on">${pic('gate', 'Nizami City girişi', { eager: true, sizes: '100vw' })}</div></div>
+    <form class="hero-f" id="fd"><h1 class="h1">Sizə uyğun mənzili tapın</h1>
+      <div class="fld"><span>Otaq sayı</span><div class="seg" data-k="r">${[[0, 'Hamısı'], [1, '1'], [2, '2'], [3, '3'], [4, '4+']].map(([v, x], i) => `<button type="button" data-v="${v}" class="${i ? '' : 'on'}">${x}</button>`).join('')}</div></div>
+      <div class="hf-2"><div class="fld"><label for="fdB">Bina</label><select class="sel" id="fdB"><option value="">Bütün binalar</option>${bs.map(b => `<option value="${b}">Bina ${b}</option>`).join('')}</select></div>
+      <div class="fld"><label for="fdA">Sahə</label><select class="sel" id="fdA">${AREAS.map(([v, x]) => `<option value="${v}">${x}</option>`).join('')}</select></div></div>
+      <label class="hf-ck"><input type="checkbox" id="fdR"> Yalnız təmirli şəkilləri olanlar</label>
+      <button class="btn hf-go" type="submit">Planları göstər ${I.ar}</button>
+      <button class="hf-q" type="button" data-quiz>${I.wand} Seçməkdə kömək et</button></form>
+    <div class="offer"><img class="mk" src="/assets/nc/site/mark-cream.png" alt=""><span>Daxili kredit</span><div class="big">${t ? t.m + ' ay' : '0%'}</div><h2>faizsiz ödəniş</h2><p>${TERMS.length > 1 ? TERMS.slice(1).map(x => x.m).join(', ').replace(/, (\d+)$/, ' və $1') + ' ayadək daxili kredit şərtlərindən yararlanın.' : 'Daxili kredit şərtlərindən yararlanın.'}</p><a class="btn" href="#elaqe" data-kind="price">${HP ? 'Qiyməti öyrən' : 'Hesabla'} ${I.ar}</a></div></div></section>`;
 }
 function bindHero(root) {
-  const sl = $('#sl', root); if (!sl) return; let i = 0, tm;
+  const sl = $('#sl', root); if (!sl || !$('#slD', sl)) return; let i = 0, tm;
   const go = n => { i = (n + SLIDES.length) % SLIDES.length; $$('.slide', sl).forEach((s, k) => s.classList.toggle('on', k === i)); $$('#slD button', sl).forEach((s, k) => s.classList.toggle('on', k === i)); $('#slH', sl).textContent = SLIDES[i][1]; $('#slS', sl).textContent = SLIDES[i][2]; };
   const auto = () => { clearInterval(tm); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) tm = setInterval(() => { if (!document.body.contains(sl)) return clearInterval(tm); if (window.__nci || Date.now() < (window.__nciT || 0)) return; go(i + 1); }, 6000); };
   $$('#slD button', sl).forEach((b, k) => b.onclick = () => { go(k); auto(); });
@@ -1714,7 +1775,7 @@ function findBlock() {
 function bindFind(root) {
   const f = $('#fd', root); if (!f) return; let r = 0;
   $('[data-k=r]', f).onclick = e => { const b = e.target.closest('button'); if (!b) return; r = +b.dataset.v; $$('[data-k=r] button', f).forEach(x => x.classList.toggle('on', x === b)); };
-  f.onsubmit = e => { e.preventDefault(); resetF(); F.r = r; F.b = $('#fdB', f).value; F.ph = $('#fdP', f).value; nav('menziller' + (fQuery() ? '?' + fQuery() : '')); };
+  f.onsubmit = e => { e.preventDefault(); resetF(); F.r = r; F.b = $('#fdB', f).value; const p = $('#fdP', f); if (p) F.ph = p.value; const ar = $('#fdA', f); if (ar && ar.value) { const [x, y] = ar.value.split('-').map(Number); F.a0 = x; F.a1 = y >= 999 ? 0 : y; } const ck = $('#fdR', f); if (ck && ck.checked) F.rp = 1; nav('menziller' + (fQuery() ? '?' + fQuery() : '')); };
 }
 function buildingsBlock(full) {
   const tabs = [['w', 'Tikilən binalar'], ['ok', 'Hazır binalar']];
@@ -1765,19 +1826,19 @@ const faqBlock = n => `<div class="two"><div class="card"><h2 class="h2" style="
 const pages = {};
 pages.home = () => ({
   title: 'Nizami City — Yasamalda qapalı həyətli yaşayış kompleksi', html: `${heroBlock()}
-  ${numBlock()}
-  ${maqSection()}
-  <section class="sec wrap">${buildingsBlock()}</section>
+  <section class="sec wrap">${bldTiles()}</section>
+  ${plansHome()}
   ${repHome()}
-  ${SHOW_STOCK ? `<section class="sec wrap">${offersBlock()}</section>` : ''}
+  <section class="sec wrap">${payHome()}</section>
+  ${maqSection()}
+  ${numBlock()}
   ${seenBlock()}
-  <section class="sec wrap">${promoBlock()}</section>
   <section class="sec wrap">${planBlock()}</section>
   <section class="sec wrap">${featBlock()}</section>
   <section class="sec wrap">${locBlock()}</section>
   ${newsBlock() ? `<section class="sec wrap">${newsBlock()}</section>` : ''}
   <section class="sec wrap">${faqBlock(5)}</section>`,
-  mount(r) { bindHero(r); heroFx(r); heroIntro(r); bindFind(r); bindMaqHome(r); bindBuildings(r); bindRail(r); bindPlan(r); bindLead(r); bindLb(r); bindRepHome(r); }
+  mount(r) { bindHero(r); heroFx(r); heroIntro(r); bindFind(r); bindMaqHome(r); bindRail(r); bindPlan(r); bindLead(r); bindLb(r); bindRepHome(r); }
 });
 pages.binalar = () => ({
   title: 'Binalar — Nizami City', html: `${pHead('Binalar', SHOW_ST ? 'A, B və C binaları təhvil verilib. E, F və G binaları tikilir' + (SHOW_DEL ? ', təhvil ' + esc(CO.delivery) : '') + '.' : '9 bina, qapalı həyət. Binanı seçin — mərtəbələr və mənzillər açılacaq.', `<div class="stats"><div class="stat"><b>${BLD.length}</b><span>bina</span></div>${SHOW_STOCK ? `<div class="stat"><b>${free.filter(u => u.st === 'free').length}</b><span>satışda</span></div>` : ''}<div class="stat"><b>9</b><span>mərtəbə</span></div></div>`)}
@@ -2128,7 +2189,7 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-rep]
 
 /* ===== 8: kinematik hero ===== */
 function heroFx(r) {
-  const sl = $('#sl', r); if (!sl) return;
+  const sl = $('#sl', r); if (!sl || !$('#slH', sl)) return;
   const t = $('.hero-t', sl), mo = new MutationObserver(() => { t.classList.remove('sw'); void t.offsetWidth; t.classList.add('sw'); });
   mo.observe($('#slH', sl), { childList: true, characterData: true, subtree: true });
 }
@@ -2508,6 +2569,26 @@ function bindRepHome(r) {
     im.onload = () => G.forEach(x => { if (!x) return; x.dataset.i = i; const a = $('.rh-a', x), b = $('.rh-b', x), top = x.classList.contains('sw') ? a : b; top.src = src; x.classList.toggle('sw'); });
     im.src = src;
   }, 1600);
+}
+
+/* ===== 20.11.2026 — ana səhifə «Alət» istiqaməti: bina düymələri, plan kartları, ödəniş cədvəli ===== */
+function bldTiles() {
+  return `<div class="sh"><h2 class="h2">Binalar</h2><span class="mu">Binanı seçin, planlar ona görə süzülsün</span></div>
+    <div class="hb-b">${BLD.slice().sort((a, b) => String(a.id).localeCompare(String(b.id))).map(b => `<a href="#menziller?b=${b.id}">Bina ${b.id} ${I.ar}</a>`).join('')}</div>`;
+}
+function plansHome() {
+  const all = uniqT(free), seen = new Set(), L = [];
+  const rank = t => (window.ncRepair(t.plan) ? 0 : 1);
+  [1, 2, 3, 4].forEach(r => { const c = all.filter(t => (r === 4 ? t.r >= 4 : t.r === r)).sort((a, b) => rank(a) - rank(b) || a.a - b.a)[0]; if (c) { L.push(c); seen.add(c.key); } });
+  all.slice().sort((a, b) => rank(a) - rank(b) || a.r - b.r || a.a - b.a).forEach(t => { if (L.length < 4 && !seen.has(t.key)) { L.push(t); seen.add(t.key); } });
+  if (!L.length) return '';
+  L.sort((a, b) => a.r - b.r || a.a - b.a);
+  return `<section class="sec wrap"><div class="sh"><h2 class="h2">Planlar</h2><a class="pillbtn" href="#menziller">Bütün planlar ${I.ar}</a></div><div class="hb-p">${L.map(t => tCard(t)).join('')}</div></section>`;
+}
+function payHome() {
+  const rows = TERMS.map((t, i) => [t.m + (i ? ' ayadək' : ' ay'), i || t.s ? 'Daxili kredit' : 'Faizsiz', i || t.s ? 'Şərtləri satış meneceri dəqiqləşdirir' : 'İlkin ödənişdən sonra qalan məbləğ']);
+  return `<div class="hb-pay"><div><div class="sh"><h2 class="h2">Ödəniş</h2></div><div class="hb-t">${rows.map(([a, b, c]) => `<div><b>${a}</b><span>${b}</span><em>${c}</em></div>`).join('')}</div></div>
+    <div class="hb-q"><h3 class="h3">Qiyməti öyrənin</h3><p>Satış meneceri seçdiyiniz planın qiymətini və ödəniş cədvəlini göndərsin.</p><a class="btn" href="#elaqe" data-kind="price">Qiyməti öyrən ${I.ar}</a><a class="lk" href="tel:${esc(CO.short)}">Zəng edin: ${esc(CO.short)}</a></div></div>`;
 }
 
 

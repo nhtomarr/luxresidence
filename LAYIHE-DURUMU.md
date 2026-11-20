@@ -668,7 +668,7 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 
 ### Nizami City ana səhifə: 3 dizayn istiqaməti (18.11.2026, seçim gözləyir)
 - Kətan: https://claude.ai/artifact/9zbqPBeGXNUqgUB7B4HRro — A «Jurnal» (açıq krem fon, Imbue serif başlıqlar, iri foto mozaikası), B «Alət» (ağ fon, axtarış paneli və plan kartları öndə), C «Kino» (tünd zeytun fon, 5 nömrəli səhnə, nəhəng yazı). Hamısı brend rəngləri və real məzmunla (rəqəmlər saytdan; uydurma yoxdur).
-- Nihat seçəndən sonra seçilən istiqamət `nc/site-src/v3`-də qurulacaq. Hələ canlıda heç nə dəyişməyib.
+- 20.11.2026: Nihat B «Alət» variantını seçdi → quruldu və canlıdadır (aşağıda).
 
 ## 19.11.2026 — 3D (3d.html): mənzillərin dünya tərəfləri satış ofisinin cədvəlinə uyğunlaşdırıldı
 - Mənbə: Nihatın göndərdiyi əlyazma cədvəl (16-cı mərtəbə): №1 111,64 cənub-qərb · №2 70,37 qərb · №3 134,33 şimal-qərb · №4 73,42 şimal-şərq · №5 150,66 şimal-şərq · №6 174,53 cənub-şərq.
@@ -691,3 +691,9 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Düzəliş: `_bio_att` — işçinin location_id-si cihazın iş yerindən fərqlidirsə (və extra_sites-də yoxdursa) davamiyyətə toxunmur, qapı jurnalına «başqa iş yeri · davamiyyət yazılmadı» düşür. Baş Ofis işçiləri (location_id null) üçün davranış dəyişməyib.
 - office_attendance id 1073: səhv çıxış (16:02) silindi, qeyd yazıldı; işçi QR ilə özü çıxış vurur.
 - Qalan: cihazda PIN 42 barmağının kimə aid olduğu yerində yoxlanıb düz işçiyə bağlanmalıdır.
+
+## 20.11.2026 — Nizami City ana səhifə: B «Alət» istiqaməti quruldu
+- Hero (`heroBlock`, app.js): slaydlar və başlıq kartı çıxdı; video/son kadr üstündə solda şüşə axtarış kartı `form.hero-f#fd` (otaq sayı, Bina, Sahə, «Yalnız təmirli şəkilləri olanlar», «Planları göstər», «Seçməkdə kömək et»), sağda kredit kartı. Göndərəndə `#menziller?r=&b=&a0=&a1=&rp=1`. Köhnə `findBlock` ana səhifədən çıxdı (funksiya qalır). Video oynayarkən kartlar gizlidir (kompüter); telefonda (≤900px) kartlar videonun altında düz blokdur və gizlənmir.
+- Yeni bloklar (plus.js sonu): `bldTiles()` (Bina A…G düymələri → süzülmüş planlar), `plansHome()` (hər otaq sayından 1 plan, təmirlisi olan öndə, 4 kart; telefonda üfüqi sürüşmə), `payHome()` (TERMS-dən ödəniş cədvəli + «Qiyməti öyrənin»). Ana səhifədən çıxarıldı: bina foto kartları, «satışda olan mənzillər» lenti, promo bloku. Qalır: təmirli lent, maket, rəqəmlər, baş plan, kompleksdə həyat, məkan, bloq, suallar.
+- Stil: intro.css sonu (`.hero.cine.hb`, `.hf-*`, `.hb-*`). Həmçinin `.sec.wrap` yan boşluğu düzəldildi (`.sec` qısa yazılışı `.wrap`-ın yan boşluğunu sıfırlayırdı — telefonda bütün bölmələr kənara yapışırdı).
+- Test: /tmp/shots/hb.py (1440, 390, 820, 1366×640) — xəta yoxdur, forma və bina düymələri düz süzür.

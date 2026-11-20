@@ -241,16 +241,20 @@ function share(id) {
 /* blokları */
 const SLIDES = [['gate', 'Nizami City', 'Yasamal r-nu, Nizami m/st-nın yanında qapalı həyətli yaşayış kompleksi'], ['aerial_c', 'Qapalı həyətlər', 'Binaların öz qapalı həyətləri: avtomobilsiz, uşaq meydançası və istirahət zonası ilə'], SHOW_ST ? ['corner', 'Hazır və tikilən binalar', 'A, B, C binaları təhvil verilib, E, F, G binaları tikilir'] : ['corner', '9 bina, qapalı həyət', 'Yeraltı parkinq, kommersiya qalereyası və qapalı həyətlər']];
 function heroBlock() {
-  const t = TERMS[0];
-  return `<section class="wrap"><div class="hero cine"><div class="slides" id="sl">${SLIDES.map(([k, h, s], i) => `<div class="slide${i ? '' : ' on'}">${pic(k, h, { eager: !i, sizes: '100vw' })}</div>`).join('')}
-      <div class="hero-t"><h1 class="h1" id="slH">${SLIDES[0][1]}</h1><p class="lead" id="slS">${SLIDES[0][2]}</p>
-        <div class="hero-c"><div class="hero-dots" id="slD">${SLIDES.map((_, i) => `<button type="button" aria-label="Şəkil ${i + 1}" class="${i ? '' : 'on'}"></button>`).join('')}</div>
-        <div class="hero-nav"><button type="button" aria-label="Əvvəlki" data-d="-1">${I.al}</button><button type="button" aria-label="Növbəti" data-d="1">${I.ar}</button></div></div></div></div>
-    <div class="offer"><img class="mk" src="/assets/nc/site/mark-cream.png" alt=""><span>Daxili kredit</span><div class="big">${t ? t.m + ' ay' : '0%'}</div><h2>faizsiz ödəniş</h2><p>${TERMS.length > 1 ? TERMS.slice(1).map(x => x.m).join(', ').replace(/, (\d+)$/, ' və $1') + ' ayadək daxili kredit şərtlərindən yararlanın.' : 'Daxili kredit şərtlərindən yararlanın.'}</p><a class="btn" href="#elaqe" data-kind="price">${HP ? 'Qiyməti öyrən' : 'Hesabla'} ${I.ar}</a></div></div>
-    ${findBlock()}</section>`;
+  const t = TERMS[0], bs = BLD.map(b => b.id);
+  /* 20.11.2026 — «Alət» istiqaməti: video üstündə mənzil axtarışı kartı (solda) + kredit kartı (sağda) */
+  return `<section class="wrap"><div class="hero cine hb"><div class="slides" id="sl"><div class="slide on">${pic('gate', 'Nizami City girişi', { eager: true, sizes: '100vw' })}</div></div>
+    <form class="hero-f" id="fd"><h1 class="h1">Sizə uyğun mənzili tapın</h1>
+      <div class="fld"><span>Otaq sayı</span><div class="seg" data-k="r">${[[0, 'Hamısı'], [1, '1'], [2, '2'], [3, '3'], [4, '4+']].map(([v, x], i) => `<button type="button" data-v="${v}" class="${i ? '' : 'on'}">${x}</button>`).join('')}</div></div>
+      <div class="hf-2"><div class="fld"><label for="fdB">Bina</label><select class="sel" id="fdB"><option value="">Bütün binalar</option>${bs.map(b => `<option value="${b}">Bina ${b}</option>`).join('')}</select></div>
+      <div class="fld"><label for="fdA">Sahə</label><select class="sel" id="fdA">${AREAS.map(([v, x]) => `<option value="${v}">${x}</option>`).join('')}</select></div></div>
+      <label class="hf-ck"><input type="checkbox" id="fdR"> Yalnız təmirli şəkilləri olanlar</label>
+      <button class="btn hf-go" type="submit">Planları göstər ${I.ar}</button>
+      <button class="hf-q" type="button" data-quiz>${I.wand} Seçməkdə kömək et</button></form>
+    <div class="offer"><img class="mk" src="/assets/nc/site/mark-cream.png" alt=""><span>Daxili kredit</span><div class="big">${t ? t.m + ' ay' : '0%'}</div><h2>faizsiz ödəniş</h2><p>${TERMS.length > 1 ? TERMS.slice(1).map(x => x.m).join(', ').replace(/, (\d+)$/, ' və $1') + ' ayadək daxili kredit şərtlərindən yararlanın.' : 'Daxili kredit şərtlərindən yararlanın.'}</p><a class="btn" href="#elaqe" data-kind="price">${HP ? 'Qiyməti öyrən' : 'Hesabla'} ${I.ar}</a></div></div></section>`;
 }
 function bindHero(root) {
-  const sl = $('#sl', root); if (!sl) return; let i = 0, tm;
+  const sl = $('#sl', root); if (!sl || !$('#slD', sl)) return; let i = 0, tm;
   const go = n => { i = (n + SLIDES.length) % SLIDES.length; $$('.slide', sl).forEach((s, k) => s.classList.toggle('on', k === i)); $$('#slD button', sl).forEach((s, k) => s.classList.toggle('on', k === i)); $('#slH', sl).textContent = SLIDES[i][1]; $('#slS', sl).textContent = SLIDES[i][2]; };
   const auto = () => { clearInterval(tm); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) tm = setInterval(() => { if (!document.body.contains(sl)) return clearInterval(tm); if (window.__nci || Date.now() < (window.__nciT || 0)) return; go(i + 1); }, 6000); };
   $$('#slD button', sl).forEach((b, k) => b.onclick = () => { go(k); auto(); });
@@ -268,7 +272,7 @@ function findBlock() {
 function bindFind(root) {
   const f = $('#fd', root); if (!f) return; let r = 0;
   $('[data-k=r]', f).onclick = e => { const b = e.target.closest('button'); if (!b) return; r = +b.dataset.v; $$('[data-k=r] button', f).forEach(x => x.classList.toggle('on', x === b)); };
-  f.onsubmit = e => { e.preventDefault(); resetF(); F.r = r; F.b = $('#fdB', f).value; F.ph = $('#fdP', f).value; nav('menziller' + (fQuery() ? '?' + fQuery() : '')); };
+  f.onsubmit = e => { e.preventDefault(); resetF(); F.r = r; F.b = $('#fdB', f).value; const p = $('#fdP', f); if (p) F.ph = p.value; const ar = $('#fdA', f); if (ar && ar.value) { const [x, y] = ar.value.split('-').map(Number); F.a0 = x; F.a1 = y >= 999 ? 0 : y; } const ck = $('#fdR', f); if (ck && ck.checked) F.rp = 1; nav('menziller' + (fQuery() ? '?' + fQuery() : '')); };
 }
 function buildingsBlock(full) {
   const tabs = [['w', 'Tikilən binalar'], ['ok', 'Hazır binalar']];
@@ -319,19 +323,19 @@ const faqBlock = n => `<div class="two"><div class="card"><h2 class="h2" style="
 const pages = {};
 pages.home = () => ({
   title: 'Nizami City — Yasamalda qapalı həyətli yaşayış kompleksi', html: `${heroBlock()}
-  ${numBlock()}
-  ${maqSection()}
-  <section class="sec wrap">${buildingsBlock()}</section>
+  <section class="sec wrap">${bldTiles()}</section>
+  ${plansHome()}
   ${repHome()}
-  ${SHOW_STOCK ? `<section class="sec wrap">${offersBlock()}</section>` : ''}
+  <section class="sec wrap">${payHome()}</section>
+  ${maqSection()}
+  ${numBlock()}
   ${seenBlock()}
-  <section class="sec wrap">${promoBlock()}</section>
   <section class="sec wrap">${planBlock()}</section>
   <section class="sec wrap">${featBlock()}</section>
   <section class="sec wrap">${locBlock()}</section>
   ${newsBlock() ? `<section class="sec wrap">${newsBlock()}</section>` : ''}
   <section class="sec wrap">${faqBlock(5)}</section>`,
-  mount(r) { bindHero(r); heroFx(r); heroIntro(r); bindFind(r); bindMaqHome(r); bindBuildings(r); bindRail(r); bindPlan(r); bindLead(r); bindLb(r); bindRepHome(r); }
+  mount(r) { bindHero(r); heroFx(r); heroIntro(r); bindFind(r); bindMaqHome(r); bindRail(r); bindPlan(r); bindLead(r); bindLb(r); bindRepHome(r); }
 });
 pages.binalar = () => ({
   title: 'Binalar — Nizami City', html: `${pHead('Binalar', SHOW_ST ? 'A, B və C binaları təhvil verilib. E, F və G binaları tikilir' + (SHOW_DEL ? ', təhvil ' + esc(CO.delivery) : '') + '.' : '9 bina, qapalı həyət. Binanı seçin — mərtəbələr və mənzillər açılacaq.', `<div class="stats"><div class="stat"><b>${BLD.length}</b><span>bina</span></div>${SHOW_STOCK ? `<div class="stat"><b>${free.filter(u => u.st === 'free').length}</b><span>satışda</span></div>` : ''}<div class="stat"><b>9</b><span>mərtəbə</span></div></div>`)}

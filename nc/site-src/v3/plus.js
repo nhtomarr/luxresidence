@@ -183,7 +183,7 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-rep]
 
 /* ===== 8: kinematik hero ===== */
 function heroFx(r) {
-  const sl = $('#sl', r); if (!sl) return;
+  const sl = $('#sl', r); if (!sl || !$('#slH', sl)) return;
   const t = $('.hero-t', sl), mo = new MutationObserver(() => { t.classList.remove('sw'); void t.offsetWidth; t.classList.add('sw'); });
   mo.observe($('#slH', sl), { childList: true, characterData: true, subtree: true });
 }
@@ -563,4 +563,24 @@ function bindRepHome(r) {
     im.onload = () => G.forEach(x => { if (!x) return; x.dataset.i = i; const a = $('.rh-a', x), b = $('.rh-b', x), top = x.classList.contains('sw') ? a : b; top.src = src; x.classList.toggle('sw'); });
     im.src = src;
   }, 1600);
+}
+
+/* ===== 20.11.2026 — ana səhifə «Alət» istiqaməti: bina düymələri, plan kartları, ödəniş cədvəli ===== */
+function bldTiles() {
+  return `<div class="sh"><h2 class="h2">Binalar</h2><span class="mu">Binanı seçin, planlar ona görə süzülsün</span></div>
+    <div class="hb-b">${BLD.slice().sort((a, b) => String(a.id).localeCompare(String(b.id))).map(b => `<a href="#menziller?b=${b.id}">Bina ${b.id} ${I.ar}</a>`).join('')}</div>`;
+}
+function plansHome() {
+  const all = uniqT(free), seen = new Set(), L = [];
+  const rank = t => (window.ncRepair(t.plan) ? 0 : 1);
+  [1, 2, 3, 4].forEach(r => { const c = all.filter(t => (r === 4 ? t.r >= 4 : t.r === r)).sort((a, b) => rank(a) - rank(b) || a.a - b.a)[0]; if (c) { L.push(c); seen.add(c.key); } });
+  all.slice().sort((a, b) => rank(a) - rank(b) || a.r - b.r || a.a - b.a).forEach(t => { if (L.length < 4 && !seen.has(t.key)) { L.push(t); seen.add(t.key); } });
+  if (!L.length) return '';
+  L.sort((a, b) => a.r - b.r || a.a - b.a);
+  return `<section class="sec wrap"><div class="sh"><h2 class="h2">Planlar</h2><a class="pillbtn" href="#menziller">Bütün planlar ${I.ar}</a></div><div class="hb-p">${L.map(t => tCard(t)).join('')}</div></section>`;
+}
+function payHome() {
+  const rows = TERMS.map((t, i) => [t.m + (i ? ' ayadək' : ' ay'), i || t.s ? 'Daxili kredit' : 'Faizsiz', i || t.s ? 'Şərtləri satış meneceri dəqiqləşdirir' : 'İlkin ödənişdən sonra qalan məbləğ']);
+  return `<div class="hb-pay"><div><div class="sh"><h2 class="h2">Ödəniş</h2></div><div class="hb-t">${rows.map(([a, b, c]) => `<div><b>${a}</b><span>${b}</span><em>${c}</em></div>`).join('')}</div></div>
+    <div class="hb-q"><h3 class="h3">Qiyməti öyrənin</h3><p>Satış meneceri seçdiyiniz planın qiymətini və ödəniş cədvəlini göndərsin.</p><a class="btn" href="#elaqe" data-kind="price">Qiyməti öyrən ${I.ar}</a><a class="lk" href="tel:${esc(CO.short)}">Zəng edin: ${esc(CO.short)}</a></div></div>`;
 }
