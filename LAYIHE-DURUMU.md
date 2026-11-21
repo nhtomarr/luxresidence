@@ -708,3 +708,9 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Səbəb: 3D hər mənzilin sahəsini satış cədvəlindən oxuyurdu (məs. Bina 3 №1 = 111,62), plan səhifəsi isə plan tipinin sahəsini (111,64) göstərir — müştəri iki fərqli rəqəm görürdü.
 - Düzəliş (3d.html `units()`): mənzil saytdakı tipə (`lux_apartments`, `area` + `alt`, ±0,05, sonra ±0,5) uyğunlaşdırılır və etiketdə, paneldə, «Baxışa yazıl» mətnində tipin sahəsi göstərilir; satış cədvəlindəki əsl rəqəm `area0`-da qalır. Uyğun tip tapılmayan mənzil öz sahəsi ilə qalır.
 - Satış sistemindəki sahələrə toxunulmayıb (müqavilədə istifadə olunur). Qeyd: Bina 4-də №1 sırasında 3 fərqli sahə var (111,62 / 111,64 / 111,34), 10-cu mərtəbə №2-nin sahəsi boşdur — satış şöbəsi yoxlamalıdır.
+
+## 21.11.2026 — 3D: bütün mərtəbələrdə eyni düzülüş; №5 «Şimal-şərq»
+- İstək (Nihat): «16-cı mərtəbədə necədirsə, ardıcıllıq bütün mərtəbələrdə eyni olsun». Səbəb: satış cədvəlində bir çox mərtəbədə sahə boş və ya fərqlidir (məs. Bina 3 №3: 134,08 / 125 / 92; Bina 5-in 4–6-cı mərtəbələri tam boş), 3D isə plitənin enini və mini planı sahədən çıxarırdı — mərtəbələr fərqli görünürdü.
+- Düzəliş (3d.html): `canonOf(bina)` — hər mənzil nömrəsinin tipi ən yuxarı tam mərtəbədəki sayt tipindən götürülür; `units(f)` mərtəbədə mənzil sayı eynidirsə həmin tipi tətbiq edir (sahə, otaq sayı, plan, en). Status (satışda/satılıb) və satış cədvəlinin öz rəqəmləri (`area0`) dəyişmir.
+- №5 (6 mənzilli mərtəbələrdə): paneldə və `__lux3d.dirs`-də istiqamət «Şimal-şərq» (əvvəl «Şərq») — satış ofisinin cədvəlinə uyğun (`dirTxt`). Günəş saatı hesabı əvvəlki kimi real fasada görədir.
+- Test /tmp/shots/t3b.py: Bina 3–6, mərtəbə 3–16 — hamısında 1:111.64, 2:70.37, 3:134.33, 4:73.42, 5:150.66, 6:174.53; xəta yoxdur. Bina 7, 8-in satış məlumatı yoxdur (mənzil göstərilmir — köhnə hal).
