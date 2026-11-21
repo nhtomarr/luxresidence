@@ -703,3 +703,8 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Düzəliş: `public.nc_kv` görünüşü (security_invoker, yalnız `nc_%` açarlar; anon yalnız açıq açarları görür: nc_site, nc_blog, nc_cfg). `nc/site-src/runtime.js` indi `/rest/v1/nc_kv` oxuyur; şərhlərdən «LUX» silindi. `nc/site.html`-də «lux» sözü: 0.
 - Qalan iz: Supabase layihə ünvanı (avqchschbbltnnasabdm) və anon açar hər iki saytda eynidir — tam ayırmaq üçün Nizamiyə ayrıca Supabase layihəsi və ya öz domenində proksi (api.nizami-city.az) lazımdır. Qərar gözləyir.
 - Təhlükəsizlik yoxlandı: lux_kv, lux_leads, nc_leads — RLS açıq; anonim istifadəçi yalnız müraciət göndərə bilir, oxuya/dəyişə/silə bilmir.
+
+## 21.11.2026 — 3D: mənzil sahəsi saytdakı plan səhifəsi ilə eyni göstərilir
+- Səbəb: 3D hər mənzilin sahəsini satış cədvəlindən oxuyurdu (məs. Bina 3 №1 = 111,62), plan səhifəsi isə plan tipinin sahəsini (111,64) göstərir — müştəri iki fərqli rəqəm görürdü.
+- Düzəliş (3d.html `units()`): mənzil saytdakı tipə (`lux_apartments`, `area` + `alt`, ±0,05, sonra ±0,5) uyğunlaşdırılır və etiketdə, paneldə, «Baxışa yazıl» mətnində tipin sahəsi göstərilir; satış cədvəlindəki əsl rəqəm `area0`-da qalır. Uyğun tip tapılmayan mənzil öz sahəsi ilə qalır.
+- Satış sistemindəki sahələrə toxunulmayıb (müqavilədə istifadə olunur). Qeyd: Bina 4-də №1 sırasında 3 fərqli sahə var (111,62 / 111,64 / 111,34), 10-cu mərtəbə №2-nin sahəsi boşdur — satış şöbəsi yoxlamalıdır.
