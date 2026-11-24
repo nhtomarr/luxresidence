@@ -714,3 +714,8 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Düzəliş (3d.html): `canonOf(bina)` — hər mənzil nömrəsinin tipi ən yuxarı tam mərtəbədəki sayt tipindən götürülür; `units(f)` mərtəbədə mənzil sayı eynidirsə həmin tipi tətbiq edir (sahə, otaq sayı, plan, en). Status (satışda/satılıb) və satış cədvəlinin öz rəqəmləri (`area0`) dəyişmir.
 - №5 (6 mənzilli mərtəbələrdə): paneldə və `__lux3d.dirs`-də istiqamət «Şimal-şərq» (əvvəl «Şərq») — satış ofisinin cədvəlinə uyğun (`dirTxt`). Günəş saatı hesabı əvvəlki kimi real fasada görədir.
 - Test /tmp/shots/t3b.py: Bina 3–6, mərtəbə 3–16 — hamısında 1:111.64, 2:70.37, 3:134.33, 4:73.42, 5:150.66, 6:174.53; xəta yoxdur. Bina 7, 8-in satış məlumatı yoxdur (mənzil göstərilmir — köhnə hal).
+
+## 24.11.2026 — Baş Ofis: Nizami City üzrə 5 yeni işçi + 24 saatlıq növbə rejimi
+- Yeni (iş yeri «Nizami City komendant ofisi», loc 5; ad.soyad@pilothayat.az / 123456; geo_exempt=true, plan_required=false): Kamil Əsədov (emp 97, Mühafizəçi, 24 saat rejim), Hikmət Aslanov (98, Fəhlə, 08:00–18:00), Məcnun Mirzəyev (99, Fəhlə, 08:00–18:00), Sabir Kərimov (100) və Əlikram Yaqubov (101) — vəzifə və saat verilməyib, müvəqqəti 09:00–18:00, vəzifəsiz.
+- Yeni vəzifələr (şöbə 19): Mühafizəçi, Fəhlə.
+- **24 saatlıq növbə** — yeni sütun `office_employees.shift24` (default false). `office_check` (5 arqumentli): shift24 işçidə gecikmə/tez çıxma 0 yazılır; dünən açıq qalan növbə (36 saata qədər) bu günkü ilk QR skanı ilə bağlanır («Növbə bitdi · çıxış qeyd olundu»), yeni növbə üçün ikinci skan lazımdır. Kamildə workdays = [] (hər gün «gəlməyib» sayılmasın). Paneldə bu rejim üçün hələ düymə yoxdur — bazadan qoyulur.
