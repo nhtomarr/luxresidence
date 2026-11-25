@@ -738,3 +738,11 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - `_bio_att`: deaktiv işçinin davamiyyəti yazılmır («işçi aktiv deyil»).
 - Qalıb (silmək üçün təsdiq gözləyir): İlham Abbasov 6, Elməddin Quliyev 2, Səbinə Dadaşova 11 günlük yalançı «barmaq» qeydi (12–24.11).
 - **Bildiriş pəncərəsi (ofis-b.js `pushGateRender`):** Android-də push dəstəkləməyən brauzerdə (Xiaomi Mi Browser və s.) artıq «telefonunuzda açın» yox, «Google Chrome-da açın» təlimatı + `intent://…package=com.android.chrome` düyməsi göstərilir. Hal: Xəyalə Yusubova.
+
+## 25.11.2026 — Mövsüm rejimi (Yeni il) — `assets/season.js`
+- **Bir açar:** `assets/season.js` başında `SW` — `'auto'` (1 dekabr – 14 yanvar, Bakı vaxtı, özü yanır/sönür), `'on'`, `'off'`; `DEF` — standart variant (`'a'` sakit, `'b'` bayramlı). Dəyişəndə səhifələrdə `season.js?v=N` artırılmalıdır.
+- **Sınaq (mövsümdən kənar da işləyir):** `?movsum=a`, `?movsum=b`, söndürmək `?movsum=0` — yalnız həmin brauzer sessiyasında qalır.
+- Nə edir: yuxarıda nazik zolaq (mətn tarixə görə: 30.12-yə qədər «Yeni il ərəfəsində mənzilinizi seçin», 31.12 «Həmrəylik günü və Yeni iliniz mübarək», 1–14.01 «Yeni iliniz mübarək») + düymə + bağla (sessiya); loqonun yanında kiçik qar dənəsi; yalnız hero-da seyrək qar (canvas, 30 kadr/san, ekrandan çıxanda dayanır; reduced-motion / saveData / 2g / ≤2 GB yaddaşda yoxdur). B variantı: «Yeni ilə N gün» sayğacı, sıx qar, zolağın altında nöqtə sırası.
+- Sayta görə ayar səhifədə `window.SEASON`: rənglər (`bg, fg, ac`), `hero`, `z`, `hideWhen` (giriş videosu zamanı qar gizli), `logo`, `cta` ({click | href | attr, label}), `offer` (kampaniya mətni — verilsə zolaqda əsas mətnin yerinə çıxır), `v`.
+- Qoşulub: `index.html` (düymə → «Baxışa yazıl» pəncərəsi), `ru.html` (→ #zayavka), `nc/site-src/v3/index.tpl.html` (zeytun rəngi, düymə → zəng sifarişi; faylda «lux» sözü yoxdur — yoxlanıb). Skript brendsizdir, bütün mətn/rəng səhifədən gəlir.
+- Qalıb: variant seçimi (A/B) və kampaniya mətni Nihatdan; qış səhnəsi (hero-nun qarlı axşam versiyası) — şəkil generasiyası tələb edir (kredit), hələ edilməyib; Odeo saytı ayrı repodadır — eyni skript ora da qoşulmalıdır; bayram iş saatları verilməyib.
