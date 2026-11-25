@@ -3,7 +3,7 @@
    Sınaq: ünvana ?movsum=a (sakit) və ya ?movsum=b (bayramlı) əlavə et; ?movsum=0 söndürür (yalnız həmin brauzer sessiyası üçün).
    Sayta görə ayarlar səhifədə window.SEASON-da verilir (rənglər, hero, loqo, düymə, mətn). */
 (function () {
-  var SW = 'auto', DEF = 'a';
+  var SW = 'auto', DEF = 'b';
   var C = window.SEASON || {}, d = document, ss = null;
   try { ss = window.sessionStorage; } catch (e) {}
   var q = /[?&]movsum=([ab01])/.exec(location.search), pv = q ? q[1] : (ss && ss.getItem('ssn_pv'));

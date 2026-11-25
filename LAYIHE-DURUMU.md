@@ -746,3 +746,4 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Sayta görə ayar səhifədə `window.SEASON`: rənglər (`bg, fg, ac`), `hero`, `z`, `hideWhen` (giriş videosu zamanı qar gizli), `logo`, `cta` ({click | href | attr, label}), `offer` (kampaniya mətni — verilsə zolaqda əsas mətnin yerinə çıxır), `v`.
 - Qoşulub: `index.html` (düymə → «Baxışa yazıl» pəncərəsi), `ru.html` (→ #zayavka), `nc/site-src/v3/index.tpl.html` (zeytun rəngi, düymə → zəng sifarişi; faylda «lux» sözü yoxdur — yoxlanıb). Skript brendsizdir, bütün mətn/rəng səhifədən gəlir.
 - Qalıb: variant seçimi (A/B) və kampaniya mətni Nihatdan; qış səhnəsi (hero-nun qarlı axşam versiyası) — şəkil generasiyası tələb edir (kredit), hələ edilməyib; Odeo saytı ayrı repodadır — eyni skript ora da qoşulmalıdır; bayram iş saatları verilməyib.
+- 25.11 (2): Nihat **B (bayramlı)** variantını seçdi — `DEF='b'`, səhifələrdə `season.js?v=2`. 1 dekabrda özü yanacaq.
