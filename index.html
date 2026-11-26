@@ -2683,6 +2683,11 @@ html.vrev #v-ana .hero .dn-badge{animation:vRevO .6s ease 1.4s both}
  html.is-home #v-ana .hero .hcap{bottom:calc(clamp(96px,10vw,150px) + var(--hx) * (1 - var(--hpos,0)))}
  html.is-home #v-ana .hero .dn-badge{margin-top:calc(var(--hx) * var(--hpos,0))}
 }
+
+/* 26.11.2026 — şəkil kəsilməyəndə (fit=0) geniş ekranda hero pəncərədən hündür olur: başlıq və düymələr görünən hissədə qalsın */
+@media(min-width:901px){
+ html.is-home #v-ana .hero .hcap{bottom:calc(max(clamp(96px,10vw,150px),(56.25vw - 100vh + 150px) * (1 - var(--hfit,1))) + var(--hx) * (1 - var(--hpos,0)))}
+ @supports(height:100svh){html.is-home #v-ana .hero .hcap{bottom:calc(max(clamp(96px,10vw,150px),(56.25vw - 100svh + 150px) * (1 - var(--hfit,1))) + var(--hx) * (1 - var(--hpos,0)))}}
 }
 </style>
 <div class="modal-bg" id="qrModal"><div class="lux-qr" role="dialog" aria-modal="true" aria-label="QR kod"><button class="mclose" id="qrClose" aria-label="Bağla">&times;</button><h2>QR kod</h2><p id="qrT">Telefonun kamerası ilə skan edin</p><div class="qr-box" id="qrBox"></div><button type="button" class="btn lx-ghost" id="qrCopy">Linki kopyala</button></div></div>

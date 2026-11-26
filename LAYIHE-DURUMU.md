@@ -747,3 +747,8 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Qoşulub: `index.html` (düymə → «Baxışa yazıl» pəncərəsi), `ru.html` (→ #zayavka), `nc/site-src/v3/index.tpl.html` (zeytun rəngi, düymə → zəng sifarişi; faylda «lux» sözü yoxdur — yoxlanıb). Skript brendsizdir, bütün mətn/rəng səhifədən gəlir.
 - Qalıb: variant seçimi (A/B) və kampaniya mətni Nihatdan; qış səhnəsi (hero-nun qarlı axşam versiyası) — şəkil generasiyası tələb edir (kredit), hələ edilməyib; Odeo saytı ayrı repodadır — eyni skript ora da qoşulmalıdır; bayram iş saatları verilməyib.
 - 25.11 (2): Nihat **B (bayramlı)** variantını seçdi — `DEF='b'`, səhifələrdə `season.js?v=2`. 1 dekabrda özü yanacaq.
+
+## 26.11.2026 — LUX ana səhifə: geniş ekranda başlıq kəsilmirdi (düzəldi)
+- Hal (Nihatın iMac-ı, 2576×1224): `fit=0` (şəkil kəsilmir, tam 16:9) seçildiyinə görə hero pəncərədən hündür olur və başlıq + düymələr ekranın altında qalırdı.
+- Düzəliş (`/tmp/psite/v4.css` sonu → build4.py): `html.is-home #v-ana .hero .hcap` üçün `bottom = max(əvvəlki, 56.25vw − 100svh + 150px)` yalnız `--hfit=0` olanda — başlıq görünən hissənin altından ~150 px yuxarıda qalır (kuki pəncərəsi düymələri örtmür). Şəkil və bina nöqtələri dəyişməyib. 1440×900 və 1920×1080-də yer dəyişmir.
+- Yan tapıntı: v4.css sonunda artıq bir `}` var idi (özündən sonra gələn qaydanı ləğv edirdi) — silindi.
