@@ -752,3 +752,10 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Hal (Nihatın iMac-ı, 2576×1224): `fit=0` (şəkil kəsilmir, tam 16:9) seçildiyinə görə hero pəncərədən hündür olur və başlıq + düymələr ekranın altında qalırdı.
 - Düzəliş (`/tmp/psite/v4.css` sonu → build4.py): `html.is-home #v-ana .hero .hcap` üçün `bottom = max(əvvəlki, 56.25vw − 100svh + 150px)` yalnız `--hfit=0` olanda — başlıq görünən hissənin altından ~150 px yuxarıda qalır (kuki pəncərəsi düymələri örtmür). Şəkil və bina nöqtələri dəyişməyib. 1440×900 və 1920×1080-də yer dəyişmir.
 - Yan tapıntı: v4.css sonunda artıq bir `}` var idi (özündən sonra gələn qaydanı ləğv edirdi) — silindi.
+
+## 26.11.2026 — LUX «Haqqımızda» səhifəsi dolğun yazıldı
+- `#v-haqqimizda` (index.html) yenidən yazıldı: «LUX Residence nədir», «Layihə qısaca» (10 fakt: ünvan, metro, binalar, mənzillər, sahələr, təhvil vəziyyəti, parkinq, təhlükəsizlik, ödəniş, idarəetmə), «Yerləşmə» (məsafələr), «Mənzillər» (otaq sayına görə plan sayı və sahə aralığı, tip səhifələrinə link), «Ərazi», «Təhvildən sonra» (komendant xidməti, sakin kabineti), «Seçim» (3D, baxışa yazıl). Üçüncü göstərici «7/24 mühafizə» → «5 dəq metroya piyada».
+- Mənbə yalnız özümüzün təsdiqli məlumatlar: assets/faq.json, İnfrastruktur səhifəsi, pilot.html, lux_apartments (16 plan: 4/1/8/3; 70,37–245,72 m²). Kənar saytlarda etibarlı məlumat tapılmadı. Qiymət, mərtəbə, status yazılmayıb.
+- Başlıq/sloqan `lux_content.aboutTitle/aboutText`-dən gəlir — bazada, index.html-də və admin.html defoltunda yeniləndi. Meta description (`functions/_middleware.js`) yeniləndi. Stil: /tmp/psite/v4.css sonu (`.abt-facts, .abt-dist, .abt-rows, .abt-list`).
+- DİQQƏT: mənzil tiplərinin sayı və sahə aralığı səhifədə statikdir — plan əlavə olunsa/silinsə əl ilə düzəldilməlidir.
+- Nihatdan gözlənilir: tikintinin başlama ili, təhvil verilmiş binalar və növbəti təhvil tarixi, memar/layihəçi, ərazinin sahəsi, binaların mərtəbə sayı (yazmaq olarmı), konstruksiya/fasad materialı, lift markası, istilik sistemi, parkinq yerlərinin sayı, «Pilot Həyat» adının saytda çəkilməsinə razılıq.
