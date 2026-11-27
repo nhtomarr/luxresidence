@@ -1446,11 +1446,26 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
   return null;
  }
  function _aptHas(x,ar,tol){return [x.area].concat(x.alt||[]).some(function(v){return Math.abs((parseFloat(v)||0)-ar)<tol;});}
+ /* 27.11.2026: sahə və otaq sayı 3D səhifəsindəki kimi saytdakı plan səhifəsindən götürülür
+    (satış cədvəlindəki 0,02–0,3 m² fərqlər və fərqli otaq sayı gizlənir). Mənzil nömrəsinin tipi
+    binanın ən yuxarı tam mərtəbəsinə görə təyin olunur; uyğun gəlməyəndə sahəyə görə axtarılır. */
+ var _CAN={};
+ function _A(){return (typeof APARTMENTS!=='undefined'?APARTMENTS:[]);}
+ function _typeOf(ar){if(!ar)return null;var A=_A();return A.find(function(x){return _aptHas(x,ar,0.05);})||A.find(function(x){return !x.hidden&&_aptHas(x,ar,0.5);})||null;}
+ function _rowsOf(b,f){return (b.rows[f]||b.rows[String(f)]||[]).filter(function(u){return u.st!=='other';});}
+ function canonOf(bn){
+  var b=salesForBina(bn);if(!b||!b.rows)return null;var k=bn+'|'+_A().length;if(_CAN[k])return _CAN[k];
+  var fs=Object.keys(b.rows).map(Number).filter(function(f){return _rowsOf(b,f).length;}).sort(function(a,c){return c-a;});
+  var C={n:fs.length?_rowsOf(b,fs[0]).length:0,t:{}};
+  fs.forEach(function(f){var r=_rowsOf(b,f);if(r.length!==C.n)return;r.forEach(function(u){if(C.t[u.n])return;var c=_typeOf(parseFloat(String(u.area).replace(',','.'))||0);if(c&&parseFloat(c.area))C.t[u.n]=c;});});
+  return _CAN[k]=C;
+ }
  function floorUnits(bn,floor){
   var b=salesForBina(bn);if(!b||!b.rows)return [];
-  var arr=b.rows[floor]||b.rows[String(floor)]||[];
-  // otaq sayı saytda kataloqdakı satış adına görə göstərilir (məs: sənəddə 3, satışda 4 otaq)
-  return arr.filter(function(u){return u.st!=='other';}).map(function(u){var ar=parseFloat(u.area)||0;var c=(typeof APARTMENTS!=='undefined'?APARTMENTS:[]).find(function(x){return _aptHas(x,ar,0.05);});return c&&c.rooms?Object.assign({},u,{room:String(c.rooms)}):u;});
+  var raw=_rowsOf(b,floor),CN=canonOf(bn),same=CN&&raw.length===CN.n;
+  return raw.map(function(u){var ar=parseFloat(String(u.area).replace(',','.'))||0;var c=(same&&CN.t[u.n])||_typeOf(ar);if(!c)return u;
+   var sa=parseFloat(String(c.area).replace(',','.'))||0;var o=Object.assign({},u,{area0:u.area});if(sa)o.area=String(sa);if(c.rooms)o.room=String(c.rooms);return o;
+  }).sort(function(a,c){return (+a.n||0)-(+c.n||0);});
  }
  function drawTower(){
   var svg=document.getElementById('towerSvg');if(!svg)return;
@@ -1502,8 +1517,8 @@ const dp=document.getElementById('dropPlan');dp.querySelector('span').addEventLi
   var _noSt=HIDEFL||HIDEST;
   if(!units.length){h+='<div class="sp-empty">Bu mərtəbədə uyğun mənzil yoxdur.</div>';}
   else{units.forEach(function(u){
-   h+='<div class="sp-apt" onclick="_secApt('+u.area+')">'+(_noSt?'':'<span class="sp-dot" style="background:'+statusColor(u.st)+'"></span>')
-    +'<div class="sp-info"><b>'+(u.room||'—')+' otaqlı · '+(u.area||'—')+' m²</b><span class="sp-st">№'+(u.n||'')+(_noSt?'':' · '+statusLabel(u.st))+'</span></div><span class="sp-arrow">→</span></div>';
+   h+='<div class="sp-apt" onclick="_secApt('+(parseFloat(String(u.area).replace(',','.'))||0)+')">'+(_noSt?'':'<span class="sp-dot" style="background:'+statusColor(u.st)+'"></span>')
+    +'<div class="sp-info"><b>'+(u.room||'—')+' otaqlı · '+(u.area?String(u.area).replace('.',','):'—')+' m²</b><span class="sp-st">№'+(u.n||'')+(_noSt?'':' · '+statusLabel(u.st))+'</span></div><span class="sp-arrow">→</span></div>';
   });}
   body.innerHTML=h;
   var _sp=document.getElementById('secPanel');_sp.classList.add('open');

@@ -759,3 +759,13 @@ nc/sayt.html «Sorğular» tabı: cədvəl əvəzinə kartlar (ad, telefon, növ
 - Başlıq/sloqan `lux_content.aboutTitle/aboutText`-dən gəlir — bazada, index.html-də və admin.html defoltunda yeniləndi. Meta description (`functions/_middleware.js`) yeniləndi. Stil: /tmp/psite/v4.css sonu (`.abt-facts, .abt-dist, .abt-rows, .abt-list`).
 - DİQQƏT: mənzil tiplərinin sayı və sahə aralığı səhifədə statikdir — plan əlavə olunsa/silinsə əl ilə düzəldilməlidir.
 - Nihatdan gözlənilir: tikintinin başlama ili, təhvil verilmiş binalar və növbəti təhvil tarixi, memar/layihəçi, ərazinin sahəsi, binaların mərtəbə sayı (yazmaq olarmı), konstruksiya/fasad materialı, lift markası, istilik sistemi, parkinq yerlərinin sayı, «Pilot Həyat» adının saytda çəkilməsinə razılıq.
+
+## 27.11.2026 — «Seçim» bölməsi: mənzil sahələri 3D ilə eyniləşdirildi
+- Satışdan irad: /secim mərtəbə panelində kvadratlar köhnə qalıb (məs. 111,62; 70,67; «2 otaqlı 125 m²»; 149,32; 176,3), 3D-də isə düzəldilib.
+- Düzəliş (index.html, `floorUnits`): 3d.html-dəki məntiq köçürüldü — `canonOf(bina)` (mənzil nömrəsinin tipi ən yuxarı tam mərtəbəyə görə) + `_typeOf(sahə)`; göstərilən sahə və otaq sayı saytdakı plan səhifəsindən gəlir, satış cədvəlinin öz rəqəmi `area0`-da qalır. Siyahı mənzil nömrəsinə görə sıralanır, sahə vergüllə yazılır.
+- Yoxlandı: Bina 3–6, 3/8/10/16-cı mərtəbələr → №1 2 otaqlı 111,64 · №2 1 otaqlı 70,37 · №3 3 otaqlı 134,33 · №4 1 otaqlı 73,42 · №5 3 otaqlı 150,66 · №6 4 otaqlı 174,53; klik düzgün mənzil səhifəsini açır.
+- Qeyd: «Seçim»də Bina 7 və 8 düymələri var, amma satış cədvəlində məlumatları yoxdur.
+
+## 27.11.2026 — LUX buklet (iş planı №1) — davam edir
+- Dizayn lövhəsi: https://claude.ai/artifact/HG27nsX57WAJqJLfFqZswv (fayllar /home/claude/buklet/project). Üç cəhd: A4 üçqatlı (3 istiqamət) → «çox bəsit»; kvadrat 21×21 nümunə → bəyənilmədi (boş, rənglər zəif, şəkil az, quruluş); «Memar albomu» A4 üfüqi 6 vərəq (çertyoj çərçivəsi, ştamp, kontur sxemi, eksplikasiya, 16 planın cədvəli, QR) — cavab gözlənilir.
+- Nihat: dizayn 5000 dollarlıq iş səviyyəsində olmalıdır, üslub — memarlıq. Çatışmayan: memarın orijinal renderləri (interyer, lobbi, həyət) və çertyojları; əldə yalnız 2560 px gündüz/axşam render və tower-3-8 var.
