@@ -21,9 +21,11 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18475026857"></script>
 <script>
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
-gtag('js',new Date());gtag('config','AW-18475026857',{allow_enhanced_conversions:true});
-function conv(lab){try{gtag('event','conversion',{send_to:'AW-18475026857/'+lab,value:1.0,currency:'USD'});}catch(e){}}
-document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href^="tel:"],a[href*="wa.me/"]');if(a)conv('wwoyCP-muYUdEKmTyulE');},true);
+gtag('js',new Date());gtag('config','AW-18475026857',{allow_enhanced_conversions:true});gtag('config','AW-18599048683',{allow_enhanced_conversions:true});
+/* 2-ci reklam hesabı (655-337-6709): köhnə etiket → yeni etiket */
+var CONV2={'wwoyCP-muYUdEKmTyulE':'AWStCLrVxsAdEOvr26RF','HYqoCJbPv4UdEKmTyulE':'MjRKCNfbzMAdEOvr26RF'};
+function conv(lab,lab2){try{gtag('event','conversion',{send_to:'AW-18475026857/'+lab,value:1.0,currency:'USD'});var n=lab2||CONV2[lab];if(n)gtag('event','conversion',{send_to:'AW-18599048683/'+n,value:1.0,currency:'USD'});}catch(e){}}
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href^="tel:"],a[href*="wa.me/"]');if(a)conv('wwoyCP-muYUdEKmTyulE',/^tel:/.test(a.getAttribute('href')||'')?'AWStCLrVxsAdEOvr26RF':'_iLYCNTbzMAdEOvr26RF');},true);
 </script>
 <style>
 :root{--rust:#ba4d2c;--rust-d:#9a3c20;--ink:#2a1d14;--cream:#f7f2ec;--sand:#eadfd3;--muted:#8b7a6b;--line:#e8dccf;--serif:'Playfair Display',Georgia,serif;--sans:'Inter',-apple-system,system-ui,sans-serif}
