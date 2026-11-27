@@ -46,6 +46,8 @@ async function officeHost(ctx, url) {
     const r = await ctx.env.ASSETS.fetch(new Request(new URL('/ofis', url).toString(), ctx.request));
     return noindex(r);
   }
+  // LUX Tikinti müşahidə paneli (iş saatları + maaş hesabatı) — yalnız ofis_tikinti icazəsi ilə
+  if (p === '/tikinti' || p === '/tikinti/' || p === '/tikinti-saat') return noindex(await ctx.env.ASSETS.fetch(new Request(new URL('/tikinti-saat', url).toString(), ctx.request)));
   if (p === '/favicon.ico' || p === '/favicon.svg' || p === '/favicon.png') return Response.redirect(url.origin + '/assets/ofis/favicon-64.png?v=2', 302);
   if (p === '/apple-touch-icon.png') return ctx.env.ASSETS.fetch(new Request(new URL('/assets/ofis/apple-touch.png', url).toString()));
   if (p === '/ofis.webmanifest') return new Response(OFFICE_MANIFEST, { headers: { 'Content-Type': 'application/manifest+json', 'Cache-Control': 'public, max-age=3600' } });

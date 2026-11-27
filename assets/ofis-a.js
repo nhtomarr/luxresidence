@@ -33,7 +33,7 @@ function err(e){toast((e&&e.message)||'Xəta baş verdi');console.warn(e);}
 function run(q){return q.then(function(r){if(r.error)throw r.error;return r.data;});}
 
 /* ---------- start ---------- */
-luxAuth({perms:['ofis','ofis_admin','ofis_owner','dev'],title:'Baş Ofis',sub:'İşçi hesabınızla daxil olun',logo:false,noAdminLink:true,accent:'#2563eb',bg:'linear-gradient(135deg,#e2e8f0,#f8fafc)',onReady:function(client,me){sb=client;ME=me;OWNER=(me.perms||[]).indexOf('ofis_owner')>=0;window.DEV=(me.perms||[]).indexOf('dev')>=0;PREVIEW=!!((me.is_admin||DEV)&&new URLSearchParams(location.search).get('baxis')==='sahibkar');if(PREVIEW)OWNER=true;MGR=me.is_admin||OWNER||DEV||(me.perms||[]).indexOf('ofis_admin')>=0;start();}});
+luxAuth({perms:['ofis','ofis_admin','ofis_owner','dev'],redirect:{ofis_tikinti:'/tikinti'},title:'Baş Ofis',sub:'İşçi hesabınızla daxil olun',logo:false,noAdminLink:true,accent:'#2563eb',bg:'linear-gradient(135deg,#e2e8f0,#f8fafc)',onReady:function(client,me){sb=client;ME=me;OWNER=(me.perms||[]).indexOf('ofis_owner')>=0;window.DEV=(me.perms||[]).indexOf('dev')>=0;PREVIEW=!!((me.is_admin||DEV)&&new URLSearchParams(location.search).get('baxis')==='sahibkar');if(PREVIEW)OWNER=true;MGR=me.is_admin||OWNER||DEV||(me.perms||[]).indexOf('ofis_admin')>=0;start();}});
 function start(){$('app').style.display='';var _bl=document.getElementById('bootload');if(_bl)_bl.style.display='none';var chip=document.querySelector('.lux-me');if(chip)chip.style.display='none';
  $('meBox').innerHTML='<b>'+esc(PREVIEW?'Afiq Rəhmanov':(ME.full_name||ME.email))+'</b>'+(PREVIEW?'Sahibkar':ME.is_admin?'Sistem admini':DEV?'Developer':OWNER?'Sahibkar':MGR?'İdarəçi':'İşçi');
  $('outBtn').onclick=function(){sb.auth.signOut().then(function(){location.href=OFB();});};

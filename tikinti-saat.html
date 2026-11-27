@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f6f1ea">
+<title>LUX Tikinti — iş saatları</title>
+<link rel="icon" href="/assets/ofis/favicon-64.png?v=2">
+<link rel="apple-touch-icon" href="/assets/ofis/apple-touch.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="LUX Tikinti">
+<script src="/assets/lux-auth.js?v=155"></script>
+<style>
+/* LUX Tikinti müşahidə paneli — iri yazı, sakit səth, bir vurğu rəngi (terrakota) */
+:root{
+  --bg:#f6f1ea;--card:#fffdf9;--line:rgba(42,29,20,.12);--line2:rgba(42,29,20,.07);
+  --t1:#231710;--t2:#5b4a3d;--t3:#7d6c5e;
+  --acc:#a8431f;--acc-on:#fff;
+  --ok:#2f6b3f;--ok-bg:#e7f0e6;--warn:#8a5a00;--warn-bg:#f6ead0;--bad:#9b2c1f;--bad-bg:#f6e2dd;
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#17110d;--card:#211812;--line:rgba(246,241,234,.14);--line2:rgba(246,241,234,.08);
+  --t1:#f6f1ea;--t2:#d1c4b6;--t3:#a89888;
+  --acc:#e0764f;--acc-on:#1a0f0a;
+  --ok:#8fcf9f;--ok-bg:#1d2e21;--warn:#e9c275;--warn-bg:#33290f;--bad:#f0a093;--bad-bg:#3a1c17;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--t1);font:400 18px/1.45 Inter,-apple-system,"Segoe UI",Roboto,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:860px;margin:0 auto;padding:16px 16px 48px}
+header{display:flex;align-items:center;gap:12px;padding:8px 0 16px}
+header h1{font:500 24px/1.2 inherit;margin:0;flex:1;font-family:inherit}
+header h1 small{display:block;font-size:16px;color:var(--t3);font-weight:400;margin-top:2px}
+.out{border:1px solid var(--line);background:transparent;border-radius:12px;padding:12px 16px;font-size:17px;color:var(--t2)}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.tabs button{border:1px solid var(--line);background:var(--card);border-radius:var(--r);padding:16px 8px;font-size:19px;font-weight:500;color:var(--t2);min-height:60px}
+.tabs button[aria-selected="true"]{background:var(--acc);border-color:var(--acc);color:var(--acc-on)}
+.tabs button:focus-visible,.out:focus-visible,.row:focus-visible,.mnav button:focus-visible,.back:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.sum div{background:var(--card);border:1px solid var(--line2);border-radius:var(--r);padding:12px 12px 14px}
+.sum b{display:block;font:500 34px/1.1 inherit}
+.sum span{font-size:16px;color:var(--t2)}
+.mnav{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.mnav button{border:1px solid var(--line);background:var(--card);border-radius:12px;min-width:60px;min-height:56px;font-size:26px;line-height:1;color:var(--t1)}
+.mnav button:disabled{opacity:.35;cursor:default}
+.mnav strong{flex:1;text-align:center;font:500 22px/1.2 inherit}
+h2{font:500 19px/1.3 inherit;margin:24px 0 8px;color:var(--t2)}
+.list{background:var(--card);border:1px solid var(--line2);border-radius:var(--r);overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;border-top:1px solid var(--line2);background:transparent;padding:14px 16px;min-height:68px}
+.row:first-child{border-top:0}
+button.row:active{background:var(--line2)}
+.row .n{flex:1;min-width:0}
+.row .n b{display:block;font-weight:500;font-size:19px;overflow-wrap:anywhere}
+.row .n>span{display:block;font-size:16px;color:var(--t2);margin-top:2px}
+.row .v{text-align:right;white-space:nowrap}
+.row .v b{display:block;font:500 21px/1.2 inherit}
+.row .v>span{display:block;font-size:15px;color:var(--t3);margin-top:2px}
+.row .go{font-size:24px;color:var(--t3);line-height:1}
+.tag{display:inline-block;border-radius:8px;padding:3px 9px;font-size:15px;font-weight:500}
+.tag.ok{background:var(--ok-bg);color:var(--ok)}.tag.warn{background:var(--warn-bg);color:var(--warn)}.tag.bad{background:var(--bad-bg);color:var(--bad)}
+.row.off .n b{color:var(--t3);font-weight:400}
+.note{font-size:16px;color:var(--t2);margin:12px 2px 0}
+.back{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:14px 18px;font-size:18px;margin-bottom:16px;min-height:56px}
+.pers h3{font:500 24px/1.2 inherit;margin:0 0 4px}
+.pers p{margin:0 0 16px;color:var(--t2)}
+.day{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:13px 16px;border-top:1px solid var(--line2)}
+.day:first-child{border-top:0}
+.day .d{font-weight:500}
+.day .h{font:500 19px/1.3 inherit;text-align:right}
+.day .t{grid-column:1/-1;font-size:16px;color:var(--t2)}
+.empty{padding:28px 16px;text-align:center;color:var(--t2)}
+.load{padding:40px 16px;text-align:center;color:var(--t3)}
+#luxAuth form{padding:34px 26px!important;width:min(440px,100%)!important}
+#luxAuth h3{font:500 26px/1.2 Inter,system-ui,sans-serif!important}
+#luxAuth p{font-size:17px!important}
+#luxAuth input[type=email],#luxAuth input[type=password]{font-size:19px!important;padding:16px!important}
+#luxAuth button{font-size:19px!important;padding:17px!important;font-weight:500!important}
+#luxAuth .rm{font-size:17px!important}#luxAuth .e{font-size:16px!important}
+.lux-me{display:none!important}
+@media (max-width:420px){body{font-size:17px}.tabs button{font-size:17px;padding:14px 4px}.sum b{font-size:30px}.row{padding:13px 12px}}
+@media print{.tabs,.out,.mnav button,.back,.row .go{display:none!important}body{background:#fff;color:#000;font-size:13px}.list,.sum div{border-color:#bbb}.row{min-height:0;padding:6px 8px}.row .n b,.row .v b{font-size:13px}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app" hidden>
+  <header>
+    <h1>LUX Tikinti<small id="who"></small></h1>
+    <button class="out" id="out" type="button">Çıxış</button>
+  </header>
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" data-t="today" aria-selected="true">Bu gün</button>
+    <button type="button" role="tab" data-t="month" aria-selected="false">Ay üzrə</button>
+    <button type="button" role="tab" data-t="pay" aria-selected="false">Maaş</button>
+  </div>
+  <main id="view"><div class="load">Yüklənir…</div></main>
+</div>
+<script>
+(function(){
+'use strict';
+var AZM=['Yanvar','Fevral','Mart','Aprel','May','İyun','İyul','Avqust','Sentyabr','Oktyabr','Noyabr','Dekabr'],
+    AZW=['bazar','bazar ertəsi','çərşənbə axşamı','çərşənbə','cümə axşamı','cümə','şənbə'];
+var sb=null,TAB='today',TODAY=null,YM=null,REP=null,PAY=null,PERS=null,PAYP=null,view=document.getElementById('view');
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function pad(n){return String(n).padStart(2,'0');}
+/* dəqiqə → «9 saat 35 dəq» */
+function dur(m){m=Math.max(0,Math.round(m||0));var h=Math.floor(m/60),r=m%60;if(!h)return r+' dəq';return h+' saat'+(r?' '+r+' dəq':'');}
+function dmy(iso){return iso.slice(8,10)+'.'+iso.slice(5,7)+'.'+iso.slice(0,4);}
+function wday(iso){var p=iso.split('-');return AZW[new Date(Date.UTC(+p[0],+p[1]-1,+p[2])).getUTCDay()];}
+function mLast(ym){var p=ym.split('-');return new Date(Date.UTC(+p[0],+p[1],0)).getUTCDate();}
+function mShift(ym,k){var p=ym.split('-'),d=new Date(Date.UTC(+p[0],+p[1]-1+k,1));return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1);}
+function mName(ym){return AZM[+ym.slice(5,7)-1]+' '+ym.slice(0,4);}
+function tot(p){var s={min:0,days:0,noOut:0};(p.days||[]).forEach(function(d){s.days++;s.min+=d.min||0;if(d.st==='no_out')s.noOut++;});return s;}
+function fail(e){view.innerHTML='<div class="empty">Məlumat yüklənmədi. İnterneti yoxlayıb səhifəni yeniləyin.</div>';try{console.error(e);}catch(_){}}
+function rpc(n,a){return sb.rpc(n,a||{}).then(function(r){if(r.error)throw r.error;return r.data;});}
+
+function loadToday(){view.innerHTML='<div class="load">Yüklənir…</div>';
+  var now=new Date(),b=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Baku'}).format(now);
+  return rpc('tk_report',{p_from:b,p_to:b}).then(function(d){TODAY=d;renderToday();}).catch(fail);}
+function renderToday(){var d=TODAY,on=[],left=[],off=[],rest=[];
+  d.people.forEach(function(p){var x=(p.days||[])[0];if(!x){if(p.kind==='isci')off.push(p);else if(p.kind==='novbe')rest.push(p);return;}(x.st==='ok'?left:on).push({p:p,x:x});});
+  on.sort(function(a,b){return a.x.in<b.x.in?-1:1;});left.sort(function(a,b){return a.p.name.localeCompare(b.p.name,'az');});
+  var h='<div class="sum"><div><b>'+on.length+'</b><span>işdədir</span></div><div><b>'+left.length+'</b><span>çıxıb</span></div><div><b>'+off.length+'</b><span>gəlməyib</span></div></div>';
+  h+='<p class="note" style="margin:0 2px 12px">'+dmy(d.today)+', '+wday(d.today)+' · saat '+esc(d.now)+'</p>';
+  function row(o){var p=o.p,x=o.x,open=x.st!=='ok';
+    return '<div class="row"><div class="n"><b>'+esc(p.name)+'</b><span>'+(p.pos?esc(p.pos)+' · ':'')+'gəlib '+esc(x.in)+(open?'':' · çıxıb '+esc(x.out))+'</span></div><div class="v"><b>'+dur(x.min)+'</b><span>'+(open?'<span class="tag ok">işdədir</span>':'iş vaxtı')+'</span></div></div>';}
+  if(on.length)h+='<h2>İşdə olanlar</h2><div class="list">'+on.map(row).join('')+'</div>';
+  if(left.length)h+='<h2>Çıxanlar</h2><div class="list">'+left.map(row).join('')+'</div>';
+  if(off.length)h+='<h2>Bu gün gəlməyənlər</h2><div class="list">'+off.map(function(p){return '<div class="row off"><div class="n"><b>'+esc(p.name)+'</b>'+(p.pos?'<span>'+esc(p.pos)+'</span>':'')+'</div></div>';}).join('')+'</div>';
+  if(rest.length)h+='<h2>Növbəli işçilər — bu gün növbədə deyil</h2><div class="list">'+rest.map(function(p){return '<div class="row off"><div class="n"><b>'+esc(p.name)+'</b>'+(p.pos?'<span>'+esc(p.pos)+'</span>':'')+'</div></div>';}).join('')+'</div>';
+  if(!on.length&&!left.length&&!off.length)h+='<div class="list"><div class="empty">Siyahı boşdur.</div></div>';
+  h+='<p class="note">Vaxt qapıdakı cihazda barmaq, üz və ya kartla keçidə görə yazılır. «İşdədir» — gəlib, hələ çıxış keçidi yoxdur.</p>';
+  view.innerHTML=h;}
+
+function loadMonth(){view.innerHTML='<div class="load">Yüklənir…</div>';PERS=null;
+  var cur=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Baku'}).format(new Date());if(!YM)YM=cur.slice(0,7);
+  var to=YM+'-'+pad(mLast(YM));if(to>cur)to=cur;
+  return rpc('tk_report',{p_from:YM+'-01',p_to:to}).then(function(d){REP=d;renderMonth();}).catch(fail);}
+function mHead(){var cur=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Baku'}).format(new Date()).slice(0,7);
+  return '<div class="mnav"><button type="button" data-m="-1" aria-label="Əvvəlki ay">‹</button><strong>'+mName(YM)+'</strong><button type="button" data-m="1" aria-label="Növbəti ay"'+(YM>=cur?' disabled':'')+'>›</button></div>';}
+function renderMonth(){if(PERS)return renderPerson();
+  var d=REP,emp=[],ext=[];d.people.forEach(function(p){(p.kind==='podratci'?ext:emp).push(p);});
+  function row(p){var s=tot(p);
+    return '<button type="button" class="row'+(s.days?'':' off')+'" data-p="'+esc(p.id)+'"><div class="n"><b>'+esc(p.name)+'</b><span>'+(s.days?s.days+' gün gəlib'+(s.noOut?' · <span class="tag bad">'+s.noOut+' gün çıxışsız</span>':''):'bu ay keçidi yoxdur')+'</span></div><div class="v"><b>'+(s.days?dur(s.min):'—')+'</b></div><span class="go" aria-hidden="true">›</span></button>';}
+  var all=0;emp.forEach(function(p){all+=tot(p).min;});
+  var h=mHead()+'<div class="sum"><div><b>'+emp.filter(function(p){return tot(p).days;}).length+'</b><span>nəfər işləyib</span></div><div><b>'+Math.round(all/60)+'</b><span>saat cəmi</span></div><div><b>'+emp.reduce(function(a,p){return a+tot(p).noOut;},0)+'</b><span>çıxışsız gün</span></div></div>';
+  h+='<h2>İşçilər</h2><div class="list">'+(emp.length?emp.map(row).join(''):'<div class="empty">Siyahı boşdur.</div>')+'</div>';
+  if(ext.length)h+='<h2>Podratçılar (cihazda qeydiyyatda olanlar)</h2><div class="list">'+ext.map(row).join('')+'</div>';
+  h+='<p class="note">Ada toxunun — günbəgün gəliş və çıxış saatları açılır. «Çıxışsız gün» — gəliş yazılıb, çıxışda cihazdan keçilməyib; həmin günün saatı cəmə daxil deyil.</p>';
+  view.innerHTML=h;}
+function renderPerson(){var p=PERS,s=tot(p),days=(p.days||[]).slice().reverse();
+  var h='<button type="button" class="back" data-back="1">‹ Siyahıya qayıt</button><div class="pers"><h3>'+esc(p.name)+'</h3><p>'+(p.pos?esc(p.pos)+' · ':'')+mName(YM)+'</p></div>';
+  h+='<div class="sum"><div><b>'+s.days+'</b><span>gün gəlib</span></div><div><b>'+Math.floor(s.min/60)+'</b><span>saat'+(s.min%60?' '+(s.min%60)+' dəq':'')+'</span></div><div><b>'+s.noOut+'</b><span>çıxışsız gün</span></div></div>';
+  h+='<div class="list">'+(days.length?days.map(function(x){
+    var t=x.st==='ok'?'gəlib '+esc(x.in)+' · çıxıb '+esc(x.out):x.st==='open'?'gəlib '+esc(x.in)+' · <span class="tag ok">işdədir</span>':'gəlib '+esc(x.in)+' · <span class="tag bad">çıxış qeyd olunmayıb</span>';
+    return '<div class="day"><span class="d">'+dmy(x.d)+', '+wday(x.d)+'</span><span class="h">'+(x.st==='no_out'?'—':dur(x.min))+'</span><span class="t">'+t+'</span></div>';}).join(''):'<div class="empty">Bu ay keçidi yoxdur.</div>')+'</div>';
+  view.innerHTML=h;window.scrollTo(0,0);}
+
+function loadPay(){view.innerHTML='<div class="load">Yüklənir…</div>';
+  return rpc('tk_pay').then(function(d){PAY=d||[];if(PAYP==null)PAYP=0;renderPay();}).catch(fail);}
+function renderPay(){if(!PAY.length){view.innerHTML='<div class="list"><div class="empty">Maaş siyahısı hələ yaradılmayıb.</div></div>';return;}
+  var per=PAY[PAYP],rows=per.rows||[],got=rows.filter(function(r){return r.status==='verildi';}),sum=0,any=false;
+  rows.forEach(function(r){if(+r.amount>0){any=true;if(r.status==='verildi')sum+=+r.amount;}});
+  var h='<div class="mnav"><button type="button" data-pp="1" aria-label="Əvvəlki ay"'+(PAYP>=PAY.length-1?' disabled':'')+'>‹</button><strong>'+mName(per.period)+'</strong><button type="button" data-pp="-1" aria-label="Növbəti ay"'+(PAYP<=0?' disabled':'')+'>›</button></div>';
+  h+='<div class="sum"><div><b>'+rows.length+'</b><span>nəfər siyahıda</span></div><div><b>'+got.length+'</b><span>maaşını alıb</span></div><div><b>'+(rows.length-got.length)+'</b><span>gözləyir</span></div></div>';
+  if(any)h+='<p class="note" style="margin:0 2px 12px">Verilən məbləğ: '+sum.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2}).replace('.',',')+' ₼</p>';
+  h+='<div class="list">'+rows.map(function(r){var ok=r.status==='verildi';
+    return '<div class="row"><div class="n"><b>'+esc(r.name)+'</b><span>'+(ok?'alıb · '+esc(r.paid_at||'')+(r.via?' · '+esc(r.via)+' ilə':''):(r.blocked?'dayandırılıb · '+esc(r.blocked):'hələ almayıb'))+'</span></div><div class="v">'+(+r.amount>0?'<b>'+(+r.amount).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2}).replace('.',',')+' ₼</b>':'')+'<span class="tag '+(ok?'ok':'warn')+'">'+(ok?'verilib':'gözləyir')+'</span></div></div>';}).join('')+'</div>';
+  h+='<p class="note">«Alıb» — işçi maaşı alarkən kassadakı cihazda barmaq izi ilə təsdiqləyib; tarix və saat həmin anı göstərir.</p>';
+  view.innerHTML=h;}
+
+function show(t){TAB=t;[].forEach.call(document.querySelectorAll('.tabs button'),function(b){b.setAttribute('aria-selected',b.dataset.t===t?'true':'false');});
+  if(t==='today')loadToday();else if(t==='month')loadMonth();else loadPay();}
+document.querySelector('.tabs').addEventListener('click',function(e){var b=e.target.closest('button');if(b)show(b.dataset.t);});
+view.addEventListener('click',function(e){var b=e.target.closest('[data-m],[data-p],[data-back],[data-pp]');if(!b||b.disabled)return;
+  if(b.dataset.m){YM=mShift(YM,+b.dataset.m);loadMonth();}
+  else if(b.dataset.p){PERS=REP.people.filter(function(p){return p.id===b.dataset.p;})[0]||null;renderMonth();}
+  else if(b.dataset.back){PERS=null;renderMonth();}
+  else if(b.dataset.pp){PAYP=Math.max(0,Math.min(PAY.length-1,PAYP+(+b.dataset.pp)));renderPay();}});
+/* «Bu gün» açıqdırsa hər 2 dəqiqədən bir və pəncərəyə qayıdanda yenilə */
+setInterval(function(){if(sb&&TAB==='today'&&!document.hidden)loadToday();},120000);
+document.addEventListener('visibilitychange',function(){if(sb&&!document.hidden&&TAB==='today')loadToday();});
+
+luxAuth({perms:['ofis_tikinti','ofis_owner','ofis_hr','sys','dev'],title:'LUX Tikinti',sub:'İş saatları və maaş hesabatı',logo:false,noAdminLink:true,accent:'#a8431f',bg:'#f6f1ea',
+  onReady:function(client,me){sb=client;document.getElementById('who').textContent=me.full_name||me.email;document.getElementById('app').hidden=false;
+    document.getElementById('out').onclick=function(){sb.auth.signOut().then(function(){location.reload();});};show('today');}});
+})();
+</script>
+</body>
+</html>
